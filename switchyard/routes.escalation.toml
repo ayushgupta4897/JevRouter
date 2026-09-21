@@ -1,0 +1,38 @@
+# Switchyard `llm_classifier` in escalation mode, judged by Jev through jevjudge.
+#
+# Every turn on an unlatched session costs one weak call + one judge call. With an LLM judge
+# that judge call was ~21% of routed spend and ~700 ms/turn (LangChain's Switchyard benchmark).
+# With Jev it is ~0.3 s and a few thousandths of a cent.
+schema_version = 1
+
+[llm_clients.upstream]
+format = "openai_chat"
+base_url = "http://127.0.0.1:8092/v1"
+
+[llm_clients.jevjudge]
+format = "openai_chat"
+base_url = "http://127.0.0.1:8090/v1"
+timeout_ms = 5000
+max_retries = 1
+
+[targets.strong]
+id = "strong-model"
+llm_client = "upstream"
+
+[targets.weak]
+id = "weak-model"
+llm_client = "upstream"
+
+[targets.jev]
+id = "jev-latest"
+llm_client = "jevjudge"
+
+[routes.escalation]
+id = "escalation"
+type = "llm_classifier"
+mode = "escalation"
+classifier_target = "jev"
+strong_target = "strong"
+weak_target = "weak"
+# Two consecutive "escalate" verdicts latch the session to strong. Needs x-switchyard-session-id.
+escalation = { confirmations = 2, recent_turn_window = 28, window_message_chars = 500 }

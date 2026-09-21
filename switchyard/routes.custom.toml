@@ -1,0 +1,79 @@
+# Switchyard `llm_classifier` in custom mode: an N-way Jev Choice over your own model groups.
+#
+# This is the cleanest fit for Jev: the verdict is a single enum, and the option descriptions
+# in the prompt (one `- label: description` line each) become the Choice criteria jevjudge sends.
+schema_version = 1
+
+[llm_clients.upstream]
+format = "openai_chat"
+base_url = "http://127.0.0.1:8092/v1"
+
+[llm_clients.jevjudge]
+format = "openai_chat"
+base_url = "http://127.0.0.1:8090/v1"
+timeout_ms = 5000
+max_retries = 1
+
+[targets.fast]
+id = "fast-model"
+llm_client = "upstream"
+
+[targets.balanced]
+id = "balanced-model"
+llm_client = "upstream"
+
+[targets.reasoning]
+id = "reasoning-model"
+llm_client = "upstream"
+
+[targets.premium]
+id = "premium-model"
+llm_client = "upstream"
+
+[targets.jev]
+id = "jev-latest"
+llm_client = "jevjudge"
+
+[routes.custom]
+id = "custom"
+type = "llm_classifier"
+mode = "custom"
+default_target = "balanced"
+classify_trigger = "user_turn"
+prompt = """
+Choose the model group that can complete this request at the lowest cost.
+- fast: greetings, lookups, one-line edits, formatting, short factual answers.
+- balanced: ordinary coding, writing, and analysis of moderate length.
+- reasoning: multi-step math, algorithm design, formal proofs, tricky debugging.
+- premium: high-stakes architecture, security, legal, or irreversible decisions.
+Return JSON matching the response schema supplied with the request.
+"""
+response_schema = '''
+{
+  "type": "object",
+  "properties": {
+    "decision": {
+      "type": "object",
+      "properties": {
+        "target": {"type": "string", "enum": ["fast", "balanced", "reasoning", "premium"]}
+      },
+      "required": ["target"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["decision"],
+  "additionalProperties": false
+}
+'''
+
+[routes.custom.models]
+judge = ["jev"]
+fast = ["fast"]
+balanced = ["balanced"]
+reasoning = ["reasoning", "premium"]
+premium = ["premium"]
+any = ["fast", "balanced", "reasoning", "premium"]
+
+[routes.custom.policy]
+type = "target_selector"
+selector = "/decision/target"

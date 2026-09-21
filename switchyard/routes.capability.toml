@@ -1,0 +1,40 @@
+# Switchyard `llm_classifier` in capability mode, judged by Jev through jevjudge.
+#
+# The judge target is an ordinary OpenAI-chat client whose base_url is the jevjudge sidecar.
+# Switchyard sends its packaged capability prompt + JSON schema; jevjudge answers with Jev.
+# Nothing in Switchyard changes. Swap the upstream client for OpenRouter/NVIDIA/etc. in prod.
+schema_version = 1
+
+[llm_clients.upstream]
+format = "openai_chat"
+base_url = "http://127.0.0.1:8092/v1"        # e2e: mock upstream. prod: https://openrouter.ai/api/v1
+# api_key_env = "OPENROUTER_API_KEY"
+
+[llm_clients.jevjudge]
+format = "openai_chat"
+base_url = "http://127.0.0.1:8090/v1"
+timeout_ms = 5000                            # Jev answers in ~0.3 s; bound the judge tightly
+max_retries = 1
+
+[targets.strong]
+id = "strong-model"                          # prod: anthropic/claude-opus-4.8
+llm_client = "upstream"
+
+[targets.weak]
+id = "weak-model"                            # prod: z-ai/glm-5.2 or nvidia/nemotron-3.5-lightning
+llm_client = "upstream"
+
+[targets.jev]
+id = "jev-latest"
+llm_client = "jevjudge"
+
+[routes.capability]
+id = "capability"
+type = "llm_classifier"
+mode = "capability"
+classifier_target = "jev"
+strong_target = "strong"
+weak_target = "weak"
+base_threshold = 0.5      # p_solve >= threshold -> weak
+threshold_step = 0.1      # uncertain/unmatched: 0.6, unsupported: 0.7
+classify_trigger = "user_turn"

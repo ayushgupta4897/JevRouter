@@ -1,0 +1,104 @@
+# All three Jev-judged routes in one deployment, for scripts/e2e.sh (mock upstream + mock Jev).
+schema_version = 1
+
+[llm_clients.upstream]
+format = "openai_chat"
+base_url = "http://127.0.0.1:8092/v1"
+
+[llm_clients.jevjudge]
+format = "openai_chat"
+base_url = "http://127.0.0.1:8090/v1"
+timeout_ms = 5000
+max_retries = 1
+
+[targets.strong]
+id = "strong-model"
+llm_client = "upstream"
+
+[targets.weak]
+id = "weak-model"
+llm_client = "upstream"
+
+[targets.fast]
+id = "fast-model"
+llm_client = "upstream"
+
+[targets.balanced]
+id = "balanced-model"
+llm_client = "upstream"
+
+[targets.reasoning]
+id = "reasoning-model"
+llm_client = "upstream"
+
+[targets.premium]
+id = "premium-model"
+llm_client = "upstream"
+
+[targets.jev]
+id = "jev-latest"
+llm_client = "jevjudge"
+
+[routes.capability]
+id = "capability"
+type = "llm_classifier"
+mode = "capability"
+classifier_target = "jev"
+strong_target = "strong"
+weak_target = "weak"
+base_threshold = 0.5
+threshold_step = 0.1
+classify_trigger = "user_turn"
+
+[routes.escalation]
+id = "escalation"
+type = "llm_classifier"
+mode = "escalation"
+classifier_target = "jev"
+strong_target = "strong"
+weak_target = "weak"
+escalation = { confirmations = 2, recent_turn_window = 28, window_message_chars = 500 }
+
+[routes.custom]
+id = "custom"
+type = "llm_classifier"
+mode = "custom"
+default_target = "balanced"
+classify_trigger = "user_turn"
+prompt = """
+Choose the model group that can complete this request at the lowest cost.
+- fast: greetings, lookups, one-line edits, formatting, short factual answers.
+- balanced: ordinary coding, writing, and analysis of moderate length.
+- reasoning: multi-step math, algorithm design, formal proofs, tricky debugging.
+- premium: high-stakes architecture, security, legal, or irreversible decisions.
+Return JSON matching the response schema supplied with the request.
+"""
+response_schema = '''
+{
+  "type": "object",
+  "properties": {
+    "decision": {
+      "type": "object",
+      "properties": {
+        "target": {"type": "string", "enum": ["fast", "balanced", "reasoning", "premium"]}
+      },
+      "required": ["target"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["decision"],
+  "additionalProperties": false
+}
+'''
+
+[routes.custom.models]
+judge = ["jev"]
+fast = ["fast"]
+balanced = ["balanced"]
+reasoning = ["reasoning", "premium"]
+premium = ["premium"]
+any = ["fast", "balanced", "reasoning", "premium"]
+
+[routes.custom.policy]
+type = "target_selector"
+selector = "/decision/target"
