@@ -122,8 +122,39 @@ def test_capability_schema_compiles_to_two_questions_and_derives_boundary():
     assert v["p_solve"] == 0.23
     assert v["crux"].startswith("jevjudge: rule=LIM-2 p_solve=0.230")
     assert set(v) == {"crux", "primary_rule", "capability_boundary", "p_solve"}
-    # gate confidence = min(choice confidence 0.81, noul confidence |0.23-0.5|*2 = 0.54)
+    # gate confidence is p_solve's own confidence (|0.23-0.5|*2 = 0.54), not primary_rule's
+    # (0.81) — Switchyard thresholds on p_solve alone, see the profile's gate_fields.
     assert decoded.confidence == pytest.approx(0.54)
+
+
+def test_capability_gate_ignores_a_hesitant_primary_rule_when_p_solve_is_decisive():
+    # Regression for a real bug found against live Jev: "print hello world" got p_solve=0.96
+    # at noul-confidence 0.92 (decisive), but primary_rule split across several plausible
+    # labels at confidence 0.43 (no rule in the card covers "trivially easy"). Gating on the
+    # minimum over both fields dragged an obviously-easy task below a 0.5 confidence floor
+    # and made Switchyard fail open to the expensive model. Switchyard's own policy already
+    # discounts a hesitant primary_rule by widening the threshold p_solve must clear
+    # (threshold_step); the sidecar's gate must not discount it a second time.
+    schema, name = extract_schema(CAPABILITY_RF, CAPABILITY_PROMPT)
+    compiled = compile_schema(schema, schema_name=name, system_prompt=CAPABILITY_PROMPT)
+    assert compiled.gate_fields == frozenset({"p_solve"})
+
+    decoded = decode_answers(
+        compiled,
+        {
+            "primary_rule": {
+                "type": "choice",
+                "choice": "SUP-1",
+                "confidence": 0.43,  # genuinely split across several rules
+                "probabilities": {"SUP-1": 0.48, "none": 0.25, "SUP-2": 0.11, "SUP-5": 0.08, "SUP-4": 0.06, "UNC-1": 0.01, "UNC-2": 0.01},
+            },
+            "p_solve": {"type": "noul", "noul": 0.96},  # decisive: confidence = |0.96-0.5|*2 = 0.92
+        },
+    )
+    assert decoded.verdict["p_solve"] == 0.96
+    assert decoded.verdict["primary_rule"] == "SUP-1"
+    assert decoded.verdict["capability_boundary"] == "supported"
+    assert decoded.confidence == pytest.approx(0.92)  # p_solve alone, not min(0.43, 0.92)
 
 
 @pytest.mark.parametrize(
@@ -204,6 +235,7 @@ def test_generic_mapping_covers_score_integer_and_literal_fields():
         "required": ["risk", "needs_tools", "kind", "notes", "tags"],
     }
     compiled = compile_schema(schema, schema_name="Anything")
+    assert compiled.gate_fields is None  # no profile: gate on every decided field, not a subset
     assert compiled.questions["risk"]["type"] == "score"
     assert len(compiled.questions["risk"]["criteria"]) == 5
     assert compiled.questions["needs_tools"]["type"] == "noul"

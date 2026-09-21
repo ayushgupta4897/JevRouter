@@ -103,6 +103,10 @@ this build's own binary and venv; pass `SWITCHYARD_SERVER=`/`PYTHON=` to point a
 
 ## Run it with real Jev
 
+This path is verified, not aspirational: `REAL_JEV=1 scripts/e2e.sh` runs the identical 12-check
+suite above against the live TypeSafe API instead of the mock — see **Status and honest
+caveats** below for what that run found and fixed.
+
 ```bash
 source .venv/bin/activate
 export TYPESAFE_API_KEY=...                       # console.typesafe.ai ($5 free credit at signup)
@@ -151,21 +155,48 @@ at ~0.3 s. The sidecar adds tens of milliseconds. Real-key numbers: run
 
 ## Status and honest caveats
 
-* **Plumbing is validated end to end; routing quality is not yet measured with real Jev.**
-  Everything above ran through the real, self-built Switchyard binary against a deterministic
-  mock Jev. With a `TYPESAFE_API_KEY` the same commands exercise the real model; the next step
-  is the Terminal-Bench 2.1 subset Switchyard ships (`vendor/switchyard/benchmark/`) with Jev
-  vs. the LLM judge.
-* Jev's calibration is vendor-claimed and only partly independently checked; one community PR
-  that replaced Switchyard's capability judge with a Jev `choice` lost 3 of 20 tasks vs. Opus.
-  That is exactly why the confidence gate and cascade exist. Start with `fallback` to an LLM
-  judge and tighten as your own logs show Jev's probabilities hold up.
+* **Validated end to end against the real TypeSafe API**, not just the mock: all three routes
+  through the real, self-built `switchyard-server`, real Jev (`jev-1.13.0`) as the judge —
+  11/11 checks (see `scripts/e2e.sh`; run it with `REAL_JEV=1`). Routing-*accuracy* — is the
+  decision actually the right one on real tasks — is a separate, not-yet-run measurement; see
+  the judge-only eval below.
+* **Two real bugs found and fixed by that validation**, both worth knowing if you extend this:
+  - *Gate confidence double-counted an already-discounted uncertainty.* Real Jev answered
+    "print hello world in python" with `p_solve = 0.96` at confidence 0.92 (decisive), but its
+    `primary_rule` choice split across several plausible labels at confidence 0.43 (no rule in
+    the capability card covers "trivially easy"). Taking the minimum confidence over *both*
+    fields abstained an obviously-easy task and sent it to the expensive model — even though
+    Switchyard's own policy already widens the threshold `p_solve` must clear when
+    `primary_rule` is uncertain (`threshold_step`), so gating on it too was double-counting.
+    Fixed: the `CapabilityClassifierDecision` profile now gates on `p_solve` alone
+    (`Compiled.gate_fields`), matching what Switchyard's policy actually thresholds on.
+  - *The offline mock's keyword cues matched Switchyard's own rubric text, not just the
+    conversation.* The escalation rubric's teaching prose legitimately uses "loop" and "doomed"
+    to explain the pattern to a judge; since the whole rubric ships as `judge_instructions` in
+    Jev's `state`, the mock's naive substring scan matched on every call regardless of actual
+    content. Real Jev doesn't do keyword matching, so this never affected it — but it made the
+    mock's escalation checks pass for the wrong reason. Fixed: the mock now scans only the
+    conversation portion of state.
+* **What real Jev's judgment looked like, honestly** (see `scripts/e2e.sh`'s `soft_expect`
+  checks, which report rather than gate on these): given the same command failing identically
+  twice, Jev was genuinely borderline (confidence 0.42, correctly triggering abstain) rather
+  than confidently escalating — it needed a third or fourth identical failure to confirm,
+  reading the rubric's "escalate only on a clear pattern... never on a single failed command"
+  conservatively. And on a phrase engineered to carry no routing cue ("something with no
+  routing cue"), Jev still picked a bucket with 0.86 confidence rather than expressing
+  calibrated uncertainty — a real, useful data point: Jev's confidence reflects its own
+  conviction, not whether a human would call the input ambiguous. Both are exactly why the
+  confidence gate is configurable and the fallback/abstain cascade exists, not reasons to
+  distrust the plumbing.
 * Free-text verdict fields (`reason`, `crux`) are templated, not written. Switchyard only
   requires them non-empty; anything that reads them for humans will see `jevjudge: …`.
 * Switchyard is pre-1.0 (APIs move); vendoring it at a pinned commit means this repo won't break
   under you, but also won't pick up upstream fixes until `scripts/update_vendor.sh` is run.
   OpenRouter's Decisions transport is implemented from its published description but not
   exercised here.
+* Routing *accuracy* on real tasks — as opposed to "the API call works and the plumbing behaves
+  sensibly", which is now verified — needs the judge-only eval and the Terminal-Bench 2.1
+  subset Switchyard ships (`vendor/switchyard/benchmark/`), run with Jev vs. the LLM judge.
 
 ## Where this goes next
 

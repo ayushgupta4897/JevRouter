@@ -63,6 +63,15 @@ class Compiled:
     plan: list[FieldPlan]
     schema_name: str
     profile: str
+    # Flat field paths whose confidence the gate should consider. `None` (the default, and
+    # every generic/unprofiled schema) means every decided field — safe when we don't know
+    # which field the caller's policy actually thresholds on. A profile sets this when some
+    # decided fields are diagnostic rather than decisive: Switchyard's capability policy
+    # routes on `p_solve` alone and already widens its own threshold when `primary_rule`
+    # lands on an uncertain or unmatched label (see `threshold_step` in llm_class.rs), so
+    # gating on `primary_rule`'s own confidence too double-counts that same uncertainty and
+    # can abstain a verdict whose actual routing signal (`p_solve`) was never in doubt.
+    gate_fields: frozenset[str] | None = None
 
 
 @dataclass
@@ -70,7 +79,7 @@ class Decoded:
     """A schema-shaped verdict plus per-field decision evidence."""
 
     verdict: dict[str, Any]
-    confidence: float  # min over deciding fields; 1.0 when nothing decides
+    confidence: float  # min over compiled.gate_fields (default: all deciding fields)
     evidence: dict[str, dict[str, Any]]
 
 
@@ -113,6 +122,10 @@ PROFILES: dict[str, dict[str, Any]] = {
             }
         },
         "templates": {"crux": "jevjudge: rule={primary_rule} p_solve={p_solve:.3f}"},
+        # Switchyard thresholds on p_solve alone; primary_rule only widens that threshold
+        # (threshold_step) when it lands outside "supported". Gate on p_solve so a genuinely
+        # decisive p_solve isn't abstained just because ten rule labels were each plausible.
+        "gate_fields": {"p_solve"},
     },
     # NVIDIA NeMo Switchyard, `llm_classifier` mode = "escalation".
     # crates/libsy/src/prompts/escalation/{prompt.md,schema.json}
@@ -280,7 +293,15 @@ def compile_schema(
     )
     if not any(p.decides for p in plan):
         raise CompileError("schema has no field Jev can decide (no boolean, enum, 0..1 number, or small integer range)")
-    return Compiled(questions=questions, plan=plan, schema_name=schema_name, profile=profile_key if profile else "generic")
+    raw_gate_fields = profile.get("gate_fields")
+    gate_fields = frozenset(raw_gate_fields) if raw_gate_fields else None
+    return Compiled(
+        questions=questions,
+        plan=plan,
+        schema_name=schema_name,
+        profile=profile_key if profile else "generic",
+        gate_fields=gate_fields,
+    )
 
 
 def _compile_object(
@@ -431,10 +452,16 @@ def _get_path(obj: dict[str, Any], path: tuple[str, ...]) -> Any:
 
 
 def decode_answers(compiled: Compiled, answers: dict[str, Any], *, bool_threshold: float = 0.5) -> Decoded:
-    """Reassemble a schema-shaped verdict from Jev's answers and compute a gate confidence."""
+    """Reassemble a schema-shaped verdict from Jev's answers and compute a gate confidence.
+
+    The gate confidence is the minimum confidence over the fields that matter for cascading:
+    every decided field by default, or just ``compiled.gate_fields`` when the profile named a
+    narrower set (see ``Compiled.gate_fields``). Every decided field's confidence is still
+    recorded in ``evidence`` regardless, for logging and calibration audits.
+    """
     verdict: dict[str, Any] = {}
     evidence: dict[str, dict[str, Any]] = {}
-    confidences: list[float] = []
+    field_confidences: dict[str, float] = {}
     raw_values: dict[str, Any] = {}
 
     # Pass 1: decided fields.
@@ -471,7 +498,7 @@ def decode_answers(compiled: Compiled, answers: dict[str, Any], *, bool_threshol
             value = fp.options[idx]
             evidence[flat] = {"type": "score", "score": score, "probabilities": ans.get("probabilities"), "confidence": conf}
             raw_values[flat] = score
-        confidences.append(conf)
+        field_confidences[flat] = conf
         _set_path(verdict, fp.path, value)
 
     # Pass 2: literals, templates, derived.
@@ -500,7 +527,15 @@ def decode_answers(compiled: Compiled, answers: dict[str, Any], *, bool_threshol
             _set_path(verdict, fp.path, value)
             evidence[flat] = {"type": "derived", "from": cfg.get("from"), "value": value}
 
-    confidence = min(confidences) if confidences else 1.0
+    gated = field_confidences
+    if compiled.gate_fields is not None:
+        restricted = {name: conf for name, conf in field_confidences.items() if name in compiled.gate_fields}
+        # A configured gate field that matched nothing (a profile/schema mismatch) is a bug in
+        # the profile, not evidence of confidence — fall back to every decided field rather
+        # than silently reporting 1.0.
+        if restricted:
+            gated = restricted
+    confidence = min(gated.values()) if gated else 1.0
     return Decoded(verdict=verdict, confidence=confidence, evidence=evidence)
 
 

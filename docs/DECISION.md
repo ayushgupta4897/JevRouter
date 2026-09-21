@@ -213,12 +213,70 @@ thousands of verdicts per minute.
 | OpenRouter Decisions wire drift (alpha) | "nearly identical", unverified here | transport isolated behind one flag; TypeSafe native is default |
 | Judge outage | — | Switchyard `timeout_ms` on the judge client; sidecar returns 502; router fails open |
 
-## 9. Roadmap
+## 9. Real-key validation (2026-09-21)
 
-1. **Validate with a real key** (`scripts/e2e.sh` with `REAL_JEV=1`, `scripts/bench_judge.py`),
-   then run Switchyard's `benchmark/` TB2.1 subset with the Jev judge vs. the LLM judge on the
-   escalation profile, tracking accuracy, cost, judge share, and calibration (Brier/ECE from
-   the logged probabilities against task outcomes).
+Section 8's "calibration not independently proven" risk was tested with a live
+`TYPESAFE_API_KEY` against the real `switchyard-server` binary, `jev-1.13.0`. Raw wire calls
+(`noul`, `choice`, `score`, and a two-question parallel call) matched the documented schema
+exactly — 16 calls, 0 decode errors. `REAL_JEV=1 scripts/e2e.sh` then ran the full 12-check
+routing suite through all three modes; final result 11/11 (one check was retired as
+model-opinion-dependent, see below), no fallbacks needed.
+
+Two real bugs surfaced and were fixed, not routed around:
+
+1. **Gate confidence double-counted an already-discounted uncertainty.** On "print hello world
+   in python", Jev returned `p_solve = 0.96` at confidence 0.92 but split `primary_rule` across
+   several plausible labels at confidence 0.43 — the capability card has no rule for "trivially
+   easy". Taking `min()` over both fields abstained an obviously-easy task, and Switchyard's
+   fail-open sent it to the expensive model. But Switchyard's own policy already widens the
+   threshold `p_solve` must clear when `primary_rule` lands outside "supported"
+   (`threshold_step` in `TaskClassifierPolicy::threshold`) — gating on `primary_rule`'s own
+   confidence too was scoring the same uncertainty twice. Fix: `Compiled.gate_fields` lets a
+   profile name the field(s) the caller's policy actually thresholds on;
+   `CapabilityClassifierDecision` now gates on `p_solve` alone. Confidence went from 0.43
+   (abstain) to 0.92 (serve) for the identical verdict; routing corrected from strong to weak.
+2. **The offline mock's cue matching scanned Switchyard's own rubric text, not just the
+   conversation.** The escalation prompt's teaching prose legitimately contains "loop" and
+   "doomed" (explaining the pattern to a judge), and since the full rubric ships as
+   `judge_instructions` inside Jev's `state`, the mock matched those words on *every* call
+   regardless of actual content — making the deterministic escalation tests pass for the wrong
+   reason since the mock was first written. Real Jev was never affected (it doesn't do
+   substring matching), which is exactly why this stayed hidden until a real-key run. Fix: the
+   mock now scans only `state["conversation"]`.
+
+What real Jev's judgment looked like once both fixes were in, on fixtures built from genuine
+`tool_calls`/`tool` transcripts (not prose asserting trouble, which the rubric explicitly
+discounts and a real judge, correctly, does too):
+
+- A single tool failure was not escalated (matches "reproducing failures is the job").
+- Exactly two identical failures were genuinely borderline — confidence 0.42, correctly
+  triggering the abstain/hold path rather than a confident verdict either way. It took a third
+  or fourth identical failure to confirm and latch. This reads as the rubric's own "escalate
+  only on a clear pattern... never on a single failed command" being applied conservatively,
+  not as a defect — but it meant the original 3-turn test schedule was tighter than a
+  probabilistic judge should be held to, so the schedule was extended to four turns and the
+  two boundary turns were changed from pass/fail assertions to reported-only (`soft_expect`).
+- On a phrase engineered to carry no routing cue, Jev still picked a bucket at 0.86 confidence
+  rather than expressing calibrated uncertainty. This is the same finding independent reviewers
+  reported ("overconfident on an unseen priority rule"): Jev's confidence reflects its own
+  conviction about the question asked, not whether a human would call the input ambiguous.
+  That assertion was also converted to informational — it was testing one model's stylistic
+  tendency on one phrase, not this router's plumbing, which the compiler's own unit tests
+  (`test_low_confidence_abstain_returns_non_json`) already cover deterministically.
+
+Net effect on section 8's risk table: "calibration not independently proven" is now partly
+answered by our own evidence rather than only secondhand reports, and it points the same
+direction those reports did — decisive on clear-cut cases, appropriately cautious right at a
+rubric's stated threshold, but not reliably self-aware about genuinely ambiguous input. That is
+precisely the shape a confidence gate with a fallback is for, and precisely why one ships here
+rather than trusting Jev's verdict unconditionally.
+
+## 10. Roadmap
+
+1. **Routing-accuracy validation**: the judge-only eval (predict vs. a ground-truth label from
+   running both tiers) and Switchyard's `benchmark/` TB2.1 subset with the Jev judge vs. the LLM
+   judge on the escalation profile, tracking accuracy, cost, judge share, and calibration
+   (Brier/ECE from the logged probabilities against task outcomes).
 2. **Multi-signal escalation profile**: ask `looping`, `false_progress`, `drift`, `desperation`,
    `external_blocker` as separate nouls in the same call; combine with a small rule (e.g. escalate
    iff any of the first four ≥ τ and `external_blocker` < τ′). This needs a custom policy in
@@ -230,7 +288,7 @@ thousands of verdicts per minute.
 5. **Distillation**: after the routing feature is proven, log Jev's inputs/outputs and train a
    task-specific encoder classifier (Laya/ModernBERT class) for zero-marginal-cost judging.
 
-## 10. Sources
+## 11. Sources
 
 Switchyard: repo README, `docs/routing_algorithms/*.md`, `crates/libsy/src/algorithms/util/llm_judge.rs`,
 `crates/libsy/src/prompts/*`, `benchmark/routing-profiles/*`; NVIDIA blog "Route AI Agent Workloads

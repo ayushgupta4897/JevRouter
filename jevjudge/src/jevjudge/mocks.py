@@ -29,6 +29,18 @@ ROUTE_CUE = re.compile(r"route:([A-Za-z0-9_.-]+)")
 
 
 def _state_text(state: Any) -> str:
+    """The text this mock scans for cues.
+
+    ``jevjudge``'s state shape is ``{"judge_instructions": <rubric>, "conversation": [...]}``
+    (see ``jevjudge.state.build_state``). The rubric is Switchyard's own packaged prompt, whose
+    teaching prose legitimately contains words like "loop" and "doomed" as part of *explaining*
+    the pattern to a judge (the escalation rubric's worked examples use both). Scanning the
+    whole state would make every call match those cues regardless of the actual conversation,
+    which is a mock-fidelity bug, not something a real judge does — Jev reads for meaning, it
+    doesn't substring-match its own instructions. Restrict cue detection to the conversation.
+    """
+    if isinstance(state, dict) and "conversation" in state:
+        return json.dumps(state["conversation"], ensure_ascii=False)
     return json.dumps(state, ensure_ascii=False) if not isinstance(state, str) else state
 
 
