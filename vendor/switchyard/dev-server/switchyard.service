@@ -1,0 +1,36 @@
+[Unit]
+Description=Switchyard Server
+
+[Service]
+# Create a temporary user to run as, extra security
+DynamicUser=yes
+
+# systemd loads these for us and makes them accessible
+LoadCredential=config.toml:/etc/switchyard/config.toml
+LoadCredential=tls-key.pem:/etc/switchyard/key.pem
+LoadCredential=tls-cert.pem:/etc/switchyard/cert.pem
+
+# %d is where systemd put those files
+ExecStart=/usr/local/bin/switchyard-server \
+    -p 443 \
+    --config %d/config.toml \
+    --tls-key %d/tls-key.pem \
+    --tls-cert %d/tls-cert.pem
+
+Restart=on-failure
+Environment="NVIDIA_API_KEY=<PUT-THE-KEY-HERE>"
+
+PrivateDevices=yes
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+
+# Allow port 443
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+
+[Install]
+WantedBy=multi-user.target
+
+

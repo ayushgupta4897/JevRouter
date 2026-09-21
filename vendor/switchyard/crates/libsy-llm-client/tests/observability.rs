@@ -1,0 +1,1848 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+//! Integration tests for the crate's observability layer: OpenTelemetry metrics
+//! recorded through the global meter provider, and `tracing` spans/logs captured
+//! by a global subscriber.
+//!
+//! Both telemetry sinks are process-global, so they are installed exactly once
+//! for this test binary and every assertion filters by a test-unique algorithm
+//! and model name. Counters are cumulative across flushes; the helpers take the
+//! latest (max) matching data point.
+
+use std::collections::BTreeMap;
+use std::fmt;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::{Arc, OnceLock};
+use std::time::Duration;
+
+use async_trait::async_trait;
+use futures::StreamExt;
+use opentelemetry::trace::TracerProvider as _;
+use opentelemetry::{Array as OtelArray, Value as OtelValue};
+use opentelemetry_sdk::metrics::data::{AggregatedMetrics, MetricData, ResourceMetrics};
+use opentelemetry_sdk::metrics::{InMemoryMetricExporter, PeriodicReader, SdkMeterProvider};
+use opentelemetry_sdk::trace::{InMemorySpanExporter, SdkTracerProvider, SpanData};
+use parking_lot::Mutex;
+use serde_json::json;
+use tracing::field::{Field, Visit};
+use tracing::span::{Attributes, Id, Record};
+use tracing::{Event, Subscriber};
+use tracing_opentelemetry::OpenTelemetryLayer;
+use tracing_subscriber::Layer;
+use tracing_subscriber::layer::{Context as LayerContext, SubscriberExt};
+use tracing_subscriber::registry::LookupSpan;
+
+use switchyard_libsy::{
+    Algorithm, ClassifyTrigger, Driver, LibsyError, LlmClassifierConfig, LlmTaskClassifier,
+    PickerMode, RoutingOutcome, RuntimeModels, StageRouter, StageRouterConfig, Step,
+    TaskClassifierConfig,
+};
+use switchyard_llm_client::{ClientRouter, RunObservation, RunObserver};
+use switchyard_protocol::{Category, ModelId};
+use switchyard_protocol::{
+    ContentBlock, LlmRequest, LlmResponse, Message, Metadata, Request, Response, Role,
+    RoutedLlmClient, ToolCall, ToolResult, Usage, WireFormat,
+};
+use switchyard_protocol::{
+    LlmClientError, LlmResponseChunk, LlmResponseStreamEvent, StopReason, text_request,
+    text_response,
+};
+
+#[derive(Debug, thiserror::Error)]
+#[error("{0}")]
+struct TestError(&'static str);
+
+fn test_error(message: &'static str) -> LibsyError {
+    LibsyError::external("test", TestError(message))
+}
+
+/// One captured span: its name, contextual parent span name, and fields
+/// (creation-time fields merged with later `Span::record` updates).
+#[derive(Clone, Debug, Default)]
+struct SpanRecord {
+    name: String,
+    parent: Option<String>,
+    fields: BTreeMap<String, String>,
+}
+
+/// One captured event (log line): its target and fields, `message` included.
+#[derive(Clone, Debug, Default)]
+struct EventRecord {
+    target: String,
+    level: String,
+    fields: BTreeMap<String, String>,
+}
+
+/// Shared store the capture layer writes into and tests read from.
+#[derive(Clone, Default)]
+struct CaptureStore {
+    spans: Arc<Mutex<BTreeMap<u64, SpanRecord>>>,
+    events: Arc<Mutex<Vec<EventRecord>>>,
+}
+
+impl CaptureStore {
+    fn spans(&self) -> Vec<SpanRecord> {
+        self.spans.lock().values().cloned().collect()
+    }
+
+    fn events(&self) -> Vec<EventRecord> {
+        self.events.lock().clone()
+    }
+}
+
+/// Renders every field type into a string map so assertions can use `contains`.
+struct FieldVisitor<'a>(&'a mut BTreeMap<String, String>);
+
+impl Visit for FieldVisitor<'_> {
+    fn record_debug(&mut self, field: &Field, value: &dyn fmt::Debug) {
+        self.0
+            .insert(field.name().to_string(), format!("{value:?}"));
+    }
+
+    fn record_str(&mut self, field: &Field, value: &str) {
+        self.0.insert(field.name().to_string(), value.to_string());
+    }
+
+    fn record_u64(&mut self, field: &Field, value: u64) {
+        self.0.insert(field.name().to_string(), value.to_string());
+    }
+
+    fn record_i64(&mut self, field: &Field, value: i64) {
+        self.0.insert(field.name().to_string(), value.to_string());
+    }
+
+    fn record_f64(&mut self, field: &Field, value: f64) {
+        self.0.insert(field.name().to_string(), value.to_string());
+    }
+}
+
+/// Subscriber layer capturing spans (with contextual parents and recorded
+/// fields) and events into a [`CaptureStore`].
+struct CaptureLayer {
+    store: CaptureStore,
+}
+
+impl<S> Layer<S> for CaptureLayer
+where
+    S: Subscriber + for<'a> LookupSpan<'a>,
+{
+    fn on_new_span(&self, attrs: &Attributes<'_>, id: &Id, ctx: LayerContext<'_, S>) {
+        let mut fields = BTreeMap::new();
+        attrs.record(&mut FieldVisitor(&mut fields));
+        // Resolve the parent the same way tracing does: an explicit parent wins,
+        // otherwise the contextually current span (if any) at creation time.
+        let parent = if let Some(parent_id) = attrs.parent() {
+            ctx.span(parent_id).map(|span| span.name().to_string())
+        } else if attrs.is_contextual() {
+            ctx.lookup_current().map(|span| span.name().to_string())
+        } else {
+            None
+        };
+        self.store.spans.lock().insert(
+            id.into_u64(),
+            SpanRecord {
+                name: attrs.metadata().name().to_string(),
+                parent,
+                fields,
+            },
+        );
+    }
+
+    fn on_record(&self, id: &Id, values: &Record<'_>, _ctx: LayerContext<'_, S>) {
+        if let Some(record) = self.store.spans.lock().get_mut(&id.into_u64()) {
+            values.record(&mut FieldVisitor(&mut record.fields));
+        }
+    }
+
+    fn on_event(&self, event: &Event<'_>, _ctx: LayerContext<'_, S>) {
+        let mut fields = BTreeMap::new();
+        event.record(&mut FieldVisitor(&mut fields));
+        self.store.events.lock().push(EventRecord {
+            target: event.metadata().target().to_string(),
+            level: event.metadata().level().to_string(),
+            fields,
+        });
+    }
+}
+
+/// Installs the process-global telemetry sinks once: an in-memory OTel metric
+/// pipeline behind the global meter provider, and the capture layer as the
+/// global tracing subscriber.
+type Telemetry = (
+    CaptureStore,
+    InMemoryMetricExporter,
+    SdkMeterProvider,
+    InMemorySpanExporter,
+    SdkTracerProvider,
+);
+
+fn telemetry() -> &'static Telemetry {
+    static TELEMETRY: OnceLock<Telemetry> = OnceLock::new();
+    TELEMETRY.get_or_init(|| {
+        let exporter = InMemoryMetricExporter::default();
+        let reader = PeriodicReader::builder(exporter.clone()).build();
+        let provider = SdkMeterProvider::builder().with_reader(reader).build();
+        opentelemetry::global::set_meter_provider(provider.clone());
+        switchyard_llm_client::initialize_metrics();
+
+        let span_exporter = InMemorySpanExporter::default();
+        let tracer_provider = SdkTracerProvider::builder()
+            .with_simple_exporter(span_exporter.clone())
+            .build();
+        let tracer = tracer_provider.tracer("switchyard-observability-test");
+        let store = CaptureStore::default();
+        let otel_layer: OpenTelemetryLayer<_, _> =
+            tracing_opentelemetry::layer().with_tracer(tracer);
+        let subscriber = tracing_subscriber::registry()
+            .with(CaptureLayer {
+                store: store.clone(),
+            })
+            .with(otel_layer);
+        if tracing::subscriber::set_global_default(subscriber).is_err() {
+            panic!("a global tracing subscriber was already installed in this test binary");
+        }
+        (store, exporter, provider, span_exporter, tracer_provider)
+    })
+}
+
+/// The tests in this file must not overlap because metrics are global.
+/// There is no Rust/cargo-native way of saying this (people use `serial_test` crate) so use a
+/// lock.
+/// Each file in `tests/` (integration tests) runs as a separate test process, so we are not
+/// concerned with interactions with tests in other files.
+fn serialize_test() -> &'static tokio::sync::Mutex<()> {
+    static LOCK: OnceLock<tokio::sync::Mutex<()>> = OnceLock::new();
+    LOCK.get_or_init(|| tokio::sync::Mutex::new(()))
+}
+
+/// Flushes the metric pipeline and returns every exported snapshot.
+fn flushed_metrics(
+    exporter: &InMemoryMetricExporter,
+    provider: &SdkMeterProvider,
+) -> Vec<ResourceMetrics> {
+    if let Err(error) = provider.force_flush() {
+        panic!("force_flush failed: {error}");
+    }
+    match exporter.get_finished_metrics() {
+        Ok(metrics) => metrics,
+        Err(error) => panic!("get_finished_metrics failed: {error}"),
+    }
+}
+
+/// True when the data point carries every wanted `key=value` attribute.
+fn attributes_match<'a>(
+    mut attributes: impl Iterator<Item = &'a opentelemetry::KeyValue>,
+    wanted: &[(&str, &str)],
+) -> bool {
+    let present: Vec<(String, String)> = attributes
+        .by_ref()
+        .map(|kv| (kv.key.as_str().to_string(), kv.value.as_str().to_string()))
+        .collect();
+    wanted
+        .iter()
+        .all(|(key, value)| present.iter().any(|(k, v)| k == key && v == value))
+}
+
+/// Latest (max) value for a `switchyard`-scoped metric across snapshots, with
+/// `extract` pulling the matching data points' values out of one metric's
+/// aggregated data. Counters and histogram counts are cumulative, so the max
+/// across snapshots is the most recent value.
+fn latest_metric_value(
+    snapshots: &[ResourceMetrics],
+    name: &str,
+    extract: impl Fn(&AggregatedMetrics) -> Vec<u64>,
+) -> Option<u64> {
+    snapshots
+        .iter()
+        .flat_map(|snapshot| snapshot.scope_metrics())
+        .filter(|scope| scope.scope().name() == "switchyard")
+        .flat_map(|scope| scope.metrics())
+        .filter(|metric| metric.name() == name)
+        .flat_map(|metric| extract(metric.data()))
+        .max()
+}
+
+/// Latest cumulative value of a `u64` counter for the given attribute set.
+fn u64_counter_value(
+    snapshots: &[ResourceMetrics],
+    name: &str,
+    wanted: &[(&str, &str)],
+) -> Option<u64> {
+    latest_metric_value(snapshots, name, |data| match data {
+        AggregatedMetrics::U64(MetricData::Sum(sum)) => sum
+            .data_points()
+            .filter(|point| attributes_match(point.attributes(), wanted))
+            .map(|point| point.value())
+            .collect(),
+        _ => Vec::new(),
+    })
+}
+
+/// Latest cumulative sample count of an `f64` histogram for the attribute set.
+fn f64_histogram_count(
+    snapshots: &[ResourceMetrics],
+    name: &str,
+    wanted: &[(&str, &str)],
+) -> Option<u64> {
+    latest_metric_value(snapshots, name, |data| match data {
+        AggregatedMetrics::F64(MetricData::Histogram(histogram)) => histogram
+            .data_points()
+            .filter(|point| attributes_match(point.attributes(), wanted))
+            .map(|point| point.count())
+            .collect(),
+        _ => Vec::new(),
+    })
+}
+
+/// Latest cumulative sample sum of an `f64` histogram, in whole milliseconds.
+fn f64_histogram_sum_ms(
+    snapshots: &[ResourceMetrics],
+    name: &str,
+    wanted: &[(&str, &str)],
+) -> Option<u64> {
+    latest_metric_value(snapshots, name, |data| match data {
+        AggregatedMetrics::F64(MetricData::Histogram(histogram)) => histogram
+            .data_points()
+            .filter(|point| attributes_match(point.attributes(), wanted))
+            .map(|point| point.sum() as u64)
+            .collect(),
+        _ => Vec::new(),
+    })
+}
+
+/// Most recent value of an `i64` up-down counter for the given attribute set.
+///
+/// Unlike the counter and histogram helpers, this takes the value from the last
+/// snapshot that carries the metric rather than the max across snapshots: an
+/// up-down counter falls as well as rises, so a max would report a past peak and
+/// never observe the return to zero.
+fn i64_up_down_counter_value(
+    snapshots: &[ResourceMetrics],
+    name: &str,
+    wanted: &[(&str, &str)],
+) -> Option<i64> {
+    snapshots
+        .iter()
+        .flat_map(|snapshot| snapshot.scope_metrics())
+        .filter(|scope| scope.scope().name() == "switchyard")
+        .flat_map(|scope| scope.metrics())
+        .filter(|metric| metric.name() == name)
+        .filter_map(|metric| match metric.data() {
+            AggregatedMetrics::I64(MetricData::Sum(sum)) => sum
+                .data_points()
+                .filter(|point| attributes_match(point.attributes(), wanted))
+                .map(|point| point.value())
+                .last(),
+            _ => None,
+        })
+        .last()
+}
+
+/// Latest value of a `u64` observable gauge.
+fn u64_gauge_value(snapshots: &[ResourceMetrics], name: &str) -> Option<u64> {
+    latest_metric_value(snapshots, name, |data| match data {
+        AggregatedMetrics::U64(MetricData::Gauge(gauge)) => {
+            gauge.data_points().map(|point| point.value()).collect()
+        }
+        _ => Vec::new(),
+    })
+}
+
+/// Client that answers every call with a fixed token [`Usage`].
+struct UsageClient {
+    usage: Usage,
+}
+
+/// Client that returns a weak classifier verdict. The delays let a test tell
+/// classifier time apart from routed-call time.
+struct ClassifierClient {
+    classifier_model_id: ModelId,
+    classifier_delay: Duration,
+    routed_delay: Duration,
+}
+
+/// Fails the first efficient answer so candidate fallback can be compared with affinity.
+struct AffinityFallbackClient {
+    calls: Mutex<Vec<ModelId>>,
+    efficient_available: AtomicBool,
+}
+
+#[async_trait]
+impl RoutedLlmClient for AffinityFallbackClient {
+    async fn call(&self, request: Request) -> Result<Response, LlmClientError> {
+        let model = request.model_id().unwrap_or_default();
+        self.calls.lock().push(model.clone());
+        if model == "affinity-fallback-judge" {
+            return Ok(Response {
+                llm_response: LlmResponse::Agg(text_response(
+                    Some(model.to_string()),
+                    r#"{"crux":"bounded task","primary_rule":"SUP-1","capability_boundary":"supported","p_solve":0.9}"#,
+                )),
+                metadata: None,
+                upstream_headers: http::HeaderMap::new(),
+            });
+        }
+        if model == "affinity-fallback-weak" && !self.efficient_available.load(Ordering::Relaxed) {
+            return Err(LlmClientError::ContextWindowExceeded {
+                model,
+                message: "too long".to_string(),
+            });
+        }
+        Ok(Response {
+            llm_response: LlmResponse::Agg(text_response(Some(model.to_string()), "answer")),
+            metadata: None,
+            upstream_headers: http::HeaderMap::new(),
+        })
+    }
+}
+
+#[async_trait]
+impl RoutedLlmClient for ClassifierClient {
+    async fn call(&self, request: Request) -> Result<Response, LlmClientError> {
+        let model_id = request.model_id().unwrap_or_default();
+        let completion = if model_id != self.classifier_model_id {
+            tokio::time::sleep(self.routed_delay).await;
+            "routed response"
+        } else {
+            tokio::time::sleep(self.classifier_delay).await;
+            r#"{"crux":"bounded task","primary_rule":"SUP-1","capability_boundary":"supported","p_solve":0.9}"#
+        };
+        Ok(Response {
+            llm_response: LlmResponse::Agg(text_response(Some(model_id.to_string()), completion)),
+            metadata: None,
+            upstream_headers: http::HeaderMap::new(),
+        })
+    }
+}
+
+// Conversation text that a provider may quote in an upstream error body.
+const LEAKED_CONTENT: &str = "patient name is Jane Doe";
+
+enum JudgeOutcome {
+    CallFailure,
+    Reply(&'static str),
+    StreamDecodeFailure,
+}
+
+/// Returns one configured judge outcome and serves the selected target normally.
+struct JudgeClient {
+    judge_model: ModelId,
+    outcome: JudgeOutcome,
+}
+
+#[async_trait]
+impl RoutedLlmClient for JudgeClient {
+    async fn call(&self, request: Request) -> Result<Response, LlmClientError> {
+        if request.model_id().as_deref().unwrap_or_default() != self.judge_model {
+            return Ok(Response {
+                llm_response: LlmResponse::Agg(text_response(
+                    request.model_id().map(|id| id.to_string()),
+                    "routed response",
+                )),
+                metadata: None,
+                upstream_headers: http::HeaderMap::new(),
+            });
+        }
+        match &self.outcome {
+            JudgeOutcome::CallFailure => Err(LlmClientError::UpstreamHttp {
+                status: http::StatusCode::INTERNAL_SERVER_ERROR,
+                body: format!(r#"{{"error":{{"message":"server error: {LEAKED_CONTENT}"}}}}"#),
+            }),
+            JudgeOutcome::Reply(text) => Ok(Response {
+                llm_response: LlmResponse::Agg(text_response(None, *text)),
+                metadata: None,
+                upstream_headers: http::HeaderMap::new(),
+            }),
+            JudgeOutcome::StreamDecodeFailure => Ok(Response {
+                llm_response: LlmResponse::Stream(
+                    futures::stream::iter([Ok(LlmResponseStreamEvent::new(vec![
+                        LlmResponseChunk::DecodeError {
+                            message: "bad judge chunk".to_string(),
+                        },
+                    ]))])
+                    .boxed(),
+                ),
+                metadata: None,
+                upstream_headers: http::HeaderMap::new(),
+            }),
+        }
+    }
+}
+
+#[async_trait]
+impl RoutedLlmClient for UsageClient {
+    async fn call(
+        &self,
+        request: Request,
+    ) -> Result<Response, switchyard_protocol::LlmClientError> {
+        let mut response = text_response(
+            request.model_id().map(|s| s.to_string()),
+            "observed response",
+        );
+        response.id = Some("obs-response-1".to_string());
+        response.usage = self.usage.clone();
+        response.outputs[0].stop_reason = Some(StopReason::EndTurn);
+        Ok(Response {
+            llm_response: LlmResponse::Agg(response),
+            metadata: None,
+            upstream_headers: http::HeaderMap::new(),
+        })
+    }
+}
+
+/// Selects the first target and leaves the terminal call to the client.
+struct SingleCallAlgo {
+    name: String,
+    target_set: Vec<String>,
+    metadata: Option<switchyard_libsy::OutcomeMetadata>,
+}
+
+#[async_trait]
+impl Algorithm for SingleCallAlgo {
+    fn name(&self) -> &str {
+        &self.name
+    }
+
+    async fn route(
+        self: Arc<Self>,
+        _driver: Driver,
+        request: Request,
+    ) -> switchyard_libsy::Result<RoutingOutcome> {
+        let target = self
+            .target_set
+            .first()
+            .ok_or(LibsyError::NoTargets)?
+            .clone();
+        tracing::info!("picked '{target}'");
+        // Include configured fallbacks so the exported model order can be checked.
+        let mut outcome = RoutingOutcome::route_to(
+            target.into(),
+            self.target_set
+                .iter()
+                .skip(1)
+                .cloned()
+                .map(ModelId::from)
+                .collect(),
+            request,
+        );
+        outcome.metadata = self.metadata.clone();
+        Ok(outcome)
+    }
+}
+
+/// Makes one routing-time model call and returns its response as the answer.
+struct RoutingCallAlgo {
+    name: String,
+    target: ModelId,
+}
+
+#[async_trait]
+impl Algorithm for RoutingCallAlgo {
+    fn name(&self) -> &str {
+        &self.name
+    }
+
+    async fn route(
+        self: Arc<Self>,
+        driver: Driver,
+        request: Request,
+    ) -> switchyard_libsy::Result<RoutingOutcome> {
+        let response = driver
+            .call_model(request.clone(), vec![self.target.clone()])
+            .await?;
+        Ok(RoutingOutcome::answered(
+            self.target.clone(),
+            request,
+            response,
+        ))
+    }
+}
+
+fn request_with_metadata(session_id: &str, correlation_id: &str) -> Request {
+    Request {
+        llm_request: text_request(Some("auto".to_string()), "hi"),
+        raw_request: None,
+        metadata: Some(Metadata {
+            session_id: Some(session_id.to_string()),
+            correlation_id: Some(correlation_id.to_string()),
+            task_kind: Some("code_review".to_string()),
+            agent_role: Some("reviewer".to_string()),
+            extra_metadata: Some(BTreeMap::from([(
+                "tenant".to_string(),
+                "obs-tenant-1".to_string(),
+            )])),
+            ..Metadata::default()
+        }),
+    }
+}
+
+fn algo(name: &str, model: &str) -> Arc<dyn Algorithm> {
+    Arc::new(SingleCallAlgo {
+        name: name.to_string(),
+        target_set: vec![model.to_string()],
+        metadata: None,
+    })
+}
+
+/// Drives `algorithm` to completion with `client` serving every target, the way a
+/// single-provider host does.
+async fn run(
+    algorithm: Arc<dyn Algorithm>,
+    client: Arc<dyn RoutedLlmClient>,
+    request: Request,
+) -> switchyard_libsy::Result<(ModelId, Response)> {
+    switchyard_llm_client::run(
+        algorithm,
+        ClientRouter::single(client),
+        request,
+        Arc::new(RuntimeModels::default()),
+        None,
+    )
+    .await
+}
+
+fn classifier_router() -> switchyard_libsy::Result<Arc<dyn Algorithm>> {
+    Ok(Arc::new(LlmTaskClassifier::new(
+        LlmClassifierConfig::Capability {
+            config: TaskClassifierConfig {
+                base_threshold: 0.5,
+                ..TaskClassifierConfig::default()
+            },
+        },
+    )?))
+}
+
+fn classifier_models(
+    judge_model: &str,
+    efficient_model: &str,
+    capable_model: &str,
+) -> Arc<RuntimeModels> {
+    Arc::new(RuntimeModels::new(
+        [
+            (Category::Judge, vec![judge_model.into()]),
+            (Category::Efficient, vec![efficient_model.into()]),
+            (Category::Capable, vec![capable_model.into()]),
+            (
+                Category::Any,
+                vec![efficient_model.into(), capable_model.into()],
+            ),
+        ]
+        .into(),
+    ))
+}
+
+async fn run_classifier(
+    judge_model: &str,
+    efficient_model: &str,
+    capable_model: &str,
+    client: Arc<dyn RoutedLlmClient>,
+    request: Request,
+) -> switchyard_libsy::Result<(ModelId, Response)> {
+    switchyard_llm_client::run(
+        classifier_router()?,
+        ClientRouter::single(client),
+        request,
+        classifier_models(judge_model, efficient_model, capable_model),
+        None,
+    )
+    .await
+}
+
+fn classifier_request() -> Request {
+    Request {
+        llm_request: text_request(Some("auto".to_string()), "classify this"),
+        raw_request: None,
+        metadata: None,
+    }
+}
+
+fn find_span(spans: &[SpanRecord], name: &str, field: &str, value: &str) -> SpanRecord {
+    match spans
+        .iter()
+        .find(|span| span.name == name && span.fields.get(field).map(String::as_str) == Some(value))
+    {
+        Some(span) => span.clone(),
+        None => panic!("no '{name}' span with {field}={value} in {spans:?}"),
+    }
+}
+
+fn find_otel_span(exporter: &InMemorySpanExporter, name: &str, model: &str) -> SpanData {
+    let spans = match exporter.get_finished_spans() {
+        Ok(spans) => spans,
+        Err(error) => panic!("failed to read exported spans: {error}"),
+    };
+    match spans.iter().find(|span| {
+        span.name == name
+            && span.attributes.iter().any(|attribute| {
+                attribute.key.as_str() == "gen_ai.request.model"
+                    && attribute.value.as_str() == model
+            })
+    }) {
+        Some(span) => span.clone(),
+        None => {
+            let available = spans
+                .iter()
+                .map(|span| {
+                    let model = span
+                        .attributes
+                        .iter()
+                        .find(|attribute| attribute.key.as_str() == "gen_ai.request.model")
+                        .map(|attribute| attribute.value.as_str().into_owned());
+                    (span.name.to_string(), model)
+                })
+                .collect::<Vec<_>>();
+            panic!("no exported '{name}' span for model {model}; available: {available:?}")
+        }
+    }
+}
+
+fn otel_attribute<'a>(span: &'a SpanData, key: &str) -> Option<&'a OtelValue> {
+    span.attributes
+        .iter()
+        .find(|attribute| attribute.key.as_str() == key)
+        .map(|attribute| &attribute.value)
+}
+
+#[tokio::test]
+async fn affinity_warns_once_when_request_has_no_usable_identity() -> switchyard_libsy::Result<()> {
+    let _guard = serialize_test().lock().await;
+    let (store, _, _, _, _) = telemetry();
+    let event_count = store.events().len();
+    let router: Arc<dyn Algorithm> =
+        Arc::new(LlmTaskClassifier::new(LlmClassifierConfig::Capability {
+            config: TaskClassifierConfig {
+                classify_trigger: ClassifyTrigger::NewSession,
+                message_hash_fallback: true,
+                ..TaskClassifierConfig::default()
+            },
+        })?);
+    let request = Request {
+        llm_request: LlmRequest {
+            messages: vec![Message {
+                role: Role::User,
+                content: vec![ContentBlock::Reasoning {
+                    text: "provider reasoning".to_string(),
+                    signature: None,
+                    details: Vec::new(),
+                }],
+            }],
+            ..LlmRequest::default()
+        },
+        raw_request: None,
+        metadata: None,
+    };
+
+    for _ in 0..2 {
+        let mut steps = router.clone().run_stream(
+            request.clone(),
+            classifier_models("warning/judge", "warning/efficient", "warning/capable"),
+        );
+        let _ = steps.next().await;
+    }
+
+    let events = store.events();
+    let warnings = events[event_count..]
+        .iter()
+        .filter(|event| {
+            event.target == "libsy"
+                && event.level == "WARN"
+                && event
+                    .fields
+                    .get("message")
+                    .is_some_and(|message| message.contains("affinity is enabled"))
+        })
+        .collect::<Vec<_>>();
+    assert_eq!(warnings.len(), 1, "affinity warnings: {warnings:?}");
+    assert!(warnings[0].fields.get("message").is_some_and(|message| {
+        message.contains("message-hash fallback with usable first-user text")
+    }));
+    Ok(())
+}
+
+#[tokio::test]
+async fn affinity_keeps_the_algorithm_selection_after_client_fallback()
+-> switchyard_libsy::Result<()> {
+    let _guard = serialize_test().lock().await;
+    let (_, exporter, provider, _, _) = telemetry();
+    let before = flushed_metrics(exporter, provider);
+    let client = Arc::new(AffinityFallbackClient {
+        calls: Mutex::new(Vec::new()),
+        efficient_available: AtomicBool::new(false),
+    });
+    let router = Arc::new(LlmTaskClassifier::new(LlmClassifierConfig::Capability {
+        config: TaskClassifierConfig {
+            base_threshold: 0.5,
+            classify_trigger: ClassifyTrigger::NewSession,
+            ..TaskClassifierConfig::default()
+        },
+    })?) as Arc<dyn Algorithm>;
+    let request = request_with_metadata("affinity-fallback-session", "affinity-fallback-first");
+
+    let (selected, first_response) = switchyard_llm_client::run(
+        Arc::clone(&router),
+        ClientRouter::single(client.clone()),
+        request.clone(),
+        classifier_models(
+            "affinity-fallback-judge",
+            "affinity-fallback-weak",
+            "affinity-fallback-strong",
+        ),
+        None,
+    )
+    .await?;
+    assert_eq!(selected, "affinity-fallback-weak");
+    assert_eq!(
+        first_response.served_model().map(ModelId::as_str),
+        Some("affinity-fallback-strong")
+    );
+
+    // One client request makes two routed calls: a weak failure and a strong success.
+    let after = flushed_metrics(exporter, provider);
+    for (metric, model, expected) in [
+        ("switchyard.errors", "affinity-fallback-weak", 1),
+        ("switchyard.requests", "affinity-fallback-weak", 0),
+        ("switchyard.requests", "affinity-fallback-strong", 1),
+    ] {
+        let attrs = [("model", model)];
+        assert_eq!(
+            u64_counter_value(&after, metric, &attrs).unwrap_or_default()
+                - u64_counter_value(&before, metric, &attrs).unwrap_or_default(),
+            expected,
+            "{metric} for {model}"
+        );
+    }
+    for (metric, expected) in [
+        ("switchyard.total_requests", 2),
+        ("switchyard.total_errors", 1),
+    ] {
+        assert_eq!(
+            u64_gauge_value(&after, metric).unwrap_or_default()
+                - u64_gauge_value(&before, metric).unwrap_or_default(),
+            expected,
+            "{metric}"
+        );
+    }
+    for (model, outcome) in [
+        ("affinity-fallback-weak", "error"),
+        ("affinity-fallback-strong", "ok"),
+    ] {
+        assert_eq!(
+            u64_counter_value(
+                &after,
+                "switchyard.llm_calls",
+                &[
+                    ("algorithm", "llm_task_classifier"),
+                    ("selected_model", model),
+                    ("outcome", outcome)
+                ]
+            ),
+            Some(1)
+        );
+    }
+
+    client.efficient_available.store(true, Ordering::Relaxed);
+    let (selected, second_response) = switchyard_llm_client::run(
+        router,
+        ClientRouter::single(client.clone()),
+        request,
+        classifier_models(
+            "affinity-fallback-judge",
+            "affinity-fallback-weak",
+            "affinity-fallback-strong",
+        ),
+        None,
+    )
+    .await?;
+    assert_eq!(selected, "affinity-fallback-weak");
+    assert_eq!(
+        second_response.served_model().map(ModelId::as_str),
+        Some("affinity-fallback-weak")
+    );
+    assert_eq!(
+        &*client.calls.lock(),
+        &[
+            ModelId::from("affinity-fallback-judge"),
+            ModelId::from("affinity-fallback-weak"),
+            ModelId::from("affinity-fallback-strong"),
+            ModelId::from("affinity-fallback-weak"),
+        ]
+    );
+    Ok(())
+}
+
+#[tokio::test]
+async fn successful_run_records_metrics_spans_and_outcome_metadata() -> switchyard_libsy::Result<()>
+{
+    let _guard = serialize_test().lock().await;
+    let (store, exporter, provider, span_exporter, _) = telemetry();
+    const ALGO: &str = "obs-success-algo";
+    const MODEL: &str = "obs-success-model";
+    let before = flushed_metrics(exporter, provider);
+    let total_requests_before =
+        u64_gauge_value(&before, "switchyard.total_requests").unwrap_or_default();
+    let total_errors_before =
+        u64_gauge_value(&before, "switchyard.total_errors").unwrap_or_default();
+
+    let client = Arc::new(UsageClient {
+        usage: Usage {
+            input_tokens: Some(11),
+            output_tokens: Some(7),
+            total_tokens: Some(25),
+            reasoning_tokens: Some(2),
+            cache: Usage::cache_details(Some(3), Some(4)),
+        },
+    }) as Arc<dyn RoutedLlmClient>;
+    let mut request = request_with_metadata("obs-session-1", "obs-corr-1");
+    request.llm_request.sampling.temperature = Some(0.25);
+    request.llm_request.sampling.top_p = Some(0.9);
+    request.llm_request.sampling.top_k = Some(40);
+    request.llm_request.output.max_output_tokens = Some(512);
+    request.llm_request.output.response_format = Some(json!({"type": "json_schema"}));
+    request.llm_request.reasoning.effort = Some("high".to_string());
+    let metadata = switchyard_libsy::OutcomeMetadata::new(
+        ALGO.to_string(),
+        Some(json!({
+            "source": "llm-classifier", "score": 0.9, "threshold": 0.5,
+            "verdict": "continue", "trigger": "turn", "reason_code": "test",
+            "confidence": "wrong type", "unknown": LEAKED_CONTENT,
+        })),
+    );
+    let algorithm = Arc::new(SingleCallAlgo {
+        name: ALGO.to_string(),
+        target_set: vec![MODEL.to_string(), "obs-fallback-model".to_string()],
+        metadata: Some(metadata.clone()),
+    });
+    let (selected_model, _response) = run(algorithm, client, request).await?;
+    assert_eq!(selected_model, MODEL);
+
+    // Metrics: run/call counters and latency histograms keyed by algorithm,
+    // plus one published decision.
+    let snapshots = flushed_metrics(exporter, provider);
+    let run_attrs = [("algorithm", ALGO), ("outcome", "ok")];
+    let call_attrs = [
+        ("algorithm", ALGO),
+        ("selected_model", MODEL),
+        ("outcome", "ok"),
+    ];
+    let token_attrs = [("algorithm", ALGO), ("selected_model", MODEL)];
+    assert_eq!(
+        u64_counter_value(&snapshots, "switchyard.runs", &run_attrs),
+        Some(1)
+    );
+    assert_eq!(
+        f64_histogram_count(&snapshots, "switchyard.run_duration_ms", &run_attrs),
+        Some(1)
+    );
+    assert_eq!(
+        u64_counter_value(&snapshots, "switchyard.llm_calls", &call_attrs),
+        Some(1)
+    );
+    assert_eq!(
+        f64_histogram_count(&snapshots, "switchyard.llm_call_duration_ms", &call_attrs),
+        Some(1)
+    );
+    assert_eq!(
+        u64_counter_value(&snapshots, "switchyard.decisions", &token_attrs),
+        Some(1)
+    );
+    let routed_attrs = [("model", MODEL)];
+    assert_eq!(
+        u64_counter_value(&snapshots, "switchyard.requests", &routed_attrs),
+        Some(1)
+    );
+    assert_eq!(
+        f64_histogram_count(
+            &snapshots,
+            "switchyard.model_call_latency_ms",
+            &routed_attrs
+        ),
+        Some(1)
+    );
+    assert_eq!(
+        u64_gauge_value(&snapshots, "switchyard.total_requests"),
+        Some(total_requests_before + 1)
+    );
+    assert_eq!(
+        u64_gauge_value(&snapshots, "switchyard.total_errors"),
+        Some(total_errors_before)
+    );
+    // One overhead observation per run, keyed by algorithm alone.
+    assert_eq!(
+        f64_histogram_count(
+            &snapshots,
+            "switchyard.routing_overhead_ms",
+            &[("algorithm", ALGO)]
+        ),
+        Some(1)
+    );
+
+    // Spans: one run span carrying the correlation ids and outcome, one child
+    // llm_call span carrying the selection, outcome, and token counts.
+    let spans = store.spans();
+    let run_span = find_span(&spans, "libsy.run", "algorithm", ALGO);
+    assert_eq!(
+        spans
+            .iter()
+            .filter(|span| span.name == "libsy.run"
+                && span.fields.get("algorithm").map(String::as_str) == Some(ALGO))
+            .count(),
+        1
+    );
+    for (field, expected) in [
+        ("outcome_id", metadata.outcome_id()),
+        ("evidence.source", "llm-classifier"),
+        ("evidence.score", "0.9"),
+        ("evidence.threshold", "0.5"),
+        ("evidence.verdict", "continue"),
+        ("evidence.trigger", "turn"),
+        ("evidence.reason_code", "test"),
+    ] {
+        assert_eq!(
+            run_span.fields.get(field).map(String::as_str),
+            Some(expected),
+            "{field}"
+        );
+    }
+    assert!(!run_span.fields.contains_key("evidence.confidence"));
+    assert!(!format!("{run_span:?}").contains(LEAKED_CONTENT));
+    let exported = span_exporter.get_finished_spans().expect("exported spans");
+    let exported_run = exported
+        .iter()
+        .find(|span| {
+            span.name == "libsy.run"
+                && otel_attribute(span, "outcome_id")
+                    .is_some_and(|id| id.as_str() == metadata.outcome_id())
+        })
+        .expect("outcome span exported");
+    assert_eq!(
+        otel_attribute(exported_run, "evidence.score"),
+        Some(&OtelValue::F64(0.9))
+    );
+    assert_eq!(
+        otel_attribute(exported_run, "selected_model_ids"),
+        Some(&OtelValue::Array(OtelArray::String(vec![
+            MODEL.into(),
+            "obs-fallback-model".into()
+        ]),))
+    );
+    assert_eq!(run_span.parent, None);
+    assert_eq!(
+        run_span.fields.get("session_id").map(String::as_str),
+        Some("obs-session-1")
+    );
+    assert_eq!(
+        run_span.fields.get("session.id").map(String::as_str),
+        Some("obs-session-1")
+    );
+    assert_eq!(
+        run_span
+            .fields
+            .get("switchyard.algorithm")
+            .map(String::as_str),
+        Some(ALGO)
+    );
+    assert_eq!(
+        run_span.fields.get("switchyard.route").map(String::as_str),
+        Some("auto")
+    );
+    assert_eq!(
+        run_span.fields.get("correlation_id").map(String::as_str),
+        Some("obs-corr-1")
+    );
+    assert_eq!(
+        run_span.fields.get("outcome").map(String::as_str),
+        Some("ok")
+    );
+    // Semantic harness labels: bounded classes, distinct from the high-cardinality ids above.
+    assert_eq!(
+        run_span.fields.get("task_kind").map(String::as_str),
+        Some("code_review")
+    );
+    assert_eq!(
+        run_span.fields.get("agent_role").map(String::as_str),
+        Some("reviewer")
+    );
+    assert!(!run_span.fields.contains_key("extra_metadata"));
+
+    // The default-client serve inside `run` gets its own client-call span.
+    let client_span = find_span(&spans, "libsy.client_call", "selected_model", MODEL);
+    // Host-side span: `run`'s serve loop creates it outside the algorithm's
+    // spans, so it has no libsy parent. This pins the instrument idiom
+    // (`#[tracing::instrument]` / `Future::instrument`) — an `Entered` guard
+    // held across the offload `.await` would leave `libsy.llm_call` entered
+    // on the thread and leak it in as the parent.
+    assert_eq!(client_span.parent.as_deref(), None);
+    assert_eq!(
+        client_span.fields.get("algorithm").map(String::as_str),
+        Some(ALGO)
+    );
+    assert_eq!(
+        client_span.fields.get("outcome").map(String::as_str),
+        Some("ok")
+    );
+    for (field, value) in [
+        ("otel.kind", "client"),
+        ("switchyard.algorithm", ALGO),
+        ("otel.name", "chat obs-success-model"),
+        ("gen_ai.operation.name", "chat"),
+        ("gen_ai.request.model", MODEL),
+        ("gen_ai.request.temperature", "0.25"),
+        ("gen_ai.request.top_p", "0.9"),
+        ("gen_ai.request.top_k", "40"),
+        ("gen_ai.request.max_tokens", "512"),
+        ("gen_ai.request.reasoning.level", "high"),
+        ("gen_ai.output.type", "json"),
+        ("gen_ai.conversation.id", "obs-session-1"),
+        ("gen_ai.response.id", "obs-response-1"),
+        ("gen_ai.response.model", MODEL),
+        ("gen_ai.usage.input_tokens", "18"),
+        ("gen_ai.usage.output_tokens", "7"),
+        ("gen_ai.usage.cache_read.input_tokens", "3"),
+        ("gen_ai.usage.cache_creation.input_tokens", "4"),
+        ("gen_ai.usage.reasoning.output_tokens", "2"),
+    ] {
+        assert_eq!(
+            client_span.fields.get(field).map(String::as_str),
+            Some(value),
+            "unexpected {field}"
+        );
+    }
+    assert_eq!(client_span.fields.get("gen_ai.request.stream"), None);
+
+    let otel_span = find_otel_span(span_exporter, "chat obs-success-model", MODEL);
+    assert!(matches!(
+        otel_attribute(&otel_span, "gen_ai.response.finish_reasons"),
+        Some(OtelValue::Array(OtelArray::String(reasons)))
+            if reasons.len() == 1 && reasons[0].as_str() == "end_turn"
+    ));
+    assert_eq!(
+        otel_attribute(&otel_span, "gen_ai.request.max_tokens"),
+        Some(&OtelValue::I64(512))
+    );
+    assert_eq!(
+        otel_attribute(&otel_span, "gen_ai.usage.input_tokens"),
+        Some(&OtelValue::I64(18))
+    );
+
+    // The algorithm logs why it made the decision.
+    let events = store.events();
+    assert!(
+        !events.iter().any(
+            |event| event.fields.get("algorithm").map(String::as_str) == Some(ALGO)
+                && event.fields.get("message").map(String::as_str) == Some("routing decision")
+        )
+    );
+    assert!(
+        events.iter().any(|event| {
+            event.level == "INFO"
+                && event
+                    .fields
+                    .get("message")
+                    .is_some_and(|message| message.contains("picked"))
+        }),
+        "no routing-decision log event for {MODEL} in {events:?}"
+    );
+    Ok(())
+}
+
+#[tokio::test]
+async fn stage_router_records_algorithm_owned_metrics() -> switchyard_libsy::Result<()> {
+    let _guard = serialize_test().lock().await;
+    let (_, exporter, provider, _, _) = telemetry();
+    const STRONG: &str = "obs-stage-strong";
+    const WEAK: &str = "obs-stage-weak";
+    let algorithm = Arc::new(StageRouter::new(StageRouterConfig::new(
+        PickerMode::EfficientFirst,
+        0.5,
+    ))?) as Arc<dyn Algorithm>;
+    let request = Request {
+        llm_request: LlmRequest {
+            model: Some("auto".to_string()),
+            messages: vec![
+                Message::text(Role::User, "fix the build"),
+                Message {
+                    role: Role::Assistant,
+                    content: vec![ContentBlock::ToolCall(ToolCall {
+                        id: "call_1".to_string(),
+                        name: "Bash".to_string(),
+                        arguments: json!({"command": "cargo test"}),
+                    })],
+                },
+                Message {
+                    role: Role::Tool,
+                    content: vec![ContentBlock::ToolResult(ToolResult {
+                        tool_call_id: "call_1".to_string(),
+                        content: vec![ContentBlock::Text {
+                            text: "fatal runtime error: out of memory".to_string(),
+                        }],
+                        is_error: Some(true),
+                    })],
+                },
+            ],
+            ..LlmRequest::default()
+        },
+        raw_request: None,
+        metadata: Some(Metadata {
+            wire_format: Some(WireFormat::OpenAiChat),
+            session_id: Some("obs-stage-session".to_string()),
+            ..Metadata::default()
+        }),
+    };
+    let client = Arc::new(UsageClient {
+        usage: Usage::default(),
+    }) as Arc<dyn RoutedLlmClient>;
+
+    let (selected_model, _) = switchyard_llm_client::run(
+        algorithm,
+        ClientRouter::single(client),
+        request,
+        Arc::new(RuntimeModels::new(
+            [
+                (Category::Capable, vec![ModelId::from(STRONG)]),
+                (Category::Efficient, vec![ModelId::from(WEAK)]),
+                (
+                    Category::Any,
+                    vec![ModelId::from(STRONG), ModelId::from(WEAK)],
+                ),
+            ]
+            .into(),
+        )),
+        None,
+    )
+    .await?;
+    assert_eq!(selected_model, STRONG);
+
+    let snapshots = flushed_metrics(exporter, provider);
+    assert_eq!(
+        u64_counter_value(
+            &snapshots,
+            "switchyard.stage_router.routing_decisions",
+            &[("decision_source", "override"), ("target_name", STRONG)],
+        ),
+        Some(1)
+    );
+    for name in [
+        "switchyard.stage_router.probability",
+        "switchyard.stage_router.confidence",
+        "switchyard.stage_router.severity",
+        "switchyard.stage_router.spinning",
+        "switchyard.stage_router.exploring",
+        "switchyard.stage_router.production_intensity",
+    ] {
+        assert_eq!(f64_histogram_count(&snapshots, name, &[]), Some(1));
+    }
+    Ok(())
+}
+
+#[tokio::test]
+async fn observed_run_reports_one_successful_routed_call() -> switchyard_libsy::Result<()> {
+    let _guard = serialize_test().lock().await;
+    let observations = Arc::new(Mutex::new(Vec::new()));
+    let observed = Arc::clone(&observations);
+    let observer: RunObserver = Arc::new(move |observation| observed.lock().push(observation));
+    const ALGO: &str = "observed-run-algo";
+    const MODEL: &str = "observed-run-model";
+    let client = Arc::new(UsageClient {
+        usage: Usage::default(),
+    }) as Arc<dyn RoutedLlmClient>;
+
+    let (_, response) = switchyard_llm_client::run(
+        algo(ALGO, MODEL),
+        ClientRouter::single(client),
+        request_with_metadata("observed-session", "observed-correlation"),
+        Arc::new(RuntimeModels::default()),
+        Some(observer),
+    )
+    .await?;
+
+    assert_eq!(
+        response
+            .llm_response
+            .as_agg()
+            .map(|response| response.model.as_deref()),
+        Some(Some(MODEL))
+    );
+    let observations = observations.lock();
+    // Outcome metadata precedes the answer call and final overhead observation.
+    assert_eq!(observations.len(), 3);
+    let RunObservation::Outcome(metadata) = &observations[0] else {
+        return Err(test_error("expected an outcome observation"));
+    };
+    assert_eq!(metadata.algorithm, ALGO);
+    let RunObservation::AnswerCall(observation) = &observations[1] else {
+        return Err(test_error("expected an answer-call observation"));
+    };
+    assert_eq!(observation.selected_model, MODEL);
+    assert!(observation.is_success);
+    assert!(observation.usage.is_some());
+    assert!(matches!(
+        observations[2],
+        RunObservation::RoutingOverhead(_)
+    ));
+    Ok(())
+}
+
+/// A streamed response keeps the client span available until terminal usage arrives.
+struct StreamingUsageClient;
+
+#[async_trait]
+impl RoutedLlmClient for StreamingUsageClient {
+    async fn call(&self, request: Request) -> Result<Response, LlmClientError> {
+        let engine = switchyard_translation::TranslationEngine::default();
+        let mut state = switchyard_translation::StreamTranslationState::new(
+            WireFormat::OpenAiChat,
+            WireFormat::OpenAiChat,
+        );
+        let chunks = [
+            json!({"id": "", "model": request.model_id(), "choices": []}),
+            json!({"id": "", "choices": [{"index": 0, "delta": {"content": "hello"}}]}),
+            json!({"id": "obs-stream-response", "choices": []}),
+            json!({"id": "obs-stream-response", "choices": [{"index": 0, "delta": {}, "finish_reason": "stop"}],
+                "usage": {"prompt_tokens": 21, "completion_tokens": 5, "prompt_tokens_details": {"cached_tokens": 8}}}),
+        ].into_iter().map(|event| {
+            Ok(engine.decode_stream_event(&mut state, WireFormat::OpenAiChat, event)
+                .expect("valid Chat fixture"))
+        }).collect::<Vec<_>>();
+        Ok(Response {
+            llm_response: LlmResponse::Stream(Box::pin(futures::stream::iter(chunks))),
+            metadata: None,
+            upstream_headers: http::HeaderMap::new(),
+        })
+    }
+}
+
+struct TimeoutClient;
+
+#[async_trait]
+impl RoutedLlmClient for TimeoutClient {
+    async fn call(&self, _request: Request) -> Result<Response, LlmClientError> {
+        Err(LlmClientError::Timeout {
+            source: Box::new(TestError("upstream timed out")),
+        })
+    }
+}
+
+#[tokio::test]
+async fn streamed_usage_updates_the_client_call_span() -> switchyard_libsy::Result<()> {
+    let _guard = serialize_test().lock().await;
+    let (store, _, _, span_exporter, _) = telemetry();
+    const ALGO: &str = "obs-stream-algo";
+    const MODEL: &str = "obs-stream-model";
+    let client = Arc::new(StreamingUsageClient) as Arc<dyn RoutedLlmClient>;
+    let mut request = request_with_metadata("obs-stream-session", "obs-stream-corr");
+    request.llm_request.stream = true;
+    let (_, response) = run(algo(ALGO, MODEL), client, request).await?;
+    let LlmResponse::Stream(mut stream) = response.llm_response else {
+        return Err(test_error("expected a streamed response"));
+    };
+    let engine = switchyard_translation::TranslationEngine::default();
+    let mut translated = switchyard_translation::StreamTranslationState::new(
+        WireFormat::OpenAiChat,
+        WireFormat::OpenAiResponses,
+    );
+    let mut events = Vec::new();
+    while let Some(item) = stream.next().await {
+        events.extend(
+            engine
+                .encode_stream_event(
+                    &mut translated,
+                    WireFormat::OpenAiResponses,
+                    item.expect("valid stream"),
+                )
+                .expect("valid translation"),
+        );
+    }
+    events.extend(
+        engine
+            .finish_stream(&mut translated, WireFormat::OpenAiResponses)
+            .expect("valid finish"),
+    );
+    let created = events
+        .iter()
+        .find(|e| e["type"] == "response.created")
+        .expect("created");
+    let completed = events
+        .iter()
+        .find(|e| e["type"] == "response.completed")
+        .expect("completed");
+    assert_eq!(created["response"]["id"], completed["response"]["id"]);
+    assert_eq!(
+        completed["response"]["output"][0]["content"][0]["text"],
+        "hello"
+    );
+
+    let spans = store.spans();
+    let client_span = find_span(&spans, "libsy.client_call", "selected_model", MODEL);
+    for (field, value) in [
+        ("otel.name", "chat obs-stream-model"),
+        ("gen_ai.request.stream", "true"),
+        ("gen_ai.response.id", "obs-stream-response"),
+        ("gen_ai.response.model", MODEL),
+        ("gen_ai.usage.input_tokens", "21"),
+        ("gen_ai.usage.output_tokens", "5"),
+        ("gen_ai.usage.cache_read.input_tokens", "8"),
+    ] {
+        assert_eq!(
+            client_span.fields.get(field).map(String::as_str),
+            Some(value),
+            "unexpected {field}"
+        );
+    }
+    let otel_span = find_otel_span(span_exporter, "chat obs-stream-model", MODEL);
+    assert!(matches!(
+        otel_attribute(&otel_span, "gen_ai.response.finish_reasons"),
+        Some(OtelValue::Array(OtelArray::String(reasons)))
+            if reasons.len() == 1 && reasons[0].as_str() == "stop"
+    ));
+    Ok(())
+}
+
+#[tokio::test]
+async fn dropped_stream_records_cancelled_outcome() -> switchyard_libsy::Result<()> {
+    let _guard = serialize_test().lock().await;
+    let (store, _, _, _, _) = telemetry();
+    const ALGO: &str = "obs-cancelled-stream-algo";
+    const MODEL: &str = "obs-cancelled-stream-model";
+    let client = Arc::new(StreamingUsageClient) as Arc<dyn RoutedLlmClient>;
+    let mut request = request_with_metadata("obs-cancelled-session", "obs-cancelled-corr");
+    request.llm_request.stream = true;
+    let (_, response) = run(algo(ALGO, MODEL), client, request).await?;
+    let LlmResponse::Stream(stream) = response.llm_response else {
+        return Err(test_error("expected a streamed response"));
+    };
+    drop(stream);
+
+    let spans = store.spans();
+    let client_span = find_span(&spans, "libsy.client_call", "selected_model", MODEL);
+    assert_eq!(
+        client_span.fields.get("outcome").map(String::as_str),
+        Some("cancelled")
+    );
+    Ok(())
+}
+
+#[tokio::test]
+async fn typed_client_failure_records_semantic_error_type() {
+    let _guard = serialize_test().lock().await;
+    let (store, _, _, _, _) = telemetry();
+    const ALGO: &str = "obs-timeout-algo";
+    const MODEL: &str = "obs-timeout-model";
+    let result = run(
+        algo(ALGO, MODEL),
+        Arc::new(TimeoutClient),
+        request_with_metadata("obs-timeout-session", "obs-timeout-corr"),
+    )
+    .await;
+    assert!(matches!(
+        result,
+        Err(LibsyError::ClientCall {
+            source: LlmClientError::Timeout { .. },
+            ..
+        })
+    ));
+
+    let spans = store.spans();
+    let client_span = find_span(&spans, "libsy.client_call", "selected_model", MODEL);
+    assert_eq!(
+        client_span.fields.get("error.type").map(String::as_str),
+        Some("timeout")
+    );
+}
+
+/// Verifies that the client span retains the HTTP status without the upstream body.
+#[tokio::test]
+async fn upstream_body_is_redacted_from_the_client_call_span() -> switchyard_libsy::Result<()> {
+    let _guard = serialize_test().lock().await;
+    let (store, _, _, _, _) = telemetry();
+    const JUDGE: &str = "redaction-judge";
+    let client = Arc::new(JudgeClient {
+        judge_model: JUDGE.into(),
+        outcome: JudgeOutcome::CallFailure,
+    }) as Arc<dyn RoutedLlmClient>;
+    let result = run_classifier(
+        JUDGE,
+        "redaction-weak",
+        "redaction-strong",
+        client,
+        classifier_request(),
+    )
+    .await;
+    assert!(matches!(
+        result,
+        Err(LibsyError::ClientCall {
+            source: LlmClientError::UpstreamHttp { status, body },
+            ..
+        }) if status == http::StatusCode::INTERNAL_SERVER_ERROR && body.contains(LEAKED_CONTENT)
+    ));
+
+    let spans = store.spans();
+    let client_span = find_span(&spans, "libsy.client_call", "selected_model", JUDGE);
+    assert_eq!(
+        client_span.fields.get("error.type").map(String::as_str),
+        Some("500")
+    );
+    let error = client_span
+        .fields
+        .get("error")
+        .map(String::as_str)
+        .unwrap_or("");
+    assert!(error.contains("upstream HTTP 500"), "{client_span:?}");
+    assert!(!error.contains(LEAKED_CONTENT), "{client_span:?}");
+    assert!(!spans.iter().any(|span| {
+        span.name == "libsy.client_call"
+            && matches!(
+                span.fields.get("selected_model").map(String::as_str),
+                Some("redaction-weak" | "redaction-strong")
+            )
+    }));
+    Ok(())
+}
+
+#[tokio::test]
+async fn failed_call_records_metrics_without_error_details() -> switchyard_libsy::Result<()> {
+    let _guard = serialize_test().lock().await;
+    let (store, exporter, provider, _, _) = telemetry();
+    const ALGO: &str = "obs-failure-algo";
+    const MODEL: &str = "obs-failure-model";
+    // The routing call is offloaded and we fail it by hand, without a client.
+    let algorithm = Arc::new(RoutingCallAlgo {
+        name: ALGO.to_string(),
+        target: MODEL.into(),
+    });
+    let stream = algorithm.run_stream(
+        request_with_metadata("obs-session-2", "obs-corr-2"),
+        Arc::new(RuntimeModels::default()),
+    );
+    tokio::pin!(stream);
+
+    let mut saw_error_step = false;
+    while let Some(step) = stream.next().await {
+        match step {
+            Ok(Step::CallModel(call)) => {
+                call.respond(Err(test_error("synthetic upstream failure")))?;
+            }
+            Ok(Step::Done(_)) => {
+                return Err(test_error("expected the failed call to fail the run"));
+            }
+            Err(error) => {
+                assert!(error.to_string().contains("synthetic upstream failure"));
+                saw_error_step = true;
+            }
+        }
+    }
+    assert!(
+        saw_error_step,
+        "expected an error step from the failed call"
+    );
+
+    // The routing call and algorithm run fail, but no terminal outcome exists to attribute as a
+    // routed request.
+    let snapshots = flushed_metrics(exporter, provider);
+    let run_attrs = [("algorithm", ALGO), ("outcome", "error")];
+    let call_attrs = [
+        ("algorithm", ALGO),
+        ("selected_model", MODEL),
+        ("outcome", "error"),
+    ];
+    assert_eq!(
+        u64_counter_value(&snapshots, "switchyard.runs", &run_attrs),
+        Some(1)
+    );
+    assert_eq!(
+        u64_counter_value(&snapshots, "switchyard.llm_calls", &call_attrs),
+        Some(1)
+    );
+    // Nothing was served, so there is nothing to measure routing against.
+    assert_eq!(
+        f64_histogram_count(
+            &snapshots,
+            "switchyard.routing_overhead_ms",
+            &[("algorithm", ALGO)]
+        ),
+        None
+    );
+
+    // Error details remain with the caller, while operational status is preserved.
+    let spans = store.spans();
+    let run_span = find_span(&spans, "libsy.run", "algorithm", ALGO);
+    assert_eq!(
+        run_span.fields.get("outcome").map(String::as_str),
+        Some("error")
+    );
+    assert!(!run_span.fields.contains_key("error"));
+    assert!(!run_span.fields.contains_key("outcome_id"));
+    let call_span = find_span(&spans, "libsy.llm_call", "selected_model", MODEL);
+    assert_eq!(
+        call_span.fields.get("outcome").map(String::as_str),
+        Some("error")
+    );
+
+    assert_eq!(call_span.parent.as_deref(), Some("libsy.run"));
+    assert!(!call_span.fields.contains_key("error"));
+
+    let events = store.events();
+    assert!(!events.iter().any(|event| event.target == "libsy"
+        && event.fields.get("algorithm").map(String::as_str) == Some(ALGO)));
+    Ok(())
+}
+
+#[tokio::test]
+async fn classifier_metrics_count_routing_and_answer_calls_once() -> switchyard_libsy::Result<()> {
+    let _guard = serialize_test().lock().await;
+    let (_store, exporter, provider, _, _) = telemetry();
+    let before = flushed_metrics(exporter, provider);
+    let total_requests_before =
+        u64_gauge_value(&before, "switchyard.total_requests").unwrap_or_default();
+
+    let client = Arc::new(ClassifierClient {
+        classifier_model_id: "classifier".into(),
+        classifier_delay: Duration::from_millis(60),
+        routed_delay: Duration::from_millis(200),
+    }) as Arc<dyn RoutedLlmClient>;
+    let (selected_model, _response) =
+        run_classifier("classifier", "weak", "strong", client, classifier_request()).await?;
+
+    assert_eq!(selected_model, "weak");
+
+    let snapshots = flushed_metrics(exporter, provider);
+    assert_eq!(
+        u64_counter_value(
+            &snapshots,
+            "switchyard.llm_calls",
+            &[
+                ("algorithm", "llm_task_classifier"),
+                ("selected_model", "classifier"),
+                ("outcome", "ok"),
+            ],
+        ),
+        Some(1)
+    );
+    assert_eq!(
+        u64_counter_value(
+            &snapshots,
+            "switchyard.llm_calls",
+            &[
+                ("algorithm", "llm_task_classifier"),
+                ("selected_model", "weak"),
+                ("outcome", "ok"),
+            ],
+        ),
+        Some(1)
+    );
+    assert_eq!(
+        u64_counter_value(&snapshots, "switchyard.requests", &[("model", "weak")],),
+        Some(1)
+    );
+    assert_eq!(
+        u64_counter_value(
+            &snapshots,
+            "switchyard.requests",
+            &[("model", "classifier")],
+        ),
+        None
+    );
+    assert_eq!(
+        f64_histogram_count(
+            &snapshots,
+            "switchyard.model_call_latency_ms",
+            &[("model", "classifier")],
+        ),
+        None
+    );
+    assert_eq!(
+        u64_gauge_value(&snapshots, "switchyard.total_requests"),
+        Some(total_requests_before + 1)
+    );
+    // The classifier call is the router's own work but the routed call is not,
+    // so overhead lands near the classifier's 60ms, not their 260ms sum.
+    let overhead = f64_histogram_sum_ms(
+        &snapshots,
+        "switchyard.routing_overhead_ms",
+        &[("algorithm", "llm_task_classifier")],
+    )
+    .unwrap_or_default();
+    assert!(
+        (60..200).contains(&overhead),
+        "expected roughly the classifier's 60ms, got {overhead}ms"
+    );
+    Ok(())
+}
+
+#[tokio::test]
+async fn classifier_stops_on_client_errors_and_records_verdict_fallback()
+-> switchyard_libsy::Result<()> {
+    let _guard = serialize_test().lock().await;
+    let (_, exporter, provider, _, _) = telemetry();
+
+    let cases = [
+        ("fo-call", JudgeOutcome::CallFailure, None),
+        (
+            "fo-parse",
+            JudgeOutcome::Reply("not json at all"),
+            Some("parse_error"),
+        ),
+        ("fo-stream-decode", JudgeOutcome::StreamDecodeFailure, None),
+        (
+            "fo-valid",
+            JudgeOutcome::Reply(
+                r#"{"crux":"hard task","primary_rule":"SUP-1","capability_boundary":"supported","p_solve":0.3}"#,
+            ),
+            None,
+        ),
+    ];
+
+    for (judge_model, outcome, expected_reason) in cases {
+        let client = Arc::new(JudgeClient {
+            judge_model: judge_model.into(),
+            outcome,
+        });
+        let result = run_classifier(
+            judge_model,
+            "fo-weak",
+            "fo-strong",
+            client.clone(),
+            classifier_request(),
+        )
+        .await;
+        match client.outcome {
+            JudgeOutcome::CallFailure => assert!(result.is_err(), "{judge_model}"),
+            JudgeOutcome::StreamDecodeFailure => assert!(matches!(
+                result,
+                Err(LibsyError::ClientCall {
+                    source: LlmClientError::ResponseTranslation { .. },
+                    ..
+                })
+            )),
+            JudgeOutcome::Reply(_) => assert_eq!(result?.0.as_str(), "fo-strong"),
+        }
+
+        let snapshots = flushed_metrics(exporter, provider);
+        match expected_reason {
+            Some(reason) => assert_eq!(
+                u64_counter_value(
+                    &snapshots,
+                    "switchyard.classifier_fail_open",
+                    &[("reason", reason), ("judge_model", judge_model)],
+                ),
+                Some(1),
+                "case {reason} did not count the fail-open"
+            ),
+            None => assert_eq!(
+                u64_counter_value(
+                    &snapshots,
+                    "switchyard.classifier_fail_open",
+                    &[("judge_model", judge_model)],
+                ),
+                None,
+                "client failures and valid verdicts must not increment switchyard.classifier_fail_open"
+            ),
+        }
+    }
+    Ok(())
+}
+
+#[tokio::test]
+async fn in_flight_gauge_reads_a_run_parked_on_an_unanswered_routing_call()
+-> switchyard_libsy::Result<()> {
+    let _guard = serialize_test().lock().await;
+    let (_, exporter, provider, _, _) = telemetry();
+    const ALGO: &str = "obs-in-flight-algo";
+    const MODEL: &str = "obs-in-flight-model";
+    let algorithm = Arc::new(RoutingCallAlgo {
+        name: ALGO.to_string(),
+        target: MODEL.into(),
+    });
+    let stream = algorithm.run_stream(
+        request_with_metadata("obs-session-if", "obs-corr-if"),
+        Arc::new(RuntimeModels::default()),
+    );
+    tokio::pin!(stream);
+    let attributes = [("algorithm", ALGO)];
+
+    // Take the offloaded call and hold it without responding. This is the shape of a
+    // stalled classifier: the run has started and cannot proceed until the call returns.
+    let Some(Ok(Step::CallModel(call))) = stream.next().await else {
+        return Err(test_error("expected an offloaded routing call"));
+    };
+
+    let snapshots = flushed_metrics(exporter, provider);
+    assert_eq!(
+        i64_up_down_counter_value(&snapshots, "switchyard.algorithms_in_flight", &attributes),
+        Some(1),
+        "a run waiting on an unanswered routing call must read as in flight"
+    );
+    // The gap this gauge fills: every other run metric is recorded on resolution, so
+    // while the call is outstanding they say nothing at all.
+    assert_eq!(
+        u64_counter_value(&snapshots, "switchyard.runs", &attributes),
+        None,
+        "the run counter must not report a run that has not resolved"
+    );
+
+    call.respond(Ok(Response {
+        llm_response: LlmResponse::Agg(text_response(Some(MODEL.to_string()), "answer")),
+        metadata: None,
+        upstream_headers: http::HeaderMap::new(),
+    }))?;
+    while stream.next().await.is_some() {}
+
+    let snapshots = flushed_metrics(exporter, provider);
+    assert_eq!(
+        i64_up_down_counter_value(&snapshots, "switchyard.algorithms_in_flight", &attributes),
+        Some(0),
+        "the gauge must fall back to zero once the run resolves"
+    );
+    Ok(())
+}
+
+#[tokio::test]
+async fn in_flight_gauge_clears_when_a_run_is_abandoned() -> switchyard_libsy::Result<()> {
+    let _guard = serialize_test().lock().await;
+    let (_, exporter, provider, _, _) = telemetry();
+    const ALGO: &str = "obs-abandoned-algo";
+    const MODEL: &str = "obs-abandoned-model";
+    let algorithm = Arc::new(RoutingCallAlgo {
+        name: ALGO.to_string(),
+        target: MODEL.into(),
+    });
+    let attributes = [("algorithm", ALGO)];
+
+    // Drop the step stream while the routing call is still outstanding, the way a
+    // disconnected client abandons a run. The run task is aborted mid-await and never
+    // reaches the code that follows it, so only a drop can return the count.
+    {
+        let stream = algorithm.run_stream(
+            request_with_metadata("obs-session-ab", "obs-corr-ab"),
+            Arc::new(RuntimeModels::default()),
+        );
+        tokio::pin!(stream);
+        let Some(Ok(Step::CallModel(_call))) = stream.next().await else {
+            return Err(test_error("expected an offloaded routing call"));
+        };
+        assert_eq!(
+            i64_up_down_counter_value(
+                &flushed_metrics(exporter, provider),
+                "switchyard.algorithms_in_flight",
+                &attributes,
+            ),
+            Some(1),
+        );
+    }
+
+    // Let the runtime finish aborting the task it was told to drop.
+    for _ in 0..10 {
+        tokio::task::yield_now().await;
+    }
+
+    assert_eq!(
+        i64_up_down_counter_value(
+            &flushed_metrics(exporter, provider),
+            "switchyard.algorithms_in_flight",
+            &attributes,
+        ),
+        Some(0),
+        "an abandoned run must not strand the gauge above zero"
+    );
+    Ok(())
+}

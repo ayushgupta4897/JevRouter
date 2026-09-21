@@ -1,0 +1,124 @@
+name: Package portability
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/package-portability.yml"
+      - ".github/workflows/publish.yml"
+      - "pyproject.toml"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "rust-toolchain.toml"
+      - ".cargo/config.toml"
+      - "crates/**"
+      - "switchyard/**"
+      - "switchyard_rust/**"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/package-portability.yml"
+      - ".github/workflows/publish.yml"
+      - "pyproject.toml"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "rust-toolchain.toml"
+      - ".cargo/config.toml"
+      - "crates/**"
+      - "switchyard/**"
+      - "switchyard_rust/**"
+  workflow_dispatch:
+
+# Cancel superseded PR runs; keep push and manual runs independent.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  MATURIN_VERSION: "1.11.5"
+
+jobs:
+  # Regular CI intentionally builds one wheel only. The complete cross-platform
+  # wheel matrix is expensive and belongs to the tag-gated release workflow in
+  # `.github/workflows/publish.yml`.
+  wheel:
+    name: Wheel (linux-x86_64)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Build manylinux x86_64 wheel
+        shell: bash
+        run: |
+          set -euxo pipefail
+          docker run --rm \
+            -e MATURIN_VERSION="${MATURIN_VERSION}" \
+            -v "${GITHUB_WORKSPACE}:/io" \
+            -w /io \
+            "quay.io/pypa/manylinux2014_x86_64" \
+            /bin/bash -lc '
+              set -euxo pipefail
+              curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable
+              source "${HOME}/.cargo/env"
+              PYTHON=/opt/python/cp310-cp310/bin/python
+              "${PYTHON}" -m pip install --upgrade pip
+              "${PYTHON}" -m pip install "maturin==${MATURIN_VERSION}"
+              "${PYTHON}" -m maturin build \
+                --release \
+                --locked \
+                --compatibility pypi \
+                --out dist \
+                --interpreter "${PYTHON}"
+            '
+      - name: Smoke install wheel on Python 3.10
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --force-reinstall dist/*.whl
+          python - <<'PY'
+          import os
+          import sys
+          import tempfile
+
+          os.chdir(tempfile.mkdtemp(prefix="switchyard-wheel-smoke-"))
+          workspace = os.environ.get("GITHUB_WORKSPACE")
+          sys.path = [entry for entry in sys.path if entry not in ("", workspace)]
+
+          import switchyard
+          import switchyard_rust
+          from switchyard_rust import _switchyard_rust
+
+          print("switchyard", switchyard.__version__)
+          print("switchyard_rust", switchyard_rust.__file__)
+          print("rust extension", _switchyard_rust.__name__)
+          PY
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - name: Smoke install wheel on Python 3.14
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --force-reinstall dist/*.whl
+          python - <<'PY'
+          import os
+          import sys
+          import tempfile
+
+          os.chdir(tempfile.mkdtemp(prefix="switchyard-wheel-smoke-"))
+          workspace = os.environ.get("GITHUB_WORKSPACE")
+          sys.path = [entry for entry in sys.path if entry not in ("", workspace)]
+
+          import switchyard
+          import switchyard_rust
+          from switchyard_rust import _switchyard_rust
+
+          print("switchyard", switchyard.__version__)
+          print("switchyard_rust", switchyard_rust.__file__)
+          print("rust extension", _switchyard_rust.__name__)
+          PY

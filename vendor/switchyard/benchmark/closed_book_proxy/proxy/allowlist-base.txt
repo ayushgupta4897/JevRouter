@@ -1,0 +1,8 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
+# Base outbound allowlist for generated closed-book Harbor tasks.
+# Runtime gateway hosts are added dynamically from OPENAI_BASE_URL,
+# ANTHROPIC_BASE_URL, AZURE_OPENAI_ENDPOINT, SWITCHYARD_BASE_URL, and
+# ALLOWED_HOSTS. Keep this file empty so task containers can only reach
+# the configured Switchyard gateway by default.

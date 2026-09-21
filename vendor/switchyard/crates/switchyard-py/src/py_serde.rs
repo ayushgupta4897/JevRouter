@@ -1,0 +1,41 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+//! Python object and JSON value conversion helpers.
+
+use pyo3::exceptions::PyValueError;
+use pyo3::prelude::*;
+use pyo3::types::PyDict;
+use pythonize::{depythonize, pythonize};
+use serde::{Serialize, de::DeserializeOwned};
+
+/// Converts a Python mapping-like object into a Serde-owned Rust value.
+pub(crate) fn from_python<T: DeserializeOwned>(value: &Bound<'_, PyAny>) -> PyResult<T> {
+    let normalized = jsonable_python(value)?;
+    depythonize(normalized.bind(value.py()))
+        .map_err(|error| PyValueError::new_err(error.to_string()))
+}
+
+/// Converts a serializable Rust value into Python dictionaries and lists.
+pub(crate) fn to_python<T: Serialize>(py: Python<'_>, value: &T) -> PyResult<Py<PyAny>> {
+    pythonize(py, value)
+        .map(|object| object.unbind())
+        .map_err(|error| PyValueError::new_err(error.to_string()))
+}
+
+fn jsonable_python(value: &Bound<'_, PyAny>) -> PyResult<Py<PyAny>> {
+    if let Ok(model_dump) = value.getattr("model_dump")
+        && model_dump.is_callable()
+    {
+        let kwargs = PyDict::new(value.py());
+        kwargs.set_item("mode", "json")?;
+        kwargs.set_item("exclude_none", true)?;
+        return model_dump.call((), Some(&kwargs)).map(Bound::unbind);
+    }
+    if let Ok(to_dict) = value.getattr("to_dict")
+        && to_dict.is_callable()
+    {
+        return to_dict.call0().map(Bound::unbind);
+    }
+    Ok(value.clone().unbind())
+}

@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # End-to-end: mock upstream + mock Jev + jevjudge + real switchyard-server, no API keys.
 #
+# Defaults to this repo's own build (run scripts/build.sh first). Override either half
+# independently to test against something else:
 #   SWITCHYARD_SERVER=/path/to/switchyard-server PYTHON=/path/to/venv/bin/python scripts/e2e.sh
 #
 # With a real key, run the same stack against TypeSafe instead of the mock:
@@ -8,9 +10,10 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-PYTHON="${PYTHON:-python3}"
-SWITCHYARD_SERVER="${SWITCHYARD_SERVER:-$(command -v switchyard-server || true)}"
-[[ -x "$SWITCHYARD_SERVER" ]] || { echo "switchyard-server not found; set SWITCHYARD_SERVER"; exit 2; }
+PYTHON="${PYTHON:-$( [[ -x .venv/bin/python ]] && echo "$PWD/.venv/bin/python" || command -v python3 )}"
+SWITCHYARD_SERVER="${SWITCHYARD_SERVER:-$( [[ -x vendor/switchyard/target/release/switchyard-server ]] && echo "$PWD/vendor/switchyard/target/release/switchyard-server" || command -v switchyard-server || true )}"
+[[ -x "$SWITCHYARD_SERVER" ]] || { echo "switchyard-server not found; run scripts/build.sh, or set SWITCHYARD_SERVER"; exit 2; }
+[[ -x "$PYTHON" ]] || { echo "python not found; run scripts/build.sh, or set PYTHON"; exit 2; }
 LOGDIR="${LOGDIR:-$(mktemp -d)}"
 pids=()
 cleanup() { for p in "${pids[@]:-}"; do kill "$p" 2>/dev/null || true; done; }

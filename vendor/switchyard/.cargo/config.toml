@@ -1,0 +1,12 @@
+# SPDX-FileCopyrightText: Copyright (c) 2025-2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
+# Target Haswell (2013) era+ machines. That gets us AVX-2
+# Force frame pointers to make performance and memory profiling much easier
+[target.x86_64-unknown-linux-gnu]
+rustflags = ["-C", "target-cpu=x86-64-v3", "-C", "force-frame-pointers=yes"]
+
+# Target Graviton 2 / Ampere Altra + machines. NEON vector, and LSE atomics.
+# Force frame pointers to make performance and memory profiling much easier
+[target.aarch64-unknown-linux-gnu]
+rustflags = ["-C", "target-cpu=neoverse-n1", "-C", "force-frame-pointers=yes"]

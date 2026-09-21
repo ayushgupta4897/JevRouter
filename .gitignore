@@ -8,3 +8,14 @@ dist/
 build/
 .env
 *.jsonl
+
+# Vendored Switchyard: source only, never its build output
+vendor/switchyard/target/
+vendor/switchyard/switchyard_rust/*.so
+vendor/switchyard/switchyard_rust/*.pyd
+vendor/switchyard/**/__pycache__/
+vendor/switchyard/**/*.egg-info/
+
+# Project-local Python env and build byproducts
+.venv/
+*.log

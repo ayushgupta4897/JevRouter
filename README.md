@@ -39,10 +39,13 @@ risks are in [`docs/DECISION.md`](docs/DECISION.md).
 
 | Path | What |
 |---|---|
+| `vendor/switchyard/` | **Vendored source**, pinned commit (`vendor/switchyard/VENDORED_COMMIT`). Not a fork: unmodified, rebuilt by `scripts/build.sh`. See `vendor/NOTICE.md` |
 | `jevjudge/` | Python package: the sidecar (`jevjudge`), the schema→questions compiler, the confidence cascade, offline mocks, tests |
 | `switchyard/routes.*.toml` | Switchyard deployments for capability, escalation, and custom modes with Jev as `classifier_target` |
+| `scripts/build.sh` | One command: builds `switchyard-server`, its Python bindings, and `jevjudge` into a project-local `.venv` |
 | `scripts/e2e.sh` | Boots mock upstream + mock Jev + jevjudge + the real `switchyard-server` and asserts 12 routing decisions. No API keys |
 | `scripts/bench_judge.py` | p50/p95 latency and $/verdict for Switchyard-shaped judge requests (mock or real Jev) |
+| `scripts/update_vendor.sh` | Re-vendor from a newer Switchyard commit or branch |
 | `examples/embedded_libsy.py` | The no-sidecar path: a Python harness drives Switchyard's `libsy` algorithms and serves the judge call with Jev in-process |
 | `docs/DECISION.md` | Why Switchyard, why not fork it, why a sidecar, what Jev can and cannot answer, economics, risks, roadmap |
 | `docs/switchyard-prompts/` | Verbatim copies of Switchyard's packaged judge prompts and verdict schemas (the exact bytes the judge receives) |
@@ -73,33 +76,40 @@ confidence, `2·|p−0.5|` for a `noul`). Below `JEVJUDGE_MIN_CONFIDENCE`, jevju
 **fallback** (forward the identical request to an LLM judge), **abstain** (reply with non-JSON
 so Switchyard fails open to its configured default/strong target), or **return** anyway (default).
 
-## Quickstart (offline, no keys)
+## Quickstart (one clone, offline, no keys)
+
+Everything the router needs lives in this repository: Switchyard's source is vendored under
+`vendor/switchyard/` (pinned commit, unmodified — see `vendor/NOTICE.md`), so there is no
+`cargo install --git ...` step and no dependency on a released `nemo-switchyard` package, which
+as of this writing lags Switchyard's own Python API.
+
+Requires: [Rust via rustup](https://rustup.rs) (the vendored `rust-toolchain.toml` pins the exact
+version and rustup installs it automatically), Python ≥ 3.11, and [`uv`](https://docs.astral.sh/uv/)
+(falls back to `venv`/`pip` if absent).
 
 ```bash
-# 1. Python side
-python -m venv .venv && . .venv/bin/activate
-pip install -e 'jevjudge[dev]'
-pytest jevjudge -q                       # 17 tests: compiler on the real Switchyard schemas + ASGI round trips
+scripts/build.sh          # builds switchyard-server + its Python bindings + jevjudge, ~3 min
 
-# 2. Switchyard server (Rust ≥ 1.96; the release binary builds in ~3 min)
-cargo install --locked --git https://github.com/NVIDIA-NeMo/Switchyard.git --branch main switchyard-server
+source .venv/bin/activate
+pytest jevjudge -q        # 17 tests: compiler on the real Switchyard schemas + ASGI round trips
 
-# 3. Full stack, deterministic mock Jev
-SWITCHYARD_SERVER=$(command -v switchyard-server) PYTHON=.venv/bin/python scripts/e2e.sh
+scripts/e2e.sh             # boots mock upstream + mock Jev + jevjudge + the real switchyard-server
 ```
 
 Expected: `passed=12 failed=0`, covering easy→weak / hard→strong / ambiguous→abstain→strong in
 capability mode; weak→weak→strong latch (and no judge call after latching) in escalation mode;
-4-way custom routing including low-confidence→abstain→`default_target`.
+4-way custom routing including low-confidence→abstain→`default_target`. Both scripts default to
+this build's own binary and venv; pass `SWITCHYARD_SERVER=`/`PYTHON=` to point at something else.
 
 ## Run it with real Jev
 
 ```bash
+source .venv/bin/activate
 export TYPESAFE_API_KEY=...                       # console.typesafe.ai ($5 free credit at signup)
 jevjudge --port 8090                              # OpenAI-compatible judge on :8090
 
 # any of the three deployments; swap the mock upstream for OpenRouter/NVIDIA in the TOML
-switchyard-server --config switchyard/routes.escalation.toml --port 4000
+vendor/switchyard/target/release/switchyard-server --config switchyard/routes.escalation.toml --port 4000
 
 export ANTHROPIC_BASE_URL=http://localhost:4000 ANTHROPIC_MODEL=escalation ANTHROPIC_API_KEY=placeholder
 claude                                             # Claude Code now routes through Switchyard + Jev
@@ -142,17 +152,20 @@ at ~0.3 s. The sidecar adds tens of milliseconds. Real-key numbers: run
 ## Status and honest caveats
 
 * **Plumbing is validated end to end; routing quality is not yet measured with real Jev.**
-  Everything above ran through the real Switchyard binary against a deterministic mock Jev.
-  With a `TYPESAFE_API_KEY` the same commands exercise the real model; the next step is the
-  Terminal-Bench 2.1 subset Switchyard ships (`benchmark/`) with Jev vs. the LLM judge.
+  Everything above ran through the real, self-built Switchyard binary against a deterministic
+  mock Jev. With a `TYPESAFE_API_KEY` the same commands exercise the real model; the next step
+  is the Terminal-Bench 2.1 subset Switchyard ships (`vendor/switchyard/benchmark/`) with Jev
+  vs. the LLM judge.
 * Jev's calibration is vendor-claimed and only partly independently checked; one community PR
   that replaced Switchyard's capability judge with a Jev `choice` lost 3 of 20 tasks vs. Opus.
   That is exactly why the confidence gate and cascade exist. Start with `fallback` to an LLM
   judge and tighten as your own logs show Jev's probabilities hold up.
 * Free-text verdict fields (`reason`, `crux`) are templated, not written. Switchyard only
   requires them non-empty; anything that reads them for humans will see `jevjudge: …`.
-* Switchyard is pre-1.0 (APIs move); OpenRouter's Decisions transport is implemented from its
-  published description but not exercised here.
+* Switchyard is pre-1.0 (APIs move); vendoring it at a pinned commit means this repo won't break
+  under you, but also won't pick up upstream fixes until `scripts/update_vendor.sh` is run.
+  OpenRouter's Decisions transport is implemented from its published description but not
+  exercised here.
 
 ## Where this goes next
 

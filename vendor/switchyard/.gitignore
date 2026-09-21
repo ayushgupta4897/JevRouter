@@ -1,0 +1,168 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+leaderboard/
+report/
+.Python
+build/
+target/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# Environments
+.env
+.venv
+.venv-vllm
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# MkDocs build artifacts
+site/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Project specific config files (keep examples)
+config/nemo_llm_proxy_config.yaml
+config/nemo_llm_proxy_server_config.yaml
+
+# Logs
+*.log
+logs/
+
+# RL training data
+rl_data/
+
+# Secrets (keep template and README)
+secrets/*
+!secrets/secrets.template.json
+!secrets/README.md
+
+# Temporary test data (keep README)
+tmp/*
+!tmp/README.md
+
+# Performance test results (keep example report and README)
+benchmark/perf/results/*
+!benchmark/perf/results/.gitkeep
+benchmark/perf/example_report.md
+
+# Perf benchmark output (.github/workflows/perf.yml)
+/perf-results/
+/perf-input.jsonl
+
+# Terminal-Bench classifier run artifacts (server/harbor logs, agent
+# trajectories, asciinema recordings — re-generated per run)
+benchmark/tb_runs/
+benchmark/datasets/
+
+swebench_runs*.json
+**/results/*
+**/result/*
+**/score/*
+**/.file_locks/*
+runs/**/*.*
+third party/**/*.*
+
+# Scratch / local working files
+scratch/
+plans/
+.experiments/
+
+# Benchmark result directories
+bench_results*/
+soak-results/
+local-soak-test-results/
+routing-benchmark-results/
+jobs/**/*.*
+pytest-of-*/
+
+# canonical location for git worktrees
+.worktrees/
+
+# codex
+.codex
+openthoughts-tblite/

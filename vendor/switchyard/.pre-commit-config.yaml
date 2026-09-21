@@ -1,0 +1,63 @@
+default_install_hook_types:
+  - pre-commit
+  - commit-msg
+
+repos:
+  - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
+    rev: v9.25.0
+    hooks:
+      - id: commitlint
+        stages: [commit-msg]
+        additional_dependencies:
+          - "@commitlint/config-conventional@20.4.1"
+
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.12
+    hooks:
+      - id: actionlint
+
+  - repo: local
+    hooks:
+      - id: spdx-headers
+        name: SPDX headers (auto-add)
+        entry: python .hooks/add_spdx_headers.py
+        language: system
+        types: [python]
+        stages: [pre-commit]
+      - id: ruff-fix
+        name: ruff (auto-fix, non-blocking)
+        entry: bash -c 'ruff check --fix . || true'
+        language: system
+        types: [python]
+        pass_filenames: false
+        stages: [pre-commit]
+      - id: cargo-fmt
+        name: cargo fmt
+        entry: cargo fmt --all --check
+        language: system
+        files: ^(Cargo\.toml|Cargo\.lock|crates/.*\.rs)$
+        pass_filenames: false
+        stages: [pre-commit]
+      - id: cargo-clippy
+        name: cargo clippy
+        entry: cargo clippy --workspace --all-targets -- -D warnings
+        language: system
+        files: ^(Cargo\.toml|Cargo\.lock|crates/.*\.rs)$
+        pass_filenames: false
+        stages: [pre-commit]
+      - id: mypy
+        name: mypy (strict, non-blocking)
+        entry: bash -c 'mypy --config-file=pyproject.toml switchyard/ || true'
+        language: system
+        types: [python]
+        pass_filenames: false
+        verbose: true
+        stages: [pre-commit]
+      - id: pyright
+        name: pyright (non-blocking)
+        entry: bash -c 'pyright switchyard/ || true'
+        language: system
+        types: [python]
+        pass_filenames: false
+        verbose: true
+        stages: [pre-commit]
