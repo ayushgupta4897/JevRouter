@@ -110,7 +110,11 @@ async def call_model(http: httpx.AsyncClient, base_url: str, api_key: str | None
     headers = {"Content-Type": "application/json"}
     if api_key:
         headers["Authorization"] = f"Bearer {api_key}"
-    body = {"model": model, "messages": [{"role": "user", "content": prompt}], "max_tokens": max_tokens}
+    # GPT-5.6-*/GPT-6-Astra reject the legacy `max_tokens` (verified against the real API,
+    # 2026-09-22): they require `max_completion_tokens`. Switchyard's own openai_chat encoder
+    # already sends the new name (crates/switchyard-translation/.../buffered.rs); this harness
+    # talks to the API directly, so it needs the same fix on its own.
+    body = {"model": model, "messages": [{"role": "user", "content": prompt}], "max_completion_tokens": max_tokens}
     started = time.perf_counter()
     response = await http.post(f"{base_url}/chat/completions", json=body, headers=headers, timeout=60.0)
     latency_ms = (time.perf_counter() - started) * 1000
