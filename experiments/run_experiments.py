@@ -131,19 +131,27 @@ class ExperimentResult:
         return sum(1 for i in self.items if i.correct) / len(self.items) if self.items else 0.0
 
     @property
+    def priced_items(self) -> list[ItemResult]:
+        """Items with a genuine, usable completion. Excludes anything flagged completion_error --
+        including "reasoning exhausted the token budget with no visible answer" (see
+        fix_truncated.py) -- rather than let a real charge for zero usable output either vanish
+        or silently inflate/deflate a cost comparison it can't meaningfully participate in."""
+        return [i for i in self.items if not i.completion_error]
+
+    @property
     def total_real_cost(self) -> float:
-        return sum(i.completion_cost_usd for i in self.items)
+        return sum(i.completion_cost_usd for i in self.priced_items)
 
     @property
     def frontier_only_cost(self) -> float:
-        """What every item would have cost had it gone to the most expensive model this route is
-        CONFIGURED with -- not just the models routing actually picked, since a route that (like
-        `auto` here) stays on one tier across the whole sample would otherwise show 0% savings
-        purely because nothing pricier was ever selected to compare against. Uses each item's
-        REAL measured token counts against that fixed tier's real price -- the fair baseline
-        (same tokens, priciest configured tier), not a guessed frontier token count."""
+        """What every priced item would have cost had it gone to the most expensive model this
+        route is CONFIGURED with -- not just the models routing actually picked, since a route
+        that (like `auto` here) stays on one tier across the whole sample would otherwise show 0%
+        savings purely because nothing pricier was ever selected to compare against. Uses each
+        item's REAL measured token counts against that fixed tier's real price -- the fair
+        baseline (same tokens, priciest configured tier), not a guessed frontier token count."""
         pricing = get_pricing(max(self.roster_ids, key=lambda m: get_pricing(m).output_per_million))
-        return sum(pricing.cost(i.completion_input_tokens, i.completion_output_tokens) for i in self.items)
+        return sum(pricing.cost(i.completion_input_tokens, i.completion_output_tokens) for i in self.priced_items)
 
     @property
     def savings_pct(self) -> float:
