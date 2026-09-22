@@ -1,0 +1,38 @@
+# Owned by the voice-AI team. Editing this file and saving it is the entire deployment process:
+# `routerctl serve` picks it up, recompiles, validates, and swaps live -- no platform ticket,
+# no restart request. See docs/TEAM_CONFIG.md for the full schema and the other three policies.
+team: voice-ai
+owner: voice-ai-team@example.com
+
+routes:
+  # Post-call transcript analysis, one route, two very different jobs behind it. Jev reads the
+  # transcript once and picks a bucket by content -- no keyword rules to maintain.
+  - name: deployment/transcription
+    policy: intent
+    default: analysis  # judge unreachable or unsure -> the safer, more capable bucket
+    models:
+      extraction:
+        id: gpt-5.6-luna
+        client: openai
+        description: >
+          Pulling a structured field straight out of the transcript: a caller's name, a date,
+          an order or account number, an amount, or a plain yes/no outcome. No judgment call,
+          the answer is either in the transcript verbatim or it isn't.
+      analysis:
+        id: gpt-5.6-sol
+        client: openai
+        description: >
+          Summarizing the call, judging customer sentiment or satisfaction, flagging a
+          compliance or escalation risk, or anything else that takes reading the whole
+          conversation and forming a judgment rather than looking up one fact.
+
+  # A second, independent route in the same team file: complexity-based rather than
+  # intent-based, for a task where "how hard is this one" is the right question instead of
+  # "which of a few fixed things is this".
+  - name: deployment/qa-summary
+    policy: complexity
+    models:
+      weak: { id: gpt-5.6-terra, client: openai }
+      strong: { id: gpt-6-astra, client: openai }
+    base_threshold: 0.55   # slightly conservative: QA summaries feed a compliance record
+    threshold_step: 0.1

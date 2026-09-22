@@ -1,0 +1,23 @@
+# The platform team's own routes: the zero-config default, and a coding-agent example using
+# escalation. Every team's file looks exactly like this one and voice-ai.yaml -- there is no
+# separate "platform" schema, just a team that happens to own the fallback route.
+team: platform
+owner: platform-team@example.com
+
+routes:
+  # The default any client gets with no opinion of its own: point at "auto" and get a sane,
+  # already-tuned policy (Switchyard's own auto preset) rather than a blank page.
+  - name: deployment/auto
+    policy: auto
+    models:
+      efficient: { id: gpt-5.6-terra, client: openai }
+      capable: { id: gpt-6-astra, client: openai }
+
+  # A coding agent: start cheap, let a judge watching the actual transcript decide when the
+  # session is genuinely stuck rather than guessing up front how hard the task looks.
+  - name: deployment/coding-agent
+    policy: escalation
+    models:
+      weak: { id: gpt-5.6-sol, client: openai }
+      strong: { id: gpt-6-astra, client: openai }
+    confirmations: 2

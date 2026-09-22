@@ -33,11 +33,12 @@ if [[ "$SKIP_RUST" != "--skip-rust" ]]; then
   ( cd "$VENDOR" && CARGO_TARGET_DIR="$VENDOR/target" maturin develop --release --quiet )
 fi
 
-echo "== [3/3] jevjudge (editable) + its dev/test deps"
+echo "== [3/3] jevjudge + routerctl (editable) + their dev/test deps"
 $PIP install -q -e "$ROOT/jevjudge[dev]"
+$PIP install -q -e "$ROOT/routerctl[dev]"
 
 echo
 echo "Built. Verify with:  scripts/e2e.sh"
 echo "  switchyard-server : $VENDOR/target/release/switchyard-server"
 echo "  python venv       : $VENV  (activate: source .venv/bin/activate)"
-python3 -c "import switchyard, jevjudge; print('  switchyard pkg   :', switchyard.__file__); print('  jevjudge pkg     :', jevjudge.__file__)" 2>/dev/null || true
+python3 -c "import switchyard, jevjudge, routerctl; print('  switchyard pkg   :', switchyard.__file__); print('  jevjudge pkg     :', jevjudge.__file__); print('  routerctl pkg    :', routerctl.__file__)" 2>/dev/null || true

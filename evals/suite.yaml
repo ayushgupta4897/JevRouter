@@ -1,0 +1,304 @@
+# A small, hand-written eval set: 24 prompts, 4 domains x 3 difficulty tiers x 2 each. Small on
+# purpose (see docs/EVALS.md for why) -- this measures where a candidate model sits on the
+# cost/quality curve per domain, not "is it a good model" in general (public benchmarks answer
+# that; see docs/EVALS.md's citation list).
+#
+# grader:
+#   contains_all   -- every string in `expected` must appear (case-insensitive) in the response
+#   numeric_equals -- the first number in the response must equal `expected` within `tolerance`
+#   jev_noul       -- Jev judges yes/no against `rubric`; graded correct if noul >= 0.5
+
+- id: coding-easy-1
+  domain: coding
+  difficulty: easy
+  prompt: >
+    Write a Python function `is_even(n)` that returns True if n is even, False otherwise.
+    Reply with only the function definition, no explanation, no markdown fences.
+  grader: contains_all
+  expected: ["def is_even", "% 2"]
+
+- id: coding-easy-2
+  domain: coding
+  difficulty: easy
+  prompt: >
+    Write one line of Python that reverses the string held in variable `s` and assigns the
+    result to `r`. Reply with only that one line.
+  grader: contains_all
+  expected: ["s[::-1]"]
+
+- id: coding-medium-1
+  domain: coding
+  difficulty: medium
+  prompt: >
+    Write a Python function `most_common(words: list[str]) -> str` that returns the most
+    frequently occurring string in the list, breaking ties by whichever appears first. Reply
+    with only the function definition.
+  grader: jev_noul
+  rubric: >
+    The response defines a function that finds the most frequent element in a list, correctly
+    breaking ties by first occurrence (not just using max() on a Counter, which does not
+    guarantee first-occurrence tie-breaking, or does so correctly if it does).
+
+- id: coding-medium-2
+  domain: coding
+  difficulty: medium
+  prompt: >
+    A function `def total(items): return sum(i.price for i in items)` throws AttributeError
+    when `items` contains plain dicts like `{"price": 9.99}` instead of objects. Give a one-line
+    fix to the return statement that works for both dicts and objects with a `.price` attribute.
+  grader: jev_noul
+  rubric: >
+    The response gives a one-line fix (e.g. using getattr with a dict fallback, or
+    `i["price"] if isinstance(i, dict) else i.price`, or similar) that correctly handles both a
+    dict with a "price" key and an object with a .price attribute.
+
+- id: coding-hard-1
+  domain: coding
+  difficulty: hard
+  prompt: >
+    Write a Python generator function `sliding_window(iterable, n)` that yields overlapping
+    tuples of length n from iterable, e.g. sliding_window([1,2,3,4], 2) yields (1,2), (2,3),
+    (3,4). It must work on iterables that are not indexable (e.g. a generator), using O(n) extra
+    memory. Reply with only the function definition.
+  grader: jev_noul
+  rubric: >
+    The response defines a generator that yields overlapping n-tuples from any iterable
+    (including one-pass iterables like a generator, not just sequences supporting indexing),
+    using a fixed-size buffer (e.g. collections.deque(maxlen=n)) rather than materializing the
+    whole input or re-indexing it.
+
+- id: coding-hard-2
+  domain: coding
+  difficulty: hard
+  prompt: >
+    Two threads increment a shared Python `counter = 0` a million times each with `counter +=
+    1`, no lock. Explain in 2-3 sentences why the final value is often less than 2,000,000, and
+    name the specific fix.
+  grader: jev_noul
+  rubric: >
+    The response correctly explains that `counter += 1` is not atomic (it is a read-modify-write
+    of three bytecode-level steps) so increments from the two threads can interleave and be
+    lost, and names a correct fix (a threading.Lock around the increment, or a
+    thread-safe/atomic counter).
+
+- id: extraction-easy-1
+  domain: extraction
+  difficulty: easy
+  prompt: >
+    Extract the invoice number from this text. Reply with only the number, nothing else.
+    Text: "Please find attached Invoice #INV-88213 for services rendered in August."
+  grader: contains_all
+  expected: ["INV-88213"]
+
+- id: extraction-easy-2
+  domain: extraction
+  difficulty: easy
+  prompt: >
+    Extract the caller's stated account number. Reply with only the number.
+    Text: "Hi, this is regarding my account, it's 4471-2298, I was charged twice this month."
+  grader: contains_all
+  expected: ["4471-2298"]
+
+- id: extraction-medium-1
+  domain: extraction
+  difficulty: medium
+  prompt: >
+    Extract the total amount due, as a plain number with two decimal places, no currency symbol.
+    Text: "Subtotal: $412.00. Tax (8.25%): $33.99. Total due upon receipt: $445.99."
+  grader: numeric_equals
+  expected: 445.99
+  tolerance: 0.01
+
+- id: extraction-medium-2
+  domain: extraction
+  difficulty: medium
+  prompt: >
+    A customer says: "I called last Tuesday, then again on Thursday, and finally today,
+    Monday, still no resolution." If today is Monday, September 22, 2026, what calendar date
+    was "last Tuesday"? Reply with only the date as YYYY-MM-DD.
+  grader: contains_all
+  expected: ["2026-09-15"]
+
+- id: extraction-hard-1
+  domain: extraction
+  difficulty: hard
+  prompt: >
+    Extract every distinct product SKU mentioned, as a comma-separated list in the order first
+    mentioned, with no duplicates.
+    Text: "Order includes SKU-100 (x2), then the customer added SKU-204, later swapped one
+    SKU-100 for a SKU-311, and finally confirmed SKU-204 again along with a new SKU-450."
+  grader: contains_all
+  expected: ["SKU-100", "SKU-204", "SKU-311", "SKU-450"]
+
+- id: extraction-hard-2
+  domain: extraction
+  difficulty: hard
+  prompt: >
+    A call transcript mixes the agent's and customer's statements without labels. Determine
+    which speaker stated the refund amount, and extract it.
+    Text: "Okay so you're saying the charge was for sixty dollars. Yes that's right, sixty even.
+    Let me check... I see a refund of forty-five dollars was already processed on the ninth.
+    Wait, I never received that. I'll escalate this for you."
+  grader: numeric_equals
+  expected: 45
+  tolerance: 0
+
+- id: finance-easy-1
+  domain: finance
+  difficulty: easy
+  prompt: >
+    A customer's bill is $80 before an 8% late fee is applied. What is the total, in dollars,
+    to two decimal places? Reply with only the number.
+  grader: numeric_equals
+  expected: 86.40
+  tolerance: 0.01
+
+- id: finance-easy-2
+  domain: finance
+  difficulty: easy
+  prompt: >
+    A company's revenue grew from $2,000,000 to $2,300,000 in one year. What was the percentage
+    growth? Reply with only the number, no percent sign.
+  grader: numeric_equals
+  expected: 15
+  tolerance: 0.5
+
+- id: finance-medium-1
+  domain: finance
+  difficulty: medium
+  prompt: >
+    A loan of $10,000 accrues simple interest at 6% annually. What is the total amount owed
+    after 18 months? Reply with only the number, two decimal places.
+  grader: numeric_equals
+  expected: 10900.00
+  tolerance: 1.0
+
+- id: finance-medium-2
+  domain: finance
+  difficulty: medium
+  prompt: >
+    A portfolio is 60% stocks and 40% bonds, worth $500,000 total. Stocks rose 10%, bonds fell
+    2%. What is the new total portfolio value? Reply with only the number.
+  grader: numeric_equals
+  expected: 526000
+  tolerance: 100
+
+- id: finance-hard-1
+  domain: finance
+  difficulty: hard
+  prompt: >
+    A company's gross margin is 40% and operating expenses are 25% of revenue. If revenue is
+    $1,200,000, what is operating income (gross profit minus operating expenses), in dollars?
+  grader: numeric_equals
+  expected: 180000
+  tolerance: 1000
+
+- id: finance-hard-2
+  domain: finance
+  difficulty: hard
+  prompt: >
+    An invoice shows a 2/10 net 30 early payment discount (2% off if paid within 10 days,
+    otherwise full amount due in 30). On a $50,000 invoice paid on day 10, what is the effective
+    annualized interest rate being forgone by NOT taking the discount, if paid instead on day
+    30? Use the standard approximation: (discount% / (100% - discount%)) * (365 / (full period -
+    discount period)). Reply with only the percentage, one decimal place.
+  grader: jev_noul
+  rubric: >
+    The response reports an effective annualized rate in the neighborhood of 36-37% (the
+    standard 2/10 net 30 approximation gives (2/98) * (365/20) ≈ 37.2%), showing the correct
+    approach even if the exact decimal varies slightly by rounding.
+
+- id: general-easy-1
+  domain: general
+  difficulty: easy
+  prompt: >
+    If all bloops are razzles, and all razzles are lazzles, are all bloops definitely lazzles?
+    Answer only yes or no.
+  grader: contains_all
+  expected: ["yes"]
+
+- id: general-easy-2
+  domain: general
+  difficulty: easy
+  prompt: >
+    A user asks a support bot: "cancel". With zero other context, what is the single most
+    important clarifying question to ask back? Reply in one short sentence.
+  grader: jev_noul
+  rubric: >
+    The response asks a genuinely clarifying question that identifies WHAT the user wants to
+    cancel (an order, a subscription, an appointment, etc.) rather than assuming, and rather
+    than answering as if the request were already unambiguous.
+
+- id: general-medium-1
+  domain: general
+  difficulty: medium
+  prompt: >
+    Three people, Alice, Bob, and Carol, each tell you one true statement and one false
+    statement, in some order. Alice says: "Bob is a liar" then "Carol is honest." Bob says:
+    "Alice is honest" then "I am the liar." Carol says nothing you can hear. Based only on the
+    two statements from Alice and the two from Bob, is it possible for both of Alice's
+    statements about Bob and Carol to be consistent with both of Bob's statements about Alice
+    and himself, given each person has exactly one true and one false statement? Answer yes or
+    no and give one sentence of reasoning.
+  grader: jev_noul
+  rubric: >
+    The response correctly identifies that Bob's statement "I am the liar" is self-referentially
+    paradoxical if taken as the false one (if false, he is not the liar, but then his other
+    statement "Alice is honest" would need to be the true one, which is consistent) -- the
+    expected conclusion is that it IS possible (Bob's false statement is "I am the liar", true
+    statement is "Alice is honest"; Alice's true statement is "Bob is a liar" is compatible
+    since Bob having one false statement makes him "a liar" loosely, and false statement "Carol
+    is honest" is fine) -- accept "yes" with any reasoning that correctly resolves Bob's
+    self-referential statement without contradiction; reject a "no" or reasoning that ignores
+    the self-reference.
+
+- id: general-medium-2
+  domain: general
+  difficulty: medium
+  prompt: >
+    A voice AI post-call system must decide, from a transcript alone, whether a customer
+    agreed to a recurring charge. The transcript says: "Sure, sounds good, sign me up" in
+    response to an agent describing a $9.99/month plan, but the agent never explicitly said the
+    word "recurring" or "monthly charge" after that point. Should the system mark this as
+    explicit consent to a recurring charge? Answer yes or no and explain briefly.
+  grader: jev_noul
+  rubric: >
+    The response reasons that agreeing to a plan the agent described AS a monthly charge does
+    constitute consent to the recurring nature (the monthly framing was established before the
+    agreement, so "sign me up" refers to the whole described plan), OR reasonably flags this as
+    borderline/ambiguous and worth escalation rather than confidently answering either way with
+    no acknowledgment of the ambiguity. Reject a response that ignores the question and just
+    restates the transcript.
+
+- id: general-hard-1
+  domain: general
+  difficulty: hard
+  prompt: >
+    You must choose, in one sentence, the single most important reason a router that predicts
+    task difficulty BEFORE running a task (rather than watching the task run and escalating on
+    trouble) will misroute more often on genuinely novel, previously-unseen task types. Answer
+    in one sentence.
+  grader: jev_noul
+  rubric: >
+    The response correctly identifies that a before-the-fact predictor has no evidence besides
+    surface features of the request itself (so novel task types resemble nothing in its
+    training/calibration and it must guess), whereas a during-the-fact escalation approach gets
+    real evidence (actual tool results, actual errors) regardless of how novel the task is.
+    Reject an answer that is generic ("the model isn't smart enough") without this distinction.
+
+- id: general-hard-2
+  domain: general
+  difficulty: hard
+  prompt: >
+    A cost-based model router achieves 95% of a frontier model's accuracy at 30% of its cost by
+    routing only 10% of requests to the frontier model. A colleague says "this proves the
+    frontier model is barely better, since we only needed it 10% of the time." Explain in 2-3
+    sentences why that conclusion does not follow from the numbers given.
+  grader: jev_noul
+  rubric: >
+    The response identifies that the 10% of requests sent to the frontier model were exactly
+    the ones the cheap model was predicted or shown to be weak on (selection, not a random
+    sample), so the frontier model's value on THOSE specific requests can still be large --
+    the aggregate accuracy gap looking small is a property of the ROUTING, not evidence that the
+    frontier model is only marginally better overall. Reject an answer that doesn't address the
+    selection-effect / non-random-sample point.
