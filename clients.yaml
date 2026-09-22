@@ -1,0 +1,14 @@
+# Platform-managed. Teams reference these by name in their own teams/<team>.yaml; they don't
+# declare upstream connections themselves, so a credential or base_url only lives in one place.
+# The shared Jev judge client ("jevjudge") always exists too -- routerctl injects it into the
+# compiled TOML automatically, so it is never declared here (see schema.JEV_JUDGE_CLIENT).
+clients:
+  openai:
+    format: openai_chat
+    base_url: https://api.openai.com/v1
+    api_key_env: OPENAI_API_KEY
+
+  openrouter:
+    format: openai_chat
+    base_url: https://openrouter.ai/api/v1
+    api_key_env: OPENROUTER_API_KEY

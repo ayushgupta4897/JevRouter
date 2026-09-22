@@ -1,0 +1,135 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+//! Typed failures surfaced by libsy's orchestration APIs.
+
+use std::error::Error as StdError;
+
+use switchyard_protocol::{LlmClientError, ModelId};
+use thiserror::Error;
+
+/// Result type returned by libsy APIs.
+pub type Result<T> = std::result::Result<T, LibsyError>;
+
+/// Failures surfaced while selecting a route, driving an algorithm, or serving a model call.
+#[derive(Debug, Error)]
+pub enum LibsyError {
+    /// A named target was not present in the configured target set.
+    #[error("target {target:?} was not found")]
+    TargetNotFound {
+        /// Missing target model id.
+        target: ModelId,
+    },
+
+    /// Routing was attempted without any configured targets.
+    #[error("no routing targets are configured")]
+    NoTargets,
+
+    /// An algorithm could not complete for an algorithm-specific reason.
+    #[error("{message}")]
+    AlgorithmError {
+        /// Description of the algorithm failure.
+        message: String,
+    },
+
+    /// The step-stream driver could not complete an operation.
+    #[error(transparent)]
+    Driver(#[from] DriverError),
+
+    /// An algorithm's step stream ended without a terminal routing outcome.
+    #[error("algorithm run ended without a routing outcome")]
+    MissingFinalResponse,
+
+    /// A target's protocol client failed while serving a routed request.
+    #[error("client call to target {target:?} failed: {source}")]
+    ClientCall {
+        /// Target whose client failed.
+        target: ModelId,
+        /// Typed error supplied by the protocol-owned client trait.
+        #[source]
+        source: LlmClientError,
+    },
+
+    /// A user extension or other foreign operation failed.
+    #[error("{operation} failed: {source}")]
+    External {
+        /// Short description of the operation that failed.
+        operation: &'static str,
+        /// Original failure.
+        #[source]
+        source: Box<dyn StdError + Send + Sync>,
+    },
+}
+
+impl LibsyError {
+    /// Wrap an error returned by the protocol-owned client trait.
+    pub fn client_call(target: impl Into<ModelId>, source: LlmClientError) -> Self {
+        Self::ClientCall {
+            target: target.into(),
+            source,
+        }
+    }
+
+    /// Preserve a concrete foreign error with a description of the failed operation.
+    pub fn external(
+        operation: &'static str,
+        source: impl StdError + Send + Sync + 'static,
+    ) -> Self {
+        Self::External {
+            operation,
+            source: Box::new(source),
+        }
+    }
+}
+
+/// Failures in the step-stream driver.
+#[derive(Debug, Error)]
+pub enum DriverError {
+    /// The consumer side of the step channel was dropped.
+    #[error("driver stream is closed")]
+    StreamClosed,
+
+    /// One side of a response promise was dropped before delivery.
+    #[error("driver response promise was dropped")]
+    ResponseDropped,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn client_call_preserves_target_and_source() {
+        let error = LibsyError::client_call(
+            "strong",
+            LlmClientError::General("upstream down".to_string()),
+        );
+        match &error {
+            LibsyError::ClientCall { target, source } => {
+                assert_eq!(target, "strong");
+                assert_eq!(source.to_string(), "upstream down");
+            }
+            other => panic!("expected ClientCall, got {other:?}"),
+        }
+        assert_eq!(
+            StdError::source(&error).map(ToString::to_string),
+            Some("upstream down".to_string())
+        );
+    }
+
+    #[test]
+    fn external_preserves_operation_and_source() {
+        let error = LibsyError::external(
+            "loading extension",
+            std::io::Error::other("bad configuration"),
+        );
+        assert!(matches!(
+            &error,
+            LibsyError::External { operation, .. } if *operation == "loading extension"
+        ));
+        assert_eq!(
+            StdError::source(&error).map(ToString::to_string),
+            Some("bad configuration".to_string())
+        );
+    }
+}

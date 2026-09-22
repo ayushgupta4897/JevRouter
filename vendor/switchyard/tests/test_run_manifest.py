@@ -1,0 +1,436 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
+from __future__ import annotations
+
+import importlib.util
+import json
+from pathlib import Path
+from types import ModuleType
+
+REPO = Path(__file__).resolve().parents[1]
+MANIFEST = REPO / "benchmark" / "run_manifest.py"
+
+
+def _load_manifest_module() -> ModuleType:
+    spec = importlib.util.spec_from_file_location("switchyard_benchmark_run_manifest", MANIFEST)
+    assert spec is not None
+    assert spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_write_manifest_schema_and_git_fields(tmp_path: Path) -> None:
+    module = _load_manifest_module()
+    out = tmp_path / "run_manifest.json"
+
+    module.write_manifest(out, harbor={"dataset": "openthoughts-tblite@2.0"})
+
+    manifest = json.loads(out.read_text())
+    assert manifest["run"]["schema_version"] == module.SCHEMA_VERSION
+    assert manifest["run"]["git_tree_kind"] in {"git-clean", "git-dirty", "not-git"}
+    assert manifest["run"]["git_dirty"] in {True, False, None}
+    assert manifest["harbor"]["dataset"] == "openthoughts-tblite@2.0"
+
+
+def test_dataset_fingerprint_includes_task_list_digest(tmp_path: Path) -> None:
+    module = _load_manifest_module()
+    task_list = tmp_path / "tasks.txt"
+    task_list.write_text("alpha\n")
+
+    first = module.dataset_fingerprint("openthoughts-tblite@2.0", task_list)
+    task_list.write_text("alpha\nbeta\n")
+    second = module.dataset_fingerprint("openthoughts-tblite@2.0", task_list)
+
+    assert first.startswith("sha256:")
+    assert second.startswith("sha256:")
+    assert first != second
+
+
+def test_dataset_fingerprint_includes_local_path_digest(tmp_path: Path) -> None:
+    module = _load_manifest_module()
+    dataset = tmp_path / "dataset"
+    dataset.mkdir()
+    (dataset / "task.toml").write_text("[environment]\n")
+
+    first = module.dataset_fingerprint(None, harbor_path=dataset)
+    (dataset / "extra.txt").write_text("changed\n")
+    second = module.dataset_fingerprint(None, harbor_path=dataset)
+
+    assert first.startswith("sha256:")
+    assert second.startswith("sha256:")
+    assert first != second
+
+
+def test_cli_write_applies_extra_fields(tmp_path: Path) -> None:
+    module = _load_manifest_module()
+    out = tmp_path / "run_manifest.json"
+    run_dir = tmp_path / "run"
+    dataset = tmp_path / "dataset"
+    dataset.mkdir()
+    harbor_bin = tmp_path / "harbor"
+    harbor_bin.write_text("#!/usr/bin/env bash\necho 'harbor test 9.9'\n")
+    harbor_bin.chmod(0o755)
+
+    rc = module._cli_main(
+        [
+            "write",
+            "--output",
+            str(out),
+            "--server-preset",
+            "serve",
+            "--harbor-command-json",
+            json.dumps([str(harbor_bin)]),
+            "--harbor-path",
+            str(dataset),
+            "--agent",
+            "terminus-2",
+            "--harbor-model",
+            "openai/gpt-5.2",
+            "--n-concurrent",
+            "1",
+            "--max-retries",
+            "0",
+            "--agent-timeout-multiplier",
+            "1.0",
+            "--run-dir",
+            str(run_dir),
+            "--log-path",
+            str(run_dir / "run.log"),
+            "--harbor-result-json",
+            str(run_dir / "harbor_result.json"),
+            "--routing-stats-json",
+            str(run_dir / "routing_stats_final.json"),
+            "--extra",
+            'server.note="external"',
+        ]
+    )
+
+    assert rc == 0
+    manifest = json.loads(out.read_text())
+    assert manifest["run"]["harbor_command"] == [str(harbor_bin)]
+    assert manifest["run"]["harbor_version"] == "harbor test 9.9"
+    assert manifest["server"]["note"] == "external"
+    assert "benchmark" not in manifest["harbor"]
+    assert manifest["harbor"]["path"] == str(dataset)
+    assert manifest["harbor"]["dataset_fingerprint"].startswith("sha256:")
+
+
+def test_cli_write_records_server_config_digest(tmp_path: Path) -> None:
+    module = _load_manifest_module()
+    out = tmp_path / "run_manifest.json"
+    run_dir = tmp_path / "run"
+    config = tmp_path / "routes.toml"
+    config.write_text('schema_version = 1\n\n[routes.noop]\nid = "noop"\ntype = "noop"\n')
+    dataset = tmp_path / "dataset"
+    dataset.mkdir()
+
+    rc = module._cli_main(
+        [
+            "write",
+            "--output",
+            str(out),
+            "--server-preset",
+            "serve",
+            "--server-config",
+            str(config),
+            "--route-model",
+            "noop",
+            "--harbor-path",
+            str(dataset),
+            "--agent",
+            "terminus-2",
+            "--harbor-model",
+            "tb-lite-random-routing",
+            "--n-concurrent",
+            "1",
+            "--max-retries",
+            "0",
+            "--agent-timeout-multiplier",
+            "1.0",
+            "--run-dir",
+            str(run_dir),
+            "--log-path",
+            str(run_dir / "run.log"),
+            "--harbor-result-json",
+            str(run_dir / "harbor_result.json"),
+            "--routing-stats-json",
+            str(run_dir / "routing_stats_final.json"),
+        ]
+    )
+
+    assert rc == 0
+    manifest = json.loads(out.read_text())
+    assert manifest["server"]["server_config"] == str(config)
+    assert manifest["server"]["server_config_digest"] == module.path_digest(config)
+    snapshot = run_dir / "server_config" / config.name
+    assert manifest["server"]["server_config_snapshot"] == str(snapshot)
+    assert manifest["server"]["server_config_snapshot_digest"] == module.path_digest(snapshot)
+    assert snapshot.read_bytes() == config.read_bytes()
+    assert manifest["server"]["route_model"] == "noop"
+
+
+def test_cli_write_records_direct_upstream_mode_without_routing_stats(tmp_path: Path) -> None:
+    module = _load_manifest_module()
+    out = tmp_path / "run_manifest.json"
+    run_dir = tmp_path / "run"
+    dataset = tmp_path / "dataset"
+    dataset.mkdir()
+
+    rc = module._cli_main(
+        [
+            "write",
+            "--output",
+            str(out),
+            "--server-preset",
+            "direct",
+            "--server-mode",
+            "direct",
+            "--server-config-json",
+            '{"mode":"direct","upstream_api_key_env":"NVIDIA_API_KEY"}',
+            "--harbor-base-url",
+            "https://inference-api.nvidia.com/v1",
+            "--upstream-base-url",
+            "https://inference-api.nvidia.com/v1",
+            "--upstream-api-key-env",
+            "NVIDIA_API_KEY",
+            "--harbor-path",
+            str(dataset),
+            "--agent",
+            "codex",
+            "--harbor-model",
+            "openai/gpt-5.2",
+            "--n-concurrent",
+            "1",
+            "--max-retries",
+            "0",
+            "--agent-timeout-multiplier",
+            "1.0",
+            "--run-dir",
+            str(run_dir),
+            "--log-path",
+            str(run_dir / "run.log"),
+            "--harbor-result-json",
+            str(run_dir / "harbor_result.json"),
+            "--routing-stats-json",
+            str(run_dir / "routing_stats_final.json"),
+            "--routing-stats-status",
+            "not-requested",
+        ]
+    )
+
+    assert rc == 0
+    manifest = json.loads(out.read_text())
+    assert manifest["server"]["preset"] == "direct"
+    assert manifest["server"]["mode"] == "direct"
+    assert manifest["server"]["upstream_base_url"] == "https://inference-api.nvidia.com/v1"
+    assert manifest["server"]["upstream_api_key_env"] == "NVIDIA_API_KEY"
+    assert manifest["server"]["server_config"] is None
+    assert manifest["outcomes"]["routing_stats_json_status"] == "not-requested"
+
+    rc = module.finalize_manifest(out, harbor_rc=0, harbor_job_dir=run_dir / "jobs" / "job")
+
+    assert rc == 0
+    manifest = json.loads(out.read_text())
+    assert manifest["outcomes"]["routing_stats_json_status"] == "not-requested"
+
+
+def test_cli_write_records_closed_book_local_dataset_snapshot(tmp_path: Path) -> None:
+    module = _load_manifest_module()
+    out = tmp_path / "run_manifest.json"
+    run_dir = tmp_path / "run"
+    dataset = tmp_path / "dataset"
+    dataset.mkdir()
+    source_manifest = dataset / "switchyard_dataset_manifest.json"
+    source_manifest.write_text(
+        json.dumps(
+            {
+                "source_dataset": "openthoughts-tblite@2.0",
+                "agent_versions": {"codex": "0.144.5"},
+            }
+        )
+    )
+
+    rc = module._cli_main(
+        [
+            "write",
+            "--output",
+            str(out),
+            "--server-preset",
+            "serve",
+            "--harbor-path",
+            str(dataset),
+            "--agent",
+            "codex",
+            "--harbor-model",
+            "openai/gpt-5.5",
+            "--n-concurrent",
+            "1",
+            "--max-retries",
+            "0",
+            "--agent-timeout-multiplier",
+            "1.0",
+            "--closed-book-mode",
+            "closed",
+            "--closed-book-gateway-enforced",
+            "1",
+            "--closed-book-hosted-tools-disabled",
+            "1",
+            "--closed-book-proxy-strip-artifact",
+            "/etc/proxy-public/strip.jsonl",
+            "--agent-versions-json",
+            '{"codex":"0.144.5"}',
+            "--run-dir",
+            str(run_dir),
+            "--log-path",
+            str(run_dir / "run.log"),
+            "--harbor-result-json",
+            str(run_dir / "harbor_result.json"),
+            "--routing-stats-json",
+            str(run_dir / "routing_stats_final.json"),
+        ]
+    )
+
+    assert rc == 0
+    manifest = json.loads(out.read_text())
+    assert manifest["harbor"]["path"] == str(dataset)
+    assert manifest["harbor"]["path_digest"] == module.path_digest(dataset)
+    assert manifest["closed_book"]["mode"] == "closed"
+    assert manifest["closed_book"]["gateway_enforced"] is True
+    assert manifest["closed_book"]["hosted_tools_disabled"] is True
+    assert manifest["closed_book"]["verifier_egress"] == "open-via-authenticated-proxy"
+    assert manifest["closed_book"]["agent_versions"] == {"codex": "0.144.5"}
+    snapshot = run_dir / "dataset" / "switchyard_dataset_manifest.json"
+    assert manifest["closed_book"]["dataset_manifest_snapshot"] == str(snapshot)
+    assert snapshot.read_text() == source_manifest.read_text()
+
+
+def test_cli_write_records_open_book_proxy_mode(tmp_path: Path) -> None:
+    module = _load_manifest_module()
+    out = tmp_path / "run_manifest.json"
+    run_dir = tmp_path / "run"
+    dataset = tmp_path / "dataset"
+    dataset.mkdir()
+    (dataset / "switchyard_dataset_manifest.json").write_text("{}\n")
+
+    rc = module._cli_main(
+        [
+            "write",
+            "--output",
+            str(out),
+            "--server-preset",
+            "serve",
+            "--harbor-path",
+            str(dataset),
+            "--agent",
+            "codex",
+            "--harbor-model",
+            "tb-lite-single-gpt-5-5",
+            "--n-concurrent",
+            "1",
+            "--max-retries",
+            "0",
+            "--agent-timeout-multiplier",
+            "1.0",
+            "--closed-book-mode",
+            "open",
+            "--closed-book-gateway-enforced",
+            "1",
+            "--closed-book-hosted-tools-disabled",
+            "0",
+            "--closed-book-proxy-strip-artifact",
+            "/etc/proxy-public/strip.jsonl",
+            "--run-dir",
+            str(run_dir),
+            "--log-path",
+            str(run_dir / "run.log"),
+            "--harbor-result-json",
+            str(run_dir / "harbor_result.json"),
+            "--routing-stats-json",
+            str(run_dir / "routing_stats_final.json"),
+        ]
+    )
+
+    assert rc == 0
+    manifest = json.loads(out.read_text())
+    assert manifest["closed_book"]["mode"] == "open"
+    assert manifest["closed_book"]["gateway_enforced"] is True
+    assert manifest["closed_book"]["hosted_tools_disabled"] is False
+    assert manifest["closed_book"]["proxy_strip_log_status"] == "predicted"
+    assert manifest["closed_book"]["verifier_egress"] == "open-via-proxy"
+
+
+def test_finalize_copies_harbor_result_and_marks_stats(tmp_path: Path) -> None:
+    module = _load_manifest_module()
+    out = tmp_path / "run_manifest.json"
+    run_dir = tmp_path / "run"
+    job_dir = run_dir / "jobs" / "job"
+    job_dir.mkdir(parents=True)
+    (job_dir / "result.json").write_text('{"stats":{"evals":{}}}\n')
+    stats = run_dir / "routing_stats_final.json"
+    stats.parent.mkdir(parents=True, exist_ok=True)
+    stats.write_text('{"total_requests":1}\n')
+    metrics = run_dir / "server_metrics_final.prom"
+    metrics.write_text("switchyard_requests_total 1\n")
+
+    module.write_manifest(
+        out,
+        outcomes={
+            "harbor_result_json": str(run_dir / "harbor_result.json"),
+            "harbor_result_json_status": "predicted",
+            "server_metrics_prom": str(metrics),
+            "server_metrics_prom_status": "predicted",
+            "routing_stats_json": str(stats),
+            "routing_stats_json_status": "predicted",
+            "harbor_rc": None,
+        },
+    )
+
+    rc = module.finalize_manifest(
+        out,
+        harbor_rc=0,
+        harbor_job_dir=job_dir,
+        server_metrics=metrics,
+        routing_stats=stats,
+    )
+
+    assert rc == 0
+    manifest = json.loads(out.read_text())
+    assert manifest["outcomes"]["harbor_rc"] == 0
+    assert manifest["outcomes"]["harbor_result_json_status"] == "present"
+    assert manifest["outcomes"]["server_metrics_prom_status"] == "present"
+    assert manifest["outcomes"]["routing_stats_json_status"] == "present"
+    assert (run_dir / "harbor_result.json").is_file()
+
+
+def test_finalize_copies_proxy_strip_log_artifact(tmp_path: Path) -> None:
+    module = _load_manifest_module()
+    out = tmp_path / "run_manifest.json"
+    run_dir = tmp_path / "run"
+    job_dir = run_dir / "jobs" / "job" / "task" / "artifacts"
+    job_dir.mkdir(parents=True)
+    (job_dir / "strip.jsonl").write_text('{"removed":["web_search"]}\n')
+
+    module.write_manifest(
+        out,
+        closed_book={
+            "mode": "closed",
+            "proxy_strip_log": str(run_dir / "proxy_strip_log.jsonl"),
+            "proxy_strip_log_status": "predicted",
+        },
+        outcomes={
+            "harbor_result_json": str(run_dir / "harbor_result.json"),
+            "harbor_result_json_status": "predicted",
+            "routing_stats_json": str(run_dir / "routing_stats_final.json"),
+            "routing_stats_json_status": "predicted",
+            "harbor_rc": None,
+        },
+    )
+
+    rc = module.finalize_manifest(out, harbor_rc=0, harbor_job_dir=run_dir / "jobs" / "job")
+
+    assert rc == 0
+    manifest = json.loads(out.read_text())
+    assert manifest["closed_book"]["proxy_strip_log_status"] == "present"
+    assert (run_dir / "proxy_strip_log.jsonl").read_text() == '{"removed":["web_search"]}\n'

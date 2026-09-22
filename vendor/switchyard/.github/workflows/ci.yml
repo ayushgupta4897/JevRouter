@@ -1,0 +1,260 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Cancel superseded PR runs; keep main builds.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    name: Detect code changes
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      full_ci: ${{ github.event_name != 'pull_request' || (!startsWith(github.event.pull_request.title, 'docs') && steps.filter.outputs.full_ci == 'true') }}
+    steps:
+      - name: Detect non-documentation changes
+        id: filter
+        if: github.event_name == 'pull_request' && !startsWith(github.event.pull_request.title, 'docs')
+        uses: dorny/paths-filter@v4
+        with:
+          predicate-quantifier: every
+          filters: |
+            full_ci:
+              - "**"
+              - "!docs/**"
+              - "!*.md"
+              - "!**/README.md"
+              - "!benchmark/*.md"
+              - "!.github/ISSUE_TEMPLATE/**"
+              - "!.github/PULL_REQUEST_TEMPLATE.md"
+              - "!.agents/skills/**/*.md"
+
+  # ruff is a hard gate — the codebase passes today, keep it that way.
+  lint:
+    name: Lint
+    needs: changes
+    if: needs.changes.outputs.full_ci == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+      - name: actionlint
+        run: uvx --from pre-commit==4.5.0 pre-commit run actionlint --all-files
+      - run: uv sync --locked --no-install-project
+      - name: ruff check
+        run: uv run --no-sync ruff check .
+
+  # SPDX headers are a hard gate — every Python file must carry the exact
+  # NVIDIA OSRB-required two-line form (SPDX-FileCopyrightText with the
+  # canonical wording, immediately followed by SPDX-License-Identifier:
+  # Apache-2.0). A leading shebang is permitted; the header must appear
+  # within the first four lines.
+  spdx-headers:
+    name: SPDX License Headers
+    needs: changes
+    if: needs.changes.outputs.full_ci == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check SPDX headers
+        run: |
+          set -u
+          copyright_re='^# SPDX-FileCopyrightText: Copyright \(c\) [0-9]{4}(-[0-9]{4})? NVIDIA CORPORATION & AFFILIATES\. All rights reserved\.$'
+          license_re='^# SPDX-License-Identifier: Apache-2\.0$'
+          missing=0
+          while IFS= read -r file; do
+            head4=$(head -4 "$file")
+            if ! printf '%s\n' "$head4" | grep -Eq "$copyright_re"; then
+              echo "FAIL ($file): missing or malformed SPDX-FileCopyrightText line"
+              missing=$((missing+1))
+              continue
+            fi
+            if ! printf '%s\n' "$head4" | grep -Eq "$license_re"; then
+              echo "FAIL ($file): missing SPDX-License-Identifier: Apache-2.0"
+              missing=$((missing+1))
+              continue
+            fi
+          done < <(find . -name '*.py' -type f \
+            ! -path './.venv/*' \
+            ! -path './.git/*' \
+            ! -path './__pycache__/*' \
+            ! -path '*/.pytest_cache/*' \
+            ! -path '*/.eggs/*' \
+            ! -path '*.egg-info/*')
+          if [ "$missing" -gt 0 ]; then
+            echo "FAIL: $missing Python files missing or malformed SPDX header"
+            exit 1
+          fi
+          echo "OK: All Python files carry the required SPDX header"
+
+  rust:
+    name: Rust
+    needs: changes
+    if: needs.changes.outputs.full_ci == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust components
+        run: rustup component add rustfmt clippy
+      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+        with:
+          cache-bin: false
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+      - name: cargo fmt
+        run: cargo fmt --all --check
+      - name: cargo clippy
+        run: cargo clippy --workspace --all-targets --locked -- -D warnings
+      - name: cargo clippy (prefill-router)
+        run: cargo clippy -p switchyard-server --all-targets --features prefill-router --locked -- -D warnings
+      - name: cargo test
+        run: cargo test --workspace --locked
+      - name: cargo test (prefill-router)
+        run: cargo test -p switchyard-runner --features prefill-router --locked
+
+  typecheck:
+    name: Typecheck (mypy)
+    needs: changes
+    if: needs.changes.outputs.full_ci == 'true'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+      - run: uv sync --locked --no-install-project
+      - name: mypy
+        run: uv run --no-sync mypy switchyard
+
+  # Unit tests on supported Python versions. Integration/e2e tests are
+  # intentionally deselected here because they may need Docker, live provider
+  # credentials, or network egress.
+  test:
+    name: Tests (Python ${{ matrix.python-version }})
+    needs: changes
+    if: needs.changes.outputs.full_ci == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12", "3.14"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+      - run: uv sync --locked
+      - name: pytest
+        run: uv run pytest tests/ -v -m "not integration"
+
+  litellm:
+    name: LiteLLM tests (no live providers)
+    needs: changes
+    if: needs.changes.outputs.full_ci == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: examples/litellm
+    env:
+      LITELLM_LOCAL_MODEL_COST_MAP: "True"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+          enable-cache: true
+          cache-dependency-glob: "examples/litellm/uv.lock"
+      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+        with:
+          cache-bin: false
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+      - run: uv sync --locked
+      - name: pytest
+        run: uv run --no-sync pytest tests -m "not e2e" -v
+
+  # Regression guard: the default install of nemo-switchyard (without extras)
+  # must NOT drag in torch / transformers / routellm / litellm /
+  # openai-agents / docx. Catches accidental top-level imports of
+  # heavy packages before they hit users as ~1 GB of install bloat.
+  #
+  # This is the actual hard gate on the workflow.
+  slim-install-smoke:
+    name: Slim install smoke test
+    needs: changes
+    if: needs.changes.outputs.full_ci == 'true'
+    runs-on: ubuntu-latest
+    env:
+      SWITCHYARD_DEFAULT_PACKAGE: "nemo-switchyard @ file://${{ github.workspace }}"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+      - name: Verify slim install (no extras) succeeds
+        working-directory: /tmp
+        run: |
+          uv run --isolated --no-project --python 3.10 \
+            --with "${SWITCHYARD_DEFAULT_PACKAGE}" \
+            python -c "import switchyard; from switchyard_rust.server import Server; print('import OK, version:', switchyard.__version__, 'server:', Server)"
+          uv run --isolated --no-project --python 3.14 \
+            --with "${SWITCHYARD_DEFAULT_PACKAGE}" \
+            python -c "import switchyard; from switchyard_rust.server import Server; print('import OK, version:', switchyard.__version__, 'server:', Server)"
+      - name: Assert heavy packages absent from slim install
+        working-directory: /tmp
+        run: |
+          uv run --isolated --no-project --python 3.10 \
+            --with "${SWITCHYARD_DEFAULT_PACKAGE}" \
+            python - <<'PY'
+          import importlib.util
+          import sys
+
+          forbidden = [
+              "torch",
+              "transformers",
+              "huggingface_hub",
+              "routellm",
+              "litellm",
+              "datasets",
+              "tokenizers",
+              "safetensors",
+              "pyarrow",
+              "agents",
+              "mcp",
+              "docx",
+          ]
+          extras = [m for m in forbidden if importlib.util.find_spec(m) is not None]
+          if extras:
+              sys.exit(f"FAIL: heavy packages pulled into slim install: {extras}")
+          print(f"OK: all {len(forbidden)} heavy packages absent from slim install.")
+          PY
+  # Single required check for branch protection. Gates on every job above so
+  # the ruleset never needs editing when jobs are added or renamed.
+  ci-success:
+    name: CI Success
+    if: always()
+    needs: [changes, lint, spdx-headers, rust, typecheck, test, litellm, slim-install-smoke]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify all jobs succeeded
+        if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
+        run: exit 1

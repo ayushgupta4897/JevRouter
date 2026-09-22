@@ -1,0 +1,56 @@
+name: Getting Started
+
+# Executable coverage for docs/getting_started.md.
+#
+# Fails when the documented Rust server flow drifts from the product, including
+# CLI changes, TOML schema changes, and operational endpoint regressions. It lives in
+# tests/getting_started/ so it reproduces locally with
+# `uv run pytest tests/getting_started`.
+
+on:
+  pull_request:
+    paths:
+      - "docs/getting_started.md"
+      - "crates/**"
+      - "tests/getting_started/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "rust-toolchain.toml"
+      - "pyproject.toml"
+      - "uv.lock"
+      - ".github/workflows/getting-started.yml"
+  push:
+    branches: [main]
+    paths:
+      - "docs/getting_started.md"
+      - "crates/**"
+      - "tests/getting_started/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "rust-toolchain.toml"
+      - "pyproject.toml"
+      - "uv.lock"
+      - ".github/workflows/getting-started.yml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  getting-started:
+    name: Run getting-started flow
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+      - name: Install
+        run: uv sync --locked
+      - name: Exercise the guide
+        run: uv run pytest tests/getting_started -v

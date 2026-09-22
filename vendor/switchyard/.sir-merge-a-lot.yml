@@ -1,0 +1,40 @@
+# .sir-merge-a-lot.yml — switchyard
+#
+# Trigger mode: on_demand
+# Meaning: the bot does NOTHING on PRs until explicitly invited via
+# @sir-merge-a-lot <command>. No autonomous grooming, no autonomous
+# merging. The bot exists in the repo's PR audit trail but takes no
+# action without operator initiation.
+#
+# Operator commands (once installed):
+#   @sir-merge-a-lot groom   — analyze and rebase this PR
+#   @sir-merge-a-lot          — same as `groom` (bare-mention default)
+#   @sir-merge-a-lot merge    — gated; not enabled by default for switchyard
+#                                (see merge_command_allowlist below)
+#
+# To revisit this config later (e.g. to enable assisted-mode autonomous
+# grooming), update this file via a normal PR + review.
+trigger_mode: "on_demand"
+
+# LLM conflict resolver. Fires only when the deterministic ladder
+# (rerere -> Mergiraf) cannot resolve a conflict, and only on PRs the
+# bot was explicitly invited to groom (on_demand mode). Every LLM
+# resolution passes the bot's bounded-edit safety check; resolutions
+# touching lines outside conflict markers are rejected.
+llm:
+  enabled: true
+
+# Coding-agent fallback tier. When the raw-LLM resolver fails
+# (prompt too large for the LLM, or LLM timeout), the bot dispatches
+# the conflicted file to a sandboxed codex_cli run (via OpenShell)
+# instead of immediately escalating to a human. Trigger reasons,
+# timeout (600s), and per-MR attempt cap (1) use the bot's defaults.
+# Requires the SMAL worker deployment to be an image with the
+# OpenShell contract (AIREAPP-1853); on older images this is a no-op.
+coding_agent_provider: codex_cli
+
+# Optional: merge-command allowlist. With on_demand mode, command-
+# driven merges still require a commenter on this list (and standard
+# repo write access). Leaving empty disables the @sir-merge-a-lot merge
+# path entirely until switchyard explicitly populates it.
+# merge_command_allowlist: []

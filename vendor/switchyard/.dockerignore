@@ -1,0 +1,17 @@
+.git
+.env
+**/.env
+.env.*
+**/.env.*
+!.env.example
+!**/.env.example
+.mypy_cache
+.pytest_cache
+.ruff_cache
+.venv
+target
+.worktrees
+benchmark/datasets
+benchmark/tb_runs
+dist
+site

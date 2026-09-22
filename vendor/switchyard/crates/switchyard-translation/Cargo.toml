@@ -1,0 +1,30 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
+[package]
+name = "switchyard-translation"
+version.workspace = true
+description = "Pure Rust request, response, and stream translation for Switchyard"
+authors.workspace = true
+edition.workspace = true
+homepage = "https://github.com/NVIDIA-NeMo/Switchyard"
+license.workspace = true
+readme = "README.md"
+repository.workspace = true
+rust-version.workspace = true
+documentation = "https://docs.rs/switchyard-translation"
+keywords = ["llm", "translation", "openai", "anthropic"]
+publish = ["crates-io"]
+
+[dependencies]
+base64.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+switchyard-protocol.workspace = true
+thiserror.workspace = true
+futures.workspace = true
+async-stream.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+pretty_assertions = "1"

@@ -1,0 +1,47 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
+[package]
+name = "switchyard-libsy"
+version.workspace = true
+description = "Provider-neutral multi-LLM routing and orchestration for Switchyard"
+authors.workspace = true
+edition.workspace = true
+homepage = "https://github.com/NVIDIA-NeMo/Switchyard"
+license.workspace = true
+readme = "README.md"
+repository.workspace = true
+rust-version.workspace = true
+keywords = ["llm", "routing", "orchestration", "openai", "anthropic"]
+categories = ["asynchronous", "web-programming"]
+publish = ["crates-io"]
+
+[dependencies]
+async-trait.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+futures.workspace = true
+# Typed status codes for errors synthesized from broken upstream streams.
+http.workspace = true
+jsonschema.workspace = true
+jsonptr.workspace = true
+# Metrics-only OTel API: instruments record through the host-installed global
+# meter provider. Pinned to the 0.32 line used across the workspace.
+opentelemetry = { version = "0.32", default-features = false, features = ["metrics"] }
+parking_lot.workspace = true
+rand.workspace = true
+regex.workspace = true
+switchyard-protocol.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+tokio-stream = "0.1"
+tracing.workspace = true
+tracing-opentelemetry.workspace = true
+uuid.workspace = true
+
+[dev-dependencies]
+# SDK + in-memory exporter to assert what the observability layer records.
+opentelemetry_sdk = { version = "0.32", features = ["metrics", "testing", "trace"] }
+tokio.workspace = true
+tracing-subscriber.workspace = true
+http.workspace = true

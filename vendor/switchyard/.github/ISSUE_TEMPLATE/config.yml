@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question or discussion
+    url: https://github.com/NVIDIA-NeMo/Switchyard/discussions
+    about: For usage questions and design discussion, please open a Discussion instead of an Issue.
+  - name: Security vulnerability
+    url: https://www.nvidia.com/en-us/security/
+    about: Do not file a public issue for security reports. Email psirt@nvidia.com — see SECURITY.md.

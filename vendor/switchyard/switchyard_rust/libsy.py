@@ -1,0 +1,268 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
+"""Minimal bindings for Rust-owned libsy algorithms."""
+
+from __future__ import annotations
+
+from collections.abc import Mapping
+from typing import TYPE_CHECKING, Any
+
+from switchyard_rust._native import load_native
+
+_EXPORTS = frozenset(
+    {
+        "Algorithm",
+        "ContextWindowExceededError",
+        "CustomClassifierConfig",
+        "EscalationClassifierConfig",
+        "LibsyError",
+        "LlmClassifierConfig",
+        "LlmFallback",
+        "LlmResponse",
+        "ModelCall",
+        "OutcomeMetadata",
+        "RoutingOutcome",
+        "Step",
+        "TaskClassifierConfig",
+        "llm_classifier",
+        "llm_task_classifier",
+        "noop",
+        "random",
+        "stage_router",
+    }
+)
+
+if TYPE_CHECKING:
+    from collections.abc import AsyncIterator, Sequence
+    from typing import ClassVar, Literal, final
+
+    class LibsyError(RuntimeError): ...
+
+    class ContextWindowExceededError(RuntimeError): ...
+
+    class LlmResponse:
+        """A normalized aggregate response or live normalized event stream."""
+
+        @final
+        class Agg:
+            __match_args__: ClassVar[tuple[Literal["response"]]] = ("response",)
+            response: dict[str, object]
+
+            def __init__(self, response: Mapping[str, object]) -> None: ...
+
+        @final
+        class Stream:
+            __match_args__: ClassVar[tuple[Literal["stream"]]] = ("stream",)
+            stream: AsyncIterator[dict[str, object]]
+
+            def __init__(self, stream: AsyncIterator[Mapping[str, object]]) -> None: ...
+
+    @final
+    class CustomClassifierConfig:
+        """Configure schema-validated routing across runtime model groups.
+
+        ``max_output_tokens`` must be positive. Enabling ``message_hash_fallback``
+        requires ``session_affinity``.
+        """
+
+        def __init__(
+            self,
+            prompt: str,
+            response_schema: Mapping[str, object],
+            selector: str,
+            *,
+            session_affinity: bool = False,
+            message_hash_fallback: bool = False,
+            recent_turn_window: int | None = None,
+            max_output_tokens: int = 4096,
+        ) -> None: ...
+
+    @final
+    class EscalationClassifierConfig:
+        """Configure response-based escalation between two targets.
+
+        Counts and token limits must be positive, and ``window_message_chars``
+        must be at least 50.
+        """
+
+        def __init__(
+            self,
+            *,
+            confirmations: int = 2,
+            recent_turn_window: int = 28,
+            window_message_chars: int = 500,
+            max_output_tokens: int = 4096,
+            prompt: str | None = None,
+            response_format_type: Literal["json_schema", "json_object"] = "json_schema",
+        ) -> None: ...
+
+    @final
+    class ModelCall:
+        @property
+        def algorithm(self) -> str: ...
+
+        @property
+        def request(self) -> dict[str, object]: ...
+
+        @property
+        def models(self) -> list[str]: ...
+
+        def respond(self, response: LlmResponse.Agg | LlmResponse.Stream) -> None: ...
+
+        def fail(self, error: BaseException) -> None: ...
+
+    @final
+    class OutcomeMetadata:
+        """Read-only outcome identity and optional algorithm evidence."""
+
+        @property
+        def outcome_id(self) -> str: ...
+
+        @property
+        def algorithm(self) -> str: ...
+
+        @property
+        def evidence(self) -> Any | None: ...
+
+    @final
+    class RoutingOutcome:
+        @property
+        def metadata(self) -> OutcomeMetadata | None: ...
+
+        @property
+        def selected_model_ids(self) -> list[str]: ...
+
+        @property
+        def request(self) -> dict[str, object]: ...
+
+        @property
+        def response(self) -> LlmResponse.Agg | LlmResponse.Stream | None: ...
+
+    class Step:
+        @final
+        class CallModel:
+            __match_args__: ClassVar[tuple[Literal["call"]]] = ("call",)
+            call: ModelCall
+
+        @final
+        class Done:
+            __match_args__: ClassVar[tuple[Literal["outcome"]]] = ("outcome",)
+            outcome: RoutingOutcome
+
+    @final
+    class TaskClassifierConfig:
+        """Configure capability classification between efficient and capable targets.
+
+        Thresholds must remain within ``[0, 1]``, ``max_output_tokens`` must be
+        positive, and ``message_hash_fallback`` requires ``session_affinity``.
+        """
+
+        def __init__(
+            self,
+            base_threshold: float,
+            *,
+            threshold_step: float = 0.0,
+            session_affinity: bool = False,
+            message_hash_fallback: bool = False,
+            recent_turn_window: int | None = None,
+            max_output_tokens: int = 4096,
+            prompt: str | None = None,
+            response_format_type: Literal["json_schema", "json_object"] = "json_schema",
+        ) -> None: ...
+
+    class LlmClassifierConfig:
+        """Select one supported LLM classifier mode.
+
+        Target names and each nested mode configuration must satisfy the selected
+        classifier's invariants.
+        """
+
+        @staticmethod
+        def capability(
+            *,
+            config: TaskClassifierConfig,
+        ) -> LlmClassifierConfig:
+            """Route by predicted task capability."""
+            ...
+
+        @staticmethod
+        def escalation(
+            *,
+            config: EscalationClassifierConfig,
+        ) -> LlmClassifierConfig:
+            """Call the efficient target first and escalate judged responses."""
+            ...
+
+        @staticmethod
+        def custom(
+            *,
+            default_target: str,
+            config: CustomClassifierConfig,
+        ) -> LlmClassifierConfig:
+            """Route among runtime model groups using a schema-selected label.
+
+            ``default_target`` names the group used when the judge fails or its
+            verdict cannot be routed. Alongside ``capable`` and ``efficient`` a
+            deployment may define its own group names, so one route can choose
+            between more than two models.
+            """
+            ...
+
+    @final
+    class LlmFallback:
+        def __init__(
+            self,
+            *,
+            config: TaskClassifierConfig,
+        ) -> None: ...
+
+    @final
+    class Algorithm:
+        def run_stream(
+            self,
+            request: Mapping[str, object],
+            models: Mapping[str, Sequence[str]],
+            subagent_models: Mapping[str, Sequence[str]] | None = None,
+            headers: Mapping[str, str] | None = None,
+        ) -> AsyncIterator[Step.CallModel | Step.Done]: ...
+
+    def noop() -> Algorithm: ...
+
+    def random(
+        weights: Sequence[float] | None = None,
+        seed: int | None = None,
+    ) -> Algorithm: ...
+
+    def llm_classifier(config: LlmClassifierConfig) -> Algorithm:
+        """Build a classifier, raising ValueError when its configuration is invalid."""
+        ...
+
+    def llm_task_classifier(
+        *,
+        config: TaskClassifierConfig,
+    ) -> Algorithm: ...
+
+    def stage_router(
+        *,
+        picker: str,
+        confidence_threshold: float,
+        recent_window: int | None = None,
+        escalation_note: str | None = None,
+        deescalation_note: str | None = None,
+        only_on_wrong_signal_escalation: bool = True,
+        capable_system_prompt: str | None = None,
+        efficient_system_prompt: str | None = None,
+        tool_semantics: dict[str, Sequence[str]] | None = None,
+        classifier: LlmFallback | None = None,
+    ) -> Algorithm: ...
+
+
+def __getattr__(name: str) -> object:
+    if name in _EXPORTS:
+        native: Any = load_native()
+        return getattr(native.libsy, name)
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
+
+__all__ = sorted(_EXPORTS)

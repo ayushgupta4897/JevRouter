@@ -1,0 +1,37 @@
+# Curated 20-task iteration subset for openthoughts-tblite@2.0.
+#
+# Used for fast inner-loop A/B tests of routing logic. Same 20 every run so
+# deltas are apples-to-apples. See:
+#   Used by benchmark/run-baseline.sh via --task-list-file for deterministic iteration subsets.
+#
+# Composition: 5 easy + 8 medium + 6 hard + 1 expert across 13 categories.
+# Wall-time projection at -n 8 (3-mode sequential):  ~45-60 min total.
+# Caveat: 20-task noise floor is +/-2-5 pp; do NOT quote as a headline number.
+
+# --- easy (5) — weak-tier floor; verifies cheap tier still catches simple work
+broken-python                          # software-engineering
+cosign-keyless-signing                 # security
+convolutional-layers                   # machine-learning
+jq-data-processing                     # data-processing
+mlflow-register                        # data-science
+
+# --- medium (8) — discriminator zone; where the classifier matters most
+acl-permissions-inheritance            # system-administration
+cpp-daemon-sighup-segfault             # debugging
+git-repo-forensics                     # forensics
+iris-dataset-classification            # data-science
+monorepo-changelog-cli                 # software-engineering
+parking-lot-pathfinding                # general
+rsa-jwt-token-api-redis-blacklist      # security
+todos-api                              # software-engineering
+
+# --- hard (6) — strong-only / near-miss zone; tests the ceiling
+application-debug                      # debugging
+breast-cancer-mlflow                   # machine-learning
+db-migration-local-storage             # backend
+pdf-table-parsing                      # parsing
+sakila-sqlite-queries                  # sql
+server-log-analysis                    # general
+
+# --- expert (1) — top-of-difficulty probe
+book-portfolio-analysis                # data-engineering

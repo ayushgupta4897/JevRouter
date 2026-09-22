@@ -1,0 +1,733 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+//! Streaming codec for Anthropic Messages events.
+
+use serde_json::{Map, Value, json};
+
+use crate::LlmResponseChunk;
+use crate::codecs::stream::{
+    StreamCodec, StreamTranslationState, record_source_identity,
+    target_message_id_or_source_message_id, target_model_or_source_model,
+};
+use crate::format::{FormatId, WireFormat};
+use crate::util::{desanitize_anthropic_tool_use_id, sanitize_anthropic_tool_use_id};
+
+/// Stream codec for Anthropic Messages events.
+pub struct AnthropicMessagesStreamCodec;
+
+impl StreamCodec for AnthropicMessagesStreamCodec {
+    fn format(&self) -> FormatId {
+        WireFormat::AnthropicMessages.into()
+    }
+
+    fn decode_event(
+        &self,
+        state: &mut StreamTranslationState,
+        event: &Value,
+    ) -> Vec<LlmResponseChunk> {
+        decode_anthropic_stream(state, event)
+    }
+
+    fn encode_event(
+        &self,
+        state: &mut StreamTranslationState,
+        event: LlmResponseChunk,
+    ) -> Vec<Value> {
+        encode_anthropic_stream(state, event)
+    }
+
+    fn observe_replayed_event(
+        &self,
+        state: &mut StreamTranslationState,
+        raw: &Value,
+        normalized: Vec<LlmResponseChunk>,
+    ) {
+        let normalized_stop = normalized
+            .iter()
+            .any(|chunk| matches!(chunk, LlmResponseChunk::MessageStop { .. }));
+        for chunk in normalized {
+            drop(encode_anthropic_stream(state, chunk));
+        }
+
+        match raw.get("type").and_then(Value::as_str) {
+            // Anthropic carries the stop reason and usage in `message_delta`, but the separate
+            // `message_stop` event is what actually terminates the stream.
+            Some("message_delta") if normalized_stop => state.emitted_message_delta = true,
+            Some("message_stop") => state.finished = true,
+            _ => {}
+        }
+    }
+
+    fn finish(&self, state: &mut StreamTranslationState) -> Vec<Value> {
+        finish_anthropic_stream(state)
+    }
+}
+
+// Decodes one Anthropic Messages event into neutral streaming events.
+fn decode_anthropic_stream(
+    state: &mut StreamTranslationState,
+    event: &Value,
+) -> Vec<LlmResponseChunk> {
+    let Some(object) = event.as_object() else {
+        return vec![LlmResponseChunk::DecodeError {
+            message: "Anthropic stream event is not an object".to_string(),
+        }];
+    };
+    match object.get("type").and_then(Value::as_str) {
+        Some("message_start") => {
+            state.saw_message_start = true;
+            let message = object.get("message").and_then(Value::as_object);
+            if let Some(model) = message
+                .and_then(|message| message.get("model"))
+                .and_then(Value::as_str)
+            {
+                state.model = Some(model.to_string());
+            }
+            if let Some(id) = message
+                .and_then(|message| message.get("id"))
+                .and_then(Value::as_str)
+            {
+                state.message_id = Some(id.to_string());
+            }
+            if let Some(message) = message
+                && let Some(usage) = message.get("usage")
+            {
+                capture_anthropic_usage(state, usage);
+            }
+            vec![LlmResponseChunk::MessageStart {
+                id: state.message_id.clone(),
+                model: state.model.clone(),
+            }]
+        }
+        Some("content_block_start") => decode_anthropic_content_block_start(state, object),
+        Some("content_block_delta") => decode_anthropic_content_block_delta(state, object),
+        Some("content_block_stop") => {
+            let index = object.get("index").and_then(Value::as_u64).unwrap_or(0) as usize;
+            if state.empty_anthropic_tool_inputs.remove(&index) {
+                vec![LlmResponseChunk::ToolCallDelta {
+                    index,
+                    id: None,
+                    name: None,
+                    arguments_delta: Some("{}".to_string()),
+                }]
+            } else {
+                Vec::new()
+            }
+        }
+        Some("message_delta") => {
+            let mut out = Vec::new();
+            if let Some(usage) = object.get("usage") {
+                capture_anthropic_usage(state, usage);
+                out.push(LlmResponseChunk::Usage(state.usage.clone()));
+            }
+            if let Some(stop_reason) = object
+                .get("delta")
+                .and_then(Value::as_object)
+                .and_then(|delta| delta.get("stop_reason"))
+                .and_then(Value::as_str)
+            {
+                // Remember the provider stop reason: Anthropic delivers it here, on
+                // `message_delta`, while the terminal `message_stop` carries none of its own.
+                state.stop_reason = Some(stop_reason.to_string());
+                state.stop_details = object
+                    .get("delta")
+                    .and_then(Value::as_object)
+                    .and_then(|delta| delta.get("stop_details"))
+                    .filter(|details| !details.is_null())
+                    .cloned();
+                out.push(LlmResponseChunk::MessageStop {
+                    reason: Some(stop_reason.to_string()),
+                });
+            }
+            out
+        }
+        // Anthropic's terminal `message_stop` carries no reason of its own; replay the one
+        // remembered from `message_delta` so a chunk accumulator keeps the real stop reason
+        // (e.g. `max_tokens`) instead of overwriting it with a reasonless `EndTurn`.
+        Some("message_stop") => vec![LlmResponseChunk::MessageStop {
+            reason: state.stop_reason.clone(),
+        }],
+        Some("error") => vec![LlmResponseChunk::StreamError {
+            message: object
+                .get("error")
+                .and_then(Value::as_object)
+                .and_then(|error| error.get("message"))
+                .and_then(Value::as_str)
+                .unwrap_or("unknown Anthropic stream error")
+                .to_string(),
+        }],
+        _ => Vec::new(),
+    }
+}
+
+// Encodes neutral streaming events into Anthropic Messages events.
+fn encode_anthropic_stream(
+    state: &mut StreamTranslationState,
+    event: LlmResponseChunk,
+) -> Vec<Value> {
+    // An in-band error is terminal: once the error is emitted, drop every later chunk.
+    if state.errored {
+        return Vec::new();
+    }
+    match event {
+        LlmResponseChunk::MessageStart { id, model } => {
+            record_source_identity(state, id, model);
+            if state.emitted_message_start {
+                Vec::new()
+            } else {
+                state.emitted_message_start = true;
+                vec![json!({
+                    "type": "message_start",
+                    "message": {
+                        "id": anthropic_message_id(state),
+                        "type": "message",
+                        "role": "assistant",
+                        "model": target_model_or_source_model(state),
+                        "content": [],
+                        "stop_reason": Value::Null,
+                        "stop_sequence": Value::Null,
+                        "usage": {"input_tokens": 0, "output_tokens": 0},
+                    },
+                })]
+            }
+        }
+        LlmResponseChunk::TextDelta { text, .. } => {
+            state.output_tokens_seen += 1;
+            let mut out = ensure_anthropic_text_block(state);
+            out.push(json!({
+                "type": "content_block_delta",
+                "index": state.text_block_index.unwrap_or(0),
+                "delta": {"type": "text_delta", "text": text},
+            }));
+            out
+        }
+        LlmResponseChunk::ReasoningDelta { text, .. } => {
+            let mut out = ensure_anthropic_reasoning_block(state);
+            out.push(json!({
+                "type": "content_block_delta",
+                "index": state.reasoning_block_index.unwrap_or(0),
+                "delta": {"type": "thinking_delta", "thinking": text},
+            }));
+            out
+        }
+        LlmResponseChunk::ReasoningDetailsDelta { text, .. } => {
+            if text.is_empty() {
+                return Vec::new();
+            }
+            let mut out = ensure_anthropic_reasoning_block(state);
+            out.push(json!({
+                "type": "content_block_delta",
+                "index": state.reasoning_block_index.unwrap_or(0),
+                "delta": {"type": "thinking_delta", "thinking": text},
+            }));
+            out
+        }
+        LlmResponseChunk::ToolCallDelta {
+            index,
+            id,
+            name,
+            arguments_delta,
+        } => encode_anthropic_tool_delta(state, index, id, name, arguments_delta),
+        LlmResponseChunk::Usage(usage) => {
+            state.usage = usage;
+            state.saw_backend_usage = true;
+            Vec::new()
+        }
+        LlmResponseChunk::MessageStop { reason } => {
+            state.stop_reason = reason.or_else(|| state.stop_reason.clone());
+            Vec::new()
+        }
+        LlmResponseChunk::StreamError { message } | LlmResponseChunk::DecodeError { message } => {
+            // An in-band error is terminal: emit the error, then nothing further.
+            state.finished = true; // finish() adds no success events
+            state.errored = true; // the entry guard drops any later chunk
+            vec![json!({"type": "error", "error": {"message": message}})]
+        }
+    }
+}
+
+// Emits any missing Anthropic terminal events and closes open content blocks.
+fn finish_anthropic_stream(state: &mut StreamTranslationState) -> Vec<Value> {
+    if state.finished {
+        return Vec::new();
+    }
+    if state.tool_states.values().any(|tool| {
+        tool.id.as_deref().is_none_or(str::is_empty)
+            || tool.name.as_deref().is_none_or(str::is_empty)
+    }) {
+        return encode_anthropic_stream(
+            state,
+            LlmResponseChunk::StreamError {
+                message: "Tool call ended without a non-empty ID and name".to_string(),
+            },
+        );
+    }
+    let mut out = Vec::new();
+    if !state.emitted_message_start {
+        out.extend(encode_anthropic_stream(
+            state,
+            LlmResponseChunk::MessageStart {
+                id: state.message_id.clone(),
+                model: state.model.clone(),
+            },
+        ));
+    }
+
+    if state.text_block_started {
+        if let Some(index) = state.text_block_index {
+            out.push(json!({"type": "content_block_stop", "index": index}));
+        }
+        state.text_block_started = false;
+    }
+
+    out.extend(close_anthropic_reasoning_block(state));
+
+    for tool in state.tool_states.values_mut() {
+        if tool.started {
+            if let Some(index) = tool.content_index {
+                out.push(json!({"type": "content_block_stop", "index": index}));
+            }
+            tool.started = false;
+        }
+    }
+
+    state.active_anthropic_tool = None;
+    for index in std::mem::take(&mut state.deferred_anthropic_tools) {
+        out.extend(encode_anthropic_tool_delta(state, index, None, None, None));
+        if let Some(tool) = state.tool_states.get_mut(&index) {
+            if let Some(content_index) = tool.content_index {
+                out.push(json!({"type": "content_block_stop", "index": content_index}));
+            }
+            tool.started = false;
+        }
+        state.active_anthropic_tool = None;
+    }
+
+    if !state.emitted_content_block {
+        out.push(json!({
+            "type": "content_block_start",
+            "index": 0,
+            "content_block": {"type": "text", "text": ""},
+        }));
+        out.push(json!({"type": "content_block_stop", "index": 0}));
+    }
+
+    if !state.emitted_message_delta {
+        out.push(json!({
+            "type": "message_delta",
+            "delta": {
+                "stop_reason": anthropic_stop_reason(state.stop_reason.as_deref()),
+                "stop_sequence": Value::Null,
+                "stop_details": anthropic_stop_details(
+                    state.stop_reason.as_deref(),
+                    state.stop_details.as_ref(),
+                ),
+            },
+            "usage": anthropic_stream_usage(state),
+        }));
+        state.emitted_message_delta = true;
+    }
+    out.push(json!({"type": "message_stop"}));
+    state.finished = true;
+    out
+}
+
+// Converts Anthropic content-block starts into text or tool-call deltas.
+fn decode_anthropic_content_block_start(
+    state: &mut StreamTranslationState,
+    object: &Map<String, Value>,
+) -> Vec<LlmResponseChunk> {
+    let index = object.get("index").and_then(Value::as_u64).unwrap_or(0) as usize;
+    let block = object.get("content_block").and_then(Value::as_object);
+    match block
+        .and_then(|block| block.get("type"))
+        .and_then(Value::as_str)
+    {
+        Some("text") => block
+            .and_then(|block| block.get("text"))
+            .and_then(Value::as_str)
+            .filter(|text| !text.is_empty())
+            .map(|text| {
+                vec![LlmResponseChunk::TextDelta {
+                    index,
+                    text: text.to_string(),
+                }]
+            })
+            .unwrap_or_default(),
+        Some("thinking") => {
+            let mut out = Vec::new();
+            if let Some(text) = block
+                .and_then(|block| block.get("thinking"))
+                .and_then(Value::as_str)
+                .filter(|text| !text.is_empty())
+            {
+                out.push(LlmResponseChunk::ReasoningDelta {
+                    index,
+                    text: text.to_string(),
+                });
+            }
+            if let Some(signature) = block
+                .and_then(|block| block.get("signature"))
+                .and_then(Value::as_str)
+                .filter(|signature| !signature.is_empty())
+            {
+                out.push(anthropic_signature_delta(index, signature));
+            }
+            out
+        }
+        Some("tool_use") => {
+            let Some(block) = block else {
+                return Vec::new();
+            };
+            if block
+                .get("input")
+                .and_then(Value::as_object)
+                .is_some_and(|input| input.is_empty())
+            {
+                state.empty_anthropic_tool_inputs.insert(index);
+            }
+            vec![LlmResponseChunk::ToolCallDelta {
+                index,
+                id: block
+                    .get("id")
+                    .and_then(Value::as_str)
+                    .map(desanitize_anthropic_tool_use_id),
+                name: block
+                    .get("name")
+                    .and_then(Value::as_str)
+                    .map(ToOwned::to_owned),
+                arguments_delta: block.get("input").and_then(tool_input_delta),
+            }]
+        }
+        _ => Vec::new(),
+    }
+}
+
+// Converts Anthropic content-block deltas into neutral text or argument deltas.
+fn decode_anthropic_content_block_delta(
+    state: &mut StreamTranslationState,
+    object: &Map<String, Value>,
+) -> Vec<LlmResponseChunk> {
+    let index = object.get("index").and_then(Value::as_u64).unwrap_or(0) as usize;
+    let Some(delta) = object.get("delta").and_then(Value::as_object) else {
+        return Vec::new();
+    };
+    match delta.get("type").and_then(Value::as_str) {
+        Some("text_delta") => delta
+            .get("text")
+            .and_then(Value::as_str)
+            .map(|text| {
+                vec![LlmResponseChunk::TextDelta {
+                    index,
+                    text: text.to_string(),
+                }]
+            })
+            .unwrap_or_default(),
+        Some("thinking_delta") => delta
+            .get("thinking")
+            .and_then(Value::as_str)
+            .map(|text| {
+                vec![LlmResponseChunk::ReasoningDelta {
+                    index,
+                    text: text.to_string(),
+                }]
+            })
+            .unwrap_or_default(),
+        Some("signature_delta") => delta
+            .get("signature")
+            .and_then(Value::as_str)
+            .map(|signature| vec![anthropic_signature_delta(index, signature)])
+            .unwrap_or_default(),
+        Some("input_json_delta") => delta
+            .get("partial_json")
+            .and_then(Value::as_str)
+            .map(|partial_json| {
+                if !partial_json.is_empty() {
+                    state.empty_anthropic_tool_inputs.remove(&index);
+                }
+                vec![LlmResponseChunk::ToolCallDelta {
+                    index,
+                    id: None,
+                    name: None,
+                    arguments_delta: Some(partial_json.to_string()),
+                }]
+            })
+            .unwrap_or_default(),
+        _ => Vec::new(),
+    }
+}
+
+fn anthropic_signature_delta(index: usize, signature: &str) -> LlmResponseChunk {
+    LlmResponseChunk::ReasoningDetailsDelta {
+        index,
+        details: vec![json!({"type": "anthropic.signature_delta", "signature": signature})],
+        text: String::new(),
+    }
+}
+
+// Starts an Anthropic text block when the target stream needs one.
+fn ensure_anthropic_text_block(state: &mut StreamTranslationState) -> Vec<Value> {
+    let mut out = close_anthropic_reasoning_block(state);
+    if state.text_block_started {
+        return out;
+    }
+    let index = state.next_content_index;
+    state.next_content_index += 1;
+    state.text_block_index = Some(index);
+    state.text_block_started = true;
+    state.emitted_content_block = true;
+    out.push(json!({
+        "type": "content_block_start",
+        "index": index,
+        "content_block": {"type": "text", "text": ""},
+    }));
+    out
+}
+
+// Starts an Anthropic thinking block when the target stream needs one.
+fn ensure_anthropic_reasoning_block(state: &mut StreamTranslationState) -> Vec<Value> {
+    let mut out = Vec::new();
+    if state.text_block_started {
+        if let Some(index) = state.text_block_index {
+            out.push(json!({"type": "content_block_stop", "index": index}));
+        }
+        state.text_block_started = false;
+    }
+    if state.reasoning_block_started {
+        return out;
+    }
+    let index = state.next_content_index;
+    state.next_content_index += 1;
+    state.reasoning_block_index = Some(index);
+    state.reasoning_block_started = true;
+    state.emitted_content_block = true;
+    out.push(json!({
+        "type": "content_block_start",
+        "index": index,
+        "content_block": {"type": "thinking", "thinking": "", "signature": ""},
+    }));
+    out
+}
+
+// Closes an open Anthropic thinking block before text/tool content starts.
+fn close_anthropic_reasoning_block(state: &mut StreamTranslationState) -> Vec<Value> {
+    if !state.reasoning_block_started {
+        return Vec::new();
+    }
+    let mut out = Vec::new();
+    if let Some(index) = state.reasoning_block_index {
+        out.push(json!({
+            "type": "content_block_delta",
+            "index": index,
+            "delta": {"type": "signature_delta", "signature": ""},
+        }));
+        out.push(json!({"type": "content_block_stop", "index": index}));
+    }
+    state.reasoning_block_started = false;
+    out
+}
+
+// Accumulates tool-call state and emits Anthropic tool-use deltas.
+fn encode_anthropic_tool_delta(
+    state: &mut StreamTranslationState,
+    index: usize,
+    id: Option<String>,
+    name: Option<String>,
+    arguments_delta: Option<String>,
+) -> Vec<Value> {
+    let mut out = Vec::new();
+    out.extend(close_anthropic_reasoning_block(state));
+    if state.text_block_started {
+        if let Some(index) = state.text_block_index {
+            out.push(json!({"type": "content_block_stop", "index": index}));
+        }
+        state.text_block_started = false;
+    }
+
+    // Reserve the first call even while its name is still being assembled.
+    let other_tool_started = *state.active_anthropic_tool.get_or_insert(index) != index;
+    let tool = state.tool_states.entry(index).or_default();
+    if let Some(id) = id.filter(|id| !id.is_empty()) {
+        tool.id = Some(sanitize_anthropic_tool_use_id(&id));
+    }
+    if let Some(name) = name.filter(|name| !name.is_empty()) {
+        tool.name = Some(name);
+    }
+    if let Some(delta) = arguments_delta {
+        tool.arguments.push_str(&delta);
+        tool.pending_arguments.push_str(&delta);
+    }
+
+    // Chat can interleave calls until EOF; Anthropic callbacks require one open block.
+    if other_tool_started {
+        if !state.deferred_anthropic_tools.contains(&index) {
+            state.deferred_anthropic_tools.push(index);
+        }
+        return out;
+    }
+
+    if !tool.started {
+        // A published tool-use ID cannot be replaced when a later snapshot supplies it.
+        let (Some(id), Some(name)) = (
+            tool.id.as_deref().filter(|id| !id.is_empty()),
+            tool.name.as_deref().filter(|name| !name.is_empty()),
+        ) else {
+            return out;
+        };
+        let content_index = state.next_content_index;
+        state.next_content_index += 1;
+        tool.content_index = Some(content_index);
+        tool.started = true;
+        state.emitted_content_block = true;
+        out.push(json!({
+            "type": "content_block_start",
+            "index": content_index,
+            "content_block": {
+                "type": "tool_use",
+                "id": id,
+                "name": name,
+                "input": {},
+            },
+        }));
+        if !tool.pending_arguments.is_empty() {
+            out.push(json!({
+                "type": "content_block_delta",
+                "index": content_index,
+                "delta": {
+                    "type": "input_json_delta",
+                    "partial_json": tool.pending_arguments,
+                },
+            }));
+            tool.pending_arguments.clear();
+        }
+        return out;
+    }
+
+    if let Some(content_index) = tool.content_index
+        && !tool.pending_arguments.is_empty()
+    {
+        out.push(json!({
+            "type": "content_block_delta",
+            "index": content_index,
+            "delta": {
+                "type": "input_json_delta",
+                "partial_json": tool.pending_arguments,
+            },
+        }));
+        tool.pending_arguments.clear();
+    }
+    out
+}
+
+// Preserves Anthropic usage fields and updates normalized token counts.
+fn capture_anthropic_usage(state: &mut StreamTranslationState, usage: &Value) {
+    let Some(usage) = usage.as_object() else {
+        return;
+    };
+    if let Some(value) = usage.get("input_tokens").and_then(Value::as_u64) {
+        state.usage.input_tokens = Some(value);
+    }
+    if let Some(value) = usage.get("output_tokens").and_then(Value::as_u64) {
+        state.usage.output_tokens = Some(value);
+    }
+    if let Some(value) = usage
+        .get("cache_creation_input_tokens")
+        .and_then(Value::as_u64)
+    {
+        state.usage.set_cache_creation_input_tokens(value);
+    }
+    if let Some(value) = usage.get("cache_read_input_tokens").and_then(Value::as_u64) {
+        state.usage.set_cached_input_tokens(value);
+    }
+    if let Some(value) = usage.get("output_tokens_details").and_then(|details| {
+        details
+            .get("thinking_tokens")
+            .and_then(Value::as_u64)
+            .or_else(|| details.get("reasoning_tokens").and_then(Value::as_u64))
+    }) {
+        state.usage.reasoning_tokens = Some(value);
+    }
+}
+
+// Builds Anthropic usage payloads from normalized and provider-extra state.
+fn anthropic_stream_usage(state: &StreamTranslationState) -> Value {
+    let mut usage = Map::new();
+    if state.saw_backend_usage {
+        if let Some(input_tokens) = state.usage.input_tokens {
+            usage.insert("input_tokens".to_string(), json!(input_tokens));
+        }
+        usage.insert(
+            "output_tokens".to_string(),
+            json!(state.usage.output_tokens.unwrap_or(0)),
+        );
+    } else {
+        usage.insert("output_tokens".to_string(), json!(state.output_tokens_seen));
+    }
+    if let Some(value) = state.usage.cache_creation_input_tokens() {
+        usage.insert("cache_creation_input_tokens".to_string(), json!(value));
+    }
+    if let Some(value) = state.usage.cached_input_tokens() {
+        usage.insert("cache_read_input_tokens".to_string(), json!(value));
+    }
+    if let Some(value) = state.usage.reasoning_tokens {
+        usage.insert(
+            "output_tokens_details".to_string(),
+            json!({"thinking_tokens": value}),
+        );
+    }
+    Value::Object(usage)
+}
+
+// Converts any upstream message ID into an Anthropic-looking message ID.
+fn anthropic_message_id(state: &StreamTranslationState) -> String {
+    let Some(id) = target_message_id_or_source_message_id(state) else {
+        return "msg_switchyard".to_string();
+    };
+    if id.starts_with("msg_") {
+        id.to_string()
+    } else {
+        format!("msg_{id}")
+    }
+}
+
+// Maps provider stop reasons into Anthropic's stop-reason vocabulary.
+fn anthropic_stop_reason(reason: Option<&str>) -> String {
+    match reason {
+        Some("length") => "max_tokens".to_string(),
+        Some("tool_calls") | Some("function_call") => "tool_use".to_string(),
+        Some("content_filter" | "refusal") => "refusal".to_string(),
+        Some(reason @ ("end_turn" | "max_tokens" | "tool_use" | "stop_sequence")) => {
+            reason.to_string()
+        }
+        _ => "end_turn".to_string(),
+    }
+}
+
+// Emits the metadata object Anthropic pairs with a `refusal` stop reason.
+//
+// A source that already reported `stop_details` carries the named policy category and
+// its explanation, so replay that object verbatim. Only a refusal synthesized from a
+// provider that reports no category falls back to the null form, which Anthropic
+// documents as the normal value for a refusal that maps to no named category.
+fn anthropic_stop_details(reason: Option<&str>, source: Option<&Value>) -> Value {
+    match reason {
+        Some("content_filter" | "refusal") => source.cloned().unwrap_or_else(|| {
+            json!({
+                "type": "refusal",
+                "category": Value::Null,
+                "explanation": Value::Null,
+            })
+        }),
+        _ => Value::Null,
+    }
+}
+
+// Converts a streamed tool input fragment into a string delta.
+fn tool_input_delta(value: &Value) -> Option<String> {
+    match value {
+        Value::String(text) if !text.is_empty() => Some(text.clone()),
+        Value::Object(object) if !object.is_empty() => serde_json::to_string(value).ok(),
+        _ => None,
+    }
+}
