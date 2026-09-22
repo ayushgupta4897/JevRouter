@@ -60,7 +60,14 @@ EXPERIMENTS = [
 
 BASE_URL = "https://api.openai.com/v1"
 API_KEY_ENV = "OPENAI_API_KEY"
-MAX_TOKENS = 400
+# gpt-5.6-*/gpt-6-astra are reasoning models: hidden reasoning tokens count against
+# max_completion_tokens before any visible text is emitted. A first run at 400 found 35 of 216
+# items (16%, across every tier) came back with 400/400 output tokens and an EMPTY visible
+# response -- the model spent its whole budget reasoning and never got to answer. That silently
+# corrupts both cost (billed for tokens that produced nothing visible) and any quality read on
+# those items. 1200 leaves comfortable room for reasoning plus a full answer even on this
+# dataset's hardest prompts (financial modeling, multi-join SQL, distributed-systems bugs).
+MAX_TOKENS = 1200
 ADEQUACY_RUBRIC = (
     "The response is a competent, on-topic answer to the task: it addresses what was actually "
     "asked, contains no clear factual or logical errors, and doesn't omit something the task "
