@@ -3,8 +3,10 @@
 Twelve realistic router configurations, one per common company use case, each with its own
 hand-authored dataset, run for real through this repo's decision-only router
 (`routerctl serve`'s default mode) and real Jev, with real completions used only to measure
-genuine cost and quality -- not simulated. See [`REPORT.md`](REPORT.md) for the full write-up and
-results; this file covers what's here and how to reproduce it.
+genuine cost and quality -- not simulated. **See [`REPORT.md`](REPORT.md) for the full write-up
+and results** (216 real routing decisions, 36.8% blended real cost savings, zero quality loss
+found on inspecting every disagreement, and an honest comparison against the published
+Switchyard/LangChain benchmark); this file covers what's here and how to reproduce it.
 
 ## Layout
 
@@ -14,8 +16,10 @@ results; this file covers what's here and how to reproduce it.
 | `teams/*.yaml` | One real `routerctl` config per experiment, using the exact same schema as `docs/TEAM_CONFIG.md` |
 | `datasets/*.yaml` | 18 hand-authored, realistic (not real customer data) requests per experiment, each tagged with this project's own hypothesis of the correct routing decision |
 | `run_experiments.py` | Runs every experiment: real routing decisions via real Jev, real completions via real OpenAI to measure genuine cost/latency, and a 3-item quality-parity spot check per experiment (routed model vs. that experiment's own frontier tier, graded by the same Jev judge) |
+| `fix_truncated.py` | One-off patch used after the first run: `gpt-5.6-*`/`gpt-6-astra` are reasoning models whose hidden reasoning tokens count against the completion cap, so a handful of the hardest prompts came back with zero visible output at 400/1200 tokens; this re-calls only those specific items at a higher cap rather than re-running everything |
+| `summarize.py` | Rebuilds the summary table straight from `results/*.json`, no re-run needed -- what `REPORT.md`'s numbers were generated from |
 | `results/*.json` | Raw per-item results from the last run: decision, cost, latency, and the actual response text, so any number in the report is auditable back to source |
-| `REPORT.md` | The write-up: methodology, per-experiment results, aggregate cost-savings, and an honest comparison against the published Switchyard/LangChain benchmark |
+| `REPORT.md` | The write-up: methodology, per-experiment results, an honest read of every routing "disagreement" (not just the raw percentage), aggregate cost-savings, and a comparison against the published Switchyard/LangChain benchmark |
 
 ## Why this uses only the OpenAI family
 
