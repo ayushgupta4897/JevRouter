@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "routerctl"
 version = "0.1.0"
-description = "Compile per-team YAML routing configs into a Switchyard TOML deployment, and serve them with live, zero-downtime reload."
+description = "Compile per-team YAML into a routing decision service (default) or a live-reloading Switchyard proxy deployment (--mode proxy)."
 readme = "README.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"
