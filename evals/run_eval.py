@@ -46,6 +46,9 @@ class CaseResult:
     output_tokens: int
     cost_usd: float
     error: str | None = None
+    response_text: str | None = None  # kept for audit -- a wrong verdict should be checkable
+    # without re-calling the API. Its absence is exactly what let a grading bug (see
+    # extract_last_number) look like a model failure across every model on one case.
 
 
 @dataclass
@@ -76,9 +79,19 @@ def load_suite() -> list[dict]:
     return yaml.safe_load(SUITE_PATH.read_text())
 
 
-def extract_first_number(text: str) -> float | None:
-    match = re.search(r"-?\d[\d,]*\.?\d*", text.replace(",", ""))
-    return float(match.group().replace(",", "")) if match else None
+def extract_last_number(text: str) -> float | None:
+    """The LAST number in the response, not the first.
+
+    Found by a real run against the live API: a model reasoning step by step restates its
+    inputs before its answer ("Gross profit: 40% x $1,200,000 = ... Operating income =
+    $180,000"), so the first number is almost always an input being echoed back, not the
+    answer. This bug graded a case wrong when the real answer ($180,000) was exactly right and
+    the model had simply also mentioned "40" first. Every `numeric_equals` case that explicitly
+    asks to "reply with only the number" happens to have exactly one number either way, so this
+    only changes grading for the harder, non-terse cases -- which is exactly where it mattered.
+    """
+    matches = re.findall(r"-?\d[\d,]*\.?\d*", text.replace(",", ""))
+    return float(matches[-1]) if matches else None
 
 
 def grade_local(case: dict, response_text: str) -> bool | None:
@@ -87,7 +100,7 @@ def grade_local(case: dict, response_text: str) -> bool | None:
         lowered = response_text.lower()
         return all(s.lower() in lowered for s in case["expected"])
     if grader == "numeric_equals":
-        value = extract_first_number(response_text)
+        value = extract_last_number(response_text)
         if value is None:
             return False
         return abs(value - float(case["expected"])) <= float(case.get("tolerance", 0))
@@ -173,7 +186,7 @@ async def run_model(model: str, suite: list[dict], base_url: str, api_key: str |
                     correct = None
             else:
                 correct = grade_local(case, text)
-            report.results.append(CaseResult(case["id"], case["domain"], case["difficulty"], correct, latency_ms, in_tok, out_tok, cost))
+            report.results.append(CaseResult(case["id"], case["domain"], case["difficulty"], correct, latency_ms, in_tok, out_tok, cost, response_text=text))
     return report
 
 
