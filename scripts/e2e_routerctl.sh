@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Proves routerctl's live reload: edit a team's YAML while the server is running, and the new
-# config is live within a few seconds -- no restart, no dropped process, other teams unaffected.
+# Proves routerctl's --mode proxy live reload: edit a team's YAML while the server is running,
+# and the new config is live within a few seconds -- no restart, no dropped process, other teams
+# unaffected. (--mode decide, the default, has its own e2e_routerctl_decide.sh.)
 #
 # Uses a throwaway fixture (not teams/), a mock upstream, and no judge (policy: auto, a plain
 # request with no tool history always picks the efficient tier deterministically -- see
@@ -56,7 +57,7 @@ write_route "model-v1"
 wait_for "http://127.0.0.1:$MOCK_PORT/health"
 
 echo "== starting routerctl serve on :$PUBLIC_PORT (fixture: $FIXTURE)"
-"$PYTHON" -m routerctl.cli serve "$FIXTURE/teams" --clients "$FIXTURE/clients.yaml" \
+"$PYTHON" -m routerctl.cli serve "$FIXTURE/teams" --clients "$FIXTURE/clients.yaml" --mode proxy \
   --switchyard-server "$SWITCHYARD_SERVER" --port "$PUBLIC_PORT" --poll-seconds 1 \
   --build-dir "$LOGDIR/build" >"$LOGDIR/routerctl.log" 2>&1 & pids+=($!)
 wait_for "http://127.0.0.1:$PUBLIC_PORT/_routerctl/health"

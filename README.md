@@ -37,7 +37,10 @@ risks are in [`docs/DECISION.md`](docs/DECISION.md).
 
 On top of that, **`routerctl`** lets any team write their own routing policy as a few lines of
 YAML — pick weak/strong/intent-bucket models, save the file, and it's live in seconds, with no
-platform restart and no risk to any other team's routes. See
+platform restart and no risk to any other team's routes. By default it runs as a **decision-only
+service**: given a request it returns which model and client should serve it, and never calls
+that model itself — a separate AI Gateway (yours, or anyone's) makes the real call, keeping that
+responsibility fully out of this router's hands. See
 [**Multi-team routing**](#multi-team-routing-routerctl) below and
 [`docs/TEAM_CONFIG.md`](docs/TEAM_CONFIG.md) for the schema.
 
@@ -47,13 +50,14 @@ platform restart and no risk to any other team's routes. See
 |---|---|
 | `vendor/switchyard/` | **Vendored source**, pinned commit (`vendor/switchyard/VENDORED_COMMIT`). Not a fork: unmodified, rebuilt by `scripts/build.sh`. See `vendor/NOTICE.md` |
 | `jevjudge/` | Python package: the sidecar (`jevjudge`), the schema→questions compiler, the confidence cascade, offline mocks, tests |
-| `routerctl/` | Python package: compiles per-team YAML into Switchyard TOML, and serves it with watch→recompile→validate→health-check→swap live reload |
+| `routerctl/` | Python package: compiles per-team YAML into a routing decision. Default `--mode decide` embeds Switchyard's own `libsy` algorithms and returns a decision, never a completion (see below); `--mode proxy` compiles to Switchyard TOML and serves it with watch→recompile→validate→health-check→swap live reload, for teams with no AI Gateway of their own yet |
 | `teams/*.yaml`, `clients.yaml` | Real example configs: a voice-AI team (`intent` and `complexity` policies) and the platform default (`auto`, `escalation`) |
 | `switchyard/routes.*.toml` | Hand-written Switchyard deployments for capability, escalation, and custom modes — the reference `routerctl` compiles down to |
 | `evals/` | A concise (24-case), runnable model-comparison harness: accuracy per domain, cost, latency, graded automatically (exact-match or Jev-as-judge) |
 | `scripts/build.sh` | One command: builds `switchyard-server`, its Python bindings, `jevjudge`, and `routerctl` into a project-local `.venv` |
 | `scripts/e2e.sh` | Boots mock upstream + mock Jev + jevjudge + the real `switchyard-server` and asserts 12 routing decisions. No API keys |
-| `scripts/e2e_routerctl.sh` | Proves live reload: edits a team's YAML while serving and asserts the change takes effect with no restart, and that a bad edit never goes live |
+| `scripts/e2e_routerctl.sh` | Proves proxy-mode live reload: edits a team's YAML while serving and asserts the change takes effect with no restart, and that a bad edit never goes live |
+| `scripts/e2e_routerctl_decide.sh` | Proves decision-only mode: every client points at an unreachable address and decisions still succeed (the target is never dialed), plus the same live-reload guarantees as proxy mode |
 | `scripts/bench_judge.py` | p50/p95 latency and $/verdict for Switchyard-shaped judge requests (mock or real Jev) |
 | `scripts/update_vendor.sh` | Re-vendor from a newer Switchyard commit or branch |
 | `examples/embedded_libsy.py` | The no-sidecar path: a Python harness drives Switchyard's `libsy` algorithms and serves the judge call with Jev in-process |
@@ -104,24 +108,61 @@ routes:
       analysis:   { id: gpt-5.6-sol,  client: openai, description: "summarizing, sentiment, compliance risk" }
 ```
 
-`routerctl` compiles every team's YAML in `teams/` (plus the platform-managed `clients.yaml`)
-into one Switchyard TOML — the exact shape already validated in this README — and Jev judges
-every `intent`/`complexity`/`escalation` route by default, at no extra config.
+### Decision-only mode (default): the router decides, your AI Gateway executes
 
-**"Live" is real**, not aspirational: Switchyard's server has no config hot-reload (checked
-against the vendored source), so `routerctl serve` watches every file and, on a change,
-recompiles, runs a genuine `switchyard-server --dry-run`, boots a new process, health-checks it,
-and only then atomically swaps a thin proxy over to it before draining the old one:
+`routerctl serve teams/` runs a **decision-only** service. POST the same shape you'd send an
+OpenAI-compatible completions endpoint, `model` set to the route name:
 
 ```bash
-routerctl validate teams/          # schema + a real --dry-run; no API keys needed
-routerctl serve teams/ --port 4000  # edit any file in teams/ -- it's live within a few seconds
+curl localhost:4000/v1/decide -d '{
+  "model": "deployment/transcription",
+  "messages": [{"role": "user", "content": "Transcript: ...caller account is ACC-88213..."}]
+}'
 ```
 
-`scripts/e2e_routerctl.sh` proves this end to end: a live edit takes effect with no restart, a
-broken edit is rejected and the last-good config keeps serving every team, and it recovers once
-fixed — 6/6 passing. Full schema (all four policies, model definitions, per-route judge
-overrides): [`docs/TEAM_CONFIG.md`](docs/TEAM_CONFIG.md).
+```json
+{
+  "route": "deployment/transcription", "policy": "intent", "bucket": "extraction",
+  "selected_model": "gpt-5.6-luna", "selected_client": "openai",
+  "fallback_model_ids": ["gpt-5.6-sol"], "fallback_clients": ["openai"],
+  "judge_source": "jev", "judge_confidence": 1.0, "latency_ms": 200,
+  "outcome_id": "01a0c8bd-f2a2-7ca3-81cd-204be669be87"
+}
+```
+
+That's it — **`gpt-5.6-luna` is never called.** Your AI Gateway reads `selected_model` /
+`selected_client` and makes the real request itself, keeping "decide" and "execute" as two
+processes with two owners, never one. Internally this embeds Switchyard's own `libsy` routing
+algorithms directly (no HTTP proxy, no subprocess) and answers the one real call every policy
+needs — the shared Jev judge — with the same `jevjudge` sidecar code used everywhere else in
+this repo; `auto`'s zero-config preset needs no judge call at all. `escalation` is the one policy
+Switchyard doesn't expose this way natively (its built-in version calls the current tier's model
+itself to observe its behavior, which breaks the "never calls the target" guarantee) — this repo
+reimplements it as a classifier that reads the transcript already in your request instead. Full
+account, including how that was verified: [`docs/DECISION.md`](docs/DECISION.md).
+
+`routerctl validate teams/` still schema-checks every team file and runs a real
+`switchyard-server --dry-run` first, so a broken config never reaches either serving mode.
+
+**"Live" is real**, not aspirational: config changes recompile in-process and atomically swap a
+dict — no subprocess to boot or health-check, unlike proxy mode below, because there's no second
+process serving traffic to swap. `scripts/e2e_routerctl_decide.sh` proves it end to end,
+including that the target is never dialed (every client in the test points at an address that
+doesn't exist, and decisions still succeed) — 7/7 passing.
+
+### Proxy mode: for teams with no AI Gateway of their own yet
+
+`routerctl serve teams/ --port 4000 --mode proxy` compiles the same YAML to a Switchyard TOML and
+runs the real `switchyard-server` as a full proxy that also forwards traffic and streams back
+completions — Switchyard's server has no config hot-reload of its own (checked against the
+vendored source), so this mode watches every file and, on a change, recompiles, runs a genuine
+`switchyard-server --dry-run`, boots a new process, health-checks it, and only then atomically
+swaps a thin proxy over to it before draining the old one. `scripts/e2e_routerctl.sh` proves this
+end to end — 6/6 passing.
+
+Both modes share the same YAML schema, the same `routerctl validate`, and the same live-reload
+guarantee (a broken edit never goes live; the last-good config keeps serving). Full schema (all
+four policies, model definitions, per-route judge overrides): [`docs/TEAM_CONFIG.md`](docs/TEAM_CONFIG.md).
 
 ## Choosing models: evals
 
@@ -148,18 +189,20 @@ version and rustup installs it automatically), Python ≥ 3.11, and [`uv`](https
 scripts/build.sh          # builds switchyard-server + its Python bindings + jevjudge + routerctl, ~3 min
 
 source .venv/bin/activate
-pytest jevjudge routerctl -q     # 18 + 20 tests: compilers on real schemas, ASGI round trips, config validation
+pytest jevjudge routerctl -q     # 18 + 34 tests: compilers on real schemas, ASGI round trips, config validation, decision-only routing
 
 routerctl validate teams/         # the example team configs, schema + a real Switchyard --dry-run
 scripts/e2e.sh                    # boots mock upstream + mock Jev + jevjudge + the real switchyard-server
-scripts/e2e_routerctl.sh          # proves live reload: edit a team's config while serving, no restart
+scripts/e2e_routerctl_decide.sh   # proves decision-only mode: the target is never dialed, live reload works
+scripts/e2e_routerctl.sh          # proves proxy-mode live reload: edit a team's config while serving, no restart
 ```
 
 Expected: `passed=12 failed=0` from `e2e.sh`, covering easy→weak / hard→strong /
 ambiguous→abstain→strong in capability mode; weak→weak→strong latch (and no judge call after
 latching) in escalation mode; 4-way custom routing including low-confidence→abstain→`default_target`.
-`passed=6 failed=0` from `e2e_routerctl.sh`: a live edit takes effect with no restart, a broken
-edit is rejected and the platform keeps serving the last-good config, and it recovers once fixed.
+`passed=7 failed=0` from `e2e_routerctl_decide.sh` and `passed=6 failed=0` from
+`e2e_routerctl.sh`: a live edit takes effect with no restart, a broken edit is rejected and the
+platform keeps serving the last-good config, and it recovers once fixed.
 All scripts default to this build's own binary and venv; pass `SWITCHYARD_SERVER=`/`PYTHON=` to
 point at something else.
 
@@ -259,13 +302,30 @@ at ~0.3 s. The sidecar adds tens of milliseconds. Real-key numbers: run
 * Routing *accuracy* on real tasks — as opposed to "the API call works and the plumbing behaves
   sensibly", which is now verified — needs the judge-only eval and the Terminal-Bench 2.1
   subset Switchyard ships (`vendor/switchyard/benchmark/`), run with Jev vs. the LLM judge.
-* **`routerctl`'s live reload is validated mechanically** (`scripts/e2e_routerctl.sh`, 6/6): a
+* **`routerctl`'s live reload is validated mechanically in both modes**: decision mode
+  (`scripts/e2e_routerctl_decide.sh`, 7/7) and proxy mode (`scripts/e2e_routerctl.sh`, 6/6) — a
   live edit takes effect without restart, a broken edit is rejected while the platform keeps
   serving every team's last-good routes, and it recovers once fixed. Two scope boundaries worth
-  knowing: a swap costs a health-check round trip (treat "live" as seconds, not instantaneous),
-  and the confidence gate / fallback judge is still one shared setting on the platform's
+  knowing: proxy mode's swap costs a health-check round trip (treat "live" as seconds, not
+  instantaneous; decision mode's in-process swap is faster since there's no second process to
+  boot), and the confidence gate / fallback judge is still one shared setting on the platform's
   `jevjudge` sidecar, not yet per-route — a team can pick a different judge model entirely
   (`judge:` in their YAML) but not yet a different confidence threshold from every other team.
+* **Decision-only mode was added after real use surfaced the actual requirement**: an AI Gateway
+  should own making the call; this router should only decide. Building it found that Switchyard's
+  embedded `libsy` algorithms are decision-only for `auto`/`complexity`/`intent` out of the box —
+  verified empirically that `run_stream` never asks to call the real target for those three — but
+  its native `escalation` classifier is *response-based*: it calls the current tier's model
+  itself to observe live behavior before judging, which no amount of configuration removes. This
+  repo's `escalation` policy is reimplemented as a classifier that judges the transcript already
+  in the request instead (same rubric intent — a repeated-failure pattern — read from history
+  rather than watched live), keeping every policy genuinely decision-only. One more real bug
+  surfaced getting there: Switchyard's `stage_router` (what `auto` compiles to) silently rejects
+  every model unless the `run_stream` models dict also includes an `any` category listing them;
+  omitting it fails with `target "..." was not found` regardless of how the `efficient`/`capable`
+  entries are spelled. Spot-checked against real Jev (no real OpenAI calls needed at all, since
+  the whole point is that the target is never called): 7/7 correct decisions across all four
+  policies, including escalation correctly detecting a real repeated-failure transcript.
 * **The `evals/` harness has been run for real against `gpt-5.6-luna/terra/sol` and
   `gpt-6-astra`** (24 cases each, `python evals/run_eval.py --models
   gpt-5.6-luna,gpt-5.6-terra,gpt-5.6-sol,gpt-6-astra`). Converged result:

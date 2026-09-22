@@ -5,8 +5,16 @@ mistake in your file never affects any other team's routes.
 
 ```bash
 routerctl validate teams/              # schema check + a real Switchyard --dry-run, no keys needed
-routerctl serve teams/ --port 4000     # runs it, watching teams/ for edits
+routerctl serve teams/ --port 4000     # decision-only by default -- see below
 ```
+
+`routerctl serve` defaults to **decision-only**: `POST /v1/decide` with `{"model": "<route
+name>", "messages": [...]}` and it tells you which model and client should serve it —
+`{"selected_model": "...", "selected_client": "...", ...}` — without ever calling that model.
+Your own AI Gateway (or anyone's) makes the real request; this keeps deciding and executing as
+two separate responsibilities, never one process doing both. Pass `--mode proxy` instead to run
+the same config as a real forwarding proxy (Switchyard itself, with live reload) if you don't
+have a gateway of your own yet — see the README's "Multi-team routing" section for both.
 
 ## The two files
 
@@ -74,7 +82,7 @@ lands on the strong model for tasks that turned out easy.
 
 ### `escalation` — judge the run, not the request
 
-Every conversation starts on the cheap model. A judge watches the actual transcript — tool calls,
+Every conversation starts on the cheap model. A judge reads the transcript so far — tool calls,
 tool results, repeated errors — and escalates to the strong model once it sees a genuine pattern
 of trouble, not a single failure. This is the mode to reach for when the same "how hard is this"
 question can't be answered up front, but the run tells you as it goes.
@@ -85,12 +93,21 @@ question can't be answered up front, but the run tells you as it goes.
   models:
     weak:   { id: gpt-5.6-sol,  client: openai }
     strong: { id: gpt-6-astra,  client: openai }
-  confirmations: 2          # consecutive "escalate" verdicts required to switch tiers. default 2
-  recent_turn_window: 28    # trailing messages the judge sees. default 28
+  confirmations: 2          # baked into the judge's prompt as "at least N times in a row"
+  recent_turn_window: 28    # trailing messages the judge is told to focus on
 ```
 
-Escalation needs a stable session so the streak survives across turns: send an
-`x-switchyard-session-id` header with each request in the same conversation.
+**The two serving modes implement this differently, and it's worth knowing which you're
+running.** Switchyard's native `escalation` classifier (used by `--mode proxy`) calls the
+current tier's model itself to observe its live response, then judges that, and keeps a
+confirmation streak across calls tied to an `x-switchyard-session-id` header. Decision-only mode
+(the default) can't do that — calling the current tier would violate "the router never calls a
+model" — so it instead judges the transcript already present in your request in one shot, with no
+cross-call session state at all: `confirmations`/`recent_turn_window` become instructions inside
+the judge's own prompt ("a pattern recurring at least N times, looking at the last M turns")
+rather than counters Switchyard tracks for you. Practically: make sure your request's `messages`
+actually include the recent tool calls/results/errors you want judged — decision mode has no
+memory of previous requests to fall back on.
 
 ### `intent` — route by what the request actually is
 
@@ -143,18 +160,23 @@ connection pool rather than duplicating it. If you need genuinely different sett
 
 ## What "live" actually means
 
-Switchyard's server has no config hot-reload — a change means a new process. `routerctl serve`
-handles that for you: it watches every file, and on a change it recompiles, runs a real
-`switchyard-server --dry-run`, and only if that passes does it boot a new process, wait for its
-health check, and atomically swap a small proxy over to it before draining the old one. Clients
-never see a dropped connection, and a syntax error or a typo'd client name in your file is caught
-before it ever reaches production — the platform keeps serving your last good config, and only
-your routes would have been affected if it had gone live, never another team's.
+Both modes watch every file and reject a bad edit while keeping your last good config serving —
+a syntax error or a typo'd client name never reaches production, and only your routes would have
+been affected if it had gone live, never another team's. How the swap itself happens differs:
 
-Two costs worth knowing: a swap needs about a second or two of health-check time, so treat "live"
-as "live within a few seconds," not instantaneous; and confidence-gate tuning (how cautious Jev's
-fallback/abstain behavior is) is currently a platform-wide setting on the shared `jevjudge`
-sidecar, not yet per-route — see `docs/DECISION.md`'s roadmap.
+* **`--mode decide`** (default): a config change recompiles in-process straight into
+  `switchyard.libsy` algorithm objects and atomically swaps a dict — no subprocess, no health
+  check, because there's no second process serving traffic to stand up.
+* **`--mode proxy`**: Switchyard's server has no config hot-reload of its own — a change means a
+  new process. `routerctl serve` handles that for you: on a change it recompiles, runs a real
+  `switchyard-server --dry-run`, and only if that passes does it boot a new process, wait for its
+  health check, and atomically swap a small proxy over to it before draining the old one. This
+  costs about a second or two of health-check time, so treat "live" as "within a few seconds,"
+  not instantaneous.
+
+Confidence-gate tuning (how cautious Jev's fallback/abstain behavior is) is currently a
+platform-wide setting on the shared `jevjudge` sidecar in both modes, not yet per-route — see
+`docs/DECISION.md`'s roadmap.
 
 ## Validating before you save
 
@@ -164,5 +186,8 @@ routerctl validate teams/ --skip-dry-run  # schema only, no Switchyard binary ne
 ```
 
 `validate` doesn't need real API keys — it fills in a placeholder for `--dry-run`'s sake (which
-makes no network calls), so this is safe to run in CI. `routerctl serve` does need real keys for
-any client it actually calls.
+makes no network calls), so this is safe to run in CI. Whether `routerctl serve` itself needs
+real keys depends on the mode: **`--mode decide` never calls a client at all**, so it never needs
+real keys for the models your routes name (only for the judge, if you point one at a paid LLM
+fallback instead of the default Jev sidecar); **`--mode proxy`** does need a real key for every
+client it actually forwards to, since it makes the real call.

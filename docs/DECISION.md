@@ -375,7 +375,110 @@ With that fixed, the real router served real traffic correctly on both live-relo
   under real load is left to a harder probe than this demo reached for; nothing here shows it
   can't.
 
-## 11. Roadmap
+## 11. Decision-only mode: the router decides, an AI Gateway executes (2026-09-22)
+
+Real use surfaced a requirement the design up to this point didn't have: the router should tell
+a caller which model to use, and never call that model itself. The caller already has (or is
+building) its own AI Gateway responsible for actually executing the request; routing and
+execution needed to be two processes with two owners, not one process doing both.
+
+### 11.1 What Switchyard's embedded API actually allows
+
+`routerctl serve`'s proxy mode (§10) works by compiling YAML to TOML and running the real
+`switchyard-server` binary, which is an HTTP proxy by construction: given a request, it always
+selects a target *and* forwards to it, streaming the completion back. There is no flag, header,
+or config key that makes it decide without forwarding — checked directly against the vendored
+source, `crates/switchyard-server/src/lib.rs`, which has no such branch.
+
+But Switchyard's routing *algorithms* (`libsy`) are a separate crate from the HTTP-forwarding
+logic, and `switchyard-py` exposes them directly to Python as an embedded API
+(`switchyard.libsy`, already used by this project's `examples/embedded_libsy.py` for a different
+reason — running a harness without the jevjudge HTTP sidecar). `Algorithm.run_stream(request,
+models)` yields a sequence of `Step`s: zero or more `Step.CallModel` (the host must fulfill each
+with a real response before the algorithm continues) followed by one terminal `Step.Done`
+carrying `selected_model_ids` — the routing decision itself, independent of whether anything was
+actually served.
+
+Empirically probing all four policies against the algorithm's real `run_stream` (mock Jev, zero
+cost) settled the design:
+
+| Policy | Compiles to | `CallModel` steps needed |
+|---|---|---|
+| `auto` | `stage_router` with no classifier | **none** — a pure heuristic over request metadata, not even a judge call |
+| `complexity` | `llm_classifier` capability mode | **one**, the judge |
+| `intent` | `llm_classifier` custom mode | **one**, the judge |
+| `escalation` | `llm_classifier` escalation mode | **the current tier's model itself**, before the judge even runs |
+
+The first three need at most the judge — already the cheapest call in this whole system — and
+never ask to call the actual target. `escalation` is qualitatively different: it is
+*response-based* by design, meaning it watches how the current tier's model actually behaves
+before judging whether that's a stuck pattern, which requires generating that behavior. No
+configuration removes this; it's what the algorithm is for. Confirmed by reading the yielded
+steps directly (a small probe script, `run_stream` against each policy in turn) rather than
+assuming from documentation — the same discipline as every other finding in this document.
+
+### 11.2 Escalation, reimplemented as a transcript-reading classifier
+
+Given that, `escalation` in this project no longer maps onto Switchyard's native
+`LlmClassifierConfig::Escalation`. It compiles instead to the *same* `custom` classifier
+mechanism `intent` uses, with two buckets (`continue`, `escalate`) instead of team-named ones,
+and a prompt asking the judge to read the conversation already present in the request — tool
+calls, tool results, repeated errors — for a clear pattern recurring at least `confirmations`
+times within the last `recent_turn_window` turns, versus ordinary or isolated trouble. This
+keeps the same rubric intent (escalate on a pattern, never a single failure) while making the
+policy genuinely decision-only: the judge is the only real call, exactly like every other policy.
+
+The real behavior difference this trades away: Switchyard's native version tracks a confirmation
+streak across multiple requests in the same session (via `x-switchyard-session-id`), so it can
+notice "this is the second time in a row" without re-reading the whole history each call.
+Decision-only mode has no cross-call memory by construction — each decision is a fresh, isolated
+read of whatever transcript the caller includes in that one request. This is a legitimate
+trade-off, not a regression papered over: an AI Gateway already holds the conversation history
+(it's the one making the real calls), so handing the router the relevant recent turns each time
+costs it nothing it doesn't already have, and the router stays stateless — no per-session data
+this process needs to retain, clean up, or lose on restart.
+
+### 11.3 A second real bug: `stage_router` needs an explicit `any` category
+
+Compiling `auto` to `stage_router` at first failed every request with `LibsyError: target
+"gpt-5.6-terra" was not found` — despite `gpt-5.6-terra` being listed exactly where the working
+`llm_classifier` policies list their own candidates (`efficient`/`capable` categories). Isolated
+with a minimal repro comparing fake placeholder names against real model IDs, and against a
+models dict with and without an `any` key: `stage_router` (unlike `llm_classifier`) requires the
+`run_stream` models dict to also include an `any` category listing every candidate the route can
+reach, or its internal target resolution fails outright, regardless of the actual `efficient`/
+`capable` values or their formatting (a red herring: the failing id happened to contain dots,
+which turned out to be irrelevant once isolated). Fixed by always including `any` as the union of
+a route's own targets in every policy's compiled models dict, not only where a native TOML config
+happened to require it (`intent`'s TOML compilation already built this list; the others hadn't
+needed to, before this).
+
+### 11.4 Validation
+
+Spot-checked against real Jev (no real OpenAI calls anywhere in this path, by construction — the
+whole point is that the target is never called) across all four policies and both obvious
+directions per judge-backed policy:
+
+| Route (policy) | Input | Decision | Judge confidence |
+|---|---|---|---|
+| `deployment/auto` | trivial greeting | `gpt-5.6-terra` (efficient) | n/a — no judge call |
+| `deployment/qa-summary` (complexity) | five-house logic riddle | `gpt-6-astra` (strong) | 0.32 |
+| `deployment/qa-summary` (complexity) | `2+2=?` | `gpt-5.6-terra` (weak) | 0.92 |
+| `deployment/transcription` (intent) | "what account number..." | `gpt-5.6-luna` (extraction) | 1.0 |
+| `deployment/transcription` (intent) | "summarize sentiment..." | `gpt-5.6-sol` (analysis) | 1.0 |
+| `deployment/coding-agent` (escalation) | same failure, 3rd time in a row | `gpt-6-astra` (escalate) | 0.93 |
+| `deployment/coding-agent` (escalation) | fixed, moving on | `gpt-5.6-sol` (continue) | 1.0 |
+
+All seven decisions correct, including the reimplemented escalation policy correctly detecting
+a genuine repeated-failure transcript and correctly recognizing ordinary progress as not needing
+escalation — purely from reading the given conversation, with no model call of its own. End-to-
+end live reload against a real running server (not just in-process) is proven the same way as
+proxy mode's own e2e script, with one addition specific to this mode:
+`scripts/e2e_routerctl_decide.sh` points every declared client at a deliberately unreachable
+address and asserts decisions still succeed — if this router ever attempted to call a target,
+every request in that script would fail with a connection error instead.
+
+## 12. Roadmap
 
 1. **Routing-accuracy validation**: the judge-only eval (predict vs. a ground-truth label from
    running both tiers) and Switchyard's `benchmark/` TB2.1 subset with the Jev judge vs. the LLM
@@ -391,8 +494,14 @@ With that fixed, the real router served real traffic correctly on both live-relo
    serves them unchanged (not exercised in e2e yet).
 5. **Distillation**: after the routing feature is proven, log Jev's inputs/outputs and train a
    task-specific encoder classifier (Laya/ModernBERT class) for zero-marginal-cost judging.
+6. **Decision-only escalation, richer signal**: §11.2's transcript-reading classifier asks one
+   `noul`-equivalent (continue vs. escalate); it could ask Jev's separate `looping`,
+   `false_progress`, `drift`, `desperation`, `external_blocker` nouls in the same call (Jev
+   answers all questions in one round trip regardless of count) and combine them with a small
+   rule, the same idea as item 2 above but built for the stateless, per-request shape decision
+   mode actually needs rather than Switchyard's session-tracked native algorithm.
 
-## 12. Sources
+## 13. Sources
 
 Switchyard: repo README, `docs/routing_algorithms/*.md`, `crates/libsy/src/algorithms/util/llm_judge.rs`,
 `crates/libsy/src/prompts/*`, `benchmark/routing-profiles/*`; NVIDIA blog "Route AI Agent Workloads

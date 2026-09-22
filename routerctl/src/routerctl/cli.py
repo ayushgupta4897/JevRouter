@@ -83,16 +83,25 @@ def cmd_compile(args: argparse.Namespace) -> int:
 
 
 def cmd_serve(args: argparse.Namespace) -> int:
-    from .supervisor import run_supervisor  # deferred: pulls in fastapi/uvicorn/httpx
+    if args.mode == "proxy":
+        from .supervisor import run_supervisor  # deferred: pulls in fastapi/uvicorn/httpx
 
-    return run_supervisor(
-        teams_dir=Path(args.teams_dir),
-        clients_path=Path(args.clients) if args.clients else None,
-        public_port=args.port,
-        switchyard_server=_find_dry_run_binary(args.switchyard_server),
-        poll_seconds=args.poll_seconds,
-        build_dir=Path(args.build_dir),
-    )
+        return run_supervisor(
+            teams_dir=Path(args.teams_dir),
+            clients_path=Path(args.clients) if args.clients else None,
+            public_port=args.port,
+            switchyard_server=_find_dry_run_binary(args.switchyard_server),
+            poll_seconds=args.poll_seconds,
+            build_dir=Path(args.build_dir),
+        )
+
+    import uvicorn  # deferred: pulls in fastapi/uvicorn/switchyard bindings
+
+    from .decision_server import build_app
+
+    app = build_app(Path(args.teams_dir), Path(args.clients) if args.clients else None, poll_seconds=args.poll_seconds)
+    uvicorn.run(app, host="127.0.0.1", port=args.port, log_level="info")
+    return 0
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -112,10 +121,17 @@ def build_parser() -> argparse.ArgumentParser:
     p_compile.add_argument("-o", "--output", default="build/router.toml")
     p_compile.set_defaults(func=cmd_compile)
 
-    p_serve = sub.add_parser("serve", parents=[common], help="Serve with live reload: watch, recompile, validate, health-check, then swap.")
+    p_serve = sub.add_parser("serve", parents=[common], help="Serve with live reload (watch teams/*.yaml, recompile, swap).")
+    p_serve.add_argument(
+        "--mode", choices=["decide", "proxy"], default="decide",
+        help="'decide' (default): decision-only -- POST /v1/decide returns which model/client should "
+             "serve a request, but never calls it; a separate AI Gateway executes. "
+             "'proxy': legacy full proxy via switchyard-server that also forwards traffic itself, for "
+             "teams with no AI Gateway of their own yet.",
+    )
     p_serve.add_argument("--port", type=int, default=4000, help="Public port clients connect to.")
     p_serve.add_argument("--poll-seconds", type=float, default=1.5)
-    p_serve.add_argument("--build-dir", default="build")
+    p_serve.add_argument("--build-dir", default="build", help="(--mode proxy only) where compiled TOML/logs go.")
     p_serve.set_defaults(func=cmd_serve)
 
     return parser
