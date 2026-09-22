@@ -166,11 +166,11 @@ def actual_label(compiled, decision) -> str:
     raise AssertionError(tag)
 
 
-async def call_model(http: httpx.AsyncClient, api_key: str, model: str, prompt: str) -> tuple[str, int, int, float]:
+async def call_model(http: httpx.AsyncClient, api_key: str, model: str, prompt: str, max_tokens: int = MAX_TOKENS, timeout: float = 60.0) -> tuple[str, int, int, float]:
     headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
-    body = {"model": model, "messages": [{"role": "user", "content": prompt}], "max_completion_tokens": MAX_TOKENS}
+    body = {"model": model, "messages": [{"role": "user", "content": prompt}], "max_completion_tokens": max_tokens}
     started = time.perf_counter()
-    response = await http.post(f"{BASE_URL}/chat/completions", json=body, headers=headers, timeout=60.0)
+    response = await http.post(f"{BASE_URL}/chat/completions", json=body, headers=headers, timeout=timeout)
     latency_ms = (time.perf_counter() - started) * 1000
     response.raise_for_status()
     payload = response.json()
