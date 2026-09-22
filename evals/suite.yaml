@@ -112,12 +112,19 @@
 - id: extraction-medium-2
   domain: extraction
   difficulty: medium
+  # Deliberately has no real calendar date in it. An earlier version anchored this to a specific
+  # date and asserted its day-of-week by hand ("today is Monday, September 22, 2026") -- that
+  # date is actually a Tuesday on the real calendar, a self-contradictory premise that made every
+  # model's answer defensible depending on whether it deferred to the stated premise or silently
+  # corrected it. Keeping the puzzle self-contained (relative days only) removes that failure mode
+  # entirely rather than requiring the constructor to hand-verify a weekday.
   prompt: >
-    A customer says: "I called last Tuesday, then again on Thursday, and finally today,
-    Monday, still no resolution." If today is Monday, September 22, 2026, what calendar date
-    was "last Tuesday"? Reply with only the date as YYYY-MM-DD.
-  grader: contains_all
-  expected: ["2026-09-15"]
+    A customer says: "I called last Tuesday, then again on Thursday, and finally today, Monday,
+    still no resolution." How many days before today was "last Tuesday"? Reply with only the
+    number of days.
+  grader: numeric_equals
+  expected: 6
+  tolerance: 0
 
 - id: extraction-hard-1
   domain: extraction
@@ -230,31 +237,38 @@
     than answering as if the request were already unambiguous.
 
 - id: general-medium-1
+  # Replaced a hand-written liar puzzle that conflated "person is a liar" (a fixed type) with
+  # "each person has one true and one false statement" (a per-statement framing) -- two real
+  # models independently and reasonably answered "no" to it, which on inspection meant the
+  # puzzle's own premise was ambiguous, not that they reasoned badly. This one is a standard,
+  # hand-verified knights-and-knaves puzzle with a single well-defined answer instead.
   domain: general
   difficulty: medium
   prompt: >
-    Three people, Alice, Bob, and Carol, each tell you one true statement and one false
-    statement, in some order. Alice says: "Bob is a liar" then "Carol is honest." Bob says:
-    "Alice is honest" then "I am the liar." Carol says nothing you can hear. Based only on the
-    two statements from Alice and the two from Bob, is it possible for both of Alice's
-    statements about Bob and Carol to be consistent with both of Bob's statements about Alice
-    and himself, given each person has exactly one true and one false statement? Answer yes or
-    no and give one sentence of reasoning.
+    Assume everyone is either a truth-teller (every statement they make is true) or a liar
+    (every statement they make is false). A says: "B always tells the truth." B says: "A and I
+    are different types: one of us always lies and the other always tells the truth." What type
+    is A -- truth-teller or liar? Answer with one word and one sentence of reasoning.
   grader: jev_noul
   rubric: >
-    The response correctly identifies that Bob's statement "I am the liar" is self-referentially
-    paradoxical if taken as the false one (if false, he is not the liar, but then his other
-    statement "Alice is honest" would need to be the true one, which is consistent) -- the
-    expected conclusion is that it IS possible (Bob's false statement is "I am the liar", true
-    statement is "Alice is honest"; Alice's true statement is "Bob is a liar" is compatible
-    since Bob having one false statement makes him "a liar" loosely, and false statement "Carol
-    is honest" is fine) -- accept "yes" with any reasoning that correctly resolves Bob's
-    self-referential statement without contradiction; reject a "no" or reasoning that ignores
-    the self-reference.
+    The response answers "liar". Correct reasoning: if A were a truth-teller, A's statement
+    makes B a truth-teller too, but then B's own statement (which would have to be true) claims
+    A and B are different types, contradicting that both are truth-tellers -- so A cannot be a
+    truth-teller. If A is a liar, A's statement is false, so B is also a liar; B's statement is
+    then false too, meaning A and B are NOT different types, which is consistent since both are
+    liars. Accept "liar" with reasoning that reaches a consistent, non-contradictory case (the
+    exact phrasing of the derivation may vary). Reject "truth-teller" or "liar" reached by
+    reasoning that doesn't check both statements for consistency.
 
 - id: general-medium-2
   domain: general
   difficulty: medium
+  # A prior version of this rubric accepted either "yes, consent was given" OR "flags this as
+  # ambiguous" as correct. That compound OR condition asked the judge to recognize which of two
+  # different response shapes it was looking at in one pass, and a genuinely reasonable response
+  # ("no, not clear consent, consider flagging for review") was marked wrong even though it
+  # plausibly satisfied the second branch. A jev_noul rubric should be one clear yes/no
+  # criterion, not a judgment call about which of two acceptable shapes applies.
   prompt: >
     A voice AI post-call system must decide, from a transcript alone, whether a customer
     agreed to a recurring charge. The transcript says: "Sure, sounds good, sign me up" in
@@ -263,12 +277,12 @@
     explicit consent to a recurring charge? Answer yes or no and explain briefly.
   grader: jev_noul
   rubric: >
-    The response reasons that agreeing to a plan the agent described AS a monthly charge does
-    constitute consent to the recurring nature (the monthly framing was established before the
-    agreement, so "sign me up" refers to the whole described plan), OR reasonably flags this as
-    borderline/ambiguous and worth escalation rather than confidently answering either way with
-    no acknowledgment of the ambiguity. Reject a response that ignores the question and just
-    restates the transcript.
+    The response answers yes, reasoning that the plan was already described as a monthly charge
+    before the customer agreed, so "sign me up" constitutes consent to the whole plan as
+    described, including its recurring nature. Reject a "no" answer, even a well-reasoned one --
+    this rubric is deliberately checking only the single-criterion answer, not judging whether
+    a more cautious "no" is also defensible (a genuinely reasonable case for caution here is a
+    real product-policy discussion, not something a one-shot judge should be arbitrating).
 
 - id: general-hard-1
   domain: general
