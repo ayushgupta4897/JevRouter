@@ -26,6 +26,23 @@ def test_last_number_not_first_on_a_real_captured_response():
     assert grade_local({"grader": "numeric_equals", "expected": 180000, "tolerance": 1000}, text) is True
 
 
+def test_last_number_handles_latex_thousands_grouping_in_the_final_answer():
+    # Captured verbatim from gpt-5.6-sol against finance-hard-1: the final boxed answer itself
+    # used LaTeX's `{,}` grouping ("\boxed{\$180{,}000}"), not a plain comma. Stripping only the
+    # comma character left "180{}000" -- the braces split one number into two digit runs ("180"
+    # and "000"), so the "last number" silently became 0 instead of 180000. This is a real
+    # answer, exactly right, that was marked wrong twice before this was caught.
+    text = (
+        r"Gross profit: \(1{,}200{,}000 \times 40\% = 480{,}000\)"
+        "\n\n"
+        r"Operating expenses: \(1{,}200{,}000 \times 25\% = 300{,}000\)"
+        "\n\n"
+        r"Operating income: \(480{,}000 - 300{,}000 = \boxed{\$180{,}000}\)"
+    )
+    assert extract_last_number(text) == 180000.0
+    assert grade_local({"grader": "numeric_equals", "expected": 180000, "tolerance": 1000}, text) is True
+
+
 def test_last_number_still_works_on_a_terse_reply():
     assert extract_last_number("445.99") == 445.99
     assert extract_last_number("The total due is $445.99.") == 445.99

@@ -90,7 +90,15 @@ def extract_last_number(text: str) -> float | None:
     asks to "reply with only the number" happens to have exactly one number either way, so this
     only changes grading for the harder, non-terse cases -- which is exactly where it mattered.
     """
-    matches = re.findall(r"-?\d[\d,]*\.?\d*", text.replace(",", ""))
+    # Stripping bare commas isn't enough: found by the same real run, gpt-5.6-sol formatted its
+    # final boxed answer as LaTeX thousands-grouping (`\boxed{\$180{,}000}`), where the comma
+    # sits inside its own brace pair. Removing only the comma leaves "180{}000" -- the braces
+    # now split one number into two separate digit runs ("180" and "000"), so the "last number"
+    # became 0 instead of 180000, silently failing a case whose answer was exactly right.
+    # Stripping braces too collapses the grouping back into one contiguous run in every case
+    # observed (plain comma, LaTeX comma, or no separator at all).
+    cleaned = text.replace(",", "").replace("{", "").replace("}", "")
+    matches = re.findall(r"-?\d[\d,]*\.?\d*", cleaned)
     return float(matches[-1]) if matches else None
 
 

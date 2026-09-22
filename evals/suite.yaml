@@ -34,10 +34,21 @@
     frequently occurring string in the list, breaking ties by whichever appears first. Reply
     with only the function definition.
   grader: jev_noul
+  # A prior wording here ("not just using max() on a Counter, which does not guarantee
+  # first-occurrence tie-breaking, or does so correctly if it does") was a confusing
+  # double-hedge that a real judge plausibly misread. A correct, idiomatic solution -- a plain
+  # dict counted in input order, then max(dict, key=dict.get) -- got marked wrong under it, even
+  # though Python's max() documents returning the first-encountered item on a tie and dicts
+  # preserve insertion order, so that combination does correctly break ties by first occurrence.
   rubric: >
-    The response defines a function that finds the most frequent element in a list, correctly
-    breaking ties by first occurrence (not just using max() on a Counter, which does not
-    guarantee first-occurrence tie-breaking, or does so correctly if it does).
+    The response correctly finds the most frequent element, with ties broken by first occurrence
+    in the input list. Accept a plain dict counted in input order combined with
+    max(dict, key=dict.get) (Python's max() returns the first item encountered among ties, and a
+    dict iterates in insertion order, so this combination is correct) or an equivalent single
+    pass that only updates its running best on a strictly greater count. Reject a solution that
+    relies on collections.Counter's own most_common() for the tie-break, since it does not
+    reliably preserve first-occurrence order, unless the response adds an explicit tie-breaking
+    step on top of it.
 
 - id: coding-medium-2
   domain: coding
