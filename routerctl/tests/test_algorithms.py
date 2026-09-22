@@ -51,6 +51,53 @@ def test_intent_compiles_one_bucket_per_named_model_plus_any():
     assert compiled.bucket_by_model_id == {"m-a": "a", "m-b": "b"}
 
 
+def test_intent_with_four_buckets_compiles_correctly():
+    compiled = compile_route_algorithm(
+        route(
+            "r",
+            {
+                "policy": "intent",
+                "default": "c",
+                "models": {
+                    "a": {"id": "m-a", "client": "openai", "description": "a"},
+                    "b": {"id": "m-b", "client": "openai", "description": "b"},
+                    "c": {"id": "m-c", "client": "openai", "description": "c"},
+                    "d": {"id": "m-d", "client": "openai", "description": "d"},
+                },
+            },
+        )
+    )
+    assert set(compiled.models["any"]) == {"m-a", "m-b", "m-c", "m-d"}
+    assert compiled.bucket_by_model_id == {"m-a": "a", "m-b": "b", "m-c": "c", "m-d": "d"}
+    assert {compiled.models[b][0] for b in ("a", "b", "c", "d")} == {"m-a", "m-b", "m-c", "m-d"}
+
+
+def test_escalation_default_recent_turn_window_is_28_when_not_set():
+    compiled = compile_route_algorithm(
+        route("r", {"policy": "escalation", "models": {"weak": {"id": "m-weak", "client": "openai"}, "strong": {"id": "m-strong", "client": "openai"}}})
+    )
+    assert compiled.recent_turn_window == 28
+
+
+def test_non_escalation_policies_never_set_a_recent_turn_window():
+    for policy in (
+        {"policy": "auto", "models": {"efficient": {"id": "m1", "client": "openai"}, "capable": {"id": "m2", "client": "openai"}}},
+        {"policy": "complexity", "models": {"weak": {"id": "m1", "client": "openai"}, "strong": {"id": "m2", "client": "openai"}}},
+        {"policy": "intent", "default": "a", "models": {"a": {"id": "m1", "client": "openai", "description": "a"}, "b": {"id": "m2", "client": "openai", "description": "b"}}},
+    ):
+        assert compile_route_algorithm(route("r", policy)).recent_turn_window is None
+
+
+def test_same_model_id_for_both_tiers_does_not_crash_and_resolves_consistently():
+    # Unusual (a team pointing both tiers at the same model), but not schema-forbidden --
+    # model_by_id naturally collapses to one entry since both refs share the same id.
+    compiled = compile_route_algorithm(
+        route("r", {"policy": "complexity", "models": {"weak": {"id": "m-shared", "client": "openai"}, "strong": {"id": "m-shared", "client": "openai"}}})
+    )
+    assert compiled.models["efficient"] == compiled.models["capable"] == ["m-shared"]
+    assert compiled.model_by_id["m-shared"].client == "openai"
+
+
 def test_escalation_compiles_as_continue_escalate_custom_classifier():
     # Regression: Switchyard's native LlmClassifierConfig.escalation is response-based -- it
     # calls the current tier's model itself to observe its live behavior, verified empirically
