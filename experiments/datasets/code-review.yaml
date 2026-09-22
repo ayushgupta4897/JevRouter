@@ -1,0 +1,57 @@
+# 18 code-review comments/questions, ranging from trivial style nits to real correctness bugs.
+# `expected` is weak (efficient tier can genuinely handle it) or strong (needs real reasoning
+# about program behavior).
+- id: rev-01
+  text: "Review this: `def get_user( id ):` -- flag any style issues with this function signature."
+  expected: weak
+- id: rev-02
+  text: "This variable is named `x` in a 40-line function -- suggest a better name given it holds a user's account balance."
+  expected: weak
+- id: rev-03
+  text: "Is `import os` needed if the file never calls anything from the os module?"
+  expected: weak
+- id: rev-04
+  text: "Should this line be `if x == None:` or `if x is None:`? Which is correct style?"
+  expected: weak
+- id: rev-05
+  text: "This function has inconsistent indentation, mixing tabs and spaces. Flag it."
+  expected: weak
+- id: rev-06
+  text: "Review this code for a race condition: two async tasks both read-modify-write the same shared counter without a lock, and the counter is used to allocate unique IDs that must never collide."
+  expected: strong
+- id: rev-07
+  text: "This recursive function has no base case for negative inputs and will stack-overflow if called with a negative number that then recurses toward negative infinity instead of terminating -- is this a real bug, and what's the fix?"
+  expected: strong
+- id: rev-08
+  text: "Review this caching decorator: it caches results keyed only by the first argument, but the function actually takes a second argument that changes the result -- will this produce wrong cached values, and in what scenario?"
+  expected: strong
+- id: rev-09
+  text: "This SQL query builds a WHERE clause by string-concatenating a value from an HTTP request parameter directly into the query text. Is this a security issue, and what's the correct fix?"
+  expected: strong
+- id: rev-10
+  text: "Add a docstring to this getter method that just returns `self._name`."
+  expected: weak
+- id: rev-11
+  text: "Should this constant `MAX_RETRIES = 3` be uppercase? Confirm it follows convention."
+  expected: weak
+- id: rev-12
+  text: "This function catches a broad `except Exception:` and silently passes -- flag this as bad practice."
+  expected: weak
+- id: rev-13
+  text: "Review this connection-pool implementation: under high concurrency, connections are returned to the pool before their in-flight transaction commits, meaning a subsequent borrower can read uncommitted data from a different logical transaction. Is this a real correctness bug?"
+  expected: strong
+- id: rev-14
+  text: "This distributed lock implementation uses a database row as the lock, but doesn't set an expiry, and the process holding the lock can crash without releasing it -- walk through what actually happens to the system in that failure case."
+  expected: strong
+- id: rev-15
+  text: "Trailing whitespace on line 42 -- flag it."
+  expected: weak
+- id: rev-16
+  text: "This retry-with-backoff logic retries a payment API call on any exception, including on the specific exception the API raises when the payment already succeeded but the response was lost -- could this cause a double charge, and why?"
+  expected: strong
+- id: rev-17
+  text: "Function name `calcTax` doesn't match the codebase's snake_case convention -- suggest a rename."
+  expected: weak
+- id: rev-18
+  text: "This event-deduplication logic uses the event's arrival timestamp as part of the dedup key instead of an event ID, so the same logical event delivered twice with slightly different processing delays won't be recognized as a duplicate -- explain the actual failure mode this causes in production."
+  expected: strong

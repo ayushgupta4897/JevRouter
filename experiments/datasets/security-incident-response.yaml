@@ -1,0 +1,57 @@
+# 18 simulated security-investigation transcripts. `expected` is continue (investigation making
+# ordinary progress, at most an isolated inconclusive check) or escalate (a clear pattern of
+# repeated dead ends or conflicting signals across multiple investigation steps).
+- id: sec-01
+  text: "Turn 1: reviewed the alert, confirmed it's a known false positive from the vulnerability scanner. Turn 2: closed the ticket with the standard note."
+  expected: continue
+- id: sec-02
+  text: "Turn 1: checked the login anomaly, traced it to a legitimate VPN IP change for a known employee. Turn 2: confirmed with the employee, closed as expected behavior."
+  expected: continue
+- id: sec-03
+  text: "Turn 1: checked the firewall logs for the suspicious IP, found nothing conclusive. Turn 2: checked the IDS logs, also inconclusive, same lack of signal. Turn 3: checked the endpoint logs on the affected host, again inconclusive with no clear signal. Turn 4: checked a fourth log source, same complete absence of a clear signal despite the alert still firing."
+  expected: escalate
+- id: sec-04
+  text: "Turn 1: reviewed the phishing report, confirmed it was a real phishing attempt, blocked the sender domain. Turn 2: verified no one clicked the link, closed the incident."
+  expected: continue
+- id: sec-05
+  text: "Turn 1: attempted to isolate the compromised host, isolation script failed silently. Turn 2: retried the isolation script, failed with the exact same silent non-error. Turn 3: tried a manual isolation procedure, same outcome, host still reachable on the network. Turn 4: escalated tooling access, same failure signature persists across every attempt."
+  expected: escalate
+- id: sec-06
+  text: "Turn 1: confirmed the malware alert was triggered by a legitimate internal pentest scheduled for today. Turn 2: verified against the pentest calendar, closed as expected activity."
+  expected: continue
+- id: sec-07
+  text: "Turn 1: two independent log sources give contradictory timestamps for the same event, off by exactly the same offset each time this type of alert has fired over the past three incidents this week. Turn 2: checked a third log source, again the identical contradictory offset. Turn 3: the same contradiction reappears on a fourth unrelated alert investigated today."
+  expected: escalate
+- id: sec-08
+  text: "Turn 1: reviewed the DLP alert for the file upload, confirmed it was an authorized data export for a partner integration, matches the approved list. Turn 2: closed as expected."
+  expected: continue
+- id: sec-09
+  text: "Turn 1: attempted to pull the process tree from the suspected-compromised host via the EDR agent, request timed out. Turn 2: retried, timed out again with the identical timeout duration. Turn 3: tried an alternate collection method, timed out the same way a third time. Turn 4: the host now appears entirely unresponsive to any collection attempt, same pattern as every prior attempt."
+  expected: escalate
+- id: sec-10
+  text: "Turn 1: verified the certificate expiry alert was a routine renewal already scheduled for next week. Turn 2: confirmed with the infra team, closed the alert."
+  expected: continue
+- id: sec-11
+  text: "Turn 1: three separate credential-stuffing detection rules fired on the same account within an hour, and blocking the source IP had no effect -- new attempts continued from a new IP with the identical request pattern each time, four times in a row."
+  expected: escalate
+- id: sec-12
+  text: "Turn 1: reviewed the unusual API usage alert, confirmed it matches a new internal automation that wasn't yet added to the allowlist. Turn 2: added it to the allowlist, closed."
+  expected: continue
+- id: sec-13
+  text: "Turn 1: the incident responder's containment action didn't take effect, checked again five minutes later, still not applied. Turn 2: reapplied the containment rule, still not in effect upon verification. Turn 3: verified via a second tool, still shows as not applied, identical to both prior checks."
+  expected: escalate
+- id: sec-14
+  text: "Turn 1: confirmed the geo-anomaly login was the employee traveling for a conference, matches their calendar. Turn 2: closed the alert as expected travel."
+  expected: continue
+- id: sec-15
+  text: "Turn 1: ran the standard malware scan on the flagged endpoint, came back clean. Turn 2: ran a second, more thorough scan given the ongoing suspicious network activity, also clean, but the anomalous traffic continues unexplained. Turn 3: checked a third detection tool, also clean, yet the exact same anomalous traffic pattern persists as in turn 1."
+  expected: escalate
+- id: sec-16
+  text: "Turn 1: verified the new admin-role grant was a properly ticketed and approved access request. Turn 2: matched against the change-management log, closed as expected."
+  expected: continue
+- id: sec-17
+  text: "Turn 1: attempted to correlate the exfiltration alert with actual outbound traffic volume, no correlation found. Turn 2: tried correlating against a different time window, still no correlation, identical null result. Turn 3: tried a third correlation approach, same complete absence of correlation despite the alert continuing to fire on the same host."
+  expected: escalate
+- id: sec-18
+  text: "Turn 1: reviewed the alert for a new SSH key added to a service account, confirmed it matches this week's scheduled key rotation. Turn 2: verified against the rotation runbook, closed as expected maintenance."
+  expected: continue

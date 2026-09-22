@@ -1,0 +1,14 @@
+# Experiment 10: Financial analyst queries. A simple lookup against a known figure is cheap;
+# a multi-step model (build a forecast, reconcile several changing assumptions, explain a
+# multi-quarter trend) deserves the strongest model -- getting this wrong costs real money.
+team: finance
+owner: fp-and-a@example.com
+
+routes:
+  - name: finance/analysis
+    policy: complexity
+    models:
+      weak:   { id: gpt-5.6-terra, client: openai }
+      strong: { id: gpt-6-astra,   client: openai }
+    base_threshold: 0.6   # slightly conservative: financial answers feed real decisions
+    threshold_step: 0.1

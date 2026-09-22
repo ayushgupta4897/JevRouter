@@ -1,0 +1,43 @@
+# Experiment 1: Support ticket triage. A support inbox gets a mix of trivial FAQ-style
+# questions, billing disputes, technical bug reports, and account-security issues -- four very
+# different jobs that all arrive as "a customer typed something." Route by content, not by a
+# human triager reading every ticket first.
+team: support
+owner: support-team@example.com
+
+routes:
+  - name: support/ticket-triage
+    policy: intent
+    default: bug_report   # unsure -> the safer, more technically capable bucket
+    models:
+      simple_faq:
+        id: gpt-5.6-luna
+        client: openai
+        description: >
+          A question already answered in the help center: how to reset a password, where to find
+          an invoice, how to change a plan, how to cancel a trial. No investigation needed, the
+          answer is a known fact or a link.
+      billing_dispute:
+        id: gpt-5.6-terra
+        client: openai
+        description: >
+          A charge the customer disputes or doesn't understand, a refund request, a proration
+          question, or a failed payment -- needs care and the account's actual billing history,
+          but not deep technical investigation.
+      bug_report:
+        id: gpt-5.6-sol
+        client: openai
+        description: >
+          Something in the product is broken or behaving unexpectedly: an error message, a
+          feature not working as documented, a data mismatch. Needs technical reasoning about
+          what's actually happening, not just a canned answer.
+      account_security:
+        id: gpt-6-astra
+        client: openai
+        description: >
+          Suspected unauthorized access, a compromised account, a request to change security
+          settings or recover access without the usual credentials, or anything where getting it
+          wrong has real security or compliance consequences.
+    # Illustrative only (untested here -- see clients.yaml): a team with real OpenRouter access
+    # might put simple_faq on a small open model, e.g. openrouter/meta-llama/llama-4-scout, and
+    # keep account_security on a frontier model regardless of provider.

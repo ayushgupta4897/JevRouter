@@ -1,0 +1,56 @@
+# 18 requests against meeting transcripts, split between structured action-item extraction and
+# narrative summarization.
+- id: meet-01
+  text: "Transcript: Sarah said she'll send the updated deck by Friday. Tom agreed to follow up with legal on the contract by Wednesday. Question: List the action items and owners."
+  expected: action_items
+- id: meet-02
+  text: "Transcript: We agreed Priya will own the migration plan, due end of month. Alex will get the budget numbers to finance by next Tuesday. Question: What are the commitments made and by whom?"
+  expected: action_items
+- id: meet-03
+  text: "Transcript: John: I'll circle back on the vendor quote tomorrow. Maria: I can have the design mockups ready Thursday. Question: Extract the action items with deadlines."
+  expected: action_items
+- id: meet-04
+  text: "Transcript: Decided: Dana owns onboarding docs, due next sprint. Raj will schedule the customer call this week. Question: Who committed to what?"
+  expected: action_items
+- id: meet-05
+  text: "Transcript: A 45-minute discussion between engineering and product about whether to delay the launch. Engineering argued the API wasn't stable; product pushed back citing a committed customer date. No resolution reached, escalated to the VP. Question: Summarize what was discussed and the current state of disagreement."
+  expected: summary
+- id: meet-06
+  text: "Transcript: The team debated two approaches to the pricing change -- a flat increase vs. usage-based tiers -- with strong opinions on both sides, eventually leaning toward a pilot of the tiered model with 10% of customers. Question: Summarize the discussion and where the team landed."
+  expected: summary
+- id: meet-07
+  text: "Transcript: Long retrospective covering what went wrong in the last sprint: unclear requirements, a late-discovered dependency, and communication gaps between two subteams. Several people raised concerns about morale. Question: Write a narrative summary capturing the key themes and concerns raised."
+  expected: summary
+- id: meet-08
+  text: "Transcript: Kickoff call for the new feature. Reviewed the timeline, discussed risks around the third-party integration, and debated whether to build or buy the analytics component. Question: Summarize the discussion, including the build-vs-buy debate and open risks."
+  expected: summary
+- id: meet-09
+  text: "Transcript: Standup: Ben will fix the flaky test today. Lena will deploy the hotfix after review. Question: What are today's commitments?"
+  expected: action_items
+- id: meet-10
+  text: "Transcript: Sales sync: Carlos will send the renewal proposal by Monday. Team agreed to loop in the CSM before the next client call. Question: List concrete next steps and owners."
+  expected: action_items
+- id: meet-11
+  text: "Transcript: All-hands Q&A covering layoffs rumors, a reorg announcement, and questions about the new performance review process, with a lot of back-and-forth and some tense moments. Question: Summarize the overall tone and the main concerns raised by employees."
+  expected: summary
+- id: meet-12
+  text: "Transcript: Design review: the team debated three navigation patterns at length, eventually agreeing to prototype two of them for user testing before deciding. Question: Summarize the debate and the decision reached."
+  expected: summary
+- id: meet-13
+  text: "Transcript: Weekly ops: Nina will update the runbook by Friday. Omar will investigate the latency spike from Tuesday. Question: What are this week's action items?"
+  expected: action_items
+- id: meet-14
+  text: "Transcript: Planning meeting: Devon owns the migration runbook, due in two weeks. Priya will coordinate with the infra team on the cutover window. Question: Extract commitments and deadlines."
+  expected: action_items
+- id: meet-15
+  text: "Transcript: A tense conversation between finance and the product team about whether the new feature's projected costs justify the timeline, with finance raising several unresolved concerns about the unit economics. Question: Summarize the disagreement and its current status."
+  expected: summary
+- id: meet-16
+  text: "Transcript: Board prep call: reviewed the metrics deck, discussed how to frame the churn increase, and debated at length whether to disclose the competitor's recent move. Question: Summarize what was discussed and any unresolved questions for the board meeting."
+  expected: summary
+- id: meet-17
+  text: "Transcript: Bug triage: Wei will fix the checkout crash today. Amara will write a postmortem by end of week. Question: List today's action items."
+  expected: action_items
+- id: meet-18
+  text: "Transcript: Leadership sync debating whether to enter a new market this year, weighing competitive risk against the cost of waiting, no clear consensus reached. Question: Summarize the discussion and the open question left unresolved."
+  expected: summary

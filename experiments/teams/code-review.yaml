@@ -1,0 +1,14 @@
+# Experiment 9: Automated code review comments. A style nit or a naming/formatting complaint is
+# cheap to judge; a real correctness or concurrency bug needs a model that can actually reason
+# about the code's behavior.
+team: eng
+owner: platform-eng@example.com
+
+routes:
+  - name: eng/code-review
+    policy: complexity
+    models:
+      weak:   { id: gpt-5.6-luna, client: openai }
+      strong: { id: gpt-5.6-sol,  client: openai }
+    base_threshold: 0.5
+    threshold_step: 0.1

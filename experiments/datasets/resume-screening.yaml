@@ -1,0 +1,55 @@
+# 18 resume-screening requests split between verbatim fact extraction and fit judgment.
+- id: resume-01
+  text: "Resume excerpt: 'Software Engineer, Acme Inc, 2019-2024. B.S. Computer Science, State University, 2019.' Question: How many years of experience does this candidate have, and what is their degree?"
+  expected: extraction
+- id: resume-02
+  text: "Resume excerpt: 'Skills: Python, Kubernetes, AWS, Terraform, PostgreSQL.' Question: What skills are listed on this resume?"
+  expected: extraction
+- id: resume-03
+  text: "Resume excerpt: 'Senior Product Manager at Beta Corp, 2021-present. Previously Associate PM at Gamma LLC, 2018-2021.' Question: What are this candidate's current and previous job titles and employers?"
+  expected: extraction
+- id: resume-04
+  text: "Resume excerpt: 'Certified AWS Solutions Architect - Professional, obtained 2022.' Question: What certification does this candidate hold and when was it obtained?"
+  expected: extraction
+- id: resume-05
+  text: "Resume excerpt: 'M.S. Data Science, Tech University, 2020.' Question: What degree does this candidate have?"
+  expected: extraction
+- id: resume-06
+  text: "We're hiring a senior backend engineer needing 5+ years of distributed-systems experience. Candidate has 3 years as a frontend developer and 1 year doing backend work at a startup, self-taught in Go over the past 6 months. Question: How well does this candidate fit the role?"
+  expected: fit_assessment
+- id: resume-07
+  text: "We're hiring a sales director needing enterprise SaaS experience and a track record of closing 6-figure deals. Candidate has 8 years in sales but entirely in SMB retail, no enterprise or SaaS experience. Question: Assess this candidate's fit for the role."
+  expected: fit_assessment
+- id: resume-08
+  text: "We need a data scientist with production ML deployment experience. Candidate has a strong academic ML research background (3 papers, PhD) but no experience shipping models to production, only research prototypes. Question: How well does this candidate fit, and what's the actual gap?"
+  expected: fit_assessment
+- id: resume-09
+  text: "We're hiring a mid-level designer. Candidate has 6 years of experience, all at one company, strong portfolio but no experience with our specific design system (Figma-based component libraries) and mostly print/branding background rather than product design. Question: Assess fit for a product design role."
+  expected: fit_assessment
+- id: resume-10
+  text: "Resume excerpt: 'Fluent in English, Spanish, and Mandarin.' Question: What languages does this candidate speak?"
+  expected: extraction
+- id: resume-11
+  text: "Resume excerpt: 'Led a team of 12 engineers across three product lines, 2020-2024.' Question: What management scope is described here?"
+  expected: extraction
+- id: resume-12
+  text: "We need an engineering manager for a 15-person org going through rapid growth. Candidate managed a stable 4-person team for 2 years with no hiring or reorg experience, but has strong individual-contributor technical depth. Question: Assess fit given the growth-stage demands of this specific role."
+  expected: fit_assessment
+- id: resume-13
+  text: "Resume excerpt: 'Bachelor of Arts, Economics, 2017. Bootcamp graduate, Full Stack Web Development, 2021.' Question: What educational background does this candidate have?"
+  expected: extraction
+- id: resume-14
+  text: "We're hiring for a compliance role requiring deep familiarity with SOC 2 and HIPAA. Candidate has general legal experience but their compliance exposure is limited to GDPR at a previous role, no SOC 2 or HIPAA work at all. Question: How well does this candidate actually fit the role's core requirement?"
+  expected: fit_assessment
+- id: resume-15
+  text: "Resume excerpt: 'Worked as a freelance contractor for 14 different clients between 2019 and 2023.' Question: What does this describe about the candidate's work history?"
+  expected: extraction
+- id: resume-16
+  text: "We're hiring a staff-level infrastructure engineer. Candidate has 9 years at large-scale companies running Kubernetes at significant scale, with two relevant open-source contributions to CNCF projects. Question: Assess this candidate's fit for a staff infrastructure role."
+  expected: fit_assessment
+- id: resume-17
+  text: "Resume excerpt: 'Total 7 years of professional experience: 4 years as QA Engineer, 3 years as SDET.' Question: How many years of experience total, and in what roles?"
+  expected: extraction
+- id: resume-18
+  text: "We're hiring a customer success manager for an enterprise account book. Candidate has strong CSM experience but exclusively with SMB accounts under $10k ACV, and the role requires managing accounts averaging $250k ACV with multi-stakeholder renewals. Question: Assess how well this maps to the actual role."
+  expected: fit_assessment

@@ -1,0 +1,56 @@
+# 18 SQL/data query requests, from a trivial single-table SELECT to a genuinely complex
+# multi-join analytical query.
+- id: sql-01
+  text: "Write a query to get all rows from the `users` table where `status = 'active'`."
+  expected: weak
+- id: sql-02
+  text: "Get the count of rows in the `orders` table."
+  expected: weak
+- id: sql-03
+  text: "Select the `name` and `email` columns from `customers` where `signup_date` is after 2025-01-01."
+  expected: weak
+- id: sql-04
+  text: "Write a query to find the maximum value of `price` in the `products` table."
+  expected: weak
+- id: sql-05
+  text: "Get all rows from `events` where `event_type = 'click'`, ordered by `timestamp` descending, limit 10."
+  expected: weak
+- id: sql-06
+  text: "Write a query that computes, per customer, their month-over-month revenue growth rate using a window function, joining across `orders`, `order_items`, and `customers`, and flags customers whose growth rate reversed sign (went from positive to negative) in the most recent month compared to the prior two months' trend."
+  expected: strong
+- id: sql-07
+  text: "Build a query to find the top 3 products by revenue within each category, using a ranking window function, joining `products`, `order_items`, and `categories`, excluding refunded orders which are tracked in a separate `refunds` table with a soft foreign key relationship."
+  expected: strong
+- id: sql-08
+  text: "Write a query to identify customers who churned (no orders in the last 90 days) but had been active for at least a year before that, accounting for the fact that `subscriptions` has overlapping date ranges due to plan changes that need to be collapsed into continuous active periods first."
+  expected: strong
+- id: sql-09
+  text: "Select all columns from the `inventory` table where `quantity < 10`."
+  expected: weak
+- id: sql-10
+  text: "Get the average `rating` from the `reviews` table."
+  expected: weak
+- id: sql-11
+  text: "Write a recursive CTE to build the full management hierarchy from an `employees` table with a self-referencing `manager_id` column, computing each employee's depth in the org chart and flagging any cycles that shouldn't exist but might due to bad data."
+  expected: strong
+- id: sql-12
+  text: "Update the `status` column to 'inactive' for all rows in `accounts` where `last_login` is null."
+  expected: weak
+- id: sql-13
+  text: "Write a query that attributes revenue to marketing channels using a multi-touch attribution model (linear weighting across all touchpoints in a customer's journey before conversion), joining `touchpoints`, `conversions`, and `campaigns`, handling customers with zero or a single touchpoint as edge cases."
+  expected: strong
+- id: sql-14
+  text: "Count how many rows in `sessions` have `duration_seconds > 300`."
+  expected: weak
+- id: sql-15
+  text: "Delete all rows from `logs` older than 30 days."
+  expected: weak
+- id: sql-16
+  text: "Write a query to detect anomalous transactions: for each account, flag transactions more than 3 standard deviations from that account's own 90-day rolling average transaction amount, computed with a window function, while excluding accounts with fewer than 10 historical transactions from the anomaly calculation entirely."
+  expected: strong
+- id: sql-17
+  text: "Join `orders` and `customers` to get the customer name for each order."
+  expected: weak
+- id: sql-18
+  text: "Write a query to compute cohort retention: group customers by signup month, then for each subsequent month compute the percentage of that cohort still active, handling the fact that 'active' is defined differently across two eras of the product (an old boolean flag before a migration date, and a new activity-log-based definition after it)."
+  expected: strong

@@ -1,0 +1,16 @@
+# Experiment 11: SQL / data query generation. A one-table SELECT with an obvious filter is
+# trivial; a multi-join analytical query with window functions or a non-obvious aggregation
+# needs a model that can actually reason about the schema and the intent behind the question.
+# Neither tier here needs to be the most expensive model available -- this is a task where even
+# the "strong" tier is a mid-cost model, which is itself a real routing decision worth showing.
+team: data
+owner: data-platform@example.com
+
+routes:
+  - name: data/sql-query-generation
+    policy: complexity
+    models:
+      weak:   { id: gpt-5.6-luna,  client: openai }
+      strong: { id: gpt-5.6-terra, client: openai }
+    base_threshold: 0.5
+    threshold_step: 0.1

@@ -1,0 +1,57 @@
+# 18 simulated coding-agent transcripts (as one message each, matching this project's own
+# real-validated escalation pattern). `expected` is continue (ordinary progress, at most an
+# isolated failure) or escalate (a clear repeated-failure pattern across multiple turns).
+- id: code-01
+  text: "Turn 1: ran the test suite, one test failed with an assertion error. Turn 2: fixed the off-by-one bug, re-ran, all tests pass now. Turn 3: committed the fix."
+  expected: continue
+- id: code-02
+  text: "Turn 1: build fails with a missing import. Turn 2: added the import, build fails again with the exact same missing-import error, same file, same line. Turn 3: tried again with a slightly different import path, still the exact same error. Turn 4: tried a fourth approach, same error persists."
+  expected: escalate
+- id: code-03
+  text: "Turn 1: implemented the new endpoint. Turn 2: wrote tests, all passing. Turn 3: ran the linter, fixed two minor style issues, done."
+  expected: continue
+- id: code-04
+  text: "Turn 1: attempted to fix the flaky test by adding a sleep, test still flakes intermittently. Turn 2: tried increasing the timeout, same intermittent failure. Turn 3: tried mocking the dependency, same intermittent failure pattern continues. Turn 4: reverted all changes, failure pattern is identical to turn 1."
+  expected: escalate
+- id: code-05
+  text: "Turn 1: refactored the function per the ticket. Turn 2: ran tests, two failed due to a signature change I forgot to update in callers. Turn 3: updated the callers, all tests pass."
+  expected: continue
+- id: code-06
+  text: "Turn 1: tried to deploy, deployment failed with a config error. Turn 2: fixed the config, deployment failed with the exact same config error again. Turn 3: double-checked the config file, looks correct, deployed again, same exact error message. Turn 4: tried a completely different deployment approach, hit the same underlying error."
+  expected: escalate
+- id: code-07
+  text: "Turn 1: added the new database migration. Turn 2: ran it locally, worked fine. Turn 3: added a rollback script as requested, done."
+  expected: continue
+- id: code-08
+  text: "Turn 1: the merge conflict resolution broke a different test. Turn 2: fixed that test, broke another one in an unrelated file. Turn 3: fixed that one too, all green now."
+  expected: continue
+- id: code-09
+  text: "Turn 1: tried fixing the memory leak by closing the connection explicitly, leak persists identically. Turn 2: tried using a context manager instead, exact same leak signature in the profiler. Turn 3: tried a third approach with connection pooling, same leak, same growth rate as before."
+  expected: escalate
+- id: code-10
+  text: "Turn 1: wrote the new feature flag logic. Turn 2: tests pass. Turn 3: code review requested renaming a variable, done, all green."
+  expected: continue
+- id: code-11
+  text: "Turn 1: the same integration test has failed with the exact same timeout error four separate times across four different fix attempts, each targeting a different suspected cause, none of which changed the outcome at all."
+  expected: escalate
+- id: code-12
+  text: "Turn 1: implemented pagination for the API. Turn 2: found an edge case with the last page, fixed it. Turn 3: added a test for that edge case, passes."
+  expected: continue
+- id: code-13
+  text: "Turn 1: the CI pipeline fails at the exact same step with the exact same error every single run, despite three different attempted fixes across three commits, each one plausible but none resolving it."
+  expected: escalate
+- id: code-14
+  text: "Turn 1: renamed the variable per the style guide. Turn 2: updated the two other places it was referenced. Turn 3: ran the full test suite, all passing."
+  expected: continue
+- id: code-15
+  text: "Turn 1: added input validation. Turn 2: one test failed on a boundary condition, fixed it. Turn 3: all tests green, opened the PR."
+  expected: continue
+- id: code-16
+  text: "Turn 1: race condition reproduces intermittently under load. Turn 2: added a lock, race condition still occurs with the identical symptom. Turn 3: tried a different locking strategy, same race condition, same symptom exactly. Turn 4: added extensive logging, still hitting the identical failure mode as turn 1."
+  expected: escalate
+- id: code-17
+  text: "Turn 1: implemented the caching layer. Turn 2: cache invalidation had a bug, fixed by adding a TTL. Turn 3: verified with a load test, working as expected now."
+  expected: continue
+- id: code-18
+  text: "Turn 1: three consecutive attempts to parse the vendor's malformed XML have each crashed with the identical stack trace, despite trying a strict parser, a lenient parser, and a manual regex-based workaround in turn."
+  expected: escalate

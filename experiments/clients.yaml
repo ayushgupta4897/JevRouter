@@ -1,0 +1,23 @@
+# Clients for the experiments/ router-type study (see experiments/REPORT.md).
+#
+# `openai` is real and live-tested throughout this repo (see docs/DECISION.md, evals/models.py):
+# gpt-5.6-luna/terra/sol and gpt-6-astra, with verified real pricing and real routing behavior.
+# Every experiment in this directory routes across this one real, verified family.
+#
+# `openrouter` is declared but UNTESTED here -- deliberately. This project's design goal is that
+# any OpenRouter-listed model can be dropped into a route by name (routerctl.compiler already
+# resolves a client generically; the decision-only server never dials the target at all, so
+# adding a model costs nothing but a YAML edit). Several teams/*.yaml files below reference
+# illustrative openrouter model IDs in comments to show what a broader multi-provider deployment
+# would look like -- clearly marked as illustration, not a tested or priced claim. Extending real
+# coverage to those models only takes a real OPENROUTER_API_KEY and a real evals/ run against them.
+clients:
+  openai:
+    format: openai_chat
+    base_url: https://api.openai.com/v1
+    api_key_env: OPENAI_API_KEY
+
+  openrouter:
+    format: openai_chat
+    base_url: https://openrouter.ai/api/v1
+    api_key_env: OPENROUTER_API_KEY

@@ -1,0 +1,55 @@
+# 18 synthetic call transcripts + question, independent of teams/voice-ai.yaml's own examples.
+- id: call-01
+  text: "Transcript: Agent: Thanks for calling. Customer: Hi, I need to confirm my delivery address. It's 42 Baker Street, apartment 4B. Agent: Got it, 42 Baker Street 4B. Anything else? Customer: No that's all. Question: What is the delivery address mentioned?"
+  expected: extraction
+- id: call-02
+  text: "Transcript: Agent: How can I help? Customer: My order number is ORD-77213, I want to check the status. Agent: One moment... it shipped yesterday. Question: What is the order number?"
+  expected: extraction
+- id: call-03
+  text: "Transcript: Agent: Can I get your account email? Customer: sure, it's j.martinez88@example.com. Question: What email address did the customer provide?"
+  expected: extraction
+- id: call-04
+  text: "Transcript: Agent: What's a good callback number? Customer: 555-0142, extension 9. Question: What callback number and extension did the customer give?"
+  expected: extraction
+- id: call-05
+  text: "Transcript: Customer: I want to cancel appointment #A-4471. Agent: Done, it's cancelled. Question: Which appointment number was cancelled?"
+  expected: extraction
+- id: call-06
+  text: "Transcript: Agent: Thanks for calling support. Customer: This is the third time I've called about the same broken feature and nobody has fixed it. I'm extremely frustrated and considering cancelling. Agent: I understand, let me escalate this. Customer: Please do, this is unacceptable. Question: Summarize the customer's sentiment and any escalation risk."
+  expected: analysis
+- id: call-07
+  text: "Transcript: Agent: How did the onboarding call go for you? Customer: Actually really smooth, the rep explained everything clearly and I feel confident using the product now. Question: What is the customer's overall satisfaction with the onboarding experience?"
+  expected: analysis
+- id: call-08
+  text: "Transcript: Customer: I was told last week this would be fixed by Friday, and now it's Monday and nothing changed, and honestly at this point I don't trust anything I'm told on these calls. Agent: I hear you, let me personally follow up. Question: Does this call show a compliance or trust risk that should be flagged to a manager?"
+  expected: analysis
+- id: call-09
+  text: "Transcript: Agent: Anything else today? Customer: No, that covers it, thanks for the quick help! Question: How satisfied does the customer seem with this interaction, and is there any risk to flag?"
+  expected: analysis
+- id: call-10
+  text: "Transcript: Agent: What's the reference number on the return label? Customer: RTN-58821. Question: What is the return reference number?"
+  expected: extraction
+- id: call-11
+  text: "Transcript: Agent: Just to confirm, your renewal date is which month? Customer: It renews every March. Question: What month does the customer's plan renew?"
+  expected: extraction
+- id: call-12
+  text: "Transcript: Customer: honestly this is the best support experience I've had with any company, you guys actually listen. Agent: That means a lot, thank you! Question: What does this call suggest about brand sentiment, and would you flag anything for a manager?"
+  expected: analysis
+- id: call-13
+  text: "Transcript: Agent: What's the serial number on the device? Customer: it's printed on the back, SN-2291-A. Question: What serial number did the customer read out?"
+  expected: extraction
+- id: call-14
+  text: "Transcript: Customer: I've asked for a supervisor twice now and been told no both times, over a $12 charge. This is genuinely absurd. Agent: I apologize for that. Question: Does this call indicate an escalation risk, and why?"
+  expected: analysis
+- id: call-15
+  text: "Transcript: Agent: What's the PO number for this order? Customer: PO-99042. Agent: Great, noted. Question: What purchase order number was given?"
+  expected: extraction
+- id: call-16
+  text: "Transcript: Customer: The technician who came out was fantastic, very knowledgeable, fixed it in ten minutes. Agent: Glad to hear it! Question: Summarize customer sentiment about the technician visit."
+  expected: analysis
+- id: call-17
+  text: "Transcript: Agent: What's your zip code for the service area check? Customer: 94107. Question: What zip code did the customer provide?"
+  expected: extraction
+- id: call-18
+  text: "Transcript: Customer: look I don't want to make a big deal but this is the second billing error in two months and I'm starting to wonder if I should just switch providers. Agent: That's fair, let me look into both charges. Question: Does this call show a churn or compliance risk worth flagging?"
+  expected: analysis

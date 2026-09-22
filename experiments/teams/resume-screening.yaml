@@ -1,0 +1,24 @@
+# Experiment 6: Resume screening. Pulling structured facts off a resume (years of experience,
+# a listed skill, a degree) is a lookup; judging fit against a specific role's actual
+# requirements is a real evaluation that affects who gets an interview.
+team: hr
+owner: talent-acquisition@example.com
+
+routes:
+  - name: hr/resume-screening
+    policy: intent
+    default: fit_assessment
+    models:
+      extraction:
+        id: gpt-5.6-luna
+        client: openai
+        description: >
+          Pull a specific fact stated on the resume: years of experience, a named skill, a degree
+          or certification, a previous job title or employer. The answer is written on the page.
+      fit_assessment:
+        id: gpt-5.6-sol
+        client: openai
+        description: >
+          Judge how well this candidate's actual background fits a specific role's requirements --
+          weighing relevant vs. adjacent experience, gaps, and seniority. A real evaluation, not a
+          keyword match, that affects whether someone gets an interview.
