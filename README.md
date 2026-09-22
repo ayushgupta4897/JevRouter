@@ -266,17 +266,41 @@ at ~0.3 s. The sidecar adds tens of milliseconds. Real-key numbers: run
   and the confidence gate / fallback judge is still one shared setting on the platform's
   `jevjudge` sidecar, not yet per-route — a team can pick a different judge model entirely
   (`judge:` in their YAML) but not yet a different confidence threshold from every other team.
-* **The `evals/` harness is built and its plumbing verified against a mock** (every grader path
-  confirmed to return both true and false correctly, cost/latency tracking confirmed against real
-  published pricing) — **it has not yet been run against real `gpt-5.6-*`/`gpt-6-astra` traffic.**
-  That needs an `OPENAI_API_KEY` exported as `OPENAI_API_KEY` (or passed via `--api-key-env`):
-  `python evals/run_eval.py --models gpt-5.6-luna,gpt-5.6-terra,gpt-5.6-sol,gpt-6-astra`.
+* **The `evals/` harness has been run for real against `gpt-5.6-luna/terra/sol` and
+  `gpt-6-astra`** (24 cases each, `python evals/run_eval.py --models
+  gpt-5.6-luna,gpt-5.6-terra,gpt-5.6-sol,gpt-6-astra`). Converged result:
+
+  | model | overall | p50 latency | cost (24 cases) |
+  |---|---|---|---|
+  | gpt-5.6-terra | 100% | 1210ms | $0.0192 |
+  | gpt-6-astra | 100% | 1979ms | $0.0939 |
+  | gpt-5.6-luna | 96% | 1293ms | $0.0023 |
+  | gpt-5.6-sol | 96% | 1579ms | $0.0413 |
+
+  Getting there found **seven real bugs** — two in the harness's own API/grading code
+  (`max_tokens` rejected by every model tested; grading extracted the first number in a
+  step-by-step answer instead of the last, plus a follow-up LaTeX-brace edge case in that same
+  fix), and four in the hand-written suite's own content (a self-contradictory calendar premise,
+  an ambiguous logic puzzle, a compound OR-rubric, and a confusingly double-hedged rubric) —
+  full narrative in `docs/DECISION.md` §10.1. None of these were models being wrong; every one
+  surfaced by reading the raw response before accepting "model failed" at face value.
+* **The real router was then run end to end**: `routerctl serve teams/` against real
+  `teams/voice-ai.yaml`/`teams/platform.yaml`, real OpenAI models, and real Jev. This found an
+  **eighth real bug** — `compile_routes` emitted every client in `clients.yaml` into the compiled
+  TOML regardless of use, so a real (non-`--dry-run`) launch demanded a working API key for a
+  client zero routes referenced. Fixed so only referenced clients are emitted or required
+  (`docs/DECISION.md` §10.2). With that fixed, real traffic through `deployment/transcription`
+  correctly bucketed an extraction prompt to `gpt-5.6-luna` and an analysis prompt to
+  `gpt-5.6-sol`; real traffic through `deployment/qa-summary` correctly kept a trivial question,
+  a multi-step finance calculation, and Einstein's five-house riddle all on the weak tier
+  (`gpt-5.6-terra`) rather than over-escalating — consistent with `terra` scoring 100% above.
+  Total real OpenAI spend across every experiment in this project: **~$0.72 of a $10 budget.**
 
 ## Where this goes next
 
-1. Run `evals/run_eval.py` for real once a key is available, and turn its output into the
-   `model-cards.json` `docs/EVALS.md` describes so `teams/*.yaml` authors have real numbers to
-   pick models from, not guesses.
+1. Turn the real eval run's output into the committed `model-cards.json` `docs/EVALS.md`
+   describes (`--output` already writes the raw per-case JSON) so `teams/*.yaml` authors have
+   real numbers to pick models from, refreshed on a schedule instead of a one-off run.
 2. Real-Jev routing-*accuracy* comparison against the LLM judge on Switchyard's benchmark subset
    (the harness and profiles are already in the Switchyard repo) — the judge-only eval design in
    `docs/EVALS.md` is the cheap first pass before a full routed run.

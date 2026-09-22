@@ -116,3 +116,9 @@ every call maxes out output: `evals/models.py`'s real pricing puts the most expe
 4-model run: comfortably under $1, leaving the rest of a $10 budget for the judge-only eval or a
 second full pass after a config change. The harness enforces a hard `--max-budget-usd` stop
 regardless, checked before every call, so a pricing surprise can't blow past it.
+
+**This was run for real**, not just estimated: `gpt-5.6-luna/terra/sol` and `gpt-6-astra`, full
+24-case runs each, actual total spend ~$0.72. `gpt-5.6-terra` and `gpt-6-astra` both scored 100%;
+`gpt-5.6-luna` and `gpt-5.6-sol` both scored 96% (one shared, genuinely-disputed nuanced-judgment
+case). Seven real bugs in the harness and suite content were found and fixed along the way —
+full account in `docs/DECISION.md` §10.1, results table in the main `README.md`.

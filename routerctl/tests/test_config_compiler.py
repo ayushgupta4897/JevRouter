@@ -142,6 +142,29 @@ def test_same_model_and_client_with_matching_extra_body_shares_one_target():
     assert 'extra_body.reasoning = { effort = "high" }' in result.toml
 
 
+def test_a_declared_but_unused_client_is_not_emitted_or_required():
+    # Regression: found against the real router. clients.yaml is a platform-managed registry
+    # meant to let a client be declared before any team adopts it ("teams reference these by
+    # name... they don't declare upstream connections themselves" -- clients.yaml's own header).
+    # The compiler used to emit every declared client into the TOML regardless of use, so
+    # Switchyard's real (non-dry-run) launch demanded an api_key_env for a client nothing
+    # routed to -- an unrelated, unused entry blocked every real launch.
+    clients = ClientsFile.model_validate(
+        {
+            "clients": {
+                "openai": {"format": "openai_chat", "base_url": "https://api.openai.com/v1", "api_key_env": "OPENAI_API_KEY"},
+                "openrouter": {"format": "openai_chat", "base_url": "https://openrouter.ai/api/v1", "api_key_env": "OPENROUTER_API_KEY"},
+            }
+        }
+    )
+    t = team("x", [{"name": "deployment/x", "policy": "auto", "models": {"efficient": {"id": "m1", "client": "openai"}, "capable": {"id": "m2", "client": "openai"}}}])
+    result = compile_routes(clients, [("x.yaml", t)])
+    assert result.api_key_envs == {"OPENAI_API_KEY"}
+    assert "[llm_clients.openai]" in result.toml
+    assert "[llm_clients.openrouter]" not in result.toml
+    assert "OPENROUTER_API_KEY" not in result.toml
+
+
 def test_extra_body_renders_as_toml_inline_table():
     t = team("x", [{"name": "deployment/x", "policy": "auto", "models": {"efficient": {"id": "m1", "client": "openai", "extra_body": {"reasoning": {"effort": "high"}, "temperature": 0.2}}, "capable": {"id": "m2", "client": "openai"}}}])
     result = compile_routes(CLIENTS, [("x.yaml", t)])

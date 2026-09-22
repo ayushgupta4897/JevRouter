@@ -271,7 +271,111 @@ rubric's stated threshold, but not reliably self-aware about genuinely ambiguous
 precisely the shape a confidence gate with a fallback is for, and precisely why one ships here
 rather than trusting Jev's verdict unconditionally.
 
-## 10. Roadmap
+## 10. Multi-tenant router and real-model validation (2026-09-22)
+
+Two things were added and then both validated against real, paid traffic rather than mocks:
+`routerctl` (self-serve per-team YAML → Switchyard TOML, with live reload since Switchyard has
+no hot-reload of its own) and `evals/` (a concise, 24-case model card generator). Total real
+OpenAI spend across every experiment below: **~$0.72 of a $10 budget ceiling.**
+
+### 10.1 Real eval run: four models, seven real bugs found
+
+Running `evals/run_eval.py` against `gpt-5.6-luna/terra/sol` and `gpt-6-astra` immediately
+surfaced bugs that a mock could never have caught, because a mock's output is whatever the mock
+author already expected:
+
+1. **`max_tokens` rejected outright.** All four models return HTTP 400 unless the request uses
+   `max_completion_tokens`. Switchyard's own `openai_chat` encoder already sends the right name;
+   only this harness's direct API calls needed the fix.
+2. **Grading extracted the first number, not the last.** A model reasoning step by step restates
+   its inputs before its answer ("40% × $1,200,000 = ... = $180,000"), so `extract_first_number`
+   matched the restated "40" and marked an exactly-correct $180,000 answer wrong — for every
+   model, on the same case, which is what made it visible as a grading bug rather than a model
+   failure. Fixed by taking the *last* number instead, with a regression test pinned to the
+   captured real response text.
+3. **LaTeX thousands-grouping split one number into two.** `gpt-5.6-sol` formatted its answer as
+   `\boxed{\$180{,}000}` — the comma sits inside its own brace pair. Stripping only the comma
+   left `180{}000`, and the digit regex read that as two separate numbers ("180", "000"), so the
+   "last number" silently became 0. This is the same case as bug 2, found again on a second real
+   run, because the first fix wasn't sufficient — caught only by inspecting the raw
+   `response_text` field added specifically so a wrong verdict could be audited without
+   re-calling the API. Fixed by also stripping `{`/`}` before matching.
+4. **A self-contradictory calendar premise.** A case asserted "today is Monday, September 22,
+   2026"; `datetime.date(2026, 9, 22).strftime('%A')` says that date is a Tuesday. Models split
+   depending on whether they deferred to the stated (wrong) day or silently corrected it. Fixed
+   by rewriting the case to ask for a relative day-count instead of depending on a real calendar
+   date at all.
+5. **An ambiguous hand-written logic puzzle.** The case conflated "is a liar" (a fixed type) with
+   "made one true and one false statement" (a per-statement framing) — two different real models
+   independently gave internally-coherent "no" answers to a case scored as "yes". Replaced with a
+   standard, hand-verified knights-and-knaves puzzle.
+6. **A compound OR-rubric.** A `jev_noul` rubric accepted "yes, consent given" OR "flags as
+   ambiguous"; a response that plausibly satisfied the second branch was marked wrong by the
+   one-shot judge, which isn't built to weigh two independent branches at once. Narrowed to a
+   single, unhedged criterion.
+7. **A confusingly double-hedged rubric.** `coding-medium-1`'s rubric read "does not guarantee...
+   or does so correctly if it does" — a genuine double-negative-conditional. `gpt-6-astra`'s
+   answer (`max(dict, key=dict.get)` on an insertion-ordered dict) is textbook-correct
+   first-occurrence tie-breaking, and was marked wrong. Rewritten as one clear criterion.
+
+None of these were the models being wrong; every one was found by refusing to accept a "model
+failed" result at face value and reading the raw response before blaming the model. That
+discipline is the actual deliverable here, not the fixes themselves — a harness that reports
+model failures uncritically will happily encode its own bugs as "this model is worse."
+
+**Final, converged 24-case result:**
+
+| model | overall | p50 latency | cost (24 cases) |
+|---|---|---|---|
+| gpt-5.6-terra | 100% | 1210ms | $0.0192 |
+| gpt-6-astra | 100% | 1979ms | $0.0939 |
+| gpt-5.6-luna | 96% | 1293ms | $0.0023 |
+| gpt-5.6-sol | 96% | 1579ms | $0.0413 |
+
+The one miss for luna and sol each is the same genuinely disputed nuanced-judgment case (a
+consent question where a well-reasoned "no" is arguably as defensible as "yes") — real model
+disagreement, not a harness defect, and left as-is rather than "fixed" by loosening the rubric
+until every model agrees. The practical read: at this suite's difficulty, `gpt-5.6-terra` is the
+efficient frontier (matches Astra's accuracy at ~5x lower cost and faster p50); Astra earns its
+premium only on tasks this 24-case set doesn't stress hard enough to reveal.
+
+### 10.2 Real router demo, and an eighth real bug
+
+With the eval harness converged, `routerctl serve teams/` was pointed at real
+`teams/voice-ai.yaml` and `teams/platform.yaml`, real OpenAI models, and real Jev (via the
+already-running `jevjudge` sidecar). The first real launch attempt failed immediately —
+`switchyard-server` refused to boot because `clients.yaml` declares an `openrouter` client with
+no `OPENROUTER_API_KEY` set, even though zero routes reference it.
+
+This is a real gap, not a config mistake: `clients.yaml`'s own header describes it as a
+platform-managed registry teams draw on by name, implying a client can be declared ahead of any
+team adopting it. `compile_routes` instead emitted every declared client into the compiled TOML
+unconditionally, so Switchyard's real (non-`--dry-run`) launch demanded a working key for a
+client nothing routed to. Fixed in `routerctl/src/routerctl/compiler.py`: `TargetRegistry` now
+tracks which client names a route actually resolved a target against
+(`referenced_clients`), and `compile_routes` only emits — and only requires an `api_key_env`
+for — clients in that set. `--dry-run`'s placeholder-filling was never the right fix for this;
+it papered over the real launch path, which is exactly the path that broke. A regression test
+(`test_a_declared_but_unused_client_is_not_emitted_or_required`) pins the fix.
+
+With that fixed, the real router served real traffic correctly on both live-reloaded routes:
+
+- `deployment/transcription` (intent policy): an extraction prompt ("what account number was
+  mentioned") correctly routed to `gpt-5.6-luna` and answered correctly; an analysis prompt
+  ("summarize sentiment and escalation risk") correctly routed to `gpt-5.6-sol` and answered
+  correctly — the same judge call, on real transcript-shaped text, picking the intended bucket
+  both times.
+- `deployment/qa-summary` (complexity policy): a trivial fact question stayed on the weak tier
+  (`gpt-5.6-terra`), as expected. Two deliberately harder probes — a three-quarter financial
+  calculation and Einstein's classic five-house riddle — also stayed on `gpt-5.6-terra` rather
+  than escalating to `gpt-6-astra`, and both were answered correctly. This is consistent with,
+  not contrary to, 10.1's finding that `terra` scored 100% on this project's own eval suite: the
+  complexity judge correctly predicted the weak tier could handle these, and it did — a real
+  cost-saving decision, not a missed escalation. Confirming the escalation path itself fires
+  under real load is left to a harder probe than this demo reached for; nothing here shows it
+  can't.
+
+## 11. Roadmap
 
 1. **Routing-accuracy validation**: the judge-only eval (predict vs. a ground-truth label from
    running both tiers) and Switchyard's `benchmark/` TB2.1 subset with the Jev judge vs. the LLM
@@ -288,7 +392,7 @@ rather than trusting Jev's verdict unconditionally.
 5. **Distillation**: after the routing feature is proven, log Jev's inputs/outputs and train a
    task-specific encoder classifier (Laya/ModernBERT class) for zero-marginal-cost judging.
 
-## 11. Sources
+## 12. Sources
 
 Switchyard: repo README, `docs/routing_algorithms/*.md`, `crates/libsy/src/algorithms/util/llm_judge.rs`,
 `crates/libsy/src/prompts/*`, `benchmark/routing-profiles/*`; NVIDIA blog "Route AI Agent Workloads
