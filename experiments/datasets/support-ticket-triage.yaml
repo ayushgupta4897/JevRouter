@@ -1,0 +1,57 @@
+# 18 realistic support tickets, hand-authored (not real customer data). `expected` is this
+# project's own hypothesis of the correct bucket, used to score the router's actual decisions --
+# same judge-only-eval idea as docs/EVALS.md, applied per business use case.
+- id: ticket-01
+  text: "How do I reset my password? I don't see the reset link in my inbox."
+  expected: simple_faq
+- id: ticket-02
+  text: "Where can I download last month's invoice as a PDF?"
+  expected: simple_faq
+- id: ticket-03
+  text: "What's the difference between the Pro and Team plans?"
+  expected: simple_faq
+- id: ticket-04
+  text: "How do I cancel my free trial before it converts to paid?"
+  expected: simple_faq
+- id: ticket-05
+  text: "I was charged $49 but I'm on the $29 plan. Can someone explain this charge?"
+  expected: billing_dispute
+- id: ticket-06
+  text: "We upgraded mid-cycle and I don't understand the prorated amount on this invoice -- can you break it down?"
+  expected: billing_dispute
+- id: ticket-07
+  text: "My card was charged twice for the same invoice number. I need one of these refunded."
+  expected: billing_dispute
+- id: ticket-08
+  text: "We cancelled three months ago but I just noticed we've been billed every month since. I need this refunded and confirmed cancelled."
+  expected: billing_dispute
+- id: ticket-09
+  text: "Every time I export a report to CSV, the date column shows the wrong timezone -- it's 5 hours ahead of what's shown in the dashboard."
+  expected: bug_report
+- id: ticket-10
+  text: "The bulk-delete button deletes the item but leaves it showing in the list until I refresh the page. Is that expected?"
+  expected: bug_report
+- id: ticket-11
+  text: "Webhook deliveries have been failing silently since yesterday -- no error in our logs, but nothing is arriving. Status page says all green."
+  expected: bug_report
+- id: ticket-12
+  text: "When I add a teammate with an email that has a '+' alias (like me+work@gmail.com), the invite never sends but shows as sent in the UI."
+  expected: bug_report
+- id: ticket-13
+  text: "I got a login alert for a location I've never been to, and then I was logged out of all my sessions. What's happening to my account?"
+  expected: account_security
+- id: ticket-14
+  text: "Someone changed the recovery email on our admin account and we no longer have access. We need this reversed immediately."
+  expected: account_security
+- id: ticket-15
+  text: "I think my API key leaked -- I found requests in the logs from an IP range we don't use. How do I rotate it and check for damage?"
+  expected: account_security
+- id: ticket-16
+  text: "Can you disable two-factor auth on my account? I lost my phone and can't get the codes, and I need in today."
+  expected: account_security
+- id: ticket-17
+  text: "What timezone does the dashboard use for the 'last active' timestamp?"
+  expected: simple_faq
+- id: ticket-18
+  text: "Our sync job has been silently dropping about 2% of records for the last week, and the failure pattern doesn't match any single field -- looks intermittent and we can't reproduce it locally."
+  expected: bug_report

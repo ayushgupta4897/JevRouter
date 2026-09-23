@@ -1,0 +1,55 @@
+# 18 requests to an executive assistant agent, spanning all four buckets.
+- id: exec-01
+  text: "Move my 2pm with the design team to 3:30pm tomorrow, same room."
+  expected: schedule
+- id: exec-02
+  text: "Accept the invite from Priya for Thursday and decline the one from the vendor at the same time."
+  expected: schedule
+- id: exec-03
+  text: "Find a 30-minute slot next week where both me and the CFO are free."
+  expected: schedule
+- id: exec-04
+  text: "Cancel my 9am tomorrow, I have a conflict."
+  expected: schedule
+- id: exec-05
+  text: "Here's a 40-message email thread about the Q3 vendor contract renewal. Give me the short version: what's decided, what's still open, who owns what."
+  expected: summarize
+- id: exec-06
+  text: "Summarize this forwarded thread from legal about the NDA redlines -- I just need to know where we landed."
+  expected: summarize
+- id: exec-07
+  text: "Boil this 12-email back-and-forth with the recruiter down to three bullet points."
+  expected: summarize
+- id: exec-08
+  text: "Draft a reply to the board member asking about our runway -- reassuring but honest, don't overcommit on the timeline."
+  expected: draft_reply
+- id: exec-09
+  text: "Write back to the customer who's upset about the delay. I want to apologize without admitting we breached the SLA, since legal is still reviewing that."
+  expected: draft_reply
+- id: exec-10
+  text: "Reply to this partnership proposal declining politely but leaving the door open for next year."
+  expected: draft_reply
+- id: exec-11
+  text: "Draft a short note to the team congratulating them on the launch, in my usual casual tone, not corporate-sounding."
+  expected: draft_reply
+- id: exec-12
+  text: "Before our board meeting, I need a comparison of the three cap table scenarios we're considering and which one best protects the founders' voting control long-term."
+  expected: research
+- id: exec-13
+  text: "Research whether our current vendor's new pricing model is actually competitive against the two alternatives we discussed last quarter, and what switching costs would look like."
+  expected: research
+- id: exec-14
+  text: "I need to understand the tradeoffs between the two acquisition targets we're evaluating before tomorrow's call -- not just a summary of each, an actual comparison of risk."
+  expected: research
+- id: exec-15
+  text: "Decline the recurring Friday sync going forward -- I don't need to be on it anymore."
+  expected: schedule
+- id: exec-16
+  text: "Reply to this investor update request -- keep it warm but I don't want to share the Q3 numbers yet, they're not finalized."
+  expected: draft_reply
+- id: exec-17
+  text: "Summarize the key disagreements in this thread between engineering and product about the roadmap."
+  expected: summarize
+- id: exec-18
+  text: "I'm deciding between two headquarters leases with very different break clauses and escalation terms -- work through which one is actually better for us given our growth plan."
+  expected: research

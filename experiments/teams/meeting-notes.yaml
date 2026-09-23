@@ -1,0 +1,23 @@
+# Experiment 4: Meeting notes processing. Two very different reads of the same transcript: a
+# flat list of who-owes-what, versus an actual narrative summary of the discussion.
+team: ops
+owner: ops-team@example.com
+
+routes:
+  - name: ops/meeting-notes
+    policy: intent
+    default: summary
+    models:
+      action_items:
+        id: gpt-5.6-luna
+        client: openai
+        description: >
+          Pull out concrete commitments stated in the meeting: who agreed to do what, by when.
+          A structured extraction task -- the commitments are stated explicitly in the transcript.
+      summary:
+        id: gpt-5.6-terra
+        client: openai
+        description: >
+          Write a narrative summary of what was actually discussed and decided, including context
+          and disagreement that a flat action-item list would lose. Requires synthesizing the
+          whole conversation, not just pulling out stated commitments.

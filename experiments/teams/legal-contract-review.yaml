@@ -1,0 +1,25 @@
+# Experiment 5: Legal contract review. Pulling a defined field (a term, a party name, a renewal
+# date) is a lookup; deciding whether a clause is actually risky is a judgment call with real
+# consequences if it's wrong -- these deserve very different models.
+team: legal
+owner: legal-ops@example.com
+
+routes:
+  - name: legal/contract-review
+    policy: intent
+    default: risk_flagging   # unsure -> the safer, most capable reviewer
+    models:
+      extraction:
+        id: gpt-5.6-luna
+        client: openai
+        description: >
+          Pull a specific, already-defined field out of the contract text: the effective date,
+          the renewal term, the named parties, the governing law, a dollar figure. The answer is
+          stated verbatim in the document.
+      risk_flagging:
+        id: gpt-6-astra
+        client: openai
+        description: >
+          Judge whether a clause is unusual, one-sided, or risky -- an indemnification clause,
+          a liability cap, an auto-renewal with a short opt-out window, a non-standard termination
+          right. Getting this wrong has real legal and financial consequences.

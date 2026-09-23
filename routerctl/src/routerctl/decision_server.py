@@ -20,7 +20,7 @@ from dataclasses import asdict
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from jevjudge.cascade import Judge, build_judge_from_env
 
@@ -33,8 +33,8 @@ logger = logging.getLogger("routerctl.decision_server")
 
 
 class DecisionRequest(BaseModel):
-    model: str
-    messages: list[dict]
+    model: str = Field(min_length=1, description="The route name, e.g. 'deployment/transcription'.")
+    messages: list[dict] = Field(min_length=1)
 
 
 class RouteTable:
@@ -118,7 +118,13 @@ def build_app(teams_dir: Path, clients_path: Path | None = None, poll_seconds: f
         try:
             decision = await decide(compiled, judge, request)
         except UnexpectedRealCallError as error:
-            raise HTTPException(500, str(error)) from error
+            # This is this project's own invariant breaking (algorithms.py should make it
+            # structurally impossible), not a caller mistake -- logged with a stack trace so it
+            # gets noticed, reported as a plain 500 without leaking internals to the client.
+            logger.exception("decision-only invariant violated on route %r", req.model)
+            raise HTTPException(500, "internal routing error") from error
+        if decision.judge_error:
+            logger.warning("route %r: judge unreachable, fell back to its safe default: %s", req.model, decision.judge_error)
         return asdict(decision)
 
     return app

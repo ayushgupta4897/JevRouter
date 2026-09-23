@@ -34,6 +34,7 @@ class CompiledRoute:
     models: dict[str, list[str]]
     model_by_id: dict[str, ModelRef]
     bucket_by_model_id: dict[str, str] | None = None  # intent / escalation-as-custom only
+    recent_turn_window: int | None = None  # escalation only -- decide() slices messages to this
 
 
 def _index(*refs: ModelRef) -> dict[str, ModelRef]:
@@ -56,7 +57,9 @@ def _target_selector_schema(bucket_names: list[str]) -> dict:
     }
 
 
-def _compile_custom(route: Route, judge_id: str, default_bucket: str, buckets: dict[str, ModelRef], prompt: str) -> CompiledRoute:
+def _compile_custom(
+    route: Route, judge_id: str, default_bucket: str, buckets: dict[str, ModelRef], prompt: str, *, recent_turn_window: int | None = None
+) -> CompiledRoute:
     bucket_names = list(buckets)
     config = CustomClassifierConfig(prompt, _target_selector_schema(bucket_names), "/decision/target")
     algorithm = algorithms.llm_classifier(LlmClassifierConfig.custom(default_target=default_bucket, config=config))
@@ -68,6 +71,7 @@ def _compile_custom(route: Route, judge_id: str, default_bucket: str, buckets: d
         models=models,
         model_by_id=_index(*buckets.values()),
         bucket_by_model_id={ref.id: name for name, ref in buckets.items()},
+        recent_turn_window=recent_turn_window,
     )
 
 
@@ -115,7 +119,10 @@ def compile_route_algorithm(route: Route) -> CompiledRoute:
 
     if isinstance(policy, EscalationPolicy):
         weak, strong = policy.models["weak"], policy.models["strong"]
-        return _compile_custom(route, policy.judge.id, "continue", {"continue": weak, "escalate": strong}, _escalation_prompt(policy))
+        return _compile_custom(
+            route, policy.judge.id, "continue", {"continue": weak, "escalate": strong}, _escalation_prompt(policy),
+            recent_turn_window=policy.recent_turn_window,
+        )
 
     raise AssertionError(f"unhandled policy type: {type(policy).__name__}")  # pragma: no cover
 

@@ -1,0 +1,63 @@
+# 18 requests to the zero-config `auto` default. Unlike every other experiment here, `auto`
+# compiles to Switchyard's `stage_router` preset with NO classifier at all (see docs/DECISION.md
+# §11.1) -- it is a signal-driven heuristic over actual tool-call/tool-result telemetry, not a
+# judgment about how hard the request's content looks. `expected: efficient` for every item here
+# is deliberate: this dataset exists to test and report that fact empirically, including on
+# prompts that read as genuinely hard, and including prompts that merely narrate failure in plain
+# prose (which is not the same as a real tool-result signal). See experiments/REPORT.md for why
+# this is a feature of `auto`, not a limitation, and why `complexity` is the right tool when
+# content-based difficulty judgment is actually what's needed.
+- id: gen-01
+  text: "What's the capital of France?"
+  expected: efficient
+- id: gen-02
+  text: "Write a haiku about autumn."
+  expected: efficient
+- id: gen-03
+  text: "Convert 100 Fahrenheit to Celsius."
+  expected: efficient
+- id: gen-04
+  text: "Give me a synonym for 'happy'."
+  expected: efficient
+- id: gen-05
+  text: "What year did the Berlin Wall fall?"
+  expected: efficient
+- id: gen-06
+  text: "Summarize the plot of Romeo and Juliet in two sentences."
+  expected: efficient
+- id: gen-07
+  text: "Prove that the square root of 2 is irrational, showing every step of the proof by contradiction rigorously."
+  expected: efficient
+- id: gen-08
+  text: "Design a distributed rate limiter that works correctly across multiple data centers with clock skew, network partitions, and no single point of failure -- explain the algorithm and its correctness guarantees in detail."
+  expected: efficient
+- id: gen-09
+  text: "Walk through the full derivation of the Black-Scholes option pricing formula from the underlying stochastic differential equation."
+  expected: efficient
+- id: gen-10
+  text: "Explain, with full technical depth, why P vs NP is considered one of the hardest open problems in computer science, including the formal definitions involved."
+  expected: efficient
+- id: gen-11
+  text: "Solve this five-house logic puzzle requiring careful multi-step deduction across many interacting constraints about color, nationality, drink, pet, and cigarette brand, and show your full reasoning."
+  expected: efficient
+- id: gen-12
+  text: "Give a rigorous, technically deep explanation of how a modern CPU's out-of-order execution and speculative execution actually work at the microarchitecture level, including hazards and how they're resolved."
+  expected: efficient
+- id: gen-13
+  text: "That answer you gave me last time was completely wrong and didn't work at all, please actually get it right this time."
+  expected: efficient
+- id: gen-14
+  text: "I tried what you suggested three separate times and it failed identically every single time -- this clearly isn't working, try something fundamentally different."
+  expected: efficient
+- id: gen-15
+  text: "This is the fourth time in a row the exact same approach has failed with the exact same error -- something is clearly and persistently broken here."
+  expected: efficient
+- id: gen-16
+  text: "What's 12 times 8?"
+  expected: efficient
+- id: gen-17
+  text: "Recommend a good book for someone who likes science fiction."
+  expected: efficient
+- id: gen-18
+  text: "Explain the full mathematical proof of Gödel's incompleteness theorems in rigorous detail, including the construction of the self-referential sentence."
+  expected: efficient

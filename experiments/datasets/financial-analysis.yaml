@@ -1,0 +1,55 @@
+# 18 financial-analyst queries, from a direct lookup to genuine multi-step modeling.
+- id: fin-01
+  text: "What was our Q2 revenue if Q1 was $2.1M and it grew 15% quarter over quarter?"
+  expected: weak
+- id: fin-02
+  text: "If gross margin is 60% and revenue is $500,000, what is the gross profit?"
+  expected: weak
+- id: fin-03
+  text: "Convert this 8% annual growth rate to an approximate monthly rate."
+  expected: weak
+- id: fin-04
+  text: "We spent $120,000 on marketing and acquired 400 customers. What's the customer acquisition cost?"
+  expected: weak
+- id: fin-05
+  text: "What is 15% of $340,000?"
+  expected: weak
+- id: fin-06
+  text: "Build a 3-year revenue forecast given: current ARR of $4.2M, historical growth rates of 45%, 38%, and 30% over the last three years respectively, a planned price increase of 8% next year, and an assumption that growth decelerates by 5 percentage points per year after that -- and explain the compounding effects of the price increase on net revenue retention."
+  expected: strong
+- id: fin-07
+  text: "We have three debt instruments with different rates and maturities: a $2M loan at 6% due in 3 years, a $1.5M convertible note at 4% due in 2 years with a conversion trigger at a $50M valuation, and a $500K line of credit at 9% variable rate. Model our total interest expense over the next 3 years under two scenarios: flat rates, and rates rising 1% per year, and explain which instrument dominates the sensitivity."
+  expected: strong
+- id: fin-08
+  text: "Reconcile why our reported EBITDA grew 20% year over year while cash from operations declined 5%, given changes in working capital, a one-time litigation settlement, and a shift in customer payment terms from net-30 to net-60 for our largest segment."
+  expected: strong
+- id: fin-09
+  text: "What is the simple average of these four quarterly revenue figures: $1.1M, $1.3M, $1.25M, $1.4M?"
+  expected: weak
+- id: fin-10
+  text: "If we have 50,000 fully diluted shares and net income of $2M, what is EPS?"
+  expected: weak
+- id: fin-11
+  text: "Explain why our unit economics might be deteriorating even though revenue and gross margin are both growing, given rising opex-to-revenue ratio, increasing customer acquisition cost, and a shift in mix toward a lower-margin product line -- and quantify the relative contribution of each factor."
+  expected: strong
+- id: fin-12
+  text: "What's the runway in months if we have $3M in the bank and are burning $250,000 per month?"
+  expected: weak
+- id: fin-13
+  text: "Build a scenario analysis for whether to raise a bridge round now at a $40M cap versus waiting 6 months for a priced round, factoring in current burn rate, expected dilution under each path, the probability-weighted impact of missing the current fundraising window, and how investor sentiment typically shifts with a down-round signal."
+  expected: strong
+- id: fin-14
+  text: "What is the total of these five expense line items: $12,000, $8,500, $3,200, $15,000, $6,750?"
+  expected: weak
+- id: fin-15
+  text: "Given a 5% discount rate, what's the approximate present value of $1,000 received in one year?"
+  expected: weak
+- id: fin-16
+  text: "Assess whether our current pricing structure is actually value-based or cost-plus in practice, using three years of pricing changes against three years of underlying delivery cost changes, and identify the quarter where the two clearly diverged and why that matters for the next pricing review."
+  expected: strong
+- id: fin-17
+  text: "If churn is 2% monthly, what's the annualized churn rate approximately?"
+  expected: weak
+- id: fin-18
+  text: "Model the impact on our fully diluted cap table of a new $8M Series A at a $32M pre-money valuation, including the effect of a 10% employee option pool top-up that's typically taken from pre-money, and show how existing common shareholders' ownership percentage changes."
+  expected: strong

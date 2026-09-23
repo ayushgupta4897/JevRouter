@@ -68,6 +68,39 @@ def test_unknown_route_is_a_404_naming_known_routes(teams_dir):
         assert "deployment/qa" in resp.json()["detail"]
 
 
+def test_empty_messages_is_a_422_not_a_500(teams_dir):
+    app = build_app(teams_dir, judge=mock_judge())
+    with TestClient(app) as client:
+        resp = client.post("/v1/decide", json={"model": "deployment/qa", "messages": []})
+        assert resp.status_code == 422
+
+
+def test_empty_model_name_is_a_422(teams_dir):
+    app = build_app(teams_dir, judge=mock_judge())
+    with TestClient(app) as client:
+        resp = client.post("/v1/decide", json={"model": "", "messages": [{"role": "user", "content": "hi"}]})
+        assert resp.status_code == 422
+
+
+def unreachable_judge() -> Judge:
+    from jevjudge.cascade import JudgeConfig as _JudgeConfig
+
+    return Judge(JevClient(JevClientConfig(base_url="http://127.0.0.1:1", api_key="x", timeout_s=1.0, max_retries=1)), _JudgeConfig())
+
+
+def test_decide_still_returns_200_with_a_fallback_decision_when_the_judge_is_down(teams_dir):
+    # A down judge is not a 5xx: the underlying algorithm fails open to its safe default (see
+    # test_decide_resilience.py), and the caller gets a real, usable decision either way --
+    # just one that says explicitly, via judge_error, that it's a fallback.
+    app = build_app(teams_dir, judge=unreachable_judge())
+    with TestClient(app) as client:
+        resp = client.post("/v1/decide", json={"model": "deployment/qa", "messages": [{"role": "user", "content": "hello"}]})
+        assert resp.status_code == 200
+        body = resp.json()
+        assert body["selected_model"] == "m-strong"  # complexity's safe default: the capable tier
+        assert body["judge_error"] is not None
+
+
 def test_route_table_reload_picks_up_a_new_route_and_rejects_a_broken_one(teams_dir):
     # build_app's background watch loop just calls RouteTable.maybe_reload() on a timer; this
     # exercises that same method directly rather than racing a real poll interval in a test.

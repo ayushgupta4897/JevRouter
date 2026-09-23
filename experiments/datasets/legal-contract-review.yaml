@@ -1,0 +1,55 @@
+# 18 contract-review requests split between verbatim field extraction and risk judgment.
+- id: legal-01
+  text: "Clause: 'This Agreement shall commence on March 1, 2027 and continue for an initial term of 24 months.' Question: What is the effective date and initial term length?"
+  expected: extraction
+- id: legal-02
+  text: "Clause: 'This Agreement is entered into between Acme Corp, a Delaware corporation, and Beta LLC, a California limited liability company.' Question: Who are the named parties and their entity types?"
+  expected: extraction
+- id: legal-03
+  text: "Clause: 'This Agreement shall be governed by the laws of the State of New York.' Question: What is the governing law?"
+  expected: extraction
+- id: legal-04
+  text: "Clause: 'The total contract value is $480,000, payable in four equal quarterly installments.' Question: What is the total contract value and payment schedule?"
+  expected: extraction
+- id: legal-05
+  text: "Clause: 'This Agreement shall automatically renew for successive one-year terms unless either party provides written notice of non-renewal at least ninety (90) days prior to the end of the then-current term.' Question: What are the renewal terms and notice period?"
+  expected: extraction
+- id: legal-06
+  text: "Clause: 'Vendor's liability under this Agreement, whether in contract, tort, or otherwise, shall not exceed the total fees paid in the preceding twelve (12) months, except in cases of gross negligence or willful misconduct.' Question: Is this liability cap unusual or risky for a standard vendor agreement, and why?"
+  expected: risk_flagging
+- id: legal-07
+  text: "Clause: 'Client shall indemnify, defend, and hold harmless Vendor from any and all claims, damages, and expenses of any kind, without limitation, arising from Client's use of the Services, including claims arising from Vendor's own negligence.' Question: Does this indemnification clause pose unusual risk to Client, and why?"
+  expected: risk_flagging
+- id: legal-08
+  text: "Clause: 'This Agreement may be terminated by Vendor at any time, for any reason or no reason, upon twenty-four (24) hours' written notice, with no refund of prepaid fees.' Question: Is this termination clause one-sided or risky for the Client, and why?"
+  expected: risk_flagging
+- id: legal-09
+  text: "Clause: 'Either party may assign this Agreement to a successor in interest in connection with a merger, acquisition, or sale of substantially all assets, without the other party's consent.' Question: Does this assignment clause create meaningful risk, and for whom?"
+  expected: risk_flagging
+- id: legal-10
+  text: "Clause: 'The parties agree that the exclusive venue for any dispute shall be the state and federal courts located in Vendor's home jurisdiction, and Client waives any objection to personal jurisdiction or venue.' Question: Does this venue clause disadvantage the Client meaningfully, and why?"
+  expected: risk_flagging
+- id: legal-11
+  text: "Clause: 'Notices under this Agreement shall be sent to the addresses listed in Exhibit A.' Question: Where should notices be sent per this clause?"
+  expected: extraction
+- id: legal-12
+  text: "Clause: 'The parties acknowledge that Confidential Information shall remain confidential for a period of five (5) years following termination of this Agreement.' Question: What is the confidentiality period specified?"
+  expected: extraction
+- id: legal-13
+  text: "Clause: 'Client shall pay a late fee of 1.5% per month on any overdue amount.' Question: What is the late payment fee?"
+  expected: extraction
+- id: legal-14
+  text: "Clause: 'In no event shall either party's cumulative liability exceed $100, regardless of the form of action, even in cases of data breach, gross negligence, or breach of confidentiality obligations.' Question: Is this liability cap appropriate given the carve-outs it fails to exclude, and why?"
+  expected: risk_flagging
+- id: legal-15
+  text: "Clause: 'This Agreement grants Vendor a perpetual, irrevocable, worldwide license to use, modify, and sublicense any data or content Client uploads to the platform, for any purpose.' Question: Does this data-license clause create outsized risk for the Client, and why?"
+  expected: risk_flagging
+- id: legal-16
+  text: "Clause: 'Payment terms are net 30 from the date of invoice.' Question: What are the payment terms?"
+  expected: extraction
+- id: legal-17
+  text: "Clause: 'The named signatories for this Agreement are Jane Doe, CEO of Acme Corp, and John Smith, General Counsel of Beta LLC.' Question: Who are the signatories and their titles?"
+  expected: extraction
+- id: legal-18
+  text: "Clause: 'Vendor reserves the right to modify these Terms at any time without notice, and continued use of the Services constitutes acceptance of the modified Terms.' Question: Does this unilateral-modification clause pose meaningful risk to the Client, and why?"
+  expected: risk_flagging

@@ -1,0 +1,39 @@
+# Experiment 3: An executive assistant agent. One inbox, four very different jobs: fire off a
+# calendar action, summarize a long thread, draft a reply in the exec's voice, or actually
+# research something before answering. This is the "executive assistant" case named directly in
+# this project's own scoping conversation.
+team: exec-assistant
+owner: eng-productivity@example.com
+
+routes:
+  - name: exec/email-triage
+    policy: intent
+    default: draft_reply
+    models:
+      schedule:
+        id: gpt-5.6-luna
+        client: openai
+        description: >
+          Book, move, or cancel a meeting; accept or decline an invite; find a free slot. A
+          mechanical calendar action with clear inputs, no drafting or judgment involved.
+      summarize:
+        id: gpt-5.6-terra
+        client: openai
+        description: >
+          Condense a long email thread or forwarded document into a short brief: what happened,
+          who wants what, what's still open. Synthesis, not just extraction, but no original
+          writing on the exec's behalf.
+      draft_reply:
+        id: gpt-5.6-sol
+        client: openai
+        description: >
+          Write a reply that will go out under the executive's name: needs the right tone,
+          judgment about what to commit to, and care about how it reads to the recipient. Getting
+          the voice wrong is a real cost even when the facts are right.
+      research:
+        id: gpt-6-astra
+        client: openai
+        description: >
+          Answer a question that requires actually reasoning through unfamiliar material before
+          responding -- comparing options, working through a non-obvious tradeoff, or preparing
+          background the exec will rely on to make a decision.
