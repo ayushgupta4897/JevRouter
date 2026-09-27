@@ -174,10 +174,12 @@ async def main() -> None:
     parser.add_argument("--max-budget-usd", type=float, default=4.0)
     parser.add_argument("--only", help="Comma-separated experiment names (default: all 12).")
     parser.add_argument("--concurrency", type=int, default=6)
+    parser.add_argument("--out", default=str(OUT), help="Results directory (default: results/model-ladder).")
     args = parser.parse_args()
     if not os.environ.get("OPENROUTER_API_KEY"):
         sys.exit("OPENROUTER_API_KEY not set")
-    OUT.mkdir(parents=True, exist_ok=True)
+    out_dir = Path(args.out)
+    out_dir.mkdir(parents=True, exist_ok=True)
     budget, judge, sem = Budget(args.max_budget_usd), build_judge_from_env(), asyncio.Semaphore(args.concurrency)
     only = set(args.only.split(",")) if args.only else None
     results = []
@@ -187,12 +189,12 @@ async def main() -> None:
                 continue
             print(f"== {name} -- spent ${budget.spent:.3f} of ${budget.cap:.2f}", flush=True)
             result = await run_experiment(name, route_name, judge, http, budget, sem)
-            (OUT / f"{name}.json").write_text(json.dumps(result, indent=2))
+            (out_dir / f"{name}.json").write_text(json.dumps(result, indent=2))
             results.append(result)
     await judge.aclose()
     summary = summarize(results)
     summary["total_spend_usd"] = budget.spent
-    (OUT / "summary.json").write_text(json.dumps(summary, indent=2))
+    (out_dir / "summary.json").write_text(json.dumps(summary, indent=2))
     print(f"\ntotal spend: ${budget.spent:.4f} of ${budget.cap:.2f}")
 
 

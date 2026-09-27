@@ -21,6 +21,7 @@ from dataclasses import dataclass
 
 from switchyard.libsy import Algorithm, CustomClassifierConfig, LlmClassifierConfig, TaskClassifierConfig, algorithms
 
+from .rubrics import complexity_prompt
 from .schema import AutoPolicy, ComplexityPolicy, EscalationPolicy, IntentPolicy, ModelRef, Route
 
 
@@ -109,7 +110,7 @@ def compile_route_algorithm(route: Route) -> CompiledRoute:
 
     if isinstance(policy, ComplexityPolicy):
         weak, strong = policy.models["weak"], policy.models["strong"]
-        config = TaskClassifierConfig(policy.base_threshold, threshold_step=policy.threshold_step)
+        config = TaskClassifierConfig(policy.base_threshold, threshold_step=policy.threshold_step, prompt=complexity_prompt(policy))
         algorithm = algorithms.llm_classifier(LlmClassifierConfig.capability(config=config))
         models = {"judge": [policy.judge.id], "efficient": [weak.id], "capable": [strong.id], "any": [weak.id, strong.id]}
         return CompiledRoute(route=route, algorithm=algorithm, models=models, model_by_id=_index(weak, strong))

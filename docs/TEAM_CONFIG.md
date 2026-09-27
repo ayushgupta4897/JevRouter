@@ -74,7 +74,24 @@ watch.
     strong: { id: gpt-6-astra,   client: openai }
   base_threshold: 0.55    # lowest solve-probability that still uses the weak model. 0-1, default 0.5
   threshold_step: 0.1     # extra caution the judge asks for when its own reasoning is shaky. default 0.1
+  # optional, plain English: what your traffic looks like on each side
+  weak_when: "A single arithmetic step: a percentage, growth rate, conversion, runway, or total."
+  strong_when: "Multi-scenario modelling, reconciling metrics that move in different directions, or cap-table maths."
+  rubric: general         # default. `coding_agent` = Switchyard's original rubric, for agents in a repo
 ```
+
+`weak_when` and `strong_when` are optional but worth writing. They work like an `intent`
+bucket's `description:`. The judge forecasts against a short rulebook of what the cheap model
+can and can't handle, and your sentences replace its most generic rule on each side. In testing,
+adding them took held-out decision accuracy from 96% to 98%, and cut easy prompts wrongly sent
+to the strong model from 2 to 0 (`docs/DECISION.md` §14).
+
+`rubric` picks that rulebook:
+* `general` (the default) judges the task itself: steps, interacting constraints, and how likely
+  a plausible answer is to be wrong.
+* `coding_agent` is Switchyard's packaged rubric. It's written for agents working in a repository
+  with tools and a verifier. Use it only for routes like that. On one-shot business prompts it
+  misrouted about a third of the time.
 
 Raising either number sends more traffic to the strong model. Start at the defaults and move
 `base_threshold` up if the weak model is failing tasks it was routed, or down if too much traffic

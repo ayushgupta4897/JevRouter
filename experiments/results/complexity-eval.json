@@ -1,0 +1,4090 @@
+{
+  "switchyard": [
+    {
+      "id": "rev-01",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.45999999999999996,
+      "judge_error": null
+    },
+    {
+      "id": "rev-02",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.54,
+      "judge_error": null
+    },
+    {
+      "id": "rev-03",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8200000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "rev-04",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.6799999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "rev-05",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "strong",
+      "correct": false,
+      "confidence": 0.08000000000000007,
+      "judge_error": null
+    },
+    {
+      "id": "rev-06",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.040000000000000036,
+      "judge_error": null
+    },
+    {
+      "id": "rev-07",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.30000000000000004,
+      "judge_error": null
+    },
+    {
+      "id": "rev-08",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.6399999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "rev-09",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.7,
+      "judge_error": null
+    },
+    {
+      "id": "rev-10",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.56,
+      "judge_error": null
+    },
+    {
+      "id": "rev-11",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "strong",
+      "correct": false,
+      "confidence": 0.1399999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "rev-12",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "strong",
+      "correct": false,
+      "confidence": 0.15999999999999992,
+      "judge_error": null
+    },
+    {
+      "id": "rev-13",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.17999999999999994,
+      "judge_error": null
+    },
+    {
+      "id": "rev-14",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.08000000000000007,
+      "judge_error": null
+    },
+    {
+      "id": "rev-15",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.45999999999999996,
+      "judge_error": null
+    },
+    {
+      "id": "rev-16",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.3600000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "rev-17",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "strong",
+      "correct": false,
+      "confidence": 0.12,
+      "judge_error": null
+    },
+    {
+      "id": "rev-18",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.3999999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "fin-01",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8600000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "fin-02",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.9199999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "fin-03",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.72,
+      "judge_error": null
+    },
+    {
+      "id": "fin-04",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8799999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "fin-05",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "fin-06",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.43999999999999995,
+      "judge_error": null
+    },
+    {
+      "id": "fin-07",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.3400000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "fin-08",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.040000000000000036,
+      "judge_error": null
+    },
+    {
+      "id": "fin-09",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.9199999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "fin-10",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8799999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "fin-11",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.24,
+      "judge_error": null
+    },
+    {
+      "id": "fin-12",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8600000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "fin-13",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.4,
+      "judge_error": null
+    },
+    {
+      "id": "fin-14",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.9199999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "fin-15",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8200000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "fin-16",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.64,
+      "judge_error": null
+    },
+    {
+      "id": "fin-17",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.6399999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "fin-18",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.43999999999999995,
+      "judge_error": null
+    },
+    {
+      "id": "sql-01",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.72,
+      "judge_error": null
+    },
+    {
+      "id": "sql-02",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.10000000000000009,
+      "judge_error": null
+    },
+    {
+      "id": "sql-03",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.17999999999999994,
+      "judge_error": null
+    },
+    {
+      "id": "sql-04",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.76,
+      "judge_error": null
+    },
+    {
+      "id": "sql-05",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.3600000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "sql-06",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.15999999999999992,
+      "judge_error": null
+    },
+    {
+      "id": "sql-07",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.10000000000000009,
+      "judge_error": null
+    },
+    {
+      "id": "sql-08",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.1200000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "sql-09",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.56,
+      "judge_error": null
+    },
+    {
+      "id": "sql-10",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.17999999999999994,
+      "judge_error": null
+    },
+    {
+      "id": "sql-11",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.28,
+      "judge_error": null
+    },
+    {
+      "id": "sql-12",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.28,
+      "judge_error": null
+    },
+    {
+      "id": "sql-13",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.21999999999999997,
+      "judge_error": null
+    },
+    {
+      "id": "sql-14",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.1399999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "sql-15",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "strong",
+      "correct": false,
+      "confidence": 0.020000000000000018,
+      "judge_error": null
+    },
+    {
+      "id": "sql-16",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.3999999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "sql-17",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "strong",
+      "correct": false,
+      "confidence": 0.08000000000000007,
+      "judge_error": null
+    },
+    {
+      "id": "sql-18",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.020000000000000018,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-01",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.15999999999999992,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-02",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8600000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-03",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.5800000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-04",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "strong",
+      "correct": false,
+      "confidence": 0.040000000000000036,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-05",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.21999999999999997,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-06",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.08000000000000007,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-07",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.040000000000000036,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-08",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.24,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-09",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.06000000000000005,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-10",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.1399999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-11",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.0,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-12",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.24,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-01",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8999999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-02",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8799999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-03",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8999999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-04",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8799999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-05",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8999999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-06",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.9199999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-07",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.040000000000000036,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-08",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.09999999999999998,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-09",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.17999999999999994,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-10",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.26,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-11",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.24,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-12",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.17999999999999994,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-01",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "weak",
+      "label": "strong",
+      "correct": false,
+      "confidence": 0.0,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-02",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.3999999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-03",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.24,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-04",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.3999999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-05",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.54,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-06",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.48,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-07",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.24,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-08",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.1399999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-09",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.15999999999999992,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-10",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.18000000000000005,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-11",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.31999999999999995,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-12",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.48,
+      "judge_error": null
+    },
+    {
+      "id": "hops-01",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8799999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hops-02",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.56,
+      "judge_error": null
+    },
+    {
+      "id": "hops-03",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.9199999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hops-04",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.78,
+      "judge_error": null
+    },
+    {
+      "id": "hops-05",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8999999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hops-06",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.6599999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hops-07",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.16000000000000003,
+      "judge_error": null
+    },
+    {
+      "id": "hops-08",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.45999999999999996,
+      "judge_error": null
+    },
+    {
+      "id": "hops-09",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.1399999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hops-10",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.08000000000000007,
+      "judge_error": null
+    },
+    {
+      "id": "hops-11",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.020000000000000018,
+      "judge_error": null
+    },
+    {
+      "id": "hops-12",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.42000000000000004,
+      "judge_error": null
+    }
+  ],
+  "general": [
+    {
+      "id": "rev-01",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.78,
+      "judge_error": null
+    },
+    {
+      "id": "rev-02",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8799999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "rev-03",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8600000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "rev-04",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.9199999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "rev-05",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.020000000000000018,
+      "judge_error": null
+    },
+    {
+      "id": "rev-06",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.24,
+      "judge_error": null
+    },
+    {
+      "id": "rev-07",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.3799999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "rev-08",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.6399999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "rev-09",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.8600000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "rev-10",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.6399999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "rev-11",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.6599999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "rev-12",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.78,
+      "judge_error": null
+    },
+    {
+      "id": "rev-13",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.040000000000000036,
+      "judge_error": null
+    },
+    {
+      "id": "rev-14",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.0,
+      "judge_error": null
+    },
+    {
+      "id": "rev-15",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.30000000000000004,
+      "judge_error": null
+    },
+    {
+      "id": "rev-16",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.5,
+      "judge_error": null
+    },
+    {
+      "id": "rev-17",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8999999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "rev-18",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.45999999999999996,
+      "judge_error": null
+    },
+    {
+      "id": "fin-01",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "fin-02",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.96,
+      "judge_error": null
+    },
+    {
+      "id": "fin-03",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.72,
+      "judge_error": null
+    },
+    {
+      "id": "fin-04",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "fin-05",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.96,
+      "judge_error": null
+    },
+    {
+      "id": "fin-06",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.07999999999999996,
+      "judge_error": null
+    },
+    {
+      "id": "fin-07",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.18000000000000005,
+      "judge_error": null
+    },
+    {
+      "id": "fin-08",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.31999999999999995,
+      "judge_error": null
+    },
+    {
+      "id": "fin-09",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "fin-10",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "fin-11",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.5,
+      "judge_error": null
+    },
+    {
+      "id": "fin-12",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.96,
+      "judge_error": null
+    },
+    {
+      "id": "fin-13",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.76,
+      "judge_error": null
+    },
+    {
+      "id": "fin-14",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.96,
+      "judge_error": null
+    },
+    {
+      "id": "fin-15",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "fin-16",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.78,
+      "judge_error": null
+    },
+    {
+      "id": "fin-17",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.72,
+      "judge_error": null
+    },
+    {
+      "id": "fin-18",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.10000000000000009,
+      "judge_error": null
+    },
+    {
+      "id": "sql-01",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "sql-02",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "strong",
+      "correct": false,
+      "confidence": 0.07999999999999996,
+      "judge_error": null
+    },
+    {
+      "id": "sql-03",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8,
+      "judge_error": null
+    },
+    {
+      "id": "sql-04",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.9199999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "sql-05",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.72,
+      "judge_error": null
+    },
+    {
+      "id": "sql-06",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.18000000000000005,
+      "judge_error": null
+    },
+    {
+      "id": "sql-07",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.06000000000000005,
+      "judge_error": null
+    },
+    {
+      "id": "sql-08",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.42000000000000004,
+      "judge_error": null
+    },
+    {
+      "id": "sql-09",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8799999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "sql-10",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.3799999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "sql-11",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.10000000000000009,
+      "judge_error": null
+    },
+    {
+      "id": "sql-12",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.78,
+      "judge_error": null
+    },
+    {
+      "id": "sql-13",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.040000000000000036,
+      "judge_error": null
+    },
+    {
+      "id": "sql-14",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.0,
+      "judge_error": null
+    },
+    {
+      "id": "sql-15",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.43999999999999995,
+      "judge_error": null
+    },
+    {
+      "id": "sql-16",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.24,
+      "judge_error": null
+    },
+    {
+      "id": "sql-17",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.54,
+      "judge_error": null
+    },
+    {
+      "id": "sql-18",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.4,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-01",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "strong",
+      "correct": false,
+      "confidence": 0.07999999999999996,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-02",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-03",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8999999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-04",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.54,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-05",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.24,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-06",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.54,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-07",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.36,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-08",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.0,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-09",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.56,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-10",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.18000000000000005,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-11",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.45999999999999996,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-12",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.48,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-01",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.9199999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-02",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-03",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-04",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-05",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-06",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.96,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-07",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.48,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-08",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.36,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-09",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.07999999999999996,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-10",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.6799999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-11",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.040000000000000036,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-12",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.38,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-01",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-02",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.7,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-03",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.54,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-04",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8999999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-05",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.52,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-06",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8999999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-07",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.36,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-08",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.26,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-09",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.08000000000000007,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-10",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.12,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-11",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.24,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-12",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.5,
+      "judge_error": null
+    },
+    {
+      "id": "hops-01",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "hops-02",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.7,
+      "judge_error": null
+    },
+    {
+      "id": "hops-03",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.96,
+      "judge_error": null
+    },
+    {
+      "id": "hops-04",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.9199999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hops-05",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "hops-06",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "hops-07",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.16000000000000003,
+      "judge_error": null
+    },
+    {
+      "id": "hops-08",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.72,
+      "judge_error": null
+    },
+    {
+      "id": "hops-09",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.06000000000000005,
+      "judge_error": null
+    },
+    {
+      "id": "hops-10",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.07999999999999996,
+      "judge_error": null
+    },
+    {
+      "id": "hops-11",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.040000000000000036,
+      "judge_error": null
+    },
+    {
+      "id": "hops-12",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.24,
+      "judge_error": null
+    }
+  ],
+  "criteria": [
+    {
+      "id": "rev-01",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8,
+      "judge_error": null
+    },
+    {
+      "id": "rev-02",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8799999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "rev-03",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8600000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "rev-04",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8999999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "rev-05",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.24,
+      "judge_error": null
+    },
+    {
+      "id": "rev-06",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.10000000000000009,
+      "judge_error": null
+    },
+    {
+      "id": "rev-07",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.3400000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "rev-08",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.6200000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "rev-09",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.8200000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "rev-10",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.6799999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "rev-11",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.74,
+      "judge_error": null
+    },
+    {
+      "id": "rev-12",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.7,
+      "judge_error": null
+    },
+    {
+      "id": "rev-13",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.07999999999999996,
+      "judge_error": null
+    },
+    {
+      "id": "rev-14",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.19999999999999996,
+      "judge_error": null
+    },
+    {
+      "id": "rev-15",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.3999999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "rev-16",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.48,
+      "judge_error": null
+    },
+    {
+      "id": "rev-17",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8999999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "rev-18",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.3999999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "fin-01",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "fin-02",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.96,
+      "judge_error": null
+    },
+    {
+      "id": "fin-03",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.76,
+      "judge_error": null
+    },
+    {
+      "id": "fin-04",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "fin-05",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.96,
+      "judge_error": null
+    },
+    {
+      "id": "fin-06",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.18000000000000005,
+      "judge_error": null
+    },
+    {
+      "id": "fin-07",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.30000000000000004,
+      "judge_error": null
+    },
+    {
+      "id": "fin-08",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.5,
+      "judge_error": null
+    },
+    {
+      "id": "fin-09",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "fin-10",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "fin-11",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.5800000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "fin-12",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.96,
+      "judge_error": null
+    },
+    {
+      "id": "fin-13",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.8200000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "fin-14",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "fin-15",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "fin-16",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.78,
+      "judge_error": null
+    },
+    {
+      "id": "fin-17",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.78,
+      "judge_error": null
+    },
+    {
+      "id": "fin-18",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.36,
+      "judge_error": null
+    },
+    {
+      "id": "sql-01",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "sql-02",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.54,
+      "judge_error": null
+    },
+    {
+      "id": "sql-03",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8799999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "sql-04",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "sql-05",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8799999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "sql-06",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.62,
+      "judge_error": null
+    },
+    {
+      "id": "sql-07",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.42000000000000004,
+      "judge_error": null
+    },
+    {
+      "id": "sql-08",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.5800000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "sql-09",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8999999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "sql-10",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.7,
+      "judge_error": null
+    },
+    {
+      "id": "sql-11",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.6,
+      "judge_error": null
+    },
+    {
+      "id": "sql-12",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8799999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "sql-13",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.38,
+      "judge_error": null
+    },
+    {
+      "id": "sql-14",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.6399999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "sql-15",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.54,
+      "judge_error": null
+    },
+    {
+      "id": "sql-16",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.36,
+      "judge_error": null
+    },
+    {
+      "id": "sql-17",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.5800000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "sql-18",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.54,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-01",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.43999999999999995,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-02",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-03",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8999999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-04",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.76,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-05",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.72,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-06",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-07",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.43999999999999995,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-08",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.24,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-09",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.64,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-10",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.62,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-11",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.6599999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-12",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.56,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-01",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.9199999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-02",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-03",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-04",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-05",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.9199999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-06",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.96,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-07",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.6599999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-08",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.42000000000000004,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-09",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.45999999999999996,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-10",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.74,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-11",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.28,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-12",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.62,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-01",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8400000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-02",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.56,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-03",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.5800000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-04",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8999999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-05",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.72,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-06",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8600000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-07",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.5,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-08",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.040000000000000036,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-09",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.020000000000000018,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-10",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.33999999999999997,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-11",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.4,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-12",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.45999999999999996,
+      "judge_error": null
+    },
+    {
+      "id": "hops-01",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "hops-02",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.7,
+      "judge_error": null
+    },
+    {
+      "id": "hops-03",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.96,
+      "judge_error": null
+    },
+    {
+      "id": "hops-04",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.9199999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hops-05",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "hops-06",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.96,
+      "judge_error": null
+    },
+    {
+      "id": "hops-07",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.12,
+      "judge_error": null
+    },
+    {
+      "id": "hops-08",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.74,
+      "judge_error": null
+    },
+    {
+      "id": "hops-09",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.1399999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hops-10",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.020000000000000018,
+      "judge_error": null
+    },
+    {
+      "id": "hops-11",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.10000000000000009,
+      "judge_error": null
+    },
+    {
+      "id": "hops-12",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.28,
+      "judge_error": null
+    }
+  ],
+  "general_repeat": [
+    {
+      "id": "rev-01",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.76,
+      "judge_error": null
+    },
+    {
+      "id": "rev-02",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8600000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "rev-03",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8600000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "rev-04",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.9199999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "rev-05",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.040000000000000036,
+      "judge_error": null
+    },
+    {
+      "id": "rev-06",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.24,
+      "judge_error": null
+    },
+    {
+      "id": "rev-07",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.3600000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "rev-08",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.6399999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "rev-09",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.8200000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "rev-10",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.54,
+      "judge_error": null
+    },
+    {
+      "id": "rev-11",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.6599999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "rev-12",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.78,
+      "judge_error": null
+    },
+    {
+      "id": "rev-13",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.020000000000000018,
+      "judge_error": null
+    },
+    {
+      "id": "rev-14",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.06000000000000005,
+      "judge_error": null
+    },
+    {
+      "id": "rev-15",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.28,
+      "judge_error": null
+    },
+    {
+      "id": "rev-16",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.5,
+      "judge_error": null
+    },
+    {
+      "id": "rev-17",
+      "set": "original",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8999999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "rev-18",
+      "set": "original",
+      "domain": "code",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.45999999999999996,
+      "judge_error": null
+    },
+    {
+      "id": "fin-01",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "fin-02",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.96,
+      "judge_error": null
+    },
+    {
+      "id": "fin-03",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.72,
+      "judge_error": null
+    },
+    {
+      "id": "fin-04",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.96,
+      "judge_error": null
+    },
+    {
+      "id": "fin-05",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.96,
+      "judge_error": null
+    },
+    {
+      "id": "fin-06",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.06000000000000005,
+      "judge_error": null
+    },
+    {
+      "id": "fin-07",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.09999999999999998,
+      "judge_error": null
+    },
+    {
+      "id": "fin-08",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.38,
+      "judge_error": null
+    },
+    {
+      "id": "fin-09",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "fin-10",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "fin-11",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.45999999999999996,
+      "judge_error": null
+    },
+    {
+      "id": "fin-12",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.96,
+      "judge_error": null
+    },
+    {
+      "id": "fin-13",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.72,
+      "judge_error": null
+    },
+    {
+      "id": "fin-14",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.96,
+      "judge_error": null
+    },
+    {
+      "id": "fin-15",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "fin-16",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.8,
+      "judge_error": null
+    },
+    {
+      "id": "fin-17",
+      "set": "original",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.74,
+      "judge_error": null
+    },
+    {
+      "id": "fin-18",
+      "set": "original",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.17999999999999994,
+      "judge_error": null
+    },
+    {
+      "id": "sql-01",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.9199999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "sql-02",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "strong",
+      "correct": false,
+      "confidence": 0.040000000000000036,
+      "judge_error": null
+    },
+    {
+      "id": "sql-03",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.78,
+      "judge_error": null
+    },
+    {
+      "id": "sql-04",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.9199999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "sql-05",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.76,
+      "judge_error": null
+    },
+    {
+      "id": "sql-06",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.09999999999999998,
+      "judge_error": null
+    },
+    {
+      "id": "sql-07",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.06000000000000005,
+      "judge_error": null
+    },
+    {
+      "id": "sql-08",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.4,
+      "judge_error": null
+    },
+    {
+      "id": "sql-09",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8600000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "sql-10",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.30000000000000004,
+      "judge_error": null
+    },
+    {
+      "id": "sql-11",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.1399999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "sql-12",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.78,
+      "judge_error": null
+    },
+    {
+      "id": "sql-13",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.08000000000000007,
+      "judge_error": null
+    },
+    {
+      "id": "sql-14",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "strong",
+      "correct": false,
+      "confidence": 0.06000000000000005,
+      "judge_error": null
+    },
+    {
+      "id": "sql-15",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.41999999999999993,
+      "judge_error": null
+    },
+    {
+      "id": "sql-16",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.24,
+      "judge_error": null
+    },
+    {
+      "id": "sql-17",
+      "set": "original",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.56,
+      "judge_error": null
+    },
+    {
+      "id": "sql-18",
+      "set": "original",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.4,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-01",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.020000000000000018,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-02",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-03",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8799999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-04",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.48,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-05",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.17999999999999994,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-06",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.5,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-07",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.28,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-08",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.020000000000000018,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-09",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.5800000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-10",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.21999999999999997,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-11",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.4,
+      "judge_error": null
+    },
+    {
+      "id": "hsql-12",
+      "set": "holdout",
+      "domain": "sql",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.5,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-01",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.9199999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-02",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-03",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-04",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-05",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-06",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.96,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-07",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.5,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-08",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.33999999999999997,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-09",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.14,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-10",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.6799999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-11",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.0,
+      "judge_error": null
+    },
+    {
+      "id": "hfin-12",
+      "set": "holdout",
+      "domain": "finance",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.43999999999999995,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-01",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-02",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.72,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-03",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.54,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-04",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8999999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-05",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.6000000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-06",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.8999999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-07",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.38,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-08",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.26,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-09",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.1200000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-10",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.18000000000000005,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-11",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.21999999999999997,
+      "judge_error": null
+    },
+    {
+      "id": "hrev-12",
+      "set": "holdout",
+      "domain": "code",
+      "expected": "strong",
+      "label": "weak",
+      "correct": false,
+      "confidence": 0.5,
+      "judge_error": null
+    },
+    {
+      "id": "hops-01",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "hops-02",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.74,
+      "judge_error": null
+    },
+    {
+      "id": "hops-03",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.96,
+      "judge_error": null
+    },
+    {
+      "id": "hops-04",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.9199999999999999,
+      "judge_error": null
+    },
+    {
+      "id": "hops-05",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "hops-06",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "weak",
+      "label": "weak",
+      "correct": true,
+      "confidence": 0.94,
+      "judge_error": null
+    },
+    {
+      "id": "hops-07",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.19999999999999996,
+      "judge_error": null
+    },
+    {
+      "id": "hops-08",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.76,
+      "judge_error": null
+    },
+    {
+      "id": "hops-09",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.1200000000000001,
+      "judge_error": null
+    },
+    {
+      "id": "hops-10",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.07999999999999996,
+      "judge_error": null
+    },
+    {
+      "id": "hops-11",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.06000000000000005,
+      "judge_error": null
+    },
+    {
+      "id": "hops-12",
+      "set": "holdout",
+      "domain": "ops",
+      "expected": "strong",
+      "label": "strong",
+      "correct": true,
+      "confidence": 0.28,
+      "judge_error": null
+    }
+  ]
+}

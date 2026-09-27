@@ -810,9 +810,88 @@ Here "hard" means the correct route was above the cheapest tier. That was 30 of 
    * this run
 
    Intent routes scored 100% in all three. That makes complexity routing the most valuable
-   thing to fix next (§14).
+   thing to fix next. It was fixed next (§14).
 
-## 14. Roadmap
+## 14. Fixing `complexity` routing (2026-09-27)
+
+### 14.1 Root cause
+
+`complexity` compiles to Switchyard's `llm_classifier` in capability mode. Jev forecasts
+`p_solve`, the chance the cheap model succeeds, against a *capability card*, which is a short
+rulebook of what the cheap model can and can't do. Switchyard's threshold widens when the chosen
+rule is "uncertain" or "unsupported".
+
+The packaged card (`vendor/switchyard/crates/libsy/src/prompts/capability-classifier/prompt.md`)
+is written for **coding agents working in a repository**. Every rule is about deterministic
+validators, executable references, inspectable environments, or hidden repository state.
+jevjudge's success question used the same framing: "under the actual harness, tools, and budget,
+as judged by the final verifier".
+
+A one-shot business request matches none of those rules, so the forecast had nothing to anchor
+on. It misrouted in both directions:
+* Hard SQL, code review and finance prompts went to the cheap tier.
+* "Delete rows older than 30 days" went to the strong tier.
+
+That is why complexity was the weakest policy in all three studies (§10, §13.2, §13.5) while
+`intent`, which routes on plain-English criteria, scored 100%.
+
+### 14.2 The fix
+
+Switchyard's own mechanism is kept whole: same schema, same rule ids, same threshold widening.
+The capability classifier accepts a prompt override (`TaskClassifierConfig(prompt=...)` in
+decision mode, `prompt = "..."` in proxy-mode TOML). Two things changed:
+
+* **`rubric: general` is the new default** (`routerctl/rubrics.py`). It's a card about the task
+  itself: lookups and single calculations are supported; "a few standard steps" and
+  ambiguity are uncertain; multi-constraint reasoning and plausible-but-wrong traps are
+  unsupported.
+  - `rubric: coding_agent` keeps Switchyard's card, for routes that really do serve an agent in a
+    repository.
+  - jevjudge's success question is now neutral: "completes the whole task fully and correctly in
+    one attempt (for an agent run: under its actual harness, tools and budget)".
+* **Optional `weak_when` / `strong_when`**: a team's own plain-English criteria. They replace the
+  most generic rule on each side, the same mechanism that makes `intent` accurate.
+
+Tests (`routerctl/tests/test_rubrics.py`) pin four things:
+* every rule id has a criterion Jev can pick by
+* the general card has no coding-agent vocabulary
+* team criteria land in the right rules
+* decision mode and proxy mode emit the identical prompt
+
+### 14.3 Measured (`experiments/complexity_eval.py` → `results/complexity-eval.json`)
+
+These are real Jev decisions on two sets:
+* the original 54 complexity items, which are in-sample, since the rubric was written after
+  reading their failures
+* **48 held-out items** (`experiments/datasets/complexity-holdout.yaml`), written *before* the
+  new rubric was ever evaluated, across SQL, finance, code review, and an ops/analytics domain
+  that nobody wrote criteria for
+
+| Decision accuracy | Switchyard rubric (before) | `general` | `general` + team criteria |
+|---|---|---|---|
+| Original 54 | 37/54 (69%) | 48/54 (89%) | **49/54 (91%)** |
+| of which code review | 50% | 72% | 72% |
+| of which finance | 83% | 100% | 100% |
+| of which SQL | 72% | 94% | 100% |
+| **Held-out 48** | 43/48 (90%) | 46/48 (96%) | **47/48 (98%)** |
+| of which ops (no criteria written) | 100% | 100% | 100% |
+| Hard prompt sent to the cheap tier | 14 | 6 | 6 |
+| Easy prompt sent to the strong tier | 8 | 2 | **0** |
+
+Re-running the `general` arm gave the same decision on 100 of 102 items, and there were no judge
+errors.
+
+**Caveats.**
+* The held-out prompts are more clear-cut than the originals. That's why the old rubric already
+  scores 90% there. The drop in misroutes is the more telling number.
+* All six remaining misses are code-review prompts that *name the bug in the question* ("… is this
+  a security issue?"). Once a bug is named, a cheap model can often confirm it. The cheapest
+  ladder model scored 4–5 on several of these exact prompts (§13.5), so some of those "strong"
+  labels are probably too strict. They're left as labelled, not relabelled to flatter the result.
+
+ANSWER_QUALITY_PLACEHOLDER
+
+## 15. Roadmap
 
 1. **Routing-accuracy validation**: the judge-only eval (predict vs. a ground-truth label from
    running both tiers) and Switchyard's `benchmark/` TB2.1 subset with the Jev judge vs. the LLM
@@ -844,14 +923,10 @@ Here "hard" means the correct route was above the cheapest tier. That was 30 of 
    Router was the top tier we chose, not the routing. Re-run the head-to-head with a cheaper top
    tier, and let outcome data rather than intuition decide when a premium model earns its price.
 
-9. **Fix `complexity` routing** (§13.5): across three studies with three different model
-   rosters, it's the one policy that misroutes. Code review is at 56–61%, and SQL at 72%.
-   It under-forecasts long, multi-step technical prompts. Options include recalibrating
-   `base_threshold` per route from outcome data, or asking Jev about named difficulty signals
-   (joins or window functions, concurrency, multi-constraint reasoning) instead of one "can the
-   weak model do it" probability.
+9. ~~**Fix `complexity` routing**~~: **done**, see §14. What's still open is long-context judging
+   (item 7) and code-review prompts that name their own bug (§14.3).
 
-## 15. Sources
+## 16. Sources
 
 Switchyard: repo README, `docs/routing_algorithms/*.md`, `crates/libsy/src/algorithms/util/llm_judge.rs`,
 `crates/libsy/src/prompts/*`, `benchmark/routing-profiles/*`; NVIDIA blog "Route AI Agent Workloads

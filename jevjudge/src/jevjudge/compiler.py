@@ -100,10 +100,10 @@ PROFILES: dict[str, dict[str, Any]] = {
     "CapabilityClassifierDecision": {
         "instructions": {
             "p_solve": (
-                "SUCCESS: the EFFICIENT (cheaper) agent completes the whole task correctly on one "
-                "fresh run under the actual harness, tools, and budget, as judged by the final "
-                "verifier. Use only evidence in the task and the capability rules in "
-                "judge_instructions. Answer with the probability of SUCCESS."
+                "SUCCESS: the EFFICIENT (cheaper) model completes the whole task fully and correctly "
+                "in one attempt (for an agent run: under its actual harness, tools and budget). Use "
+                "only evidence in the task and the capability rules in judge_instructions. Answer "
+                "with the probability of SUCCESS."
             ),
             "primary_rule": (
                 "Which single capability rule from judge_instructions best describes the crux, "

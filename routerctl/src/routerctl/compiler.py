@@ -15,6 +15,7 @@ from pathlib import Path
 
 import yaml
 
+from .rubrics import complexity_prompt
 from .schema import (
     JEV_JUDGE_CLIENT,
     JEV_JUDGE_MODEL,
@@ -174,6 +175,9 @@ def _compile_route(route: Route, registry: TargetRegistry, source: Source) -> st
         out.append(f"base_threshold = {policy.base_threshold}")
         out.append(f"threshold_step = {policy.threshold_step}")
         out.append('classify_trigger = "user_turn"')
+        prompt = complexity_prompt(policy)
+        if prompt is not None:
+            out.append(f"prompt = {_toml_str(prompt)}")
 
     elif isinstance(policy, EscalationPolicy):
         weak = resolve(policy.models["weak"])

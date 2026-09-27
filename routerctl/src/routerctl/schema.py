@@ -10,6 +10,7 @@ already support, given friendlier names and defaults:
 
 * ``auto``       -- zero-config default (Switchyard's own `auto` preset).
 * ``complexity`` -- judge forecasts whether the weak model can do it; threshold decides.
+                    Optional ``weak_when`` / ``strong_when`` sharpen the forecast in plain English.
 * ``escalation`` -- start weak; a judge watching the transcript escalates to strong after
                     repeated trouble.
 * ``intent``     -- judge picks one of N named model buckets by content (the voice-AI
@@ -143,6 +144,18 @@ class ComplexityPolicy(BaseModel):
     base_threshold: float = Field(default=0.5, ge=0.0, le=1.0)
     threshold_step: float = Field(default=0.1, ge=0.0)
     judge: JudgeOverride = Field(default_factory=JudgeOverride)
+    rubric: Literal["general", "coding_agent"] = Field(
+        default="general",
+        description="What the judge forecasts against. `general` judges the task itself and suits "
+        "one-shot requests; `coding_agent` is Switchyard's original rubric for agents working in a "
+        "repository with tools and a verifier. See routerctl/rubrics.py.",
+    )
+    weak_when: str | None = Field(
+        default=None, description="Plain English: what this route's traffic looks like when the weak model is enough.",
+    )
+    strong_when: str | None = Field(
+        default=None, description="Plain English: what makes a request here need the strong model.",
+    )
 
     @model_validator(mode="after")
     def _both_tiers(self) -> "ComplexityPolicy":

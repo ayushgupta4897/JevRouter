@@ -1,0 +1,206 @@
+# Held-out set for the complexity-routing fix (docs/DECISION.md section 14). Written BEFORE the new
+# rubric was evaluated, so no rubric wording was tuned against these. 48 items, 12 per domain,
+# half `weak` (a small, cheap model answers it fully and correctly) and half `strong` (multi-step,
+# several interacting constraints, or a plausible-but-wrong answer is likely). `domain` says which
+# route evaluates it. The fourth domain (ops/analytics) has no team-written criteria anywhere, so it
+# tests the default rubric alone.
+
+# ---------------------------------------------------------------- SQL
+- id: hsql-01
+  domain: sql
+  text: "List all columns from the `products` table where `category = 'electronics'`."
+  expected: weak
+- id: hsql-02
+  domain: sql
+  text: "What's the SQL to count distinct `customer_id` values in `orders`?"
+  expected: weak
+- id: hsql-03
+  domain: sql
+  text: "Rename the column `fname` to `first_name` in the `employees` table (PostgreSQL)."
+  expected: weak
+- id: hsql-04
+  domain: sql
+  text: "Get the 5 most recent rows from `audit_log` ordered by `created_at`."
+  expected: weak
+- id: hsql-05
+  domain: sql
+  text: "Sum the `amount` column in `payments` for rows where `status = 'settled'`."
+  expected: weak
+- id: hsql-06
+  domain: sql
+  text: "Insert a row into `cities` with name 'Pune' and state 'Maharashtra'."
+  expected: weak
+- id: hsql-07
+  domain: sql
+  text: "For each dealer, compute the median days-to-sell per car segment over the last two quarters, excluding cars relisted after a price drop (tracked in `listing_events` with event_type 'relist'), and rank dealers within each segment. Postgres has no MEDIAN aggregate."
+  expected: strong
+- id: hsql-08
+  domain: sql
+  text: "Write a query that deduplicates `leads` where the same person appears with different phone formats (+91, 0-prefixed, spaces) and keeps the most recently updated record, while preserving any lead that has an associated `inspection` row even if it isn't the newest."
+  expected: strong
+- id: hsql-09
+  domain: sql
+  text: "Compute a 7-day rolling conversion rate from `visits` to `bookings` per city, where a booking only counts if it happened within 3 days of the visit and a visitor can have multiple visits; avoid double counting a booking across overlapping visits."
+  expected: strong
+- id: hsql-10
+  domain: sql
+  text: "Find gaps-and-islands in `vehicle_status_history`: return each continuous period a car was 'available', merging back-to-back rows with the same status, and handle rows whose `valid_to` is NULL (still current)."
+  expected: strong
+- id: hsql-11
+  domain: sql
+  text: "Build a funnel query from `events` (view -> test_drive -> offer -> purchase) that counts a user at a stage only if they completed every earlier stage in order within a 30-day window from their first view, reporting stage-to-stage drop-off per acquisition channel."
+  expected: strong
+- id: hsql-12
+  domain: sql
+  text: "Our monthly revenue query double-counts orders that have multiple line items and multiple payments. Rewrite it so revenue is correct when an order can have several items and be paid in several partial payments, some refunded."
+  expected: strong
+
+# ---------------------------------------------------------------- finance
+- id: hfin-01
+  domain: finance
+  text: "What is 18% GST on an invoice of Rs 2,50,000?"
+  expected: weak
+- id: hfin-02
+  domain: finance
+  text: "If revenue was $3.2M last year and $3.8M this year, what's the year-over-year growth?"
+  expected: weak
+- id: hfin-03
+  domain: finance
+  text: "Convert $45,000 to rupees at 83.2 INR per USD."
+  expected: weak
+- id: hfin-04
+  domain: finance
+  text: "Our monthly burn is $180,000 and we have $2.7M in the bank. How many months of runway?"
+  expected: weak
+- id: hfin-05
+  domain: finance
+  text: "What is the simple interest on Rs 5,00,000 at 9% per year for 3 years?"
+  expected: weak
+- id: hfin-06
+  domain: finance
+  text: "Total these expenses: $4,200, $12,750, $980, $6,300."
+  expected: weak
+- id: hfin-07
+  domain: finance
+  text: "Model the unit economics of our car-financing product: loan book of Rs 400 Cr at 14% yield, cost of funds 9.5%, 2.8% expected credit loss rising to 4% in a downturn, origination cost of Rs 6,000 per loan with an average ticket of Rs 5 lakh, and prepayment risk. What's the break-even volume, and how sensitive is it to the downturn scenario?"
+  expected: strong
+- id: hfin-08
+  domain: finance
+  text: "Explain why our inventory days rose from 38 to 61 while gross margin per car improved, given a shift toward older, higher-margin stock, slower auction liquidation, and a change in how we capitalize refurbishment costs. Which of these actually hurts cash, and by roughly how much on a Rs 900 Cr inventory?"
+  expected: strong
+- id: hfin-09
+  domain: finance
+  text: "Should we hedge our USD-denominated debt of $40M given INR has depreciated ~3% a year, a hedge costs about 4.5% annualized, and 30% of our revenue is export-linked? Walk through the natural hedge, the break-even depreciation rate, and what could make the unhedged position blow up."
+  expected: strong
+- id: hfin-10
+  domain: finance
+  text: "Build a cohort-level LTV for customers acquired through three channels with different repeat-purchase curves, a 25% contribution margin that differs by channel, and a 12% discount rate; then show whether the paid channel's CAC of Rs 9,000 is justified over a 3-year horizon."
+  expected: strong
+- id: hfin-11
+  domain: finance
+  text: "Reconcile why EBITDA margin improved 400 bps while free cash flow went negative, given a shift to extended payment terms for B2B dealers, higher capex on inspection centres, and a one-time GST refund recognized in the prior year."
+  expected: strong
+- id: hfin-12
+  domain: finance
+  text: "We're choosing between an 18-month convertible note with a 20% discount and a $120M cap, and a priced round at $100M pre with 1x non-participating preference. Model founder dilution and exit proceeds under $80M, $200M, and $500M exit scenarios."
+  expected: strong
+
+# ---------------------------------------------------------------- code review
+- id: hrev-01
+  domain: code
+  text: "Should this Python variable be named `userList` or `user_list`?"
+  expected: weak
+- id: hrev-02
+  domain: code
+  text: "This function has a 180-character line. Flag it per PEP 8."
+  expected: weak
+- id: hrev-03
+  domain: code
+  text: "Is it fine to leave a commented-out print statement in production code? Flag it."
+  expected: weak
+- id: hrev-04
+  domain: code
+  text: "Suggest a clearer name for a function called `doStuff` that sends the welcome email."
+  expected: weak
+- id: hrev-05
+  domain: code
+  text: "This file imports `datetime` twice at the top. Flag the duplicate import."
+  expected: weak
+- id: hrev-06
+  domain: code
+  text: "Replace this magic number `86400` with a named constant and suggest a name."
+  expected: weak
+- id: hrev-07
+  domain: code
+  text: "This payment webhook handler marks an order paid, then enqueues fulfilment, but the webhook can be delivered more than once and out of order with the refund webhook. Review it for correctness and propose a fix."
+  expected: strong
+- id: hrev-08
+  domain: code
+  text: "Review this cache: it stores user permissions in a process-local dict with a 10-minute TTL, and permission revocations are written only to the database. We run 12 replicas behind a load balancer. What can go wrong, and how bad is it?"
+  expected: strong
+- id: hrev-09
+  domain: code
+  text: "This code computes loan EMIs using floating-point arithmetic and rounds each installment to 2 decimals, then sums installments to show the total repayable. Is the total correct, and what's the right way to handle money here?"
+  expected: strong
+- id: hrev-10
+  domain: code
+  text: "Our pagination uses OFFSET/LIMIT over a table where new rows are inserted constantly and rows can be soft-deleted. Users report seeing duplicates and missing items while scrolling. Review the approach and recommend a correct one."
+  expected: strong
+- id: hrev-11
+  domain: code
+  text: "This async worker pulls a job, processes it, and deletes it from the queue only after success; on failure it logs and continues. Jobs call an external API that isn't idempotent. Review the failure modes when the worker crashes mid-job or the API times out."
+  expected: strong
+- id: hrev-12
+  domain: code
+  text: "This JWT validation checks the signature and expiry but reads the algorithm from the token header and accepts any algorithm the library supports. Is this safe? Explain the attack, if any, and the fix."
+  expected: strong
+
+# ---------------------------------------------------------------- ops / analytics (no team criteria anywhere)
+- id: hops-01
+  domain: ops
+  text: "Summarize this in one line: 'The Bangalore hub processed 1,240 inspections this week, up from 1,100.'"
+  expected: weak
+- id: hops-02
+  domain: ops
+  text: "Convert 14:30 IST to Dubai time."
+  expected: weak
+- id: hops-03
+  domain: ops
+  text: "What's the average of these daily ticket counts: 120, 135, 98, 142, 110?"
+  expected: weak
+- id: hops-04
+  domain: ops
+  text: "Draft a two-line reminder to the ops team that the monthly safety audit is due Friday."
+  expected: weak
+- id: hops-05
+  domain: ops
+  text: "Which is larger: 18% of 2,400 or 25% of 1,800?"
+  expected: weak
+- id: hops-06
+  domain: ops
+  text: "Extract the pickup date from: 'Customer confirmed pickup on 14 Oct between 10 and 12.'"
+  expected: weak
+- id: hops-07
+  domain: ops
+  text: "Our inspection no-show rate jumped from 9% to 17% in two cities after we moved reminder SMS from 24h to 2h before the slot, changed the booking form, and a competitor launched a cashback offer. How would you figure out which change caused it, with the data we'd realistically have?"
+  expected: strong
+- id: hops-08
+  domain: ops
+  text: "Design a staffing plan for 6 inspection hubs where demand is seasonal (Diwali peak ~2.3x), inspectors take 3 weeks to train, attrition is 8% a month, and each hub has different peak hours. Minimize overtime while keeping SLA breaches under 2%."
+  expected: strong
+- id: hops-09
+  domain: ops
+  text: "An A/B test of a new pricing page shows +6% bookings (p=0.04), but the test ran during a holiday week, the treatment group had more mobile traffic, and we peeked at results daily. Can we trust it? What would you do before shipping?"
+  expected: strong
+- id: hops-10
+  domain: ops
+  text: "Our car-price prediction model's error doubled for cars older than 8 years after a data-pipeline change that also added two new cities. Lay out a diagnosis plan that separates data drift, pipeline bugs, and genuine market change."
+  expected: strong
+- id: hops-11
+  domain: ops
+  text: "We want to route refurbishment jobs across 4 workshops with different capacities, specialties, and transport costs, with some jobs having deadlines tied to customer deliveries. Propose an approach and explain its trade-offs versus a greedy assignment."
+  expected: strong
+- id: hops-12
+  domain: ops
+  text: "Customer complaints about 'hidden charges' rose 40% after a checkout redesign, yet the fees themselves didn't change. Analyze what might be going on and how to confirm it from support transcripts, funnel data, and pricing logs."
+  expected: strong
