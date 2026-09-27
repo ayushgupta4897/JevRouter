@@ -208,6 +208,25 @@ routes:
     base_threshold: 0.65
 ```
 
+One route can span providers. Here every tier sits with a different provider, and each is pinned
+to it through `extra_body`, which arrives with every decision as `selected_extra_body`. Your
+gateway sends it along with the call.
+
+```yaml
+# three inference providers, one route
+routes:
+  - name: support/triage
+    policy: intent
+    default: technical
+    models:
+      faq:       { id: deepseek/deepseek-v4.1-flash, client: openrouter, description: "...",
+                   extra_body: { provider: { order: [fireworks], allow_fallbacks: false } } }
+      billing:   { id: openai/gpt-oss-120b, client: openrouter, description: "...",
+                   extra_body: { provider: { order: [together], allow_fallbacks: false } } }
+      technical: { id: anthropic/claude-sonnet-5, client: openrouter, description: "...",
+                   extra_body: { provider: { order: [anthropic] } } }
+```
+
 Full schema, every field, what "live" means, what a broken edit does: [`docs/TEAM_CONFIG.md`](docs/TEAM_CONFIG.md).
 Twelve more real, worked examples across support, coding, legal, finance, HR, and security:
 [`experiments/teams/`](experiments/teams/) and [`experiments/REPORT.md`](experiments/REPORT.md).
@@ -223,7 +242,8 @@ curl localhost:4000/v1/decide -d '{"model": "deployment/simple", "messages": [..
 # -> {"selected_model": "gpt-5.6-terra", "selected_client": "openai", ...}
 ```
 
-Read `selected_model` / `selected_client`, then call that model however you already do. With an
+Read `selected_model` / `selected_client` (plus `selected_extra_body`, if the route sets one), then
+call that model however you already do. With an
 OpenAI-compatible gateway like [Bifrost](https://github.com/maximhq/bifrost), that's a second,
 completely unrelated HTTP call:
 

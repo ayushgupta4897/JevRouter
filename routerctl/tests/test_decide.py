@@ -89,3 +89,18 @@ async def test_fallback_model_ids_carry_the_rest_of_the_selection(judge):
     decision = await decide(compiled, judge, request("anything"))
     assert decision.selected_model not in decision.fallback_model_ids
     assert set(decision.fallback_model_ids) <= {"m-weak", "m-strong"}
+
+
+async def test_decision_carries_each_models_extra_body_to_the_gateway(judge):
+    # decision-only mode never makes the call, so provider pinning / reasoning effort set on a
+    # model in YAML has to travel with the decision or it is silently lost
+    pin = {"provider": {"order": ["fireworks"], "allow_fallbacks": False}}
+    effort = {"reasoning": {"effort": "high"}}
+    compiled = compile_route_algorithm(route("r", {"policy": "complexity", "models": {
+        "weak": {"id": "m-weak", "client": "openai", "extra_body": pin},
+        "strong": {"id": "m-strong", "client": "openai", "extra_body": effort},
+    }}))
+    decision = await decide(compiled, judge, request("anything"))
+    expected = {"m-weak": pin, "m-strong": effort}
+    assert decision.selected_extra_body == expected[decision.selected_model]
+    assert decision.fallback_extra_bodies == [expected[m] for m in decision.fallback_model_ids]

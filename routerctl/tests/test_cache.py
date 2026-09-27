@@ -274,6 +274,19 @@ def test_apply_held_rewrites_selection_and_keeps_policy_pick_as_first_fallback()
     assert result.cache["policy_model"] == "m-mid"
 
 
+def test_apply_held_swaps_extra_body_with_the_model():
+    route = Route.model_validate({"name": "r", "policy": "complexity", "models": {
+        "weak": {"id": "m-mid", "client": "openai", "extra_body": {"x": "mid"}},
+        "strong": {"id": "m-premium", "client": "openai", "extra_body": {"x": "premium"}},
+    }})
+    compiled = compile_route_algorithm(route)
+    d = Decision(**{**decision("m-mid", fallbacks=["m-premium"]).__dict__, "selected_extra_body": {"x": "mid"}, "fallback_extra_bodies": [{"x": "premium"}]})
+    result = apply(d, compiled, SessionState(current_model="m-premium"), PRICING, CacheConfig(), LONG)
+    assert result.selected_model == "m-premium"
+    assert result.selected_extra_body == {"x": "premium"}
+    assert result.fallback_extra_bodies == [{"x": "mid"}]
+
+
 def test_apply_followed_leaves_the_decision_and_explains_why():
     compiled = compiled_mid_premium()
     original = decision("m-mid", fallbacks=["m-premium"])

@@ -149,7 +149,7 @@ Every `models.<role>` entry, in every policy, takes the same three fields:
 | `id` | yes | The exact model ID sent upstream, e.g. `gpt-5.6-sol`. |
 | `client` | yes | A name from `clients.yaml`. |
 | `description` | only for `intent` buckets | What routes here — see above. |
-| `extra_body` | no | Provider-specific extras, e.g. `{reasoning: {effort: high}}`. |
+| `extra_body` | no | Provider-specific extras sent with the call, e.g. `{reasoning: {effort: high}}` or OpenRouter provider pinning `{provider: {order: [fireworks], allow_fallbacks: false}}`. In decision mode it comes back on every decision as `selected_extra_body` (and `fallback_extra_bodies`) for your gateway to send. |
 
 The same `(id, client)` pair used by two different routes becomes **one shared target** — this is
 deliberate (Switchyard would otherwise warn and silently collapse the duplicates itself; see

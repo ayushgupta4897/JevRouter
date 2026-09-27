@@ -255,6 +255,8 @@ def apply(
         bucket=compiled.bucket_by_model_id.get(current.id) if compiled.bucket_by_model_id else None,
         fallback_model_ids=[ref.id for ref in fallbacks],
         fallback_clients=[ref.client for ref in fallbacks],
+        selected_extra_body=current.extra_body,
+        fallback_extra_bodies=[ref.extra_body for ref in fallbacks],
         cache=report.as_dict(),
     )
 

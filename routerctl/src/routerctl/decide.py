@@ -5,7 +5,7 @@ and the whole point of this project); the target model itself is never invoked h
 from __future__ import annotations
 
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from switchyard.libsy import LlmResponse, Step
 
@@ -40,6 +40,11 @@ class Decision:
     latency_ms: float
     outcome_id: str | None
     cache: dict | None = None  # set by cache.apply(): what the cache gate did and why
+    # The route's per-model `extra_body` (reasoning effort, provider pinning, ...) for the gateway
+    # to send with the call. Decision-only mode used to drop these silently: a route could say
+    # `extra_body: {provider: {order: [fireworks]}}` and the gateway never heard about it.
+    selected_extra_body: dict | None = None
+    fallback_extra_bodies: list[dict | None] = field(default_factory=list)
 
 
 def _windowed(request: dict, recent_turn_window: int | None) -> dict:
@@ -103,6 +108,8 @@ async def decide(compiled: CompiledRoute, judge: Judge, request: dict, *, header
                     judge_error=judge_error,
                     latency_ms=latency_ms,
                     outcome_id=outcome.metadata.outcome_id if outcome.metadata else None,
+                    selected_extra_body=primary_ref.extra_body,
+                    fallback_extra_bodies=[ref.extra_body for ref in fallback_refs],
                 )
 
     raise RuntimeError(f"route {compiled.route.name!r} algorithm ended without a terminal outcome")
