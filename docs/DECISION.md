@@ -593,6 +593,35 @@ document are slightly high.
 * **Caches aren't shared across providers.** `current_client` distinguishes the same model on
   two clients. Provider stickiness below that level (OpenRouter's) belongs to the gateway.
 
+### 12.6 Two real bugs found while writing the README examples
+
+To give `auto` real examples, I ran the real `stage_router` on a few agent transcripts. It picked
+the efficient tier for everything, including an agent that had hit the same traceback three
+times. The cause was `routerctl/messages.py`, the adapter from OpenAI chat shape to libsy's
+format. It kept only each message's `content`:
+
+* It dropped every assistant `tool_calls` entry.
+* It flattened `role: tool` results into anonymous text.
+
+`auto` routes on nothing *but* tool traffic, so in decision mode it never saw a signal. The
+escalation judge was also missing the tool calls, which are part of the transcript it reads.
+
+The same adapter passed OpenAI content parts through unchanged, so any request with an
+`image_url` part crashed libsy (`unknown variant image_url`) and returned a 500.
+
+The fix maps `tool_calls` to libsy `tool_call` blocks and tool messages to `tool_result` blocks,
+converts image parts, and drops parts routing can't use. With it, the stuck agent escalates to
+the capable tier and a productive one stays efficient. `routerctl/tests/test_messages.py` pins
+both behaviours plus the image case against the real `stage_router`.
+
+The earlier `auto` experiment (`experiments/REPORT.md`, general assistant) isn't affected: it
+used plain chat with no tool history, and there `auto` correctly stays efficient either way.
+
+One related caveat for §12.3. For `complexity`, the confidence Jev reports measures how decisive
+the verdict is (|p − 0.5| × 2), not how far p sits from the route's threshold. With the default
+threshold of 0.5 these are the same thing. With a different threshold, `upgrade_min_confidence`
+only approximates "borderline".
+
 ## 13. Roadmap
 
 1. **Routing-accuracy validation**: the judge-only eval (predict vs. a ground-truth label from
