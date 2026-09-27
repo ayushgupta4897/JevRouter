@@ -1,0 +1,81 @@
+{
+  "blended_savings_pct": 37.891571681768774,
+  "real_cost_usd": 1.3868434299999999,
+  "frontier_equivalent_usd": 2.23293918,
+  "head_to_head": {
+    "deferent": {
+      "prompts": 72,
+      "cost_usd": 0.47225684000000007,
+      "failed_or_empty": 8,
+      "jev_adequate": [
+        63,
+        72
+      ],
+      "mean_score": 4.152777777777778,
+      "scored": 72,
+      "score_ge_4": 58
+    },
+    "openrouter/auto": {
+      "prompts": 72,
+      "cost_usd": 0.075938787,
+      "failed_or_empty": 2,
+      "jev_adequate": [
+        70,
+        72
+      ],
+      "mean_score": 4.513888888888889,
+      "scored": 72,
+      "score_ge_4": 65
+    },
+    "typesafe/jev-router": {
+      "prompts": 72,
+      "cost_usd": 0.057915168999999996,
+      "failed_or_empty": 1,
+      "jev_adequate": [
+        71,
+        72
+      ],
+      "mean_score": 4.152777777777778,
+      "scored": 72,
+      "score_ge_4": 53
+    },
+    "always-top-tier": {
+      "prompts": 72,
+      "cost_usd": 0.85577522,
+      "failed_or_empty": 2,
+      "jev_adequate": [
+        69,
+        72
+      ],
+      "mean_score": 4.833333333333333,
+      "scored": 72,
+      "score_ge_4": 69
+    }
+  },
+  "head_to_head_models": {
+    "deferent": {
+      "deepseek/deepseek-v4.1-flash": 31,
+      "openai/gpt-oss-120b": 18,
+      "anthropic/claude-sonnet-5": 11,
+      "anthropic/claude-opus-5.5": 12
+    },
+    "openrouter/auto": {
+      "deepseek/deepseek-v4-flash-0731": 22,
+      "google/gemini-2.5-flash": 13,
+      "deepseek/deepseek-v4.1-flash": 27,
+      "z-ai/glm-5.3-flash": 10
+    },
+    "typesafe/jev-router": {
+      "stealth/space-bunny-alpha": 63,
+      "deepseek/deepseek-v4.1-flash": 6,
+      "openai/gpt-6-sol": 2,
+      "x-ai/grok-4.7": 1
+    },
+    "always-top-tier": {
+      "anthropic/claude-opus-5.5": 42,
+      "anthropic/claude-sonnet-5": 18,
+      "deepseek/deepseek-v4.1-flash": 12
+    }
+  },
+  "total_spend_usd": 2.894920245999998
+}

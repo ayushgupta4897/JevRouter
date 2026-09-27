@@ -1,0 +1,633 @@
+{
+  "name": "financial-analysis",
+  "route_name": "finance/analysis",
+  "policy": "complexity",
+  "roster": [
+    "openai/gpt-oss-120b",
+    "anthropic/claude-opus-5.5"
+  ],
+  "accuracy": 0.8333333333333334,
+  "real_cost_usd": 0.1878138,
+  "frontier_equivalent_usd": 0.28192400000000006,
+  "savings_pct": 33.38140775528158,
+  "items": [
+    {
+      "item_id": "fin-01",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.8600000000000001,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": "Together",
+        "cost_usd": 9.09e-05,
+        "input_tokens": 94,
+        "output_tokens": 128,
+        "latency_ms": 999.6120549999432,
+        "text": "Q2 revenue\u202f=\u202fQ1\u202f\u00d7\u202f(1\u202f+\u202f15\u202f%)  \n=\u202f$2.1\u202fM\u202f\u00d7\u202f1.15  \n=\u202f$2.415\u202fM  \n\nSo the Q2 revenue would be **approximately $2.415\u202fmillion**.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "z-ai/glm-5.3-flash",
+          "provider": "BaseTen",
+          "cost_usd": 7.27e-05,
+          "input_tokens": 38,
+          "output_tokens": 134,
+          "latency_ms": 3834.184524999955,
+          "text": "Based on Q1 revenue of $2.1M with 15% QoQ growth:\n\n**Q2 revenue = $2.1M \u00d7 1.15 = $2.415M** (about $2.42 million)\n\nNote that this is a calculation based on the figures you provided \u2014 I don't have access to your company's actual financial data, so make sure these numbers match your real Q1 figures and growth rate. If you have the actual Q2 numbers from your financials, that would be the authoritative figure.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 181,
+          "output_tokens": 68,
+          "latency_ms": 2395.091086999855,
+          "text": "Q2 revenue was **$2.415 million** (about **$2.42M**).\n\nCalculation: $2.1M \u00d7 1.15 = $2.415M.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.002816,
+          "input_tokens": 44,
+          "output_tokens": 132,
+          "latency_ms": 3537.533349999876,
+          "text": "Your **Q2 revenue was about $2.415 million**, roughly $2.42M.\n\n**Calculation:**\n- Growth: $2.1M \u00d7 0.15 = $315,000\n- Q2 revenue: $2.1M + $0.315M = **$2.415M**\n\nOr in one step: $2.1M \u00d7 1.15 = $2.415M",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "fin-02",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.9199999999999999,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": null,
+        "cost_usd": 0.0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 1033.5967790001632,
+        "text": "",
+        "error": "HTTP 503: {\"error\": {\"message\": \"Provider returned error\", \"code\": 503, \"metadata\": {\"raw\": \"{\\n  \\\"id\\\": \\\"p2yroV1-fdNmn-680e6bf2-aws_ue1\\\",\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Service unavailable\\\",\\n    \\\"type\\\": \\\"service_unavailable\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": null\\n  }\\n}\", \"provider_name\": ",
+        "jev_adequate": false,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "fin-03",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.6799999999999999,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": null,
+        "cost_usd": 0.0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 965.4575980000573,
+        "text": "",
+        "error": "HTTP 503: {\"error\": {\"message\": \"Provider returned error\", \"code\": 503, \"metadata\": {\"raw\": \"{\\n  \\\"id\\\": \\\"p2yroUw-fdNmn-975e8a0a-aws_ue1\\\",\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Service unavailable\\\",\\n    \\\"type\\\": \\\"service_unavailable\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": null\\n  }\\n}\", \"provider_name\": ",
+        "jev_adequate": false,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "fin-04",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.8600000000000001,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": "Together",
+        "cost_usd": 8.295e-05,
+        "input_tokens": 89,
+        "output_tokens": 116,
+        "latency_ms": 1127.2462619999715,
+        "text": "The Customer Acquisition Cost (CAC) is calculated by dividing the total marketing spend by the number of customers acquired:\n\n\\[\n\\text{CAC} = \\frac{\\$120{,}000}{400\\ \\text{customers}} = \\$300 \\text{ per customer}\n\\]\n\nSo, your CAC is **$300 per customer**.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "z-ai/glm-5.3-flash",
+          "provider": "CoreWeave",
+          "cost_usd": 0.00012145,
+          "input_tokens": 33,
+          "output_tokens": 233,
+          "latency_ms": 5834.3980269999065,
+          "text": "Your customer acquisition cost (CAC) is **$300**.\n\n**Calculation:** $120,000 \u00f7 400 customers = $300 per customer\n\nNote that this is a basic CAC based on marketing spend only. If you want a fuller picture, some businesses also include sales team salaries, software tools, and other acquisition-related costs in the numerator.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 176,
+          "output_tokens": 42,
+          "latency_ms": 1764.1303000000335,
+          "text": "The customer acquisition cost (CAC) is:\n\n\\[\n\\text{CAC} = \\frac{\\$120{,}000}{400} = \\$300\n\\]\n\n**Customer acquisition cost: $300 per customer.**",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.006108,
+          "input_tokens": 42,
+          "output_tokens": 297,
+          "latency_ms": 4114.618010999948,
+          "text": "**Customer Acquisition Cost (CAC) = $300**\n\n**Calculation:**\nCAC = Total Marketing Spend \u00f7 Customers Acquired\nCAC = $120,000 \u00f7 400 = **$300 per customer**\n\n**A few things to consider:**\n- **Fully loaded CAC:** If you include sales salaries, tools, software, or agency fees in addition to the $120,000, your true CAC will be higher.\n- **Compare to Customer Lifetime Value (LTV):** A common benchmark is an LTV:CAC ratio of 3:1 or higher. At a $300 CAC, you'd want each customer to generate about $900+ in lifetime value (ideally measured as gross margin, not just revenue).\n- **Payback period:** It also helps to know how many months it takes for a customer's gross margin to recover the $300.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "fin-05",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.9199999999999999,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": "Together",
+        "cost_usd": 6.84e-05,
+        "input_tokens": 80,
+        "output_tokens": 94,
+        "latency_ms": 1332.1480980000615,
+        "text": "15\u202f% of \\$340,000 is:\n\n\\[\n0.15 \\times 340{,}000 = 51{,}000\n\\]\n\nSo the result is **\\$51,000**.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "fin-06",
+      "expected": "strong",
+      "actual_label": "weak",
+      "correct": false,
+      "judge_confidence": 0.43999999999999995,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": null,
+        "cost_usd": 0.0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 990.2650580002046,
+        "text": "",
+        "error": "HTTP 503: {\"error\": {\"message\": \"Provider returned error\", \"code\": 503, \"metadata\": {\"raw\": \"{\\n  \\\"id\\\": \\\"p2yroUZ-fdNmn-e0c2cbd0-aws_ue1\\\",\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Service unavailable\\\",\\n    \\\"type\\\": \\\"service_unavailable\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": null\\n  }\\n}\", \"provider_name\": ",
+        "jev_adequate": false,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "fin-07",
+      "expected": "strong",
+      "actual_label": "weak",
+      "correct": false,
+      "judge_confidence": 0.3400000000000001,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": "Together",
+        "cost_usd": 0.0018195,
+        "input_tokens": 174,
+        "output_tokens": 2989,
+        "latency_ms": 12936.881589999984,
+        "text": "**Assumptions**\n\n| Instrument | Principal | Coupon (base) | Maturity | Current utilisation |\n|------------|-----------|---------------|----------|----------------------|\n| Senior term loan | $2,000,000 | 6\u202f% (fixed) | 3\u202fyr | Full amount outstanding for the whole 3\u2011yr horizon |\n| Convertible note | $1,500,000 | 4\u202f% (fixed) | 2\u202fyr | Full amount outstanding for years\u202f1\u20112.  No conversion assumed (valuation stays <\u202f$50\u202fM) |\n| Revolving line of credit | $500,000 | 9\u202f% (variable) | 3\u202fyr (renewable) | Fully drawn each year (the \u201cworst\u2011case\u201d interest\u2011only scenario) |\n\n*No amortisation of principal is modelled \u2013 we are only tracking interest expense.  \n*All cash\u2011flows are assumed to occur at year\u2011end for simplicity.  \n\n---\n\n## 1.  Interest expense \u2013 \u201cFlat\u2011Rate\u201d scenario  \n\nRates stay exactly at the base percentages for the whole horizon.\n\n| Year | Loan\u202f(6\u202f%) | Note\u202f(4\u202f%) | LOC\u202f(9\u202f%) | **Total interest** |\n|------|-----------|-----------|----------|-------------------|\n| 1 | $2\u202fM\u202f\u00d7\u202f6\u202f% = **$120,000** | $1.5\u202fM\u202f\u00d7\u202f4\u202f% = **$60,000** | $0.5\u202fM\u202f\u00d7\u202f9\u202f% = **$45,000** | **$225,000** |\n| 2 | $120,000 | $60,000 | $45,000 | **$225,000** |\n| 3 | $120,000 | \u2013 (note repaid) | $45,000 | **$165,000** |\n| **3\u2011yr cumulative** | | | | **$615,000** |\n\n---\n\n## 2.  Interest expense \u2013 \u201cRising\u2011Rate\u201d scenario  \n\nEvery year the underlying benchmark rate moves **+1\u202f%** point for each instrument (the spread over the benchmark stays the same).  \n\n| Year | Loan rate | Loan interest | Note rate | Note interest | LOC rate | LOC interest | **Total** |\n|------|----------|---------------|-----------|---------------|----------|--------------|-----------|\n| 1 | 6\u202f% | $2\u202fM\u202f\u00d7\u202f6\u202f% = **$120,000** | 4\u202f% | $1.5\u202fM\u202f\u00d7\u202f4\u202f% = **$60,000** | 9\u202f% | $0.5\u202fM\u202f\u00d7\u202f9\u202f% = **$45,000** | **$225,000** |\n| 2 | 7\u202f% | $2\u202fM\u202f\u00d7\u202f7\u202f% = **$140,000** | 5\u202f% | $1.5\u202fM\u202f\u00d7\u202f5\u202f% = **$75,000** | 10\u202f% | $0.5\u202fM\u202f\u00d7\u202f10\u202f% = **$50,000** | **$265,000** |\n| 3 | 8\u202f% | $2\u202fM\u202f\u00d7\u202f8\u202f% = **$160,000** | \u2013 | \u2013 | 11\u202f% | $0.5\u202fM\u202f\u00d7\u202f11\u202f% = **$55,000** | **$215,000** |\n| **3\u2011yr cumulative** | | | | | | | **$705,000** |\n\n**Increment vs. flat\u2011rate baseline**:  \n\n\\[\n\\Delta\\text{Interest}_{3yr}= \\$705{,}000 - \\$615{,}000 = \\boxed{\\$90{,}000}\n\\]\n\n---\n\n## 3.  Sensitivity breakdown (where does the extra $90\u202fk come from?)\n\n| Instrument | Increment in Year\u202f2 | Increment in Year\u202f3 | **Total incremental interest** |\n|------------|---------------------|---------------------|-------------------------------|\n| **Loan** (2\u202fM) | 2\u202fM\u202f\u00d7\u202f1\u202f% = $20,000 | 2\u202fM\u202f\u00d7\u202f2\u202f% (7\u202f%\u21928\u202f%) = $40,000 | **$60,000** |\n| **Convertible note** (1.5\u202fM) | 1.5\u202fM\u202f\u00d7\u202f1\u202f% = $15,000 | \u2013 (note already retired) | **$15,000** |\n| **LOC** (0.5\u202fM) | 0.5\u202fM\u202f\u00d7\u202f1\u202f% = $5,000 | 0.5\u202fM\u202f\u00d7\u202f2\u202f% (10\u202f%\u219211\u202f%) = $10,000 | **$15,000** |\n| **Total** | | | **$90,000** |\n\n### Which instrument dominates?\n\n- **Loan:** $60\u202fk (\u2248\u202f66\u202f% of the total $90\u202fk rise)  \n- Convertible note: $15\u202fk (\u2248\u202f17\u202f%)  \n- LOC: $15\u202fk (\u2248\u202f17\u202f%)\n\n> **Conclusion:** The senior $2\u202fM term loan is the primary driver of interest\u2011rate sensitivity because it is the largest balance and remains outstanding for the full three\u2011year horizon. Even a modest 1\u202f% per\u2011year increase adds $20\u202fk in year\u202f2 and $40\u202fk in year\u202f3, out\u2011sizing the impact of the smaller\u2011balance instruments.\n\n---\n\n## 4.  Quick \u201cwhat\u2011if\u201d on conversion\n\nIf the company\u2019s valuation were to hit the $50\u202fM trigger **before the note\u2019s maturity**, the $1.5\u202fM note could convert to equity, eliminating its principal and the associated $60\u202fk (year\u202f1) / $75\u202fk (year\u202f2) interest cash\u2011outflows. In that case:\n\n- **Flat\u2011rate total** would drop to $615\u202fk\u202f\u2013\u202f$60\u202fk\u202f\u2013\u202f$75\u202fk\u202f= **$480\u202fk**.  \n- **Rising\u2011rate total** would drop to $705\u202fk\u202f\u2013\u202f$60\u202fk\u202f\u2013\u202f$75\u202fk\u202f= **$570\u202fk**.  \n- The loan would then represent **\u2248\u202f84\u202f%** of the remaining $90\u202fk sensitivity (now $45\u202fk of the $45\u202fk difference), further reinforcing the loan as the dominant risk factor.\n\n*(If conversion occurs later than year\u202f2, the effect on the 3\u2011year total is proportionally smaller.)*\n\n---\n\n### Bottom line for treasury / CFO\n\n| Metric | Flat\u2011rate (3\u202fyr) | Rising\u2011rate (3\u202fyr) | \u0394 |\n|--------|------------------|--------------------|---|\n| Total interest expense | **$615\u202fk** | **$705\u202fk** | **+$90\u202fk** |\n| % of total interest coming from each instrument (rising case) | Loan 69\u202f% (\u2248\u202f$486\u202fk) | Note 11\u202f% (\u2248\u202f$90\u202fk) | LOC 20\u202f% (\u2248\u202f$129\u202fk) |\n| **Most rate\u2011sensitive instrument** | **Senior term loan** | **Senior term loan** | \u2013 |\n\n**Actionable insight:** If you anticipate a rising\u2011rate environment, consider:\n\n1. **Refinancing the $2\u202fM term loan** (e.g., longer tenor, fixed\u2011rate lock, or modestly lower coupon) \u2013 it yields the biggest reduction in future interest cost volatility.  \n2. **Monitoring the conversion trigger** for the note \u2013 early conversion would cut interest cost but also dilute equity; weigh the trade\u2011off.  \n3. **Managing the revolving line** \u2013 keep the drawn amount as low as practical, since its variable coupon will also climb with market rates.  \n\nFeel free to let me know if you\u2019d like a more detailed cash\u2011flow model (including principal repayments, tax shields, or scenario analysis on conversion timing).",
+        "error": null,
+        "jev_adequate": true,
+        "score": 2
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "z-ai/glm-5.3-flash",
+          "provider": "CoreWeave",
+          "cost_usd": 0.0016932,
+          "input_tokens": 118,
+          "output_tokens": 3351,
+          "latency_ms": 22456.106361000137,
+          "text": "# Assumptions\n\nSince a few details weren't specified, here's the base case (flag anything you want changed):\n\n- **Interest-only** on all instruments (no amortization); simple annual interest on outstanding principal\n- **LOC fully drawn** at $500K for all 3 years (no commitment fees modeled)\n- **No conversion** of the note in the base case \u2014 it pays interest through year 2, then matures\n- \"Rates rising 1%/year\" applies only to the **floating-rate LOC** (9% \u2192 10% \u2192 11%); the term loan and convertible are fixed\n\n# Interest Expense Model ($ thousands)\n\n| Instrument | Yr 1 | Yr 2 | Yr 3 | 3-Yr Total |\n|---|---|---|---|---|\n| $2M term loan @ 6% | 120 | 120 | 120 | **360** |\n| $1.5M convertible @ 4% | 60 | 60 | \u2014 | **120** |\n| $500K LOC \u2014 flat scenario (9%/9%/9%) | 45 | 45 | 45 | **135** |\n| $500K LOC \u2014 rising scenario (9%/10%/11%) | 45 | 50 | 55 | **150** |\n| **Total \u2014 flat rates** | **225** | **225** | **165** | **615** |\n| **Total \u2014 rising rates** | **225** | **230** | **175** | **630** |\n\n**Delta between scenarios: $15K over 3 years (~2.4%), entirely from the LOC.**\n\n# Which instrument dominates the sensitivity\n\n**The $500K line of credit \u2014 by construction, it carries 100% of the rate sensitivity.** Every basis point of rate movement hits only the floating instrument: +100bps \u00d7 $500K = $5K/year, and the +1%/year path compounds that to $15K cumulative.\n\nThe counterintuitive point is that the **$2M term loan is your biggest cost line ($120K/year, 59% of total interest) but has zero rate sensitivity within this window**. Its rate risk exists only at refinancing \u2014 which lands just *outside* the 3-year window. If you extended the model to year 4+ and rates were up 300\u2013400bps, that refi (potentially at ~9\u201310% vs. 6%) would suddenly dominate everything. Same logic for the convertible: it's fixed, and it disappears at year 2 anyway.\n\nSo within this window: **rate sensitivity scales with (floating balance) \u00d7 (time outstanding), not with total balance.** The LOC is small but fully floating and fully outstanding for all 3 years, making it the only live exposure.\n\n# The conversion trigger is actually the bigger swing factor\n\nNote that the conversion option dwarfs the rate delta in absolute terms:\n\n- **Rate scenario delta: $15K** over 3 years\n- **Conversion swing: up to $120K** \u2014 if the note converts at the $50M valuation in year 1, you save $60K/year for two years; if it rides to maturity, you pay the full $120K\n\nAnd there's a second-order interaction worth modeling: **rising rates make hitting the $50M valuation *less* likely** (higher discount rates, tighter funding environment). So in the rising-rate scenario, the note probably *stays* outstanding and keeps accruing \u2014 meaning the realistic rising-rate total sticks near $630K, while a strong-valuation/flat-rate scenario could come in as low as ~$495K. The trigger is binary; the rate path is incremental.\n\n# Sensitivities worth stress-testing\n\n1. **LOC utilization** \u2014 at 50% drawn, the rate delta halves; at $1M drawn, it doubles. This lever is as powerful as the rate path itself.\n2. **Spread on the LOC** \u2014 if 9% = base rate + spread, confirm whether the +1%/year applies to the index only.\n3. **The year-3 refi wall** \u2014 run a year 4\u20135 extension to see the term loan's true refinancing exposure; that's where fixed-rate risk actually lives.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 261,
+          "output_tokens": 1576,
+          "latency_ms": 14940.444341999864,
+          "text": "Assume all instruments remain outstanding at their stated principal amounts, interest is paid annually, and principal repayments are excluded from \u201cinterest expense.\u201d The convertible note is assumed not to convert because no path for the company\u2019s $50M valuation trigger is provided.\n\n### Interest expense by year\n\n| Instrument | Flat-rate scenario | Year 1 | Year 2 | Year 3 | 3-year total |\n|---|---:|---:|---:|---:|---:|\n| $2M loan at 6% | $120,000 | $120,000 | $120,000 | $120,000 | $360,000 |\n| $1.5M convertible note at 4% | $60,000 | $60,000 | $60,000 | \u2014 | $120,000 |\n| $500K line at 9% | $45,000 | $45,000 | $45,000 | $45,000 | $135,000 |\n| **Total** |  | **$225,000** | **$225,000** | **$165,000** | **$615,000** |\n\nThe note matures at the end of Year 2, so it contributes no interest in Year 3.\n\n### Rates rising 1% per year\n\nOnly the variable-rate line of credit is assumed to reprice. Its rate becomes:\n\n- Year 1: 9%\n- Year 2: 10%\n- Year 3: 11%\n\n| Instrument | Year 1 | Year 2 | Year 3 | 3-year total |\n|---|---:|---:|---:|---:|\n| $2M loan at 6% | $120,000 | $120,000 | $120,000 | $360,000 |\n| $1.5M convertible note at 4% | $60,000 | $60,000 | \u2014 | $120,000 |\n| $500K line at 9%\u201311% | $45,000 | $50,000 | $55,000 | $150,000 |\n| **Total** | **$225,000** | **$230,000** | **$175,000** | **$630,000** |\n\n### Comparison and sensitivity\n\n- **Flat rates:** $615,000 of cumulative interest.\n- **Rates rising 1% per year:** $630,000 of cumulative interest.\n- **Increase in interest expense:** **$15,000**.\n\nThe **$500K variable-rate line of credit dominates interest-rate sensitivity**. It is the only instrument whose rate changes in this scenario, and its annual interest increases from $45,000 to $55,000 over the three years. The fixed-rate loan and convertible note are not directly affected by changes in market rates.\n\nIf the company\u2019s valuation reaches the **$50M conversion trigger**, the convertible note may cease accruing coupon interest after conversion. That would further reduce total interest, but the reduction depends on when the trigger is reached.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 4
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.059088,
+          "input_tokens": 152,
+          "output_tokens": 2924,
+          "latency_ms": 29674.925619000078,
+          "text": "# 3-Year Interest Expense Model\n\n## Key Assumptions\n\nThese drive the results, so check them against your actual loan documents.\n\n| Instrument | Principal | Rate | Rate Type | Maturity | Assumption |\n|---|---|---|---|---|---|\n| Term Loan | $2.0M | 6% | **Fixed** | Year 3 | Interest-only, bullet repayment |\n| Convertible Note | $1.5M | 4% | **Fixed** | Year 2 | Simple interest, gone after Year 2 (converted or repaid) |\n| Line of Credit | $0.5M | 9% | **Variable** | Revolving | Fully drawn all 3 years |\n\n**Rising scenario:** The LOC rate steps up 1 point at each anniversary: 9% in Year 1, 10% in Year 2, and 11% in Year 3.\n\n---\n\n## Scenario 1: Flat Rates\n\n| | Year 1 | Year 2 | Year 3 | **Total** |\n|---|---|---|---|---|\n| Term Loan (6%) | $120,000 | $120,000 | $120,000 | $360,000 |\n| Convertible (4%) | $60,000 | $60,000 | \u2014 | $120,000 |\n| LOC (9%) | $45,000 | $45,000 | $45,000 | $135,000 |\n| **Total** | **$225,000** | **$225,000** | **$165,000** | **$615,000** |\n\n## Scenario 2: Rates Rising 1% per Year\n\n| | Year 1 | Year 2 | Year 3 | **Total** |\n|---|---|---|---|---|\n| Term Loan (6% fixed) | $120,000 | $120,000 | $120,000 | $360,000 |\n| Convertible (4% fixed) | $60,000 | $60,000 | \u2014 | $120,000 |\n| LOC (9% \u2192 10% \u2192 11%) | $45,000 | $50,000 | $55,000 | $150,000 |\n| **Total** | **$225,000** | **$230,000** | **$175,000** | **$630,000** |\n\n**Difference: +$15,000 (+2.4%)**\n\nIf rates rise immediately instead (10%, 11%, 12%), the LOC costs $165,000 and the difference grows to +$30,000.\n\n---\n\n## Which Instrument Dominates the Sensitivity?\n\n### On paper: the Line of Credit (100% of it)\nThe LOC is the only floating-rate instrument. It accounts for **all** of the modeled rate sensitivity, even though it is only 12.5% of total debt. Each 1-point move costs about **$5,000/year**. That is a small, manageable exposure.\n\n### In reality: the Convertible Note is the bigger risk\nThe flat-vs-rising comparison understates your exposure because it ignores **refinancing risk**:\n\n- **If the note converts** (you raise at \u2265$50M valuation), the $1.5M becomes equity. You have no cash repayment, no refinancing, and the accrued interest typically converts too, so it is a non-cash expense.\n- **If it doesn't convert**, you must repay $1.5M at the end of Year 2, likely by refinancing at market rates. You would be replacing 4% money with debt priced closer to your LOC (10\u201311% in the rising scenario).\n\n| Year 3 Note Refinancing | Added Interest vs. Model |\n|---|---|\n| Converts to equity | $0 |\n| Refinanced at 9% (flat) | +$135,000 |\n| Refinanced at 11% (rising) | +$165,000 |\n\nEach 1-point move on the refinanced note is worth **$15,000/year**, three times the LOC's sensitivity. **The $50M valuation trigger is the single biggest swing factor in your interest expense.**\n\n### Also watch: the Term Loan maturity\nThe $2M loan matures at the end of Year 3. Its refinancing rate falls outside this window, but it will drive Year 4+. At +2 points, it adds **$40,000/year**. You'll likely start negotiating it during Year 2\u20133, when the rising scenario would have rates meaningfully higher.\n\n---\n\n## Recommendations\n\n1. **Confirm the term loan is truly fixed.** If it floats, it becomes the dominant sensitivity: about +$60,000 over 3 years in the rising scenario, 4x the LOC.\n2. **Model the note conversion probability explicitly.** Build a third scenario (no conversion plus refinancing) for board and cash planning.\n3. **Consider paying down the LOC first** if you have excess cash. It is your most expensive and only floating debt.\n4. **Start refinancing conversations for the note 6\u20139 months before maturity** if a qualifying round looks uncertain.\n5. **Check whether the note's interest compounds.** Compounding at 4% adds only about $2,400 in Year 2, but it changes the conversion share count.\n\nI can extend this to a monthly model, add LOC utilization assumptions, or build the non-conversion scenario in full if useful.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "fin-08",
+      "expected": "strong",
+      "actual_label": "strong",
+      "correct": true,
+      "judge_confidence": 0.040000000000000036,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-opus-5.5",
+        "provider": "Anthropic",
+        "cost_usd": 0.065816,
+        "input_tokens": 89,
+        "output_tokens": 3273,
+        "latency_ms": 33908.8826090001,
+        "text": "# Reconciling 20% EBITDA Growth with a 5% Decline in Operating Cash Flow\n\nEBITDA measures accrual-based operating profit. Cash from operations (CFO) measures when cash actually moves. Several items sit between them: cash taxes, cash interest (operating under US GAAP), working capital changes, and cash items excluded from EBITDA, such as a litigation settlement. This year all three of the drivers you named work against cash at once. Most of the gap is timing or non-recurring rather than a deterioration in earnings quality.\n\n*The figures below are illustrative ($M), scaled to your growth rates. Substitute your actuals into the same structure.*\n\n---\n\n## 1. Current-Year Bridge: EBITDA to CFO\n\n| Line | Prior Year | Current Year | Change |\n|---|---|---|---|\n| **Reported EBITDA** | 100 | 120 | **+20** (+20%) |\n| Cash taxes paid | (12) | (15) | (3) |\n| Cash interest paid | (6) | (6) | 0 |\n| Litigation settlement paid | 0 | (10) | (10) |\n| \u2191 AR from net-30 to net-60 shift | 0 | (16) | (16) |\n| \u2191 AR from organic revenue growth | (3) | (4) | (1) |\n| \u2191 Inventory | (2) | (3) | (1) |\n| \u2191 AP and accrued liabilities | 3 | 10 | +7 |\n| **Cash from Operations** | **80** | **76** | **(4)** (\u22125%) |\n\n---\n\n## 2. Driver-by-Driver Explanation\n\n### A. Payment terms shift, net-30 to net-60 (largest driver, about \u221216)\n\nExtending terms by 30 days adds roughly one extra month of that segment's revenue to receivables:\n\n> **Incremental AR \u2248 Segment annual revenue \u00d7 (30 \u00f7 365)**\n> e.g., $200M \u00d7 30/365 \u2248 **$16M**\n\nPoints to make:\n- **Revenue and EBITDA are unaffected.** Revenue is recognized on delivery regardless of when the customer pays.\n- **The cash cost is mostly a one-time step-up.** Once the new terms are fully in place, AR stays at the higher level. After that, it grows only with segment revenue, at the new higher ratio.\n- **Check the timing of the change.** If it happened mid-year, part of the step-up may still land next year.\n- **Show DSO separately** for this segment and for the rest of the business. That proves the underlying collection performance hasn't slipped.\n\n### B. Litigation settlement (about \u221210, non-recurring)\n\nHow this reconciles depends on the accounting:\n\n| Scenario | Effect on EBITDA | Effect on CFO |\n|---|---|---|\n| Accrued in a **prior year**, paid this year | Hit prior-year EBITDA (or was adjusted out) | Hits **this year's** CFO: a timing mismatch |\n| Accrued and paid **this year**, added back in *Adjusted* EBITDA | Excluded, so it flatters EBITDA growth | Fully hits CFO |\n| Accrued and paid this year, **not** adjusted out | Depresses EBITDA | Hits CFO; little reconciling gap |\n\nConfirm which scenario applies. If \"reported EBITDA\" is an adjusted figure that excludes the settlement, disclose that explicitly.\n\n### C. Other working capital (net about +5)\n\n- **AR from growth (\u22121):** More revenue naturally means more receivables, even at constant DSO.\n- **Inventory build (\u22121):** This supports higher volumes.\n- **AP and accruals (+7):** This partially offsets the other drivers. Check whether it reflects sustainable supplier terms or just timing, such as a large payable due right after period-end. If it is timing, it may reverse next year.\n\n### D. Cash taxes (\u22123)\n\nHigher profit means higher cash taxes. This is expected and not a concern.\n\n---\n\n## 3. Normalized View\n\nRemove the one-time items to show the underlying cash generation:\n\n| | Prior Year | Current Year | Change |\n|---|---|---|---|\n| Reported CFO | 80 | 76 | \u22125% |\n| + Litigation settlement | \u2014 | 10 | |\n| + Terms-change AR step-up | \u2014 | 16 | |\n| **Normalized CFO** | **80** | **102** | **+27.5%** |\n| Cash conversion (Normalized CFO \u00f7 EBITDA) | 80% | 85% | +5 pts |\n\n**Key message:** Excluding the settlement and the one-time working capital investment from the terms change, operating cash flow grew faster than EBITDA, and cash conversion improved.\n\n---\n\n## 4. Diligence Questions Before Presenting\n\nAn auditor, board, or lender will likely ask these:\n\n1. **Why were terms extended?** If it was to win or retain volume, did it pull forward demand or support revenue that might otherwise have been lost? Scrutinize any link between the terms extension and the EBITDA growth.\n2. **Credit risk:** Is the bad-debt reserve adequate for longer-dated receivables? Is the AR aging still healthy?\n3. **Concentration:** How exposed are you to the largest customer or segment now that more cash is tied up with it?\n4. **Sustainability of the AP benefit:** Is the +7 repeatable, or will it reverse?\n5. **Remaining step-up:** Is any terms-related AR build still to come next year?\n6. **Mitigants:** Would receivables factoring, supply-chain finance, or early-pay discounts recover some of the working capital?\n\n---\n\n## 5. Data Needed to Finalize\n\nTo replace the illustrative figures, you will need:\n- EBITDA definition, including all add-backs and whether the settlement is excluded\n- Cash taxes and cash interest, both years\n- Balance sheet AR, inventory, AP, and accruals at each period-end\n- Revenue by segment and the effective date of the terms change\n- Litigation accrual history (when recognized, when paid)\n- DSO by segment, both years\n\nIf you share your actual figures, I can build the exact reconciliation and a short narrative for management commentary or lender reporting.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "fin-09",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.8999999999999999,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": "Together",
+        "cost_usd": 0.00019575,
+        "input_tokens": 105,
+        "output_tokens": 300,
+        "latency_ms": 1607.831325999996,
+        "text": "To find the simple (arithmetic) average, add the four figures together and then divide by 4.\n\n\\[\n\\begin{aligned}\n\\text{Sum} &= 1.1\\text{M} + 1.3\\text{M} + 1.25\\text{M} + 1.4\\text{M} \\\\\n           &= 5.05\\text{M} \\\\\n\\text{Average} &= \\frac{5.05\\text{M}}{4} \\\\\n               &= 1.2625\\text{M}\n\\end{aligned}\n\\]\n\n**Average revenue:** **\\$1.2625\u202fmillion** (\u2248\u202f\\$1.263\u202fM).",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "fin-10",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.8999999999999999,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": "Together",
+        "cost_usd": 0.00010365,
+        "input_tokens": 91,
+        "output_tokens": 150,
+        "latency_ms": 1463.6503679998896,
+        "text": "Earnings\u202fper\u202fshare (EPS) is calculated by dividing net income by the total number of fully\u2011diluted shares:\n\n\\[\n\\text{EPS} = \\frac{\\text{Net Income}}{\\text{Fully Diluted Shares}} \n          = \\frac{\\$2{,}000{,}000}{50{,}000}\n          = \\$40 \\text{ per share}\n\\]\n\nSo the EPS would be **$40 per share**.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Together",
+          "cost_usd": 0.000174,
+          "input_tokens": 52,
+          "output_tokens": 132,
+          "latency_ms": 2081.4826779999294,
+          "text": "EPS = Net income \u00f7 Fully diluted shares  \n= $2,000,000 \u00f7 50,000  \n= **$40.00 per share**\n\nSo diluted EPS is **$40.00**.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 178,
+          "output_tokens": 31,
+          "latency_ms": 1953.0915330001335,
+          "text": "Basic EPS = Net income \u00f7 fully diluted shares\n\n**EPS = $2,000,000 \u00f7 50,000 = $40 per share.**",
+          "error": null,
+          "jev_adequate": true,
+          "score": 2
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.004148,
+          "input_tokens": 37,
+          "output_tokens": 200,
+          "latency_ms": 2930.095123000001,
+          "text": "**Diluted EPS = $40.00**\n\nDiluted EPS = Net Income \u00f7 Fully Diluted Shares = $2,000,000 \u00f7 50,000 = **$40 per share**\n\nTwo notes:\n- **Preferred dividends:** If there are any, subtract them from net income first, since EPS measures earnings available to common shareholders.\n- **Share count:** Strictly, EPS uses the *weighted average* share count for the period. If the share count changed during the year, use the weighted average rather than the ending figure.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "fin-11",
+      "expected": "strong",
+      "actual_label": "strong",
+      "correct": true,
+      "judge_confidence": 0.26,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-opus-5.5",
+        "provider": "Anthropic",
+        "cost_usd": 0.0804,
+        "input_tokens": 100,
+        "output_tokens": 4000,
+        "latency_ms": 39906.76213200004,
+        "text": "# Why Unit Economics Can Deteriorate While Revenue and Gross Profit Grow\n\n## Why this happens\n\nRevenue and gross profit are **totals**. Unit economics are **ratios**: margin per dollar, LTV/CAC, payback period. Totals can grow while every ratio gets worse, as long as volume grows faster than per-unit value erodes.\n\n**Clarify \"gross margin is growing.\"** If you shifted mix toward a lower-margin line, gross margin *percentage* should be under pressure. Most likely gross profit *dollars* are growing, possibly with an offsetting per-line rate improvement. That distinction matters for the decomposition below.\n\n**Avoid double-counting.** Your three factors overlap. CAC is mostly sales and marketing spend, which sits *inside* opex. So the clean structure is:\n\n```\n\u0394 Operating margin = \u0394 GM%                    \u2192 split into Mix effect + Rate effect\n                   \u2212 \u0394 (S&M / Revenue)         \u2192 split into CAC inflation + Acquisition pace\n                   \u2212 \u0394 (Other opex / Revenue)  \u2192 R&D, G&A leverage or deleverage\n```\n\n## Illustrative quantification (hypothetical numbers, $M)\n\nYou didn't share figures, so here is a worked example showing the method. Substitute your actuals.\n\n| | Period 1 | Period 2 |\n|---|---|---|\n| Product A revenue (high margin) | 70 @ 70% GM | 78 @ 72% GM |\n| Product B revenue (low margin) | 30 @ 40% GM | 52 @ 42% GM |\n| **Total revenue** | **100** | **130** (+30%) |\n| **Gross profit** | **61.0 (61.0%)** | **78.0 (60.0%)** (+28%) |\n| S&M | 25.0 (25.0%) | 39.0 (30.0%) |\n| R&D | 15.0 (15.0%) | 18.0 (13.8%) |\n| G&A | 10.0 (10.0%) | 14.0 (10.8%) |\n| **Operating margin** | **11.0%** | **5.4%** |\n| New customers / CAC | 1,000 @ $25k | 1,300 @ $30k |\n\nRevenue is up 30% and gross profit up 28%, yet operating margin nearly halved.\n\n### Step 1: Gross margin (mix vs. rate)\n- **Mix effect** (Period 2 mix at Period 1 margins): 0.6\u00d770% + 0.4\u00d740% = 58.0%, which is **\u22123.0 pts** vs. 61%.\n- **Rate effect** (Period 2 mix, margin improvement within each line): 0.6\u00d72 + 0.4\u00d72 = **+2.0 pts**.\n- Net: \u22121.0 pt. The mix shift is real but partly masked by per-line improvements.\n\n### Step 2: S&M (CAC inflation vs. acquisition pace)\n- At the old $25k CAC, 1,300 customers would cost $32.5M, or 25.0% of revenue. That is the same ratio as before, so pace alone explains nothing here.\n- **CAC inflation**: ($30k \u2212 $25k) \u00d7 1,300 = $6.5M, which is **\u22125.0 pts**.\n\n### Step 3: Other opex\n- R&D leverage: **+1.2 pts**. G&A deleverage: **\u22120.8 pts**. Net **+0.4 pts**.\n\n### Attribution of the \u22125.6 pt decline\n\n| Factor | Impact (pts) | Share of gross headwinds (8.8 pts) |\n|---|---|---|\n| CAC inflation | \u22125.0 | **57%** |\n| Mix shift to low-margin line | \u22123.0 | **34%** |\n| G&A deleverage | \u22120.8 | 9% |\n| *Offset: per-line margin gains* | *+2.0* | |\n| *Offset: R&D leverage* | *+1.2* | |\n| **Net** | **\u22125.6** | |\n\n## Translating to per-customer unit economics\n\nAssume $20k ARPU and 15% annual churn, with LTV = ARPU \u00d7 GM% \u00f7 churn.\n\n| Metric | Period 1 | Period 2 |\n|---|---|---|\n| LTV | $81.3k | $80.0k |\n| LTV / CAC | 3.25\u00d7 | 2.67\u00d7 |\n| CAC payback | 24.6 mo | 30.0 mo |\n\nOf the \u22120.58\u00d7 drop in LTV/CAC, about **\u22120.53\u00d7 comes from CAC** and **\u22120.05\u00d7 from margin**. The pure mix effect alone would have cost \u22120.16\u00d7, but rate gains offset most of it. At the per-customer level, CAC dominates even more than at the P&L level.\n\n## Caveats that often change the answer\n\n1. **Order dependence.** Sequential decompositions shift credit between factors. If the interaction terms are large, use a Shapley-style average across orderings.\n2. **The factors may share a cause.** If the low-margin product attracts a different segment with higher CAC or churn, the mix shift is *driving* part of the CAC increase. Segment CAC, churn, and payback by product line before treating them as independent.\n3. **Blended CAC hides channel saturation.** Rising CAC often means marginal CAC is much worse than the average. Look at incremental cohorts.\n4. **Growth-phase distortion.** S&M spent now acquires revenue that arrives later, so the ratio looks worse during acceleration. Cohort-level payback is the true test.\n\n## Data needed to run this on your numbers\n\n- Revenue and gross margin by product line, both periods\n- S&M spend and new-customer counts (ideally by product line and channel)\n- R&D and G&A by period\n- ARPU, churn, and expansion by product line\n\nWith those, I can produce the actual attribution and flag which lever (pricing on the low-",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "fin-12",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.8600000000000001,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": "Together",
+        "cost_usd": 9.675e-05,
+        "input_tokens": 93,
+        "output_tokens": 138,
+        "latency_ms": 968.8842179998574,
+        "text": "Your runway is simply the cash you have divided by your monthly burn:\n\n\\[\n\\text{Runway (months)} = \\frac{ \\$3{,}000{,}000 }{ \\$250{,}000 \\text{ per month}} = 12 \\text{ months}\n\\]\n\nSo with $3\u202fM in the bank and a $250k/month burn rate, you have about **12 months** of runway.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "fin-13",
+      "expected": "strong",
+      "actual_label": "strong",
+      "correct": true,
+      "judge_confidence": 0.45999999999999996,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-opus-5.5",
+        "provider": "Anthropic",
+        "cost_usd": 0.080444,
+        "input_tokens": 111,
+        "output_tokens": 4000,
+        "latency_ms": 47602.284413999994,
+        "text": "",
+        "error": "empty visible answer",
+        "jev_adequate": false,
+        "score": 1
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "z-ai/glm-5.3-flash",
+          "provider": "CoreWeave",
+          "cost_usd": 0.0020117,
+          "input_tokens": 78,
+          "output_tokens": 4000,
+          "latency_ms": 55512.585568000075,
+          "text": "",
+          "error": "empty visible answer",
+          "jev_adequate": false,
+          "score": 1
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "openai/gpt-6-sol",
+          "provider": "OpenAI",
+          "cost_usd": 0.036084,
+          "input_tokens": 282,
+          "output_tokens": 3552,
+          "latency_ms": 60791.26639900005,
+          "text": "## Bridge now or wait six months?\n\n**Illustrative conclusion:** With only about six months of cash, a $3M bridge at a $40M cap is worth serious consideration **if it materially improves the chance of reaching the next priced round**. Waiting produces less dilution in a successful base case, but leaves almost no cash for a fundraising delay. The answer changes if the company can cut burn or secure a credible financing commitment without the bridge.\n\nBecause you haven\u2019t supplied cash, burn, or round-size figures, the analysis below uses assumptions\u2014not a forecast.\n\n| Assumption | Illustrative value |\n|---|---:|\n| Cash today / net burn | $4M / $650K per month |\n| Bridge now | $3M at a **$40M pre-money-equivalent cap** |\n| Priced round in six months | $8M |\n| Financing terms | No SAFE discount, interest, option-pool increase, or special preferences modeled |\n\n### 1. Runway makes \u201cwait six months\u201d the risky path\n\nAt current burn, $4M lasts **6.2 months**. After six months, just **$100K** remains\u2014effectively no allowance for a delayed close. The bridge extends total runway to **10.8 months**, leaving **$3.1M** at month six.\n\nTo wait six months *and* preserve a two-month cash buffer ($1.3M), burn would need to fall to **$450K per month**, roughly a **31% cut**. The priced-round process would also need to begin well before month six.\n\n### 2. Dilution versus financing risk\n\nThe table treats the cap as a maximum conversion price: if the priced valuation is below $40M, the bridge converts at the lower round price. Percentages are dilution of shareholders who own stock **today**, after both financings where applicable.\n\n| Month-six outcome | Bridge-now probability | Bridge: old-holder dilution | Wait probability | Wait: old-holder dilution |\n|---|---:|---:|---:|---:|\n| Strong round: $60M pre-money | 70% | 17.9% | 55% | 11.8% |\n| Weaker round: $35M pre with bridge; $30M without | 20% | 25.0% | 25% | 21.1% |\n| Difficult round: $25M pre with bridge; $20M without | 10% | 10% | 32.4% | 28.6% |\n| No viable financing | \u2014 | \u2014 | 10% | Potentially severe equity loss |\n\nIn the strong case, the bridge costs existing holders about **6.1 percentage points** of additional ownership. Its potential benefit is not cheaper dilution; it is avoiding a cash-driven negotiation or failed raise.\n\nFor an explicit probability-weighted view, suppose the chance of *missing the fundraising window* if the company waits is **20%**: half of those cases secure the difficult $20M round, and half fail to secure viable financing. Under the illustrative probabilities above, current shareholders retain an average **79.2%** stake with the bridge, versus **75.4%** when waiting **if a failed financing is counted as zero retained economic value**. That comparison is highly sensitive to the assumed failure probability; ownership percentage alone is not a substitute for valuing the different outcomes.\n\n### 3. Account for the down-round signal\n\nA **$40M cap is not itself a priced valuation**, but investors may read it as a negative signal if the last priced round was above $40M\u2014particularly if existing investors decline to participate. A subsequent priced down round makes the signal harder to dismiss. Investors may then demand a lower price, stronger preferences, more diligence, or evidence that the business has reset expectations; employee retention can become harder as well.\n\nThat effect should be reflected in the **probabilities and terms of the next round**, not counted as an automatic extra dilution charge. The bridge is most defensible if it funds specific milestones that credibly offset the signal: for example, a revenue target, signed customers, or a measurable burn reduction, with existing-investor participation where possible.\n\n**Decision rule:** Favor the bridge if waiting leaves no credible cash buffer and the $3M buys enough time to improve financing odds or terms. Favor waiting if a six-month round is genuinely executable *and* burn can be reduced to preserve negotiating runway. Before signing, rerun the table using actual cash, monthly burn, last-round valuation, required raise size, likely option-pool top-up, and the bridge\u2019s precise conversion and preference terms.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.080444,
+          "input_tokens": 111,
+          "output_tokens": 4000,
+          "latency_ms": 48284.92155100002,
+          "text": "",
+          "error": "empty visible answer",
+          "jev_adequate": false,
+          "score": 1
+        }
+      ]
+    },
+    {
+      "item_id": "fin-14",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.9199999999999999,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": "Together",
+        "cost_usd": 6.015e-05,
+        "input_tokens": 105,
+        "output_tokens": 74,
+        "latency_ms": 1174.7254379999958,
+        "text": "The total is **$45,450**.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "fin-15",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.8400000000000001,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": "Together",
+        "cost_usd": 0.0001062,
+        "input_tokens": 92,
+        "output_tokens": 154,
+        "latency_ms": 1285.461701000031,
+        "text": "The present value (PV) is calculated by discounting the future amount at the given rate:\n\n\\[\n\\text{PV} = \\frac{\\$1{,}000}{1 + 0.05}\n           = \\frac{\\$1{,}000}{1.05}\n           \\approx \\$952.38.\n\\]\n\nSo, the approximate present value of $1,000 received in one year at a 5\u202f% discount rate is **about \\$952**.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "fin-16",
+      "expected": "strong",
+      "actual_label": "strong",
+      "correct": true,
+      "judge_confidence": 0.64,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-opus-5.5",
+        "provider": "Anthropic",
+        "cost_usd": 0.038656,
+        "input_tokens": 89,
+        "output_tokens": 1915,
+        "latency_ms": 22741.45607499986,
+        "text": "I don't have your pricing or cost data. Nothing was attached, and I can't access your systems. I can't name the divergence quarter without the numbers, and I'd rather not invent one. Here's how to run the assessment, and if you paste the data I'll do the analysis.\n\n## What to send (quarterly, 12 quarters)\n\n| Quarter | Product/SKU or tier | List price | Realized/net price (after discounts) | Unit delivery cost | Volume | Notes (launches, cost shocks, contract cycles) |\n|---|---|---|---|---|---|---|\n\nUse like-for-like products so mix shifts don't distort the result. Realized price matters more than list price, because many \"value-based\" list prices are cost-plus once discounting is applied.\n\n## The diagnostic tests\n\n**1. Margin stability (the strongest signal)**\n- Compute gross margin % per quarter.\n- **Cost-plus:** margin % stays roughly flat because price tracks cost.\n- **Value-based:** margin % moves around because price responds to customer value, not cost.\n\n**2. Price-cost correlation with lags**\n- Correlate quarterly % change in price with % change in cost at lags of 0, 1 and 2 quarters.\n- A high correlation (above about 0.7) at a 1\u20132 quarter lag suggests you reprice after cost moves, which is cost-plus behavior.\n\n**3. Asymmetry test**\n- When costs fell, did prices fall?\n- Cost-plus pricing passes decreases through, at least partly.\n- Value-based pricing holds price, because customer value didn't drop.\n- If prices only ever go up when costs go up, you have \"cost-plus with a ratchet,\" which is common and not the same as value-based.\n\n**4. Trigger audit**\n- For each price change, record the stated reason: a cost increase, a feature or value launch, a competitor move, or WTP research.\n- If most changes cite costs, the stated strategy isn't the operating one.\n\n**5. Segment dispersion (if you have segment data)**\n- Value-based pricing produces different markups for segments with similar cost-to-serve but different value received.\n- A uniform markup across segments points to cost-plus.\n\n## Finding the divergence quarter\n\n1. Index price and cost to 100 at Q1 of year 1 and plot both.\n2. Regress price on cost for the early period and track the residuals over time.\n3. The divergence quarter is where the residual (or the gap between the two indices) breaks out and **stays** out for at least 2\u20133 quarters. One-quarter spikes are usually timing noise.\n4. For a formal test, use a Chow test or CUSUM for a structural break.\n5. Then explain the break using your notes column. Typical causes:\n   - a product launch that added value\n   - a cost shock you absorbed rather than passed on\n   - a discounting push\n   - a change in cost allocation method (check this first, since it's an accounting artifact, not a pricing shift)\n\n## Why the direction matters for the next review\n\n- **Price pulled ahead of cost:** You started capturing value. Check whether the new level has held without rising churn or discount depth. If it has, that event is evidence of willingness to pay you can build on.\n- **Cost pulled ahead of price:** Margin is compressing. Either pricing power has eroded (commoditization or competitor pressure) or you've been underpricing and absorbing costs. The next review needs to decide deliberately whether to recover margin or accept the lower level strategically.\n- **No divergence at all:** You're operating cost-plus regardless of the stated strategy. The review should question whether you have any value metric (outcomes, usage, ROI delivered) to price against.\n\nPaste the table, even as a rough export, and I'll run these tests, identify the break quarter, and draft the implications for your review.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Together",
+          "cost_usd": 0.0042546,
+          "input_tokens": 82,
+          "output_tokens": 3525,
+          "latency_ms": 14592.194608,
+          "text": "I can\u2019t identify the exact divergence quarter from the information provided because the actual 3-year pricing and delivery-cost series aren\u2019t included. But the assessment can be made rigorously with the right data. Here\u2019s the diagnostic I\u2019d run, and what the answer would mean for your next pricing review.\n\n## 1. What to measure\n\nUse **realized price**, not list price:\n\n- **Price index \\(P_t\\)**: volume-weighted average realized price per unit/contract/account, net of discounts, rebates, credits, and mix effects. Base quarter = 100.\n- **Delivery cost index \\(C_t\\)**: volume-weighted unit cost to serve/deliver, including labor, hosting/cloud, support, onboarding, fulfillment, third-party fees, payment costs, and allocated overhead. Same base quarter = 100.\n- **Spread \\(S_t = P_t - C_t\\)** or **markup \\(M_t = (P_t - C_t)/C_t\\)**.\n\nDo this quarterly for 12 quarters. Ideally also split by product, segment, and region, because a blended view can hide cost-plus behavior in one segment and value-based pricing in another.\n\n## 2. Test: cost-plus vs value-based in practice\n\nRun a simple pass-through regression:\n\n\\[\n\\Delta P_t = \\alpha + \\beta \\Delta C_t + \\varepsilon\n\\]\n\nInterpretation:\n\n- **\\(\\beta \\approx 1\\)** and markup stable \u2192 pricing is effectively **cost-plus**.\n- **\\(\\beta \\approx 0\\)** and not statistically significant \u2192 pricing is **not driven by delivery cost**; likely value-, competition-, or willingness-to-pay-driven.\n- **\\(0 < \\beta < 1\\)** \u2192 hybrid / partial pass-through.\n- **\\(\\beta < 0\\)** \u2192 price moves opposite cost, usually competitive or value-repositioning behavior.\n\nThen add value drivers:\n\n\\[\n\\Delta P_t = \\alpha + \\beta \\Delta C_t + \\gamma \\Delta V_t + \\varepsilon\n\\]\n\nwhere \\(V_t\\) includes feature releases, SLA/outcome improvements, win/loss rates, churn, competitive price moves, segment WTP, or packaging changes. If \\(\\gamma\\) is significant and \\(\\beta\\) is not, your pricing is value-based in practice even if your internal narrative says cost-plus.\n\n## 3. Identify the divergence quarter\n\nThe clearest divergence quarter is the one where the price index and cost index break their historical relationship.\n\nMethod:\n\n1. Compute cumulative spread \\(S_t = P_t - C_t\\).\n2. Compute quarter-over-quarter change in spread:\n   \\[\n   \\Delta S_t = S_t - S_{t-1}\n   \\]\n3. Find the quarter with the largest deviation from the median/trend:\n   \\[\n   D_t = |\\Delta S_t - \\text{median}(\\Delta S)|\n   \\]\n4. The divergence quarter is \\(\\arg\\max D_t\\), confirmed by a structural-break test such as CUSUM or Chow.\n5. Require persistence: the gap should remain for at least two quarters, not just one noisy quarter.\n\nCommon patterns:\n\n- **Price up, cost down** \u2192 value capture or pricing power; not cost-plus.\n- **Price flat, cost up** \u2192 margin leak; cost-plus would have raised prices earlier.\n- **Price and cost up together with stable markup** \u2192 cost-plus in practice.\n- **Price down, cost down** \u2192 either competitive pass-through or deliberate value-based repositioning.\n\n## 4. Why the divergence quarter matters for the next pricing review\n\nThe divergence quarter tells you whether your pricing process is actually anchored to cost or to value.\n\nIf the two diverged because **price rose while delivery cost fell**, your next review should not \u201cgive back\u201d price just because costs decreased. Instead, protect the value-based capture, check competitive response, and decide whether to reinvest in retention, packaging, or targeted discounts.\n\nIf they diverged because **cost rose while price stayed flat**, you have a margin problem. The next review should address price increases, cost-to-serve reduction, discount governance, or contractual cost pass-through clauses.\n\nIf they moved together with a stable markup, you are running a **cost-plus pricing system in practice**, regardless of the stated strategy. The next review should shift toward value metrics: WTP research, win/loss analysis, feature/outcome pricing, segment-level packaging, and competitive benchmarks.\n\n## 5. What the output should look like\n\n| Quarter | Price index | Cost index | Spread | Markup | Key value/cost event | Verdict |\n|---|---:|---:|---:|---:|---|---|\n| Q1 Y1 | 100 | 100 | 0 | base | \u2014 | base |\n| \u2026 | \u2026 | \u2026 | \u2026 | \u2026 | \u2026 | \u2026 |\n| Q? Y? | \u2026 | \u2026 | \u2026 | \u2026 | divergence event | likely value/cost-plus |\n\n**Bottom line:** Without your 12-quarter price and delivery-cost data, I can\u2019t name the exact divergence quarter. But the test is straightforward: if realized price changes track delivery-cost changes with stable markups, you are cost-plus in practice. If they diverge, especially in a sustained quarter, you are pricing off something else\u2014value, competition, or mix. That quarter should frame the next pricing review because it reveals whether cost is actually your pricing anchor or just a floor.\n\nIf you share the quarterly price and delivery-cost series, I can compute the price/cost indices, pass-through beta, and identify the exact divergence quarter.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "openai/gpt-6-sol",
+          "provider": "OpenAI",
+          "cost_usd": 0.003214,
+          "input_tokens": 57,
+          "output_tokens": 310,
+          "latency_ms": 6900.600970999903,
+          "text": "I can\u2019t assess the three-year trend or name the divergence quarter without the pricing and delivery-cost data.\n\nPlease share, by quarter for the last three years, the **realized price per unit** and **delivery cost per unit**, ideally by product and customer segment, along with volume and the dates of pricing changes. If available, include the stated rationale for each change and any customer-value measures used in the decision.\n\nI\u2019ll compare price changes with underlying cost changes on a like-for-like basis, adjusting for mix where possible. The clearest divergence quarter would be the first in which price and cost moved materially differently\u2014not merely because the customer or product mix changed. I\u2019d then check *why* the price changed: a cost-driven rationale points toward cost-plus in practice; evidence of differentiated customer value and willingness to pay supports value-based pricing.\n\nThat distinction matters for the next review because a cost-led process may miss opportunities to price for value, while a price increase that outpaces costs still needs a defensible customer-value case. **Price\u2013cost divergence alone cannot prove the strategy is value-based.**",
+          "error": null,
+          "jev_adequate": true,
+          "score": 3
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.033556,
+          "input_tokens": 89,
+          "output_tokens": 1660,
+          "latency_ms": 21187.128354999913,
+          "text": "# Value-Based vs. Cost-Plus Pricing: Assessment Approach\n\nI don't have your pricing history or delivery cost data, so I can't name the divergence quarter or give a verdict yet. I also don't want to invent one. Below is the method I'd use. If you share the data, I'll run it and give you a specific answer.\n\n## What I need from you\n\n**Minimum dataset (quarterly, 12 quarters):**\n\n| Field | Notes |\n|---|---|\n| List price and realized/net price (after discounts) by product or tier | Realized price matters more; discounting often hides cost-plus behavior |\n| Fully loaded delivery cost per unit/customer | COGS, hosting/infrastructure, support, implementation, third-party licenses |\n| Date and stated rationale for each price change | Board decks, pricing memos, or even Slack announcements |\n| Volume/customer count by tier | To separate mix shifts from true price moves |\n\n**Strongly helpful:**\n- A value proxy: customer ROI metrics, usage/outcome data, NPS, or win/loss notes citing price\n- Competitor price moves over the same period\n- Churn and expansion rates by quarter\n\n## How to tell which model you're actually running\n\n**1. Correlation test.** Compute quarter-over-quarter % change in realized price vs. % change in unit delivery cost.\n- High correlation (r > ~0.7) with price moves lagging cost moves by 0\u20132 quarters suggests **cost-plus in practice**, whatever the pricing page says.\n- Weak correlation, with price tracking value proxies or competitive moves instead, suggests **value-based**.\n\n**2. Margin stability test.** Plot gross margin % per unit over time.\n- A suspiciously flat margin band is the fingerprint of cost-plus: prices are being set to hold a target markup.\n- Value-based pricing usually produces margin that *drifts*. It expands when costs fall but value holds, and compresses when you choose to invest in share.\n\n**3. Asymmetry test.** When costs *fell* (e.g., infrastructure optimization, automation), did prices fall, hold, or rise?\n- Prices falling with costs points strongly to cost-plus.\n- Prices holding while margin expands points to value-based.\n- Most companies are asymmetric: they pass cost increases through but keep cost savings. That's \"opportunistic cost-plus,\" not value-based.\n\n**4. Rationale audit.** Code each price change memo as *cost-driven* (\"rising hosting costs\"), *value-driven* (\"new capability X saves customers Y\"), or *competitive*. The ratio is often the most honest answer.\n\n**5. Tier structure test.** Are price gaps between tiers proportional to *cost-to-serve* gaps or to *value delivered* gaps? Cost-proportional tiers are cost-plus in disguise.\n\n## Finding the divergence quarter\n\n1. Index both series (price and unit cost) to 100 at Q1 of year one.\n2. Plot them together and compute the spread (price index minus cost index).\n3. Look for a **structural break**: the quarter after which the spread changes direction or slope and stays changed. A one-off spike is not enough. A Chow test or simple before/after regression on the spread formalizes this, but it's usually visible by eye.\n4. Cross-reference that quarter against events: a cost shock, a product launch, a repackaging, a competitor move, or a change in who owned pricing decisions.\n\n## Why the divergence matters for the next review\n\nThe interpretation depends on which way the lines split:\n\n- **Price rose faster than cost:** You may have shifted toward value capture, possibly without formally deciding to. Check whether churn, win rates, and discount depth held up. If they did, you've found evidence of pricing power worth formalizing. If they didn't, you may have overreached.\n- **Cost rose faster than price:** Margin compression. Either you're under-capturing value, or competitive pressure is setting your ceiling. The review needs to separate the two.\n- **Cost fell but price held:** This is healthy value-based behavior, but it's fragile if your team believes the model is cost-plus. Someone will eventually propose passing savings through.\n- **Price fell with cost:** You're leaving money on the table if customer value didn't also fall.\n\nThe broader point for the review: whatever the divergence reveals, the organization should **decide deliberately** which model it runs. Many pricing reviews fail because leadership describes value-based pricing while the actual approval process asks \"what's our margin?\"\n\n---\n\n**Next step:** If you paste or upload the quarterly price and cost figures, even a rough spreadsheet, I'll run these tests, identify the divergence quarter, and draft recommendations for the review.",
+          "error": null,
+          "jev_adequate": false,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "fin-17",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.6200000000000001,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": "Together",
+        "cost_usd": 0.00031755,
+        "input_tokens": 85,
+        "output_tokens": 508,
+        "latency_ms": 2516.829193999911,
+        "text": "When you hear \u201c2\u202f% churn per month,\u201d it means that each month you lose 2\u202f% of the customers you had at the start of that month. To see what that looks like over a full year you have to compound the loss month\u2011by\u2011month.\n\n1. **Monthly retention rate**  \n   \\[\n   \\text{Retention}_{\\text{month}} = 1 - 0.02 = 0.98 \\;(\\text{or } 98\\% )\n   \\]\n\n2. **Annual retention rate** (multiply the monthly retention 12 times)  \n   \\[\n   \\text{Retention}_{\\text{year}} = 0.98^{12}\n   \\]\n\n   \\[\n   0.98^{12} \\approx 0.784 \\quad (\\text{about } 78.4\\%)\n   \\]\n\n3. **Annual churn rate** (the complement of the annual retention)  \n   \\[\n   \\text{Churn}_{\\text{year}} = 1 - 0.784 \\approx 0.216 \\;(\\text{or } 21.6\\%)\n   \\]\n\n---\n\n### Quick approximation\n\nA rough rule of thumb is to multiply the monthly churn by 12, but that ignores compounding and gives a slight over\u2011estimate:\n\n\\[\n2\\% \\times 12 = 24\\%\n\\]\n\nThe exact compounded figure (\u224821\u201322\u202f%) is a bit lower.\n\n---\n\n## Bottom line\n\n- **Exact compounded annual churn:** **\u2248\u202f21.6\u202f%** (\u2248\u202f22\u202f%).\n- **Simple linear estimate:** **\u2248\u202f24\u202f%** (use only for back\u2011of\u2011the\u2011envelope checks).\n\nSo, a 2\u202f% monthly churn translates to roughly a **22\u202f% churn rate over a year**.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "fin-18",
+      "expected": "strong",
+      "actual_label": "weak",
+      "correct": false,
+      "judge_confidence": 0.45999999999999996,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": null,
+        "cost_usd": 0.0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 706.3085510001201,
+        "text": "",
+        "error": "HTTP 503: {\"error\": {\"message\": \"Provider returned error\", \"code\": 503, \"metadata\": {\"raw\": \"{\\n  \\\"id\\\": \\\"p2yrtL1-fdNmn-8fb77c52-aws_ue1\\\",\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Service unavailable\\\",\\n    \\\"type\\\": \\\"service_unavailable\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": null\\n  }\\n}\", \"provider_name\": ",
+        "jev_adequate": false,
+        "score": null
+      },
+      "head_to_head": []
+    }
+  ]
+}

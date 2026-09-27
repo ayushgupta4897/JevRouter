@@ -1,0 +1,633 @@
+{
+  "name": "general-assistant",
+  "route_name": "general/assistant",
+  "policy": "auto",
+  "roster": [
+    "openai/gpt-oss-120b",
+    "anthropic/claude-opus-5.5"
+  ],
+  "accuracy": 1.0,
+  "real_cost_usd": 0,
+  "frontier_equivalent_usd": 0,
+  "savings_pct": 0.0,
+  "items": [
+    {
+      "item_id": "gen-01",
+      "expected": "efficient",
+      "actual_label": "efficient",
+      "correct": true,
+      "judge_confidence": null,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": null,
+        "cost_usd": 0.0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 1013.0514320001112,
+        "text": "",
+        "error": "HTTP 503: {\"error\": {\"message\": \"Provider returned error\", \"code\": 503, \"metadata\": {\"raw\": \"{\\n  \\\"id\\\": \\\"p2ytK6A-z1gNr-5937cb81-aws_ue1\\\",\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Service unavailable\\\",\\n    \\\"type\\\": \\\"service_unavailable\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": null\\n  }\\n}\", \"provider_name\": ",
+        "jev_adequate": false,
+        "score": 1
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4-flash-0731",
+          "provider": "Baidu",
+          "cost_usd": 1.71336e-05,
+          "input_tokens": 90,
+          "output_tokens": 14,
+          "latency_ms": 3050.185432000035,
+          "text": "The capital of France is Paris.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 162,
+          "output_tokens": 9,
+          "latency_ms": 1588.6790930001098,
+          "text": "The capital of France is **Paris**.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.000484,
+          "input_tokens": 16,
+          "output_tokens": 21,
+          "latency_ms": 2784.6727559999636,
+          "text": "The capital of France is **Paris**.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "gen-02",
+      "expected": "efficient",
+      "actual_label": "efficient",
+      "correct": true,
+      "judge_confidence": null,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": null,
+        "cost_usd": 0.0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 768.3212490001097,
+        "text": "",
+        "error": "HTTP 503: {\"error\": {\"message\": \"Provider returned error\", \"code\": 503, \"metadata\": {\"raw\": \"{\\n  \\\"id\\\": \\\"p2ytK14-z1gNr-4dc78d1d-aws_ue1\\\",\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Service unavailable\\\",\\n    \\\"type\\\": \\\"service_unavailable\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": null\\n  }\\n}\", \"provider_name\": ",
+        "jev_adequate": false,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "gen-03",
+      "expected": "efficient",
+      "actual_label": "efficient",
+      "correct": true,
+      "judge_confidence": null,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": null,
+        "cost_usd": 0.0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 1387.242297000057,
+        "text": "",
+        "error": "HTTP 503: {\"error\": {\"message\": \"Provider returned error\", \"code\": 503, \"metadata\": {\"raw\": \"{\\n  \\\"id\\\": \\\"p2ytK6T-fdNmn-3015c43c-aws_ue1\\\",\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Service unavailable\\\",\\n    \\\"type\\\": \\\"service_unavailable\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": null\\n  }\\n}\", \"provider_name\": ",
+        "jev_adequate": false,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "gen-04",
+      "expected": "efficient",
+      "actual_label": "efficient",
+      "correct": true,
+      "judge_confidence": null,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": null,
+        "cost_usd": 0.0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 930.2814659999967,
+        "text": "",
+        "error": "HTTP 503: {\"error\": {\"message\": \"Provider returned error\", \"code\": 503, \"metadata\": {\"raw\": \"{\\n  \\\"id\\\": \\\"p2ytK5L-z1gNr-ffd15412-aws_ue1\\\",\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Service unavailable\\\",\\n    \\\"type\\\": \\\"service_unavailable\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": null\\n  }\\n}\", \"provider_name\": ",
+        "jev_adequate": false,
+        "score": 1
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4-flash-0731",
+          "provider": "Baidu",
+          "cost_usd": 3.79016e-05,
+          "input_tokens": 91,
+          "output_tokens": 67,
+          "latency_ms": 3387.538869999844,
+          "text": "Joyful",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 164,
+          "output_tokens": 4,
+          "latency_ms": 2018.5434770000938,
+          "text": "Joyful.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.001108,
+          "input_tokens": 22,
+          "output_tokens": 51,
+          "latency_ms": 3192.3969130000387,
+          "text": "**Joyful** is a good synonym for \"happy.\" Others include *cheerful*, *content*, *glad*, and *delighted*.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "gen-05",
+      "expected": "efficient",
+      "actual_label": "efficient",
+      "correct": true,
+      "judge_confidence": null,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": null,
+        "cost_usd": 0.0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 1823.0276209999374,
+        "text": "",
+        "error": "HTTP 503: {\"error\": {\"message\": \"Provider returned error\", \"code\": 503, \"metadata\": {\"raw\": \"{\\n  \\\"id\\\": \\\"p2ytK9w-fdNmn-5df1a5e1-aws_ue1\\\",\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Service unavailable\\\",\\n    \\\"type\\\": \\\"service_unavailable\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": null\\n  }\\n}\", \"provider_name\": ",
+        "jev_adequate": false,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "gen-06",
+      "expected": "efficient",
+      "actual_label": "efficient",
+      "correct": true,
+      "judge_confidence": null,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": null,
+        "cost_usd": 0.0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 1067.5290750000386,
+        "text": "",
+        "error": "HTTP 503: {\"error\": {\"message\": \"Provider returned error\", \"code\": 503, \"metadata\": {\"raw\": \"{\\n  \\\"id\\\": \\\"p2ytK5r-z1gNr-6e5b70d4-aws_ue1\\\",\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Service unavailable\\\",\\n    \\\"type\\\": \\\"service_unavailable\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": null\\n  }\\n}\", \"provider_name\": ",
+        "jev_adequate": false,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "gen-07",
+      "expected": "efficient",
+      "actual_label": "efficient",
+      "correct": true,
+      "judge_confidence": null,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": null,
+        "cost_usd": 0.0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 675.740641999937,
+        "text": "",
+        "error": "HTTP 503: {\"error\": {\"message\": \"Provider returned error\", \"code\": 503, \"metadata\": {\"raw\": \"{\\n  \\\"id\\\": \\\"p2ytKCY-z1gNr-a57ac7d8-aws_ue1\\\",\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Service unavailable\\\",\\n    \\\"type\\\": \\\"service_unavailable\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": null\\n  }\\n}\", \"provider_name\": ",
+        "jev_adequate": false,
+        "score": 1
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Together",
+          "cost_usd": 0.0018864,
+          "input_tokens": 52,
+          "output_tokens": 1559,
+          "latency_ms": 7134.922663999987,
+          "text": "**Theorem.** \\(\\sqrt{2}\\) is irrational.\n\n**Proof by contradiction.** Suppose, for contradiction, that \\(\\sqrt{2}\\) is rational.\n\nThen there exist integers \\(a,b\\) with \\(b\\neq 0\\) such that\n\\[\n\\sqrt{2}=\\frac{a}{b}.\n\\]\nChoose the fraction in lowest terms. That is, let \\(d=\\gcd(|a|,|b|)\\), and define\n\\[\np=\\frac{a}{d},\\qquad q=\\frac{b}{d}.\n\\]\nThen\n\\[\n\\sqrt{2}=\\frac{p}{q},\n\\]\nwhere \\(p,q\\in\\mathbb Z\\), \\(q\\neq 0\\), and\n\\[\n\\gcd(|p|,|q|)=1.\n\\]\nEquivalently, \\(p\\) and \\(q\\) have no common positive divisor greater than \\(1\\).\n\nSquaring both sides of \\(\\sqrt{2}=p/q\\), we get\n\\[\n2=\\frac{p^2}{q^2}.\n\\]\nSince \\(q\\neq 0\\), we may multiply both sides by \\(q^2\\), obtaining\n\\[\np^2=2q^2.\n\\]\n\nWe now use the following fact.\n\n**Lemma.** For any integer \\(n\\), \\(n^2\\) is even if and only if \\(n\\) is even.\n\n**Proof of lemma.**  \nIf \\(n\\) is even, then \\(n=2k\\) for some integer \\(k\\), so\n\\[\nn^2=4k^2=2(2k^2),\n\\]\nwhich is even.\n\nConversely, if \\(n\\) is odd, then \\(n=2k+1\\) for some integer \\(k\\), so\n\\[\nn^2=(2k+1)^2=4k^2+4k+1=2(2k^2+2k)+1,\n\\]\nwhich is odd. Therefore, if \\(n^2\\) is even, \\(n\\) cannot be odd, so \\(n\\) is even. \\(\\square\\)\n\nNow \\(p^2=2q^2\\), so \\(p^2\\) is even. By the lemma, \\(p\\) is even. Hence\n\\[\np=2r\n\\]\nfor some integer \\(r\\).\n\nSubstitute \\(p=2r\\) into \\(p^2=2q^2\\):\n\\[\n(2r)^2=2q^2.\n\\]\nThus\n\\[\n4r^2=2q^2.\n\\]\nDividing by \\(2\\), we get\n\\[\n2r^2=q^2.\n\\]\nSo \\(q^2\\) is even. By the lemma again, \\(q\\) is even.\n\nTherefore \\(p\\) and \\(q\\) are both even. But then \\(2\\) divides both \\(p\\) and \\(q\\), contradicting the fact that\n\\[\n\\gcd(|p|,|q|)=1.\n\\]\n\nThis contradiction shows that our assumption was false. Hence \\(\\sqrt{2}\\) cannot be rational.\n\nTherefore,\n\\[\n\\boxed{\\sqrt{2}\\text{ is irrational}.}\n\\]",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "x-ai/grok-4.7",
+          "provider": "xAI",
+          "cost_usd": 0.0036096,
+          "input_tokens": 1263,
+          "output_tokens": 619,
+          "latency_ms": 13027.526528999942,
+          "text": "### Theorem\n\\(\\sqrt{2}\\) is irrational.\n\n### Proof (by contradiction)\nAssume, for the sake of contradiction, that \\(\\sqrt{2}\\) is rational. Then there exist integers \\(p\\) and \\(q\\) such that\n\\[\n\\sqrt{2} = \\frac{p}{q},\n\\]\nwhere \\(q \\neq 0\\) and \\(\\gcd(p,q) = 1\\) (i.e., the fraction is in lowest terms). Squaring both sides yields\n\\[\n2 = \\frac{p^2}{q^2},\n\\]\nand therefore\n\\[\np^2 = 2q^2. \\tag{1}\n\\]\nIn particular, \\(p^2\\) is even, so \\(p\\) itself must be even. (If \\(p\\) were odd, then \\(p^2\\) would be odd, contradicting (1).) Write \\(p = 2k\\) for some integer \\(k\\). Substitute into (1):\n\\[\n(2k)^2 = 2q^2 \\implies 4k^2 = 2q^2 \\implies q^2 = 2k^2. \\tag{2}\n\\]\nThus \\(q^2\\) is even, so \\(q\\) itself must be even (by the same parity argument as above).\n\nBut then both \\(p\\) and \\(q\\) are even, so \\(2\\) divides both \\(p\\) and \\(q\\). This contradicts the assumption that \\(\\gcd(p,q) = 1\\).\n\nTherefore the assumption that \\(\\sqrt{2}\\) is rational is false, and \\(\\sqrt{2}\\) is irrational.\n\n(Note: the argument uses only that the square of an odd integer is odd, which follows at once from \\((2m+1)^2 = 4m(m+1) + 1\\).)",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.034848,
+          "input_tokens": 42,
+          "output_tokens": 1734,
+          "latency_ms": 14641.077928000186,
+          "text": "# Theorem: \u221a2 is irrational\n\n**Definitions.** A real number $x$ is *rational* if $x = \\frac{p}{q}$ for some integers $p, q$ with $q \\neq 0$. It is *irrational* if it is not rational. An integer $n$ is *even* if $n = 2k$ for some integer $k$, and *odd* if $n = 2k+1$ for some integer $k$. Every integer is either even or odd, and not both.\n\n---\n\n## Lemma 1: If $n^2$ is even, then $n$ is even.\n\n**Proof (by contrapositive).** We show that if $n$ is odd, then $n^2$ is odd.\n\nSuppose $n$ is odd, so $n = 2k + 1$ for some integer $k$. Then\n$$n^2 = (2k+1)^2 = 4k^2 + 4k + 1 = 2(2k^2 + 2k) + 1.$$\nSince $2k^2 + 2k$ is an integer, $n^2$ is odd.\n\nSo \"$n$ odd $\\Rightarrow$ $n^2$ odd.\" The contrapositive, \"$n^2$ not odd $\\Rightarrow$ $n$ not odd,\" is logically equivalent. Because every integer is either even or odd but not both, this says \"$n^2$ even $\\Rightarrow$ $n$ even.\" \u220e\n\n---\n\n## Lemma 2: Every positive rational number can be written in lowest terms.\n\nThat is, if $x = \\frac{a}{b} > 0$ with $a, b$ integers, then $x = \\frac{p}{q}$ for some positive integers $p, q$ with no common factor greater than 1.\n\n**Proof.** Since $x > 0$, we may choose $a, b$ both positive (replace them with $-a, -b$ if necessary). The set\n$$S = \\{\\, q \\in \\mathbb{Z}^+ : x = \\tfrac{p}{q} \\text{ for some } p \\in \\mathbb{Z}^+ \\,\\}$$\nis nonempty because $b \\in S$. By the **Well-Ordering Principle**, $S$ has a least element $q$. Write $x = \\frac{p}{q}$.\n\nSuppose $p$ and $q$ had a common factor $d > 1$, say $p = dp'$ and $q = dq'$. Then $x = \\frac{p'}{q'}$ with $q' = q/d < q$ and $q' \\in S$. This contradicts the minimality of $q$. Hence $p$ and $q$ share no common factor greater than 1. \u220e\n\n---\n\n## Main Proof\n\n**Assume, for contradiction, that $\\sqrt{2}$ is rational.**\n\n**Step 1 (Lowest terms).** Since $\\sqrt{2} > 0$, Lemma 2 gives positive integers $p, q$ with\n$$\\sqrt{2} = \\frac{p}{q}, \\qquad \\text{where } p \\text{ and } q \\text{ have no common factor greater than } 1.$$\n\n**Step 2 (Clear the root).** Square both sides:\n$$2 = \\frac{p^2}{q^2}.$$\nMultiply both sides by $q^2$, which is valid since $q \\neq 0$:\n$$p^2 = 2q^2. \\tag{1}$$\n\n**Step 3 ($p$ is even).** Since $q^2$ is an integer, equation (1) shows that $p^2$ is 2 times an integer, so $p^2$ is even. By Lemma 1, $p$ is even. So there is an integer $k$ with\n$$p = 2k. \\tag{2}$$\n\n**Step 4 (Substitute).** Substitute (2) into (1):\n$$(2k)^2 = 2q^2 \\;\\Longrightarrow\\; 4k^2 = 2q^2 \\;\\Longrightarrow\\; q^2 = 2k^2.$$\n\n**Step 5 ($q$ is even).** Since $k^2$ is an integer, $q^2$ is even. By Lemma 1, $q$ is even. So $q = 2m$ for some integer $m$.\n\n**Step 6 (Contradiction).** From Steps 3 and 5, $2$ divides both $p$ and $q$. Thus $2$ is a common factor of $p$ and $q$ greater than 1. This contradicts Step 1, where $p$ and $q$ were chosen to have no common factor greater than 1.\n\n**Step 7 (Conclusion).** The assumption that $\\sqrt{2}$ is rational leads to a contradiction. Therefore the assumption is false, and\n\n$$\\boxed{\\sqrt{2} \\text{ is irrational.}}$$ \u220e\n\n---\n\n**Summary of logical structure:** We assumed $\\neg P$ (that $\\sqrt{2}$ is rational). We derived both a statement $Q$ (\"$p, q$ have no common factor $>1$\") and its negation $\\neg Q$ (\"2 is a common factor\"). Since $\\neg P \\Rightarrow (Q \\wedge \\neg Q)$ is impossible, $P$ must hold.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "gen-08",
+      "expected": "efficient",
+      "actual_label": "efficient",
+      "correct": true,
+      "judge_confidence": null,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": null,
+        "cost_usd": 0.0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 1021.1817360000168,
+        "text": "",
+        "error": "HTTP 503: {\"error\": {\"message\": \"Provider returned error\", \"code\": 503, \"metadata\": {\"raw\": \"{\\n  \\\"id\\\": \\\"p2ytKJK-fdNmn-f04acd8e-aws_ue1\\\",\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Service unavailable\\\",\\n    \\\"type\\\": \\\"service_unavailable\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": null\\n  }\\n}\", \"provider_name\": ",
+        "jev_adequate": false,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "gen-09",
+      "expected": "efficient",
+      "actual_label": "efficient",
+      "correct": true,
+      "judge_confidence": null,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": null,
+        "cost_usd": 0.0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 1065.9452410000085,
+        "text": "",
+        "error": "HTTP 503: {\"error\": {\"message\": \"Provider returned error\", \"code\": 503, \"metadata\": {\"raw\": \"{\\n  \\\"id\\\": \\\"p2ytKVo-z1gNr-97fc9517-aws_ue1\\\",\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Service unavailable\\\",\\n    \\\"type\\\": \\\"service_unavailable\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": null\\n  }\\n}\", \"provider_name\": ",
+        "jev_adequate": false,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "gen-10",
+      "expected": "efficient",
+      "actual_label": "efficient",
+      "correct": true,
+      "judge_confidence": null,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": null,
+        "cost_usd": 0.0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 633.6708899998484,
+        "text": "",
+        "error": "HTTP 503: {\"error\": {\"message\": \"Provider returned error\", \"code\": 503, \"metadata\": {\"raw\": \"{\\n  \\\"id\\\": \\\"p2ytKWf-z1gNr-a37baf68-aws_ue1\\\",\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Service unavailable\\\",\\n    \\\"type\\\": \\\"service_unavailable\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": null\\n  }\\n}\", \"provider_name\": ",
+        "jev_adequate": false,
+        "score": 1
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Together",
+          "cost_usd": 0.0048177,
+          "input_tokens": 59,
+          "output_tokens": 4000,
+          "latency_ms": 17727.111216999903,
+          "text": "",
+          "error": "empty visible answer",
+          "jev_adequate": false,
+          "score": 1
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 185,
+          "output_tokens": 4000,
+          "latency_ms": 53175.35806400019,
+          "text": "# Why \\(P\\) vs. \\(NP\\) is considered one of the hardest open problems in computer science\n\nAt its core, the question is:\n\n> Is there a problem for which finding a valid solution is difficult, but verifying a proposed solution is easy\u2014and does that distinction imply that no problem can be solved efficiently in general?\n\nMore formally, it asks whether polynomial-time computation can simulate polynomial-time nondeterministic computation:\n\n\\[\nP \\stackrel{?}{=} NP.\n\\]\n\nThe answer is currently unknown. It has been open since the 1970s and is one of the most important unresolved questions in all of mathematics and computer science.\n\n---\n\n## 1. Formal setup: decision problems and languages\n\nA **decision problem** is a problem whose answer is either YES or NO.\n\nFormally, we represent computational problems as languages. If \\(\\Sigma\\) is a finite alphabet, then a language is a set of strings:\n\n\\[\nL \\subseteq \\Sigma^*.\n\\]\n\nThe set \\(\\Sigma^*\\) consists of all finite strings over the alphabet \\(\\Sigma\\). For example, if \\(\\Sigma=\\{0,1\\}\\), then \\(\\Sigma^*=\\{0,1\\}^*\\).\n\nA problem represented by \\(L\\) asks:\n\n\\[\nx \\in L \\;?\n\\]\n\nFor example:\n\n- Given a Boolean formula \\(\\varphi\\), is \\(\\varphi\\) satisfiable?\n- Given a graph \\(G\\) and integers \\(s,t\\), is there a path from \\(s\\) to \\(t\\)?\n- Given integers \\(a,b\\), does \\(a\\) divide \\(b\\)?\n- Given a proposed graph coloring, is it valid?\n\nThe input is encoded as a finite string \\(x\\), and its length is denoted by\n\n\\[\nn=|x|.\n\\]\n\nThe computational difficulty depends primarily on \\(n\\), not on the numerical values of the symbols themselves.\n\n---\n\n## 2. The class \\(P\\)\n\n### 2.1 Deterministic Turing machines\n\nA **deterministic Turing machine** has a single control state at each step. Given the current input and internal state, its next move is completely determined.\n\nA language \\(L\\) belongs to \\(P\\) if there exists a deterministic Turing machine \\(M\\) and a polynomial \\(p\\) such that\n\n\\[\nM \\text{ decides } L\n\\]\n\nand for every input \\(x\\),\n\n\\[\nM \\text{ runs on } x \\text{ in time } O(p(|x|)).\n\\]\n\nEquivalently,\n\n\\[\nP=\\bigcup_{k\\geq 1} DTIME(n^k).\n\\]\n\nThus, \\(P\\) is the class of decision problems solvable by deterministic algorithms in time polynomial in the input length.\n\n### 2.2 Examples of problems in \\(P\\)\n\nTypical examples include:\n\n- Sorting \\(n\\) integers: \\(O(n\\log n)\\)\n- Solving a system of linear equations over a field efficiently\n- Testing whether a given graph is bipartite\n- Finding shortest paths in a graph with nonnegative edge weights\n- Testing whether a given propositional formula is a valid propositional logic theorem using a suitable procedure in some restricted contexts\n- Multiplying two \\(n\\)-bit integers\n- Checking whether a proposed coloring is proper\n\nPolynomial time includes all constant-degree polynomial growth rates:\n\n\\[\nn,\\quad n^2,\\quad n^5,\\quad n^{100}.\n\\]\n\nThe particular exponent is usually less important than whether it is constant independent of the input size.\n\n---\n\n## 3. The class \\(NP\\)\n\n### 3.1 Nondeterministic Turing machines\n\nA **nondeterministic Turing machine** is a computational model that, in abstract form, may branch into multiple possible computations. It accepts if at least one possible computation accepts.\n\nFormally, \\(NP\\) is the class of languages recognized by nondeterministic Turing machines in polynomial time:\n\n\\[\nNP=\\bigcup_{k\\geq 1} NTIME(n^k).\n\\]\n\nThis does not mean that \\(NP\\) contains only \u201cnon-polynomial\u201d problems. The letters \\(NP\\) stand for **nondeterministic polynomial time**, not \u201cnon-polynomial.\u201d\n\n### 3.2 The certificate characterization\n\nAn equivalent and especially important definition is:\n\nA language \\(L\\) is in \\(NP\\) if there exist a polynomial \\(p\\) and a polynomial-time deterministic verifier \\(V\\) such that:\n\n1. If \\(x\\in L\\), then there exists a certificate or witness \\(w\\), with\n   \\[\n   |w|\\leq p(|x|),\n   \\]\n   for which\n   \\[\n   V(x,w)=1.\n   \\]\n\n2. If \\(x\\notin L\\), then for every possible witness \\(w\\),\n   \\[\n   V(x,w)=0.\n   \\]\n\nIn symbols:\n\n\\[\nx\\in L\n\\iff\n\\exists w,\\ |w|\\leq p(|x|)\\text{ such that }V(x,w)=1.\n\\]\n\nThis is often summarized as:\n\n> \\(NP\\) is the class of problems for which a YES answer has a polynomially sized certificate that can be checked in polynomial time.\n\nThe certificate itself may be difficult to discover. The definition only promises that once a certificate is supplied, verification is efficient.\n\n---\n\n## 4. Why \\(P\\subseteq NP\\)\n\nEvery problem in \\(P\\) is also in \\(NP\\).\n\nSuppose \\(L\\in P\\). Then there is a deterministic algorithm \\(A\\) that decides \\(L\\) in polynomial time. We can construct a verifier that:\n\n- ignores the witness, or\n- uses the empty witness,\n\nand simply runs \\(A(x)\\).\n\nTherefore,\n\n\\[\nL\\in P \\implies L\\in NP.\n\\]\n\nHence,\n\n\\[\nP\\subseteq NP.\n\\]\n\nThe open question is whether this inclusion is strict:\n\n\\[\nP\\subsetneq NP\n\\]\n\nor whether the classes are equal:\n\n\\[\nP=NP.\n\\]\n\nIf \\(P=NP\\), then every efficiently verifiable problem would also have an efficient algorithm for finding its answer.\n\n---\n\n## 5. A central example: SAT\n\nConsider the Boolean satisfiability problem, or **SAT**.\n\nGiven a Boolean formula such as\n\n\\[\n\\varphi=(x_1\\land x_2)\\lor(\\neg x_1\\land x_3),\n\\]\n\nthe question is:\n\n> Is there an assignment of truth values to \\(x_1,x_2,x_3\\) such that \\(\\varphi\\) evaluates to true?\n\nMore formally, given a Boolean formula \\(\\varphi\\), determine whether there exists an assignment\n\n\\[\na: \\{\\text{variables of }\\varphi\\}\\to\\{\\text{False},\\text{True}\\}\n\\]\n\nsuch that\n\n\\[\n\\varphi(a)=\\text{True}.\n\\]\n\nSAT belongs to \\(NP\\):\n\n- A certificate is an assignment of truth values to all variables.\n- The certificate has length proportional to the number of variables.\n- One can evaluate the formula under that assignment in polynomial time.\n\nSAT was historically the first problem shown to be \\(NP\\)-complete, through the Cook\u2013Levin theorem.\n\nIf a deterministic polynomial-time algorithm for SAT were found, then a very large class of computationally difficult problems would become efficiently solvable.\n\n---\n\n## 6. NP-completeness\n\n### 6.1 Polynomial-time many-one reductions\n\nA language \\(A\\) is **NP-hard** under polynomial-time many-one reductions if every language \\(B\\in NP\\) can be reduced to \\(A\\).\n\nA reduction from \\(B\\) to \\(A\\) is a polynomial-time computable function \\(f\\) such that for every input \\(x\\),\n\n\\[\nx\\in B\n\\iff\nf(x)\\in A.\n\\]\n\nThis means that one can transform an instance of \\(B\\) into an equivalent instance of \\(A\\) in polynomial time.\n\nA language is **NP-complete** if:\n\n1. It belongs to \\(NP\\), and\n2. It is NP-hard under polynomial-time reductions.\n\nThe central theorem is:\n\n### Cook\u2013Levin theorem\n\nSAT is NP-complete.\n\nIn fact, many related problems are also NP-complete, including:\n\n- 3-SAT\n- CLIQUE\n- VERTEX COVER\n- HAMILTONIAN PATH\n- HAMILTONIAN CYCLE\n- INTEGER FACTORIZATION in its decision formulation\n- Many scheduling, routing, constraint-satisfaction, and combinatorial optimization problems\n\nThe exact list of NP-complete problems varies, but the phenomenon is broad.\n\n---\n\n## 7. Why one NP-complete problem controls all of \\(NP\\)\n\nSuppose we find a deterministic polynomial-time algorithm for SAT. Then every problem in \\(NP\\) becomes polynomial-time solvable.\n\nThe reason is that any \\(L\\in NP\\) has a polynomial-time reduction \\(f\\) to SAT:\n\n\\[\nx\\in L \\iff f(x)\\in \\text{SAT}.\n\\]\n\nTo decide whether \\(x\\in L\\), we can:\n\n1. Compute \\(f(x)\\).\n2. Run the polynomial-time SAT algorithm on \\(f(x)\\).\n3. Return YES if \\(f(x)\\) is satisfiable and NO otherwise.\n\nSince both the reduction and the SAT algorithm run in polynomial time, the entire procedure is polynomial-time.\n\nTherefore:\n\n\\[\n\\text{SAT}\\in P\n\\implies\nNP\\subseteq P.\n\\]\n\nSince \\(P\\subseteq NP\\), this would imply\n\n\\[\nP=NP.\n\\]\n\nConversely, if \\(P=NP\\), then SAT is in \\(P\\), because SAT is in \\(NP\\).\n\nThus, the question can be reduced to a single concrete problem:\n\n> Can SAT be solved in polynomial time?\n\nMore generally:\n\n\\[\nP=NP\n\\iff\n\\text{there exists an NP-complete language in }P.\n\\]\n\nThis is why the problem is not merely about one formula or one algorithm. It concerns the relationship between two entire computational models.\n\n---\n\n## 8. What \\(P=NP\\) would mean\n\nIf \\(P=NP\\), then polynomial-time nondeterministic computation would not be more powerful than polynomial-time deterministic computation.\n\nIn practical terms:\n\n- Every problem with a polynomially checkable certificate would have a polynomial-time algorithm for finding the certificate.\n- SAT would be solvable in polynomial time.\n- Many scheduling and routing problems would be polynomial-time solvable.\n- Many optimization problems would be efficiently solvable.\n- Many cryptographic assumptions based on NP-hardness would fail in their standard form.\n\nHowever, \\(P=NP\\) would not mean:\n\n- Every problem is easy.\n- Every problem has a practical algorithm.\n- All algorithms run quickly.\n- A polynomial algorithm must have a small constant.\n- Numerical values such as \\(2^{1000000}\\) become small.\n\nIt would mean that there is some fixed polynomial bound for the relevant algorithms. A running time such as\n\n\\[\nO(n^{1000})\n\\]\n\nis polynomial, even if it is not useful for many practical applications.\n\nIt also would not automatically imply that there is a single algorithm that is efficient for all possible representations or all problem variants, although broad consequences would follow.\n\n---\n\n## 9. What \\(P\\neq NP\\) would mean\n\nIf \\(P\\neq NP\\), then at least one problem in \\(NP\\) is not solvable in polynomial time.\n\nSince SAT is NP-complete, this would imply:\n\n\\[\n\\text{SAT}\\notin P.\n\\]\n\nThus no deterministic polynomial-time algorithm would solve all Boolean formula instances.\n\nHowever, \\(P\\neq NP\\) would not mean:\n\n- No problem in \\(NP\\) is easy.\n- No practical algorithms exist for NP problems.\n- Every NP problem is intractable.\n- Optimization problems cannot be approximated.\n- Randomized or quantum algorithms cannot help.\n\nIndeed:\n\n- Many problems in \\(NP\\) are already known to be in \\(P\\).\n- Some NP problems have excellent practical algorithms despite not having known polynomial-time bounds.\n- Some problems are fixed-parameter tractable.\n- Some have approximation algorithms.\n- Some are easier on restricted input classes.\n- Quantum computation may provide speedups for particular problems, though it is not known to solve all NP-complete problems in polynomial time.\n\nThe separation \\(P\\neq NP\\) would establish a fundamental distinction between:\n\n- problems whose answers can be verified efficiently, and\n- problems whose answers can be found efficiently by deterministic computation.\n\n---\n\n## 10. Why proving \\(P=NP\\) is difficult\n\nTo prove \\(P=NP\\), one would need to show that nondeterministic polynomial-time computation can be simulated by deterministic polynomial-time computation.\n\nA standard proof might attempt to do the following:\n\n1. Take an NP problem.\n2. Search through all certificates of length at most \\(p(n)\\).\n3. Verify each one in polynomial time.\n\nThis does work, but it is generally exponentially expensive.\n\nIf the witness has length \\(p(n)\\), there may be approximately\n\n\\[\n2^{p(n)}\n\\]\n\npossible certificates. Even when \\(p(n)=n\\), this is exponential:\n\n\\[\n2^n.\n\\]\n\nFor example, a Boolean formula with \\(m\\) variables may have up to\n\n\\[\n2^m\n\\]\n\npossible assignments.\n\nThe key gap is:\n\n> Verification is polynomial, but exhaustive search over all possible witnesses may be exponential.\n\nA proof of \\(P=NP\\) must overcome this gap. It must show that there is some clever deterministic method that avoids searching all possibilities, or that the structure of NP languages guarantees such a method.\n\nNo general method is known.\n\n---\n\n## 11. Why proving \\(P\\neq NP\\) is difficult\n\nTo prove \\(P\\neq NP\\), one must establish a genuine lower bound:\n\n\\[\n\\exists L\\in NP\\quad \\text{such that }L\\notin P.\n\\]\n\nEquivalently, one could show that some NP-complete problem, such as SAT, has no deterministic polynomial-time algorithm.\n\nThis is difficult because lower bounds are much harder to prove than upper bounds.\n\n### Upper bounds versus lower bounds\n\nAn upper-bound proof says:\n\n> Here is an algorithm, and here is why it runs in \\(O(n^k)\\) time.\n\nA lower-bound proof says:\n\n> No algorithm whatsoever can solve this problem in \\(O(n^k)\\) time\u2014or even in any polynomial time.\n\nThe second statement must rule out every possible algorithm, including algorithms that we have not thought of.\n\nMany standard techniques that produce lower bounds for restricted computational models do not automatically apply to general Turing machines.\n\nFor example, one might prove that:\n\n- a restricted model requires exponentially many operations,\n- a particular class of circuits has limitations,\n- a simplified machine cannot solve a problem efficiently.\n\nBut general algorithms may use more powerful operations, memory access patterns, or circuit constructions.\n\nA proof of \\(P\\neq NP\\) would need to overcome this universality.\n\n---\n\n## 12. Circuit complexity perspective\n\nA standard formulation is:\n\n\\[\nP\\subseteq \\text{P/poly}.\n\\]\n\nEvery language in \\(P\\) can be computed by polynomial-size Boolean circuits with a polynomial number of gate types.\n\nIf one could show that some language in \\(NP\\) requires superpolynomial-size circuits, then one would have:\n\n\\[\nL\\notin P.\n\\]\n\nSince \\(L\\in NP\\), this would prove:\n\n\\[\nP\\neq NP.\n\\]\n\nHowever, proving strong general circuit lower bounds is itself a major open problem. Existing lower-bound techniques often work only for restricted circuit classes, such as:\n\n- monotone circuits,\n- small-depth circuits,\n- AC^0,\n- bounded-fan-in circuits of certain restricted forms.\n\nThey do not yet establish the necessary lower bounds for arbitrary polynomial-time algorithms.\n\n---\n\n## 13. Why common intuitive arguments do not prove \\(P\\neq NP\\)\n\nA tempting argument is:\n\n> There are \\(2^n\\) possible inputs, so solving a problem requires exponential time.\n\nThis is not sufficient.\n\nA problem may have exponentially many possible inputs while still having a polynomial-time algorithm. For example, a function can be defined on all \\(2^n\\) binary strings, yet the property \u201cdoes this string begin with 0?\u201d is decidable in \\(O(1)\\) time.\n\nLikewise, the existence of exponentially many certificates does not prove that every algorithm must inspect all of them. A clever algorithm may exploit structure, compute a solution directly, or use algebraic methods.\n\nLikewise:\n\n> SAT has exponentially many assignments.\n\nThis shows that brute-force search is exponential, but it does not prove that every algorithm is exponential. A lower bound must rule out all possible smarter algorithms.\n\n---\n\n## 14. Diagonalization and its limitations\n\nClassical diagonalization can show that some computable problems are undecidable and that some problems require superpolynomial or even nearly exponential time.\n\nFor example, one can construct a language that differs from each machine in an enumerated list on some carefully chosen input.\n\nBut standard diagonalization often proves that a problem lies **outside a particular class**, such as:\n\n- \\(P\\),\n- \\(NP\\),\n- \\(PSPACE\\),\n- \\(EXP\\).\n\nIt may fail to produce a separation that is exactly \\(P\\) versus \\(NP\\).\n\nThe challenge is to construct a language that is:\n\n1. verifiably in \\(NP\\), but\n2. not solvable by any polynomial-time deterministic algorithm.\n\nMany standard diagonalization arguments can place a language outside a larger or more powerful class, but not necessarily inside \\(NP\\).\n\nThis is a central technical reason why the separation remains difficult.\n\n---\n\n## 15. Relativization\n\nA powerful technique called **relativization** studies oracle machines\u2014machines that have access to an abstract oracle answering membership questions.\n\nA theorem relativizes if its proof continues to work unchanged in the presence of suitable oracles.\n\nBaker, Gill, and Solovay showed in 1975 that there exist or",
+          "error": null,
+          "jev_adequate": true,
+          "score": 3
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.080208,
+          "input_tokens": 52,
+          "output_tokens": 4000,
+          "latency_ms": 38892.82077300004,
+          "text": "# P vs NP: Formal Foundations and Why It Resists Proof\n\n## Part I: The Formal Setup\n\n### 1.1 Computational model\n\nThe standard model is the **deterministic multi-tape Turing machine** (TM). Formally, a TM is a tuple\n\n$$M = (Q, \\Sigma, \\Gamma, \\delta, q_0, q_{\\text{accept}}, q_{\\text{reject}})$$\n\nwhere $Q$ is a finite state set, $\\Sigma$ the input alphabet (typically $\\{0,1\\}$), $\\Gamma \\supseteq \\Sigma \\cup \\{\\sqcup\\}$ the tape alphabet, and $\\delta: Q \\times \\Gamma^k \\to Q \\times \\Gamma^k \\times \\{L, R, S\\}^k$ the transition function for $k$ tapes.\n\nA **language** is a set $L \\subseteq \\{0,1\\}^*$. Decision problems are identified with languages. For example, SAT is the set of encodings of satisfiable Boolean formulas.\n\nThe **time complexity** of $M$ is $t_M(n) = \\max_{|x| = n} (\\text{number of steps } M \\text{ takes on } x)$.\n\n$$\\mathsf{DTIME}(f(n)) = \\{ L : L \\text{ is decided by some TM with } t_M(n) = O(f(n)) \\}$$\n\n### 1.2 The class P\n\n$$\\mathsf{P} = \\bigcup_{k \\geq 1} \\mathsf{DTIME}(n^k)$$\n\n**Why polynomial time?** Two reasons.\n\n- **Robustness.** By the *extended (polynomial) Church\u2013Turing thesis*, every reasonable deterministic model (RAM machines, multi-tape TMs, cellular automata) simulates every other with at most polynomial overhead. P is therefore model-independent.\n- **Closure.** Polynomials are closed under composition, so a polynomial-time algorithm calling a polynomial-time subroutine is still polynomial.\n\n### 1.3 The class NP\n\nThere are two equivalent definitions.\n\n**(a) Verifier definition.** $L \\in \\mathsf{NP}$ iff there exist a polynomial $p$ and a polynomial-time deterministic TM $V$ (the verifier) such that for all $x$:\n\n$$x \\in L \\iff \\exists w \\in \\{0,1\\}^{\\leq p(|x|)} : V(x, w) = 1$$\n\nThe string $w$ is called a **witness** or **certificate**.\n\n**(b) Nondeterministic definition.** A nondeterministic TM has a transition *relation* $\\delta \\subseteq (Q \\times \\Gamma^k) \\times (Q \\times \\Gamma^k \\times \\{L,R,S\\}^k)$. It accepts $x$ if *some* computation path reaches $q_{\\text{accept}}$. Then\n\n$$\\mathsf{NP} = \\bigcup_k \\mathsf{NTIME}(n^k)$$\n\nThe definitions are equivalent: the witness encodes the sequence of nondeterministic choices, and conversely a nondeterministic machine can \"guess\" the witness.\n\n**NP is not \"non-polynomial.\"** Trivially $\\mathsf{P} \\subseteq \\mathsf{NP}$: take a verifier that ignores $w$. The upper bound is also known:\n\n$$\\mathsf{NP} \\subseteq \\mathsf{PSPACE} \\subseteq \\mathsf{EXP}$$\n\nBrute force over all $2^{p(n)}$ witnesses gives exponential time and only polynomial space.\n\n**The question:**\n$$\\mathsf{P} \\overset{?}{=} \\mathsf{NP}$$\n\nPut informally: is every problem whose solutions can be *checked* efficiently also *solvable* efficiently?\n\n### 1.4 Reductions and completeness\n\nA **polynomial-time many-one (Karp) reduction** $L \\leq_p L'$ is a polynomial-time computable $f$ such that\n$$x \\in L \\iff f(x) \\in L'.$$\n\n- $L'$ is **NP-hard** if $L \\leq_p L'$ for every $L \\in \\mathsf{NP}$.\n- $L'$ is **NP-complete** if it is NP-hard and in NP.\n\n**Cook\u2013Levin Theorem (1971/1973).** SAT is NP-complete.\n\n*Proof sketch.* Let $L \\in \\mathsf{NP}$ with a nondeterministic machine $N$ running in time $T = n^k$.\n\n1. Build a $T \\times T$ **tableau** whose rows are successive configurations of $N$.\n2. Introduce Boolean variables $x_{i,j,s}$ meaning \"cell $(i,j)$ contains symbol $s$,\" where $s$ ranges over $\\Gamma \\cup (Q \\times \\Gamma)$.\n3. Write the formula\n$$\\phi = \\phi_{\\text{cell}} \\wedge \\phi_{\\text{start}} \\wedge \\phi_{\\text{move}} \\wedge \\phi_{\\text{accept}}$$\n   - $\\phi_{\\text{cell}}$: each cell hol",
+          "error": null,
+          "jev_adequate": true,
+          "score": 2
+        }
+      ]
+    },
+    {
+      "item_id": "gen-11",
+      "expected": "efficient",
+      "actual_label": "efficient",
+      "correct": true,
+      "judge_confidence": null,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": null,
+        "cost_usd": 0.0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 1034.088501000042,
+        "text": "",
+        "error": "HTTP 503: {\"error\": {\"message\": \"Provider returned error\", \"code\": 503, \"metadata\": {\"raw\": \"{\\n  \\\"id\\\": \\\"p2ytKcB-fdNmn-a48c3f90-aws_ue1\\\",\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Service unavailable\\\",\\n    \\\"type\\\": \\\"service_unavailable\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": null\\n  }\\n}\", \"provider_name\": ",
+        "jev_adequate": false,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "gen-12",
+      "expected": "efficient",
+      "actual_label": "efficient",
+      "correct": true,
+      "judge_confidence": null,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": null,
+        "cost_usd": 0.0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 1068.4098799999902,
+        "text": "",
+        "error": "HTTP 503: {\"error\": {\"message\": \"Provider returned error\", \"code\": 503, \"metadata\": {\"raw\": \"{\\n  \\\"id\\\": \\\"p2ytKiV-fdNmn-6cb62383-aws_ue1\\\",\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Service unavailable\\\",\\n    \\\"type\\\": \\\"service_unavailable\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": null\\n  }\\n}\", \"provider_name\": ",
+        "jev_adequate": false,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "gen-13",
+      "expected": "efficient",
+      "actual_label": "efficient",
+      "correct": true,
+      "judge_confidence": null,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": null,
+        "cost_usd": 0.0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 626.8577559999358,
+        "text": "",
+        "error": "HTTP 503: {\"error\": {\"message\": \"Provider returned error\", \"code\": 503, \"metadata\": {\"raw\": \"{\\n  \\\"id\\\": \\\"p2ytKub-z1gNr-e7736a63-aws_ue1\\\",\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Service unavailable\\\",\\n    \\\"type\\\": \\\"service_unavailable\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": null\\n  }\\n}\", \"provider_name\": ",
+        "jev_adequate": false,
+        "score": 1
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "z-ai/glm-5.3-flash",
+          "provider": "Fireworks",
+          "cost_usd": 0.00023555,
+          "input_tokens": 37,
+          "output_tokens": 460,
+          "latency_ms": 7177.849509999987,
+          "text": "I don't actually have access to previous conversations\u2014each chat with me starts fresh, so I can't see whatever answer was given before or what went wrong with it. That also means I can't verify whether it was right or wrong.\n\nBut I'd genuinely like to help you get this sorted. Could you share:\n\n- The original question or problem\n- What the previous answer suggested\n- What happened when you tried it (error message, wrong output, etc.)\n\nWith that context, I can work through it properly\u2014and knowing what didn't work already helps me avoid going down the same path.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 180,
+          "output_tokens": 110,
+          "latency_ms": 1983.7719300001027,
+          "text": "You\u2019re right\u2014I\u2019m sorry the previous answer didn\u2019t work. I don\u2019t have the earlier exchange in this chat, so I can\u2019t reliably correct it without the context.\n\nPlease paste:\n\n1. The original question or problem  \n2. The answer I previously gave  \n3. What went wrong\u2014the error message, incorrect result, or unexpected behavior  \n\nOnce you share those details, I\u2019ll work through it carefully and verify the solution before presenting it.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.00572,
+          "input_tokens": 40,
+          "output_tokens": 278,
+          "latency_ms": 4896.8793370002,
+          "text": "I'm sorry the last answer didn't work. That's frustrating, especially when you were counting on it.\n\nI don't have access to our previous conversation, though. Each chat starts fresh for me, so I can't see what you asked or what I said. If you share a few details, I'll work through it carefully:\n\n1. **What you're trying to do**: the original question or goal.\n2. **What I suggested**: paste the previous answer or the relevant part, if you have it.\n3. **What happened when you tried it**: error messages, unexpected output, or how it failed. Exact error text is especially helpful.\n4. **Relevant context**: software versions, operating system, language, or anything else that might matter.\n\nWith that, I can figure out what went wrong instead of guessing again.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "gen-14",
+      "expected": "efficient",
+      "actual_label": "efficient",
+      "correct": true,
+      "judge_confidence": null,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": null,
+        "cost_usd": 0.0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 1000.5714609999359,
+        "text": "",
+        "error": "HTTP 503: {\"error\": {\"message\": \"Provider returned error\", \"code\": 503, \"metadata\": {\"raw\": \"{\\n  \\\"id\\\": \\\"p2ytL2v-fdNmn-0cb2c462-aws_ue1\\\",\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Service unavailable\\\",\\n    \\\"type\\\": \\\"service_unavailable\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": null\\n  }\\n}\", \"provider_name\": ",
+        "jev_adequate": false,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "gen-15",
+      "expected": "efficient",
+      "actual_label": "efficient",
+      "correct": true,
+      "judge_confidence": null,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": null,
+        "cost_usd": 0.0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 640.5954800000018,
+        "text": "",
+        "error": "HTTP 503: {\"error\": {\"message\": \"Provider returned error\", \"code\": 503, \"metadata\": {\"raw\": \"{\\n  \\\"id\\\": \\\"p2ytLKV-z1gNr-a9da9d0d-aws_ue1\\\",\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Service unavailable\\\",\\n    \\\"type\\\": \\\"service_unavailable\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": null\\n  }\\n}\", \"provider_name\": ",
+        "jev_adequate": false,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "gen-16",
+      "expected": "efficient",
+      "actual_label": "efficient",
+      "correct": true,
+      "judge_confidence": null,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": null,
+        "cost_usd": 0.0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 601.0425849999592,
+        "text": "",
+        "error": "HTTP 503: {\"error\": {\"message\": \"Provider returned error\", \"code\": 503, \"metadata\": {\"raw\": \"{\\n  \\\"id\\\": \\\"p2ytLWR-z1gNr-68a29175-aws_ue1\\\",\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Service unavailable\\\",\\n    \\\"type\\\": \\\"service_unavailable\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": null\\n  }\\n}\", \"provider_name\": ",
+        "jev_adequate": false,
+        "score": 1
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Together",
+          "cost_usd": 3.54e-05,
+          "input_tokens": 38,
+          "output_tokens": 20,
+          "latency_ms": 2070.631019999837,
+          "text": "96",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 163,
+          "output_tokens": 15,
+          "latency_ms": 1027.321346000008,
+          "text": "96",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.000308,
+          "input_tokens": 17,
+          "output_tokens": 12,
+          "latency_ms": 1204.1345149998506,
+          "text": "12 \u00d7 8 = **96**",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "gen-17",
+      "expected": "efficient",
+      "actual_label": "efficient",
+      "correct": true,
+      "judge_confidence": null,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": null,
+        "cost_usd": 0.0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 638.0299049999394,
+        "text": "",
+        "error": "HTTP 503: {\"error\": {\"message\": \"Provider returned error\", \"code\": 503, \"metadata\": {\"raw\": \"{\\n  \\\"id\\\": \\\"p2ytMJ7-z1gNr-f5350eeb-aws_ue1\\\",\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Service unavailable\\\",\\n    \\\"type\\\": \\\"service_unavailable\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": null\\n  }\\n}\", \"provider_name\": ",
+        "jev_adequate": false,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "gen-18",
+      "expected": "efficient",
+      "actual_label": "efficient",
+      "correct": true,
+      "judge_confidence": null,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": null,
+        "cost_usd": 0.0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 639.527371000213,
+        "text": "",
+        "error": "HTTP 503: {\"error\": {\"message\": \"Provider returned error\", \"code\": 503, \"metadata\": {\"raw\": \"{\\n  \\\"id\\\": \\\"p2ytMJM-z1gNr-d217ec85-aws_ue1\\\",\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Service unavailable\\\",\\n    \\\"type\\\": \\\"service_unavailable\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": null\\n  }\\n}\", \"provider_name\": ",
+        "jev_adequate": false,
+        "score": null
+      },
+      "head_to_head": []
+    }
+  ]
+}

@@ -1,0 +1,635 @@
+{
+  "name": "support-ticket-triage",
+  "route_name": "support/ticket-triage",
+  "policy": "intent",
+  "roster": [
+    "openai/gpt-oss-120b",
+    "deepseek/deepseek-v4.1-flash",
+    "anthropic/claude-sonnet-5",
+    "anthropic/claude-opus-5.5"
+  ],
+  "accuracy": 1.0,
+  "real_cost_usd": 0.14293092999999998,
+  "frontier_equivalent_usd": 0.36266799999999993,
+  "savings_pct": 60.58904287116591,
+  "items": [
+    {
+      "item_id": "ticket-01",
+      "expected": "simple_faq",
+      "actual_label": "simple_faq",
+      "correct": true,
+      "judge_confidence": 0.97,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00126258,
+        "input_tokens": 48,
+        "output_tokens": 1897,
+        "latency_ms": 49632.04616899998,
+        "text": "If you mean **ChatGPT/OpenAI**, here\u2019s what to try:\n\n1. Go to the login page: **https://chatgpt.com/auth/login**  \n   Or for API/platform: **https://platform.openai.com/login**\n2. Click **\u201cForgot password?\u201d** or **\u201cLog in\u201d \u2192 \u201cForgot password?\u201d**\n3. Enter the email address associated with your account.\n4. Check your inbox for a message from OpenAI. If it\u2019s not there:\n   - Check **Spam/Junk**, **Promotions**, **Updates**, and **All Mail**.\n   - Search your email for: **OpenAI**, **password reset**, or **reset**.\n   - Make sure you\u2019re checking the correct email address.\n   - Wait 5\u201310 minutes, then request a new link. Only the newest link usually works.\n   - Add `openai.com` or `noreply@openai.com` to your contacts/safe senders.\n   - Try a different browser or incognito window.\n5. If you signed up with **Google, Apple, or Microsoft**, you may not have an OpenAI password. Use the **\u201cContinue with Google/Apple/Microsoft\u201d** option instead.\n6. If you still don\u2019t get the email, contact OpenAI Support at **https://help.openai.com/** and use the chat widget. Include the email address you\u2019re trying and the time you requested the reset.\n\nIf this is for a different service, the same steps generally apply: use the login page\u2019s **\u201cForgot password?\u201d** link, then check spam/junk and support.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 4
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4-flash-0731",
+          "provider": "Baidu",
+          "cost_usd": 0.0001416118,
+          "input_tokens": 101,
+          "output_tokens": 330,
+          "latency_ms": 10101.109631999974,
+          "text": "If you didn\u2019t receive the password reset email, try these steps:\n\n1. **Check your spam/junk folder**  \n   Sometimes reset emails get filtered there.\n\n2. **Search your entire inbox**  \n   Search for terms like \u201cpassword reset,\u201d \u201creset your password,\u201d or the app/website name.\n\n3. **Make sure you entered the correct email address**  \n   If you typed a slightly different email, the reset link went to that account instead.\n\n4. **Wait a few minutes and resend**  \n   Some emails take a few minutes to arrive. Use the \u201cResend / Forgot password\u201d option again.\n\n5. **Check for typos in your email address**  \n   If you have multiple email accounts, try the one you normally use for that service.\n\n6. **Whitelist the sender**  \n   Add the site\u2019s email address to your contacts to avoid future filtering.\n\n7. **Try a different browser or device**  \n   Sometimes the reset request doesn\u2019t go through due to a browser issue.\n\n8. **Contact support**  \n   If it\u2019s been more than 15\u201330 minutes and you still haven\u2019t received it, reach out to the website\u2019s support team. They can verify your account and help you reset it.\n\nIf you tell me which website/app you\u2019re using, I can give more specific instructions.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 4
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 173,
+          "output_tokens": 288,
+          "latency_ms": 7417.99740099998,
+          "text": "I can help you troubleshoot, but I can\u2019t reset your password directly without knowing which service you use.\n\nTry these steps:\n\n1. **Request a new reset link** from the sign-in page\u2014choose **\u201cForgot password\u201d** or **\u201cReset password.\u201d**\n2. **Check all mail folders**, including Spam/Junk, Promotions, and Trash.\n3. **Search your inbox** for the service\u2019s name or words like \u201cpassword reset.\u201d\n4. **Allow a few minutes** for the email to arrive, then request another link. Some services expire links quickly, so use the newest one.\n5. **Add the sender to your contacts** or whitelist the service\u2019s email domain, then check spam again.\n6. Make sure you entered the **correct email address or username** and that any email-typo filters are disabled.\n7. If you used a phone number, try **\u201creset by SMS\u201d** or the account-recovery option.\n8. If nothing arrives, contact the service\u2019s support team and provide the email/username you used\u2014**never send them your password or full verification code**.\n\nTell me which website or app you\u2019re trying to access, and I can give more specific steps.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 4
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.01084,
+          "input_tokens": 30,
+          "output_tokens": 536,
+          "latency_ms": 6707.180423000068,
+          "text": "Here are the most common reasons a password reset email doesn't show up, and what to try:\n\n**1. Check other folders**\n- **Spam/Junk**: reset emails often get filtered here.\n- **Promotions, Updates, or Social tabs** (Gmail).\n- **Other/Focused** (Outlook).\n- Search your inbox for words like \"password,\" \"reset,\" or the company's name.\n\n**2. Wait a few minutes**\nEmails can take 5\u201315 minutes to arrive. Avoid requesting multiple resets quickly, because each new request usually invalidates the previous link.\n\n**3. Confirm the email address**\n- Make sure you typed it correctly on the reset page.\n- You may have signed up with a different email (an old work, school, or secondary address).\n- If you signed up with Google, Apple, or Facebook, there may be no password to reset. Try the \"Sign in with\u2026\" button instead.\n\n**4. Check email filters or blocks**\n- Look for rules or filters that auto-archive or delete messages.\n- Make sure the sender's domain isn't blocked.\n- If it's a work or school email, IT security filters sometimes quarantine these messages.\n\n**5. Try again**\nRequest one new reset link, then wait a few minutes before checking.\n\n**6. Contact support**\nIf nothing arrives, reach out to the service's support team. Many have a \"Can't access your account?\" or \"Other options\" link on the login page for account recovery by phone or ID verification.\n\n**Which service or website are you trying to reset your password for?** If you tell me, I can give you more specific steps.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "ticket-02",
+      "expected": "simple_faq",
+      "actual_label": "simple_faq",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00070884,
+        "input_tokens": 42,
+        "output_tokens": 1060,
+        "latency_ms": 28466.131685999928,
+        "text": "I can\u2019t access your billing account, so I can\u2019t retrieve it for you\u2014but where you download it depends on the service.\n\nIf you mean **OpenAI/ChatGPT**:\n\n- **ChatGPT Plus/Pro subscription:**  \n  In ChatGPT, click your profile/avatar \u2192 **Settings** \u2192 **Subscription** \u2192 **Manage**. This opens the Stripe billing portal. Go to **Invoices** or **Payment history**, find last month\u2019s invoice, and click **Download invoice/receipt PDF**.\n\n- **OpenAI API platform:**  \n  Go to [platform.openai.com](https://platform.openai.com) \u2192 **Settings** \u2192 **Organization** \u2192 **Billing** \u2192 **Invoices**. Find the invoice for last month and download the PDF. You may need owner/admin permissions.\n\n- **Also check your email:**  \n  OpenAI/Stripe usually emails receipts/invoices with a link to download the PDF. Search for \u201cOpenAI receipt\u201d or \u201cStripe invoice.\u201d\n\nIf you mean a different service, tell me which one and I\u2019ll give you the exact path.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "ticket-03",
+      "expected": "simple_faq",
+      "actual_label": "simple_faq",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00133826,
+        "input_tokens": 41,
+        "output_tokens": 2014,
+        "latency_ms": 54942.24716300005,
+        "text": "Assuming you mean **ChatGPT (OpenAI) plans**:\n\n| | **Pro** | **Team** |\n|---|---|---|\n| **Best for** | One individual power user | Organizations/small teams |\n| **Seats** | 1 person | 2+ users, billed per seat |\n| **Price** | ~$200/month | ~$25/user/month annual, ~$30/user/month monthly |\n| **Model access** | Highest-tier access, including Pro-exclusive/high-compute modes and earliest features | Advanced models, but generally **not** Pro-exclusive high-compute modes |\n| **Usage limits** | Highest limits | Higher than Plus per user, but below Pro |\n| **Collaboration** | None/limited | Shared workspace, GPTs, member management |\n| **Admin controls** | Personal account only | Admin console, centralized billing, user management |\n| **Data privacy** | Consumer treatment; may be used for training unless you opt out | Team data is typically excluded from model training by default |\n| **Billing** | Individual subscription | Per-user subscription, minimum 2 users |\n\n**Short version:**  \n- Choose **Pro** if you\u2019re one person who needs the maximum model access, compute, and Pro-only features.  \n- Choose **Team** if you need multiple seats, admin/collaboration tools, centralized billing, and stronger business data-privacy defaults.\n\nPricing and exact features change often, so check OpenAI\u2019s current pricing page. If you meant a different product\u2019s Pro vs Team plans, tell me which one and I\u2019ll compare those.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "ticket-04",
+      "expected": "simple_faq",
+      "actual_label": "simple_faq",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00049324,
+        "input_tokens": 43,
+        "output_tokens": 733,
+        "latency_ms": 22253.884716000015,
+        "text": "It depends on where you started the free trial. In general:\n\n1. **Log in** to the account you used for the trial.\n2. Go to **Account / Settings \u2192 Billing / Subscription / Plan**.\n3. Find the free trial and choose **Manage** or **Cancel subscription**.\n4. **Confirm cancellation** \u2014 you usually need to click through a confirmation screen.\n5. Check for a **confirmation email** or a status that says \u201cCancelled\u201d / \u201cEnds on [date].\u201d  \n   Deleting the app or ignoring it usually does **not** cancel it.\n\nPlatform-specific:\n\n- **iPhone/iPad:** Settings \u2192 [your name] \u2192 Subscriptions \u2192 select the service \u2192 Cancel Free Trial.\n- **Android:** Google Play Store \u2192 profile icon \u2192 Payments & subscriptions \u2192 Subscriptions \u2192 select \u2192 Cancel.\n- **PayPal:** Settings \u2192 Payments \u2192 Manage automatic payments \u2192 find the merchant \u2192 Cancel.\n- **Direct website:** Account \u2192 Billing/Subscription \u2192 Cancel.\n- **Amazon/Apple/Google/Roku etc.:** Cancel through that store\u2019s subscription settings, not just the service\u2019s website.\n\nCancel **at least 24\u201348 hours before the trial ends** if possible, because some systems process renewals early. If it already converted, cancel immediately and contact support to ask for a refund\u2014many will refund if you\u2019re within a short window.\n\nIf you tell me the exact service/app, I can give you the exact cancellation steps.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "google/gemini-2.5-flash",
+          "provider": "Google",
+          "cost_usd": 0.0025139,
+          "input_tokens": 13,
+          "output_tokens": 1004,
+          "latency_ms": 8661.32891899997,
+          "text": "To cancel your free trial before it converts to a paid subscription, you'll generally need to follow these steps. The exact process can vary slightly depending on the service, but the core idea remains the same:\n\n**1. Identify the Service and Your Account:**\n\n* **Which service are you trying to cancel?** (e.g., Netflix, Spotify, Amazon Prime, Adobe, a specific app, etc.)\n* **What email address or username did you use to sign up?** You'll need this to log in.\n\n**2. Find Your Account or Subscription Settings:**\n\n* **Website:** This is usually the easiest and most reliable method. Go to the service's official website.\n* **App:** If it's a mobile app, you might find the settings within the app itself.\n\n**3. Log In to Your Account:**\n\n* Use your credentials to log in. If you've forgotten your password, use the \"Forgot Password\" or \"Reset Password\" option.\n\n**4. Locate \"Subscriptions,\" \"Billing,\" \"Payments,\" or \"Account Settings\":**\n\n* Once logged in, look for a section related to your account, subscriptions, billing, or payments. This is where your trial information will be. Common locations include:\n    * **Profile icon (often a silhouette or your initial) in the top right corner.**\n    * **A menu labeled \"Settings,\" \"Account,\" \"My Account,\" or \"Subscription.\"**\n    * **Sometimes a direct link like \"Manage Subscription\" or \"Manage Plan.\"**\n\n**5. Find the \"Cancel Trial\" or \"Cancel Subscription\" Option:**\n\n* Within the subscription or billing section, you should see an option to manage or cancel your trial. It might be labeled:\n    * \"Cancel Trial\"\n    * \"Cancel Subscription\"\n    * \"Manage Plan\"\n    * \"Do not renew\"\n    * \"Turn off auto-renew\"\n\n**6. Follow the Cancellation Prompts:**\n\n* The service will often try to persuade you to stay. You might encounter:\n    * **Confirmation questions:** \"Are you sure you want to cancel?\"\n    * **Surveys:** \"Why are you canceling?\" (You can often skip these or select \"Other.\")\n    * **Special offers:** \"Stay with us and get X% off!\" (You can decline these.)\n* **Be sure to go through all the steps until you receive a final confirmation.**\n\n**7. Look for Confirmation:**\n\n* **On-screen confirmation:** The service should display a message confirming your cancellation.\n* **Email confirmation:** Most services will send you an email confirming that your trial has been canceled and that you won't be charged. **This email is crucial \u2013 keep it for your records.**\n\n**8. Check the Effective Cancellation Date:**\n\n* Some services allow you to continue using the trial benefits until the original trial end date, even after you've canceled. Others might cut off access immediately. The confirmation message or email should clarify this.\n\n**General Tips and Important Considerations:**\n\n* **Do it before the trial ends:** Don't wait until the last minute. Give yourself a buffer of at least 24-48 hours, especially if you're unsure about time zones or potential technical glitches.\n* **Set a reminder:** Put a reminder on your calendar or phone for a few days before the trial is set to convert.\n* **Review terms and conditions:** When you sign up for a trial, quickly skim the terms for cancellation policies.\n* **Payment Method:** If you're concerned about being charged, you can sometimes remove your payment method *after* canceling, but **never before you've confirmed the cancellation.** Removing it prematurely might just pause the trial or prevent you from accessing other features without actually canceling the billing cycle.\n* **Screenshot everything:** If you encounter any issues, taking screenshots of the cancellation process and confirmation messages can be helpful.\n* **App Store/Google Play Subscriptions:** If you signed up for a trial through an app on your phone (e.g., Apple App Store or Google Play Store), the cancellation process often goes through their respective subscription management settings:\n    * **iOS (Apple):** Go to Settings > Your Name > Subscriptions.\n    * **Android (Google Play):** Open the Google Play Store app > Tap your profile icon > Payments & subscriptions > Subscriptions.\n\n**If you have trouble finding the cancellation option:**\n\n* **Search the service's help center or FAQ:** Many companies have detailed instructions on how to cancel.\n* **Contact customer support:** If all else fails, reach out to their customer support via chat, email, or phone.\n\nBy following these steps, you should be able to successfully cancel your free trial before you're charged.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 4
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 169,
+          "output_tokens": 195,
+          "latency_ms": 5091.11554499998,
+          "text": "To cancel a free trial before it becomes paid:\n\n1. Sign in to the account where you started the trial.\n2. Open **Settings**, **Account**, **Billing**, or **Subscription**\u2014the exact label varies by service.\n3. Find the active trial and select **Cancel trial**, **End membership**, or **Manage subscription**.\n4. Continue through the cancellation prompts and save the confirmation.\n\nAlso check your email for a trial-ending reminder or follow the cancellation link in the original signup receipt. Make sure the cancellation is completed **before the trial\u2019s stated end date**, since some services renew automatically at that time.\n\nIf you can\u2019t find a cancellation option, contact the company\u2019s support before the trial ends and ask them to cancel the subscription and confirm that you won\u2019t be charged. Keep screenshots or the confirmation number.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 3
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.013844,
+          "input_tokens": 26,
+          "output_tokens": 687,
+          "latency_ms": 7846.174254999937,
+          "text": "The exact steps depend on the service and on **where you signed up** (the website, the Apple App Store, Google Play, Amazon, etc.). Here's how to handle the most common cases.\n\n## If you signed up through an app store\n**iPhone/iPad (Apple):**\n1. Open **Settings** \u2192 tap your name \u2192 **Subscriptions**\n2. Select the subscription \u2192 **Cancel Free Trial**\n\n**Android (Google Play):**\n1. Open the **Play Store** \u2192 tap your profile icon \u2192 **Payments & subscriptions** \u2192 **Subscriptions**\n2. Select the subscription \u2192 **Cancel subscription**\n\n**Amazon (Prime, Channels, apps):**\nGo to **Your Account** \u2192 **Memberships & Subscriptions** \u2192 find the trial \u2192 **Cancel** or turn off auto-renew\n\n## If you signed up directly on the company's website\n1. Log in to your account\n2. Look for **Account**, **Settings**, **Billing**, **Subscription**, or **Plan**\n3. Click **Cancel**, **End trial**, or **Turn off auto-renew**\n4. If you can't find it, search \"[service name] cancel free trial.\" Most companies have a help page for this.\n\n## Tips to avoid getting charged\n- **Cancel at least a day early.** Some trials renew hours before the stated end date, or time zone differences can catch you.\n- **You usually keep access** until the trial ends, even after canceling, so there's often no downside to canceling right away.\n- **Get confirmation.** Look for a confirmation email or screenshot the cancellation screen.\n- **Deleting the app doesn't cancel the subscription.** You have to cancel it explicitly.\n- **If you get charged anyway**, contact the company's support right away. Many will refund a charge you dispute promptly. You can also contact your bank or card issuer as a last resort.\n\nIf you tell me which service it is (Netflix, Spotify, Amazon Prime, Audible, etc.), I can give you the specific steps.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "ticket-05",
+      "expected": "billing_dispute",
+      "actual_label": "billing_dispute",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": null,
+        "cost_usd": 0.0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 972.4408250000351,
+        "text": "",
+        "error": "HTTP 503: {\"error\": {\"message\": \"Provider returned error\", \"code\": 503, \"metadata\": {\"raw\": \"{\\n  \\\"id\\\": \\\"p2yoRR6-z1gNr-5aadec07-aws_ue1\\\",\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Service unavailable\\\",\\n    \\\"type\\\": \\\"service_unavailable\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": null\\n  }\\n}\", \"provider_name\": ",
+        "jev_adequate": false,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "ticket-06",
+      "expected": "billing_dispute",
+      "actual_label": "billing_dispute",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": "Together",
+        "cost_usd": 0.00022305,
+        "input_tokens": 91,
+        "output_tokens": 349,
+        "latency_ms": 2426.761703000011,
+        "text": "I\u2019m happy to help you understand the prorated charge, but I\u2019ll need to verify that I\u2019m looking at the right account before we dive into the details.\n\n**Could you please provide one (or more) of the following pieces of information so I can confirm your identity?**\n\n1. The email address associated with your account  \n2. Your account/customer ID (if you have it handy)  \n3. The last four digits of the payment method you used for this invoice  \n\n*We never ask for full credit\u2011card numbers, passwords, or any other sensitive security codes.*\n\nOnce I have verified your account, I can break down exactly how the prorated amount was calculated for your mid\u2011cycle upgrade. If you prefer, I can also give you a quick overview of how prorations work in general right now. Let me know how you\u2019d like to proceed!",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "ticket-07",
+      "expected": "billing_dispute",
+      "actual_label": "billing_dispute",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": "Together",
+        "cost_usd": 0.00025365,
+        "input_tokens": 87,
+        "output_tokens": 401,
+        "latency_ms": 2574.83084699993,
+        "text": "I\u2019m sorry you\u2019re seeing a duplicate charge. I can help start the investigation and get a refund processed for the one you don\u2019t need.\n\nTo pull up the transaction details, could you please provide the following information?\n\n| Detail | What to share |\n|--------|----------------|\n| **Last\u202f4 digits of the card** used for the purchase | e.g.,\u202f1234 |\n| **Merchant name** (as it appears on the statement) | |\n| **Invoice/reference number** that appears on both charges | |\n| **Date(s)** of the two charges (or the approximate date) | |\n| **Amount** of each charge (they should be the same) | |\n\nYou can share just the last four digits of the card\u2014there\u2019s no need to send the full number, expiration date, or CVV.\n\nOnce I have those details, I\u2019ll be able to:\n\n1. Verify that the two charges are indeed duplicates.  \n2. Open a dispute on the duplicate transaction.  \n3. Initiate a refund for the extra charge and keep you updated on the status.\n\nIf you prefer, you can also contact our support line\u202f\ud83d\udcde\u202f1\u2011800\u2011555\u20110199 or use the secure chat in the app under **Help\u202f\u2192\u202fPayments\u202f\u2192\u202fReport a problem**. Either way, we\u2019ll work to get the unwanted charge removed as quickly as possible.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 1
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "google/gemini-2.5-flash",
+          "provider": "Google",
+          "cost_usd": 0.0008454,
+          "input_tokens": 18,
+          "output_tokens": 336,
+          "latency_ms": 4445.715557999961,
+          "text": "I understand you were charged twice for the same invoice and need a refund for one of the charges. To help you with this, I need to know a little more about who charged you.\n\n**Please tell me:**\n\n*   **Who was the charge from?** (e.g., a specific store, a service provider, an online platform, a utility company, etc.)\n\nOnce I know who processed the charge, I can give you the most accurate advice on how to proceed.\n\n**In the meantime, here are the general steps you'll likely need to take:**\n\n1.  **Gather your information:**\n    *   **Both transaction details:** Dates, amounts, and any transaction IDs or authorization codes.\n    *   **The invoice number:** Confirm it's identical on both charges.\n    *   **Proof of payment:** Bank statements or credit card statements showing both charges.\n2.  **Contact the merchant/service provider directly:** This is usually the quickest and most effective way to resolve duplicate charges.\n    *   Explain the situation clearly.\n    *   Provide them with all the details you've gathered.\n    *   Request a refund for the duplicate charge.\n3.  **If you have difficulty with the merchant, or if they are unresponsive:**\n    *   **Contact your bank or credit card company.** Explain that you have a duplicate charge from a specific merchant and you've already tried to resolve it with them (if applicable). They can initiate a dispute or chargeback process for you.\n\nLet me know who charged you, and I can give you more specific guidance!",
+          "error": null,
+          "jev_adequate": true,
+          "score": 4
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 174,
+          "output_tokens": 222,
+          "latency_ms": 6267.663158000005,
+          "text": "I can help you troubleshoot, but I can\u2019t issue the refund directly.\n\nContact the merchant or payment platform and ask them to **void or refund the duplicate charge** for the same invoice number. Provide:\n\n- Invoice number  \n- Charge amount and dates  \n- Card\u2019s last four digits  \n- Receipts or transaction IDs  \n\nThe refund should go back to the original card, usually within **5\u201310 business days**, depending on the provider. If the merchant refuses or you don\u2019t recognize either charge, contact your card issuer to dispute the duplicate transaction.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 4
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.012588,
+          "input_tokens": 32,
+          "output_tokens": 623,
+          "latency_ms": 8300.35457300005,
+          "text": "I'm sorry about the double charge. I'm an AI assistant, so I can't see your account or issue refunds myself, but I can help you get this resolved quickly.\n\n**1. Check whether both charges are final**\nLook at your bank or card statement. If one charge is marked **\"pending,\"** it may be a temporary authorization hold that will drop off on its own within 3\u201310 business days. If both show as **posted/completed**, it's a true duplicate and you'll need a refund.\n\n**2. Gather the details**\n- Invoice number\n- Date and amount of each charge\n- Last 4 digits of the card\n- Any transaction or reference IDs from your statement\n- A screenshot of both charges, if possible\n\n**3. Contact the merchant first**\nThis is usually the fastest route. Here's a message you can adapt:\n\n> Subject: Duplicate charge \u2013 Invoice #[number]\n>\n> Hello,\n>\n> My card ending in [XXXX] was charged twice for Invoice #[number]:\n> - [Date] \u2013 $[amount] \u2013 Ref: [ID]\n> - [Date] \u2013 $[amount] \u2013 Ref: [ID]\n>\n> I only authorized one payment. Please refund the duplicate charge to the original payment method and confirm once it's processed.\n>\n> Thank you,\n> [Your name]\n> [Account number/email on file]\n\n**4. If the merchant doesn't respond or refuses**\nContact your card issuer (the number on the back of your card) and dispute the duplicate charge. Most issuers have a time limit, often 60 days from the statement date, so don't wait too long.\n\nIf you tell me which company charged you, I can help you find their support contact or billing process.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "ticket-08",
+      "expected": "billing_dispute",
+      "actual_label": "billing_dispute",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": "Together",
+        "cost_usd": 0.00031875,
+        "input_tokens": 93,
+        "output_tokens": 508,
+        "latency_ms": 2656.4265619999787,
+        "text": "I\u2019m really sorry to hear you\u2019ve been charged after you thought the service was cancelled.\u202fLet\u2019s get this sorted out and make sure you receive the refund you\u2019re owed.\n\nTo investigate and process the cancellation/refund, could you please provide the following details?\n\n| Information needed | Why we need it |\n|--------------------|----------------|\n| **Email address** associated with the account (or the username you use to log in) | Helps us locate the correct subscription |\n| **Order/Invoice number** (if you have it) | Lets us pull up the specific billing records |\n| **Subscription or plan name** (e.g., \u201cPro Monthly\u201d, \u201cPremium\u201d) | Confirms which product was billed |\n| **Date you originally attempted to cancel** (or a screenshot of the cancellation confirmation, if you have one) | Allows us to verify the timeline and why the cancellation didn\u2019t go through |\n\n*Please do **not** share full credit\u2011card numbers, CVV codes, or any other sensitive payment details.* The information above is enough for our billing team to locate your account and issue a refund for the months you were incorrectly charged.\n\nOnce we have those details, we\u2019ll:\n\n1. Verify the cancellation status and determine why the billing continued.  \n2. Issue a refund for each month you were charged after the intended cancellation date.  \n3. Confirm the cancellation so no further charges occur.  \n\nIf you prefer, you can also reach out directly to our support email **support@yourcompany.com** or call **1\u2011800\u2011555\u20110199** (option\u202f3 for Billing) and reference the case \u201cRefund \u2013 Cancelled Subscription.\u201d  \n\nThank you for your patience, and I\u2019ll make sure we get this resolved quickly.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "ticket-09",
+      "expected": "bug_report",
+      "actual_label": "bug_report",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.012038,
+        "input_tokens": 54,
+        "output_tokens": 1193,
+        "latency_ms": 14255.094084000008,
+        "text": "That 5-hour offset is a strong clue \u2014 it matches the UTC to US Eastern Time (EST) difference. This almost always means:\n\n**The dashboard converts timestamps to local/Eastern time before displaying them, but the CSV export skips that conversion and dumps raw UTC values instead.**\n\n## Quick ways to confirm\n\n1. Check what timezone your database stores timestamps in (usually UTC).\n2. Check what timezone your dashboard frontend uses to render dates (often the browser's local timezone via JS `Date` object, or a hardcoded org timezone).\n3. Check your export/report generation code \u2014 does it format dates using the same timezone logic as the dashboard, or does it just call something like `date.toString()` / `strftime()` without a timezone conversion?\n\n## Likely fix locations\n\n- **Frontend (JS):** If the dashboard uses `new Date(utcString)` and lets the browser convert to local time automatically, but your CSV export is generated server-side (e.g., in Python/Node) without applying the same offset \u2014 that's the bug.\n- **Backend export script:** Look for where the CSV writes the date column. If it's using `datetime.utcnow()` or pulling the raw DB value without `.astimezone(tz)` or similar, that's it.\n- **Reporting library:** Some report/export tools (pandas `to_csv`, server-side PDF/CSV generators) default to UTC or naive datetime formatting regardless of what the UI shows.\n\n## Typical fix (example patterns)\n\n**Python:**\n```python\nfrom datetime import timezone\nimport pytz\n\neastern = pytz.timezone(\"America/New_York\")\nlocal_dt = utc_dt.replace(tzinfo=timezone.utc).astimezone(eastern)\n```\n\n**Node.js:**\n```js\nconst { DateTime } = require(\"luxon\");\nconst localDate = DateTime.fromISO(utcTimestamp, { zone: \"utc\" }).setZone(\"America/New_York\");\n```\n\n**SQL (if export is a raw query):**\n```sql\nSELECT date_column AT TIME ZONE 'UTC' AT TIME ZONE 'America/New_York'\n```\n\n## What I'd need to help more precisely\n- What stack generates the CSV (Python/pandas, Node, a BI tool like Looker/Tableau/Metabase, etc.)?\n- Is the timestamp stored as UTC in the database?\n- Does the dashboard timezone come from the browser, or a fixed setting?\n\nIf you can share the export code snippet or the tool name, I can point to the exact line to fix.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "ticket-10",
+      "expected": "bug_report",
+      "actual_label": "bug_report",
+      "correct": true,
+      "judge_confidence": 0.99,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.004956,
+        "input_tokens": 43,
+        "output_tokens": 487,
+        "latency_ms": 7335.214024999914,
+        "text": "That's not expected behavior\u2014the UI should update immediately after a successful delete without requiring a manual refresh. This points to a state management issue rather than an inherent limitation. A few likely causes:\n\n**Most common culprits:**\n\n1. **Local state not updated after API success** \u2014 the delete request succeeds on the backend, but the frontend list (array/state) isn't being filtered or re-fetched afterward.\n2. **Optimistic update missing or broken** \u2014 if the UI is supposed to remove items immediately (before server confirmation), that logic might be missing or erroring silently.\n3. **Stale cache** \u2014 if you're using something like React Query, SWR, Apollo, or similar, the cache key for the list query might not be getting invalidated/refetched after the delete mutation.\n4. **Batch handling bug** \u2014 since this is bulk delete specifically, check if the single-item delete works correctly but the bulk path skips the UI update step (easy to miss if bulk delete was added as a separate code path).\n\n**Questions to help narrow it down:**\n\n- Does deleting a *single* item (non-bulk) update the list correctly?\n- Are you seeing any errors in the browser console when this happens?\n- What does the network tab show \u2014 does the delete request return success (200/204) for all items?\n- Are you managing this list with a specific library (React Query, Redux, Vuex, plain state, etc.)?\n\nIf you can share the relevant code (the delete handler and how the list is rendered/stored), I can help pinpoint exactly where the update is being missed.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 4
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Together",
+          "cost_usd": 0.0023412,
+          "input_tokens": 56,
+          "output_tokens": 1937,
+          "latency_ms": 13973.723863000032,
+          "text": "No \u2014 that\u2019s not expected in a properly implemented UI. It means the delete request succeeded on the server, but the frontend list state/cache wasn\u2019t updated afterward. A refresh re-fetches the list and shows the correct result.\n\nCommon causes:\n\n- The bulk-delete mutation succeeds, but the list query/cache isn\u2019t invalidated or refetched.\n- The frontend removes only a single item, not all selected IDs.\n- The list is server-rendered/cached and needs revalidation (e.g. Next.js `revalidatePath`/`router.refresh`, HTMX/Turbo refresh, Rails cache busting).\n- The UI filters/keys by a different ID than the bulk delete returns.\n- Pagination/filter state keeps stale data until a full reload.\n\nTypical fixes:\n\n- Optimistically remove deleted IDs from local state:\n  ```ts\n  setItems(prev => prev.filter(item => !deletedIds.includes(item.id)));\n  ```\n- Or invalidate/refetch the list after success:\n  ```ts\n  queryClient.invalidateQueries({ queryKey: ['items'] });\n  ```\n  SWR: `mutate('/api/items')`\n  Apollo: update/evict cache\n  Redux/Pinia/Vuex: dispatch/remove deleted items\n- If using server actions, revalidate the affected path or call `router.refresh()`.\n- Make the bulk endpoint return the deleted IDs so the client knows exactly what to remove.\n\nIf you\u2019re just using the app, it\u2019s a bug and worth reporting. If you\u2019re the developer, tell me the framework/state tool (React Query, Redux, Next.js, Django, Rails, etc.) and I can give the exact fix.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 180,
+          "output_tokens": 182,
+          "latency_ms": 4674.527524999917,
+          "text": "No\u2014the item should disappear from the list immediately after a successful bulk delete. If it remains until you refresh, the deletion likely succeeded on the server, but the list\u2019s client-side state or cache wasn\u2019t updated.\n\nTypical fixes:\n\n- Refresh or re-fetch the list after the delete request succeeds.\n- Remove deleted IDs from the local state/cache.\n- Invalidate the relevant query cache after mutation.\n- Check that the bulk-delete request completed successfully and the UI updates the active page/filter.\n- Make sure you\u2019re not viewing an optimistic-update list that needs to be rolled back or replaced with the server response.\n\nIf you share the relevant component or API/query code, I can identify the exact update that\u2019s missing.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 3
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.01964,
+          "input_tokens": 45,
+          "output_tokens": 973,
+          "latency_ms": 12328.069769000082,
+          "text": "No, that's usually not the intended behavior. A delete action should normally update the list right away. When the item disappears only after a refresh, it typically means **the delete succeeded on the server, but the UI never updated its local copy of the data.**\n\n## If this is an app you're using (not building)\n\nIt's most likely a bug. Try:\n- Checking whether a newer version is available\n- Reporting it to the developer/support, noting that it happens with bulk delete specifically (if single delete works fine, that's a useful clue for them)\n\n## If this is your own code\n\nThese are the usual culprits:\n\n1. **Local state isn't updated after the delete request**\n   The API call succeeds, but nothing removes the items from the list in memory. After the request resolves, filter them out:\n   ```js\n   setItems(prev => prev.filter(item => !selectedIds.includes(item.id)));\n   ```\n\n2. **Cached data isn't invalidated**\n   With a data-fetching library, the list query needs to be refetched or invalidated:\n   - React Query / TanStack Query: `queryClient.invalidateQueries({ queryKey: ['items'] })`\n   - SWR: `mutate('/api/items')`\n   - Apollo: `refetchQueries` or a cache `update` function\n   - RTK Query: `invalidatesTags` on the mutation\n\n3. **Single delete works but bulk doesn't**\n   Often the single-delete handler has the update logic and the bulk handler was written separately without it. Or the bulk handler compares IDs with mismatched types (e.g., `\"5\"` vs `5`), so the filter removes nothing.\n\n4. **State is mutated directly**\n   Something like `items.splice(...)` changes the array in place, so frameworks like React don't detect a change and don't re-render. Always create a new array.\n\n5. **Missing or unstable list keys**\n   Using array index as the `key` can cause the wrong items to appear to remain after removal.\n\n6. **Server-side caching**\n   Less common, but if the list endpoint is cached (HTTP cache headers, CDN, server cache), a refetch might return stale data. Check the Network tab to see whether the refetched response still contains the deleted items.\n\n## Quick diagnosis\n\nOpen your browser dev tools and watch the Network tab when you click bulk delete:\n- **Delete request succeeds, no follow-up fetch, list unchanged** \u2192 the problem is #1 or #2\n- **Refetch happens but the response still includes the items** \u2192 the problem is #6 or a server-side issue\n- **Refetch returns correct data but the UI doesn't change** \u2192 the problem is #4 or #5\n\nIf you share the framework you're using and the bulk-delete handler code, I can point to the exact fix.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "ticket-11",
+      "expected": "bug_report",
+      "actual_label": "bug_report",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.02168,
+        "input_tokens": 50,
+        "output_tokens": 2158,
+        "latency_ms": 28135.056513999985,
+        "text": "That's the classic \"silent failure\" pattern \u2014 it usually means the problem is in a layer that isn't being observed, not that nothing is wrong. A few things to check, roughly in order of likelihood/speed:\n\n**1. Confirm which side is actually broken**\n- Are events even being *generated* on your end? Check upstream (order created, status changed, whatever triggers the webhook) \u2014 is that still firing?\n- Is your webhook dispatcher being *called* at all, or is it being called and failing to send?\n\n**2. Check the queue/worker, not the API logs**\nMost webhook systems push to a queue and a worker delivers async. If the worker process died, hung, or is stuck retrying against a poison message:\n- Queue depth \u2014 is it growing unbounded since yesterday?\n- Worker process alive but not consuming (deadlock, connection pool exhausted, thread pool starved)?\n- Any silent `except: pass` / swallowed exception in the delivery code that was touched in a recent deploy?\n\n**3. Check what changed yesterday**\nThis is the highest-signal question. Look at:\n- Deploys/config changes in that window (even unrelated-looking ones \u2014 feature flags, dependency bumps)\n- TLS cert expiry on either your outbound client or a proxy in front of it\n- DNS changes for destination endpoints\n- Egress firewall/security group changes (cloud provider auto-updates, network policy changes)\n- Queue/broker version upgrades or infra migrations (K8s node rotation, autoscaling group replaced)\n\n**4. Rule out \"logged as success but never left the building\"**\n- Is your HTTP client logging based on \"request initiated\" rather than \"response received\"?\n- Any proxy/load balancer between your dispatcher and the internet that could be returning a fake 200 or eating the connection?\n- Timeouts set too short + retries silently exhausted without alerting?\n\n**5. Your status page is checking the wrong thing**\n\"All green\" almost certainly means your health checks test that the API/DB is up, not that the actual webhook delivery path works end-to-end. That's worth fixing regardless \u2014 add a synthetic canary: fire a real webhook to a controlled endpoint every N minutes and alert if it doesn't arrive within X seconds.\n\n**Fastest way to localize it right now:**\nManually trigger one event and trace it through each stage:\n```\nevent created \u2192 enqueued? \u2192 dequeued by worker? \u2192 HTTP request attempted? \u2192 response received? \u2192 marked delivered?\n```\nWhichever stage it stops at tells you exactly where to look next.\n\nCan you tell me: is delivery async via a queue, or synchronous in the request path? And did anything deploy/change in the last 24-48h (even something seemingly unrelated)? That'll help narrow this down fast.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "ticket-12",
+      "expected": "bug_report",
+      "actual_label": "bug_report",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.008516,
+        "input_tokens": 53,
+        "output_tokens": 841,
+        "latency_ms": 11253.662518999932,
+        "text": "This is a classic bug pattern \u2014 the '+' character is getting mishandled somewhere in your pipeline even though the UI reports success. Here's how to narrow it down:\n\n## Most likely causes\n\n**1. URL encoding issue**\nThe `+` character means \"space\" in URL-encoded strings (`application/x-www-form-urlencoded`). If the email is passed as a query param or form field without proper encoding, `me+work@gmail.com` silently becomes `me work@gmail.com` server-side, which then fails email validation or delivery \u2014 often *after* your UI has already marked the invite as \"sent\" (e.g., if you optimistically update UI state before confirming the backend/email-provider response).\n\n**2. Email validation regex**\nSome backend or third-party validation (SendGrid, Mailgun, custom regex) may reject or silently drop addresses with `+` if the regex doesn't account for RFC 5322 properly.\n\n**3. Async fire-and-forget invite logic**\nIf your invite flow does something like:\n```js\nsendInviteEmail(email) // not awaited, no .catch()\nsetInviteStatus('sent') // UI updates regardless\n```\n...then any failure (encoding, provider rejection, DB constraint) gets swallowed silently.\n\n**4. Database/normalization step**\nIf you lowercase, trim, or otherwise sanitize emails before storing/sending, check that this step isn't stripping or mangling the `+`.\n\n## How to debug it\n\n- **Check network tab**: submit an invite with a `+` email and inspect the actual outgoing request payload \u2014 is `+` encoded as `%2B`?\n- **Check server/API logs**: does the email arrive intact on the backend?\n- **Check your email provider's logs** (SendGrid/Postmark/SES/etc.): was the send attempted, rejected, or bounced?\n- **Check the invite-sending code path**: is the \"sent\" status set optimistically before or independent of actual send confirmation?\n\n## Quick fixes depending on where the bug is\n\n- If it's URL encoding: use `encodeURIComponent(email)` before sending as a query param, or send as JSON body instead of form-encoded.\n- If it's validation regex: use a proper RFC 5322-compliant validator instead of a hand-rolled one.\n- If it's optimistic UI: make the \"sent\" status depend on a confirmed response from your email service, with error handling that surfaces failures to the user.\n\nIf you can share the relevant snippet (the invite submission handler and the backend endpoint that sends the email), I can pinpoint exactly where the `+` is getting lost.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "ticket-13",
+      "expected": "account_security",
+      "actual_label": "account_security",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-opus-5.5",
+        "provider": "Anthropic",
+        "cost_usd": 0.01646,
+        "input_tokens": 45,
+        "output_tokens": 814,
+        "latency_ms": 10952.927120000026,
+        "text": "I can't see your account, but this pattern usually means one of two things, and you should act quickly either way.\n\n## What's likely happening\n\n**Possibility 1: Someone else got in and changed your password.**\nChanging a password typically logs out all other sessions. An attacker who takes over an account often does this to lock the real owner out.\n\n**Possibility 2: The service detected suspicious activity and protected you.**\nMany platforms automatically sign out all sessions after flagging an unusual login. In this case, your password may still work, or you may be prompted to reset it.\n\n**Less likely but possible:** The \"unfamiliar location\" was you, because a VPN, mobile carrier, or ISP routed your traffic through another city or country. This wouldn't explain being logged out, though.\n\n## What to do right now\n\n1. **Try logging in, but not through links in the alert email.** Go directly to the site or app. Alert emails can be phishing.\n2. **If your password still works:** Change it immediately to something strong and unique.\n3. **If your password doesn't work:** Use the \"Forgot password\" option right away. If the recovery email or phone has been changed, go straight to the service's official account recovery or support page.\n4. **Check your recovery email and phone for messages** about password or email changes. These often include a \"This wasn't me\" link to reverse the change. Again, verify that it's legitimate.\n5. **Turn on two-factor authentication (2FA)**, preferably with an authenticator app rather than SMS.\n6. **Review account settings** for anything the intruder may have changed: recovery email or phone, connected apps, forwarding rules (for email accounts), payment methods, or new devices.\n\n## Protect your other accounts\n\n- **If you reused this password anywhere else, change it on those sites too.** Attackers test stolen passwords on other services.\n- **Secure your email account first** if it's a different account, since it controls password resets for everything else.\n- Consider using a **password manager** so every account gets a unique password.\n- If this was a financial or shopping account, **check for unauthorized transactions**.\n\nIf you tell me which service this was (Google, Instagram, a bank, etc.), I can walk you through its specific recovery steps.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Together",
+          "cost_usd": 0.0024918,
+          "input_tokens": 62,
+          "output_tokens": 2061,
+          "latency_ms": 16914.77527799998,
+          "text": "Short answer: **treat this as a likely account takeover or a forced security reset.** The unknown-location login alert means someone may have accessed your account. Being logged out of all sessions often happens when someone changes the password/security settings and kicks out existing sessions\u2014or when the service detects suspicious activity and revokes all sessions to protect you.\n\n### Do this now\n\n1. **Secure your email first if it uses the same password**\n   - Your email can reset almost every other account. Change that password first if there\u2019s any chance it was exposed.\n\n2. **Change your password from a trusted device**\n   - Go directly to the official website/app\u2014don\u2019t use links from the alert.\n   - Use a strong, unique password you haven\u2019t used anywhere else.\n   - If you can\u2019t log in, use the account recovery flow immediately.\n\n3. **Enable or verify 2FA**\n   - Prefer an authenticator app or hardware security key over SMS.\n   - Remove any unknown phone numbers, authenticator apps, or backup methods.\n   - Generate new backup codes.\n\n4. **Kick out unknown sessions/devices**\n   - Review active sessions/devices and sign out all unknown ones.\n   - Revoke app passwords, API tokens, connected apps, and third-party access.\n   - Check recovery email/phone settings\u2014make sure only yours are listed.\n\n5. **Check your email rules and settings**\n   - Look for forwarding rules, filters, delegates, or aliases you didn\u2019t create.\n   - Attackers often set up forwarding so they keep getting password-reset emails.\n\n6. **Review account activity**\n   - Check recent logins, sent messages, deleted items, profile changes, payment methods, and linked accounts.\n   - If it\u2019s a financial account, contact your bank/provider. If it\u2019s social media, warn your contacts. If it\u2019s a work/school account, contact IT/security immediately.\n\n7. **Check your devices**\n   - Run a malware scan, update your OS/browser, and avoid logging in from untrusted devices.\n   - If you suspect malware or a compromised device, consider resetting it.\n\n### Important\nThe alert location could be inaccurate because of VPNs, iCloud Private Relay, mobile carriers, or corporate networks\u2014but because you were then logged out of all sessions, **assume it\u2019s real until proven otherwise**.\n\nIf you\u2019re locked out and can\u2019t recover the account, contact the platform\u2019s support team right away and document everything.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 186,
+          "output_tokens": 368,
+          "latency_ms": 7358.060421000005,
+          "text": "That combination usually means the service detected a suspicious or unusual sign-in and then revoked your active sessions as a security precaution. It **doesn\u2019t necessarily mean your account was fully hacked**, but you should treat it seriously.\n\nWhat may have triggered it:\n\n- A password entered on a phishing or credential-stuffed site\n- An unfamiliar device or IP address\n- VPN, proxy, carrier, or corporate-network changes\n- Sharing or re-entering your password on an untrusted app\n- Actual account compromise\n\nDo this now:\n\n1. **Go directly to the service\u2019s official app or website**\u2014don\u2019t use links in the alert\u2014and review **sign-in activity/session history**.\n2. **Change your password** to something unique, especially if it\u2019s reused elsewhere.\n3. **Sign out of all other devices/sessions** and review connected apps, recovery methods, email/phone changes, and MFA settings.\n4. **Remove unknown MFA devices or authenticator entries** and re-add only what you recognize.\n5. Check whether your **recovery email or phone number** was changed.\n6. Update passwords on any other account using the same password, and enable MFA.\n7. If you don\u2019t recognize the location or activity, **contact the service\u2019s official support/security team** and report the login. Don\u2019t reply to the alert email.\n\nIf the alert itself contains an unexpected link or asks for your password, it may be phishing. Preserve the message and report it.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 4
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.0202,
+          "input_tokens": 45,
+          "output_tokens": 1001,
+          "latency_ms": 12921.500057000003,
+          "text": "This could be one of a few things, and some are more serious than others. Here's how to tell them apart and what to do.\n\n## What might be happening\n\n**1. Someone got your password and took over the account (most urgent)**\nA common pattern is that an attacker logs in, then **changes your password**. That automatically signs out every other session, including yours. If your old password no longer works, assume this happened.\n\n**2. The service detected something suspicious and logged everyone out to protect you**\nMany platforms force a sign-out of all sessions after a suspicious login attempt. In this case, your password usually still works, and you may be asked to verify your identity or reset it.\n\n**3. A false alarm from location data**\nIP-based location is often wrong. A VPN, your mobile carrier, a new ISP, or a relay service (like iCloud Private Relay) can make your own login appear to come from another city or country. This wouldn't normally explain being logged out everywhere, though, unless you or the service triggered it.\n\n## What to do right now\n\n1. **Check whether the alert is real.** Don't click links in the alert email or text. Phishing emails often imitate these exact warnings. Go directly to the site or app yourself.\n2. **Try logging in.**\n   - **If it works:** change your password immediately to something strong and unique.\n   - **If it doesn't:** use the official \"Forgot password\" or account recovery process right away. Check whether the recovery email or phone number was changed.\n3. **Check your email account too.** If an attacker is in your email, they can reset passwords everywhere. Secure it first if there's any sign of access.\n4. **Turn on two-factor authentication (2FA)**, preferably with an authenticator app or security key rather than SMS.\n5. **Review account activity:** recent logins, connected devices, changed settings, new recovery options, forwarding rules (for email), linked apps, and any purchases or messages you didn't make.\n6. **Change the password anywhere else you used the same one.** Reused passwords are the most common way these takeovers happen, often from an unrelated site's data breach.\n7. **If money is involved** (shopping, banking, payment apps), check for unauthorized transactions and contact your bank or card issuer if needed.\n8. **If you can't get back in,** contact the service's official support and report the account as compromised.\n\n## Afterward\n\n- Check if your email appears in known breaches at **haveibeenpwned.com**.\n- Consider a password manager so every account gets a unique password.\n- Run a malware scan if you suspect your device could be infected (for example, if you recently installed something unusual).\n\nIf you tell me which service this was (Google, Microsoft, Instagram, a bank, etc.) and whether you can still log in, I can walk you through the specific recovery steps.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "ticket-14",
+      "expected": "account_security",
+      "actual_label": "account_security",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-opus-5.5",
+        "provider": "Anthropic",
+        "cost_usd": 0.018744,
+        "input_tokens": 41,
+        "output_tokens": 929,
+        "latency_ms": 11880.276699999968,
+        "text": "I can't reverse the change myself because I don't have access to your account systems, but here's how to move quickly.\n\n## Right now (first 15\u201330 minutes)\n\n**1. Check the *original* recovery email inbox.**\nMost providers (Google, Microsoft, Apple, AWS, Meta, etc.) send a security alert to the **old** address when the recovery email changes. That message often has a **\"This wasn't me\" / \"Secure your account\"** link that can revert the change. It's usually time-limited, so check now, including spam.\n\n**2. Start the provider's official account recovery.**\n- **Google Workspace:** Another super admin can reset it in the Admin Console. If there isn't one, use the [super admin recovery flow](https://support.google.com/a/answer/33561) (domain verification via DNS).\n- **Microsoft 365 / Entra ID:** Another Global Admin can reset it. Otherwise, contact Microsoft support. They'll verify domain ownership via DNS.\n- **AWS root account:** Use the \"Forgot password\" flow or contact AWS Support via the account recovery form.\n- **Other platforms:** Look for \"Can't access your account\" or \"Account recovery\" and contact their support directly.\n\n**3. If you have any other admin accounts, use them immediately** to lock down the compromised one: reset the password, revoke sessions, remove unknown MFA devices, and restore the correct recovery email.\n\n## In parallel\n\n- **Assume compromise.** Check for new admin accounts, forwarding rules, API keys, OAuth app grants, and changed MFA settings.\n- **Secure the connected email.** If the attacker got in through someone's email, lock that down too.\n- **Document everything:** timestamps, alert emails, the new recovery address (if shown), and login IPs. Providers will ask for this, and you may need it for legal or insurance purposes.\n- **Loop in your IT/security team** or incident response provider if you have one.\n- **Prepare proof of ownership:** billing records, domain registrar access, business documents. Recovery teams typically require these.\n\n## To give you more specific steps\n\n- **Which platform is this?** (Google Workspace, Microsoft 365, AWS, a social media account, a domain registrar, etc.)\n- **Do you have any other admin accounts** or anyone else with admin rights?\n- **Do you control the domain's DNS?** This is often the fastest path to proving ownership.\n\nTell me the platform and I'll walk you through the exact recovery process.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "ticket-15",
+      "expected": "account_security",
+      "actual_label": "account_security",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-opus-5.5",
+        "provider": "Anthropic",
+        "cost_usd": 0.028176,
+        "input_tokens": 49,
+        "output_tokens": 1399,
+        "latency_ms": 17197.24478699993,
+        "text": "Here's how to contain it, assess the damage, and find the leak. The exact clicks depend on your provider (AWS, Stripe, OpenAI, GitHub, etc.). Tell me which one and I can get specific.\n\n## 1. Contain it now\n\n**Revoke or rotate the key immediately**, even before you fully understand what happened. Every minute it's live, it can be used.\n\n- **If you can tolerate brief downtime:** revoke the old key first, then create a new one and deploy it.\n- **If you need zero downtime:** create a new key, deploy it everywhere, then revoke the old one. Do this within minutes, not hours.\n\nAlso:\n- **Block the suspicious IP range** at your firewall, WAF, or the provider's IP allowlist, if available.\n- **Rotate anything stored alongside the key.** If it lived in a `.env` file or config with other secrets (DB passwords, other API keys), assume those leaked too.\n- **Check for persistence.** On platforms like AWS, GCP, or GitHub, attackers often create *new* keys, users, tokens, or OAuth apps so they keep access after you rotate. Look for any credentials you didn't create.\n\n## 2. Assess the damage\n\nPull the provider's audit or access logs for the compromised key and look at:\n\n- **Time window:** When did the first unfamiliar request appear? That's roughly when the leak happened, which helps you find the source.\n- **What was called:** Reads vs. writes vs. deletes. Were there data exports, list/enumerate calls, or permission changes?\n- **Data accessed:** Customer data, PII, payment info? This determines whether you have disclosure obligations.\n- **Resources created:** Crypto-mining VMs, new users, webhooks pointing to unknown URLs, email or SMS sending (spam abuse).\n- **Billing:** Check for usage spikes. Many providers will waive fraudulent charges if you contact support quickly.\n\nUseful places to look, depending on the platform:\n- **AWS:** CloudTrail, IAM credential report, Cost Explorer\n- **GCP:** Cloud Audit Logs\n- **Stripe / Twilio / OpenAI, etc.:** dashboard request logs and usage pages\n- **GitHub:** Settings \u2192 Security log / org audit log\n\n## 3. Find how it leaked\n\nOtherwise the new key will leak the same way. Common culprits:\n\n- **Committed to git**, including old history or a public fork. Scan with `gitleaks` or `trufflehog`. Deleting the file doesn't remove it from history.\n- **Exposed client-side:** frontend JS bundles, mobile app binaries\n- **Logs or error messages** that printed the key or full request headers\n- **CI/CD:** build logs, misconfigured secrets, third-party actions\n- **Shared in Slack, tickets, docs, or pastebins**\n- **A compromised developer machine or dependency**\n\nThe timestamp of the first malicious request, matched against commits, deploys, or messages around that time, often points straight to the source.\n\n## 4. Prevent a repeat\n\n- Store keys in a secrets manager (AWS Secrets Manager, Vault, Doppler, 1Password) rather than code or config files.\n- Use **least-privilege scoped keys**, so a leaked read-only key can't delete anything.\n- Enable **IP allowlisting** if the provider supports it.\n- Turn on **GitHub secret scanning / push protection** and add a pre-commit hook (e.g., gitleaks).\n- Set up **billing alerts** and usage anomaly alerts.\n- Rotate keys on a schedule so any undetected leak has a limited lifespan.\n\n## 5. Consider disclosure\n\nIf customer or personal data was accessed, you may have legal notification obligations (GDPR, state breach laws, contracts). Loop in whoever handles security or legal at your org sooner rather than later.\n\n---\n\nWhich provider is the key for, and what kind of access did it have? I can give you exact steps for rotation and where to find the relevant logs.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "ticket-16",
+      "expected": "account_security",
+      "actual_label": "account_security",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-opus-5.5",
+        "provider": "Anthropic",
+        "cost_usd": 0.014232,
+        "input_tokens": 43,
+        "output_tokens": 703,
+        "latency_ms": 9887.022944000022,
+        "text": "I can't access or change settings on any account, but I can help you get back in as fast as possible.\n\n**Quick options to try first:**\n\n1. **Backup/recovery codes.** When you set up 2FA, most services gave you a list of one-time codes. Check your password manager, email, notes app, downloads folder, or anywhere you might have printed or saved them.\n2. **Another trusted device.** If you're still logged in on a laptop, tablet, or another browser, you may be able to approve the login from there or turn off 2FA in the security settings.\n3. **Alternate 2FA methods.** On the login screen, look for \"Try another way\" or \"Use a different method.\" You might have a backup email, security key, or secondary phone number set up.\n4. **Get your number back.** If your codes came by SMS, your mobile carrier can usually issue a replacement SIM or eSIM for your number today, often in-store with ID. Once it's active, texts will come through again.\n5. **Authenticator apps with cloud sync.** If you used Google Authenticator (with account sync), Microsoft Authenticator, or Authy, signing into that app on a new device may restore your codes.\n\n**If none of those work:**\n\nUse the service's official account recovery process, usually a \"Can't access your authenticator?\" or \"Lost your device?\" link on the 2FA screen. Be aware that recovery can take anywhere from hours to several days because they need to verify it's really you. Go through official channels only. Anyone offering to bypass 2FA for you is almost certainly a scam.\n\n**Which account is this for** (Google, Apple, Microsoft, a bank, a work account, etc.)? I can give you the specific steps for that service. If it's a work or school account, your IT help desk can often reset 2FA the same day, so that's likely your fastest route.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "google/gemini-2.5-flash",
+          "provider": "Google",
+          "cost_usd": 0.0016262,
+          "input_tokens": 29,
+          "output_tokens": 647,
+          "latency_ms": 6107.206364000035,
+          "text": "I understand how frustrating it must be to be locked out of your account, especially when you need access today!\n\nHowever, **as an AI, I do not have access to your personal accounts or any user databases. Therefore, I cannot directly disable two-factor authentication (2FA) for you.** My purpose is to provide information and complete tasks, but I cannot perform actions that involve accessing or modifying your personal data on any website or service.\n\n**To regain access to your account, you will need to go through the account recovery process provided by the specific service you are trying to access.** Every service (like Google, Facebook, a banking website, etc.) has its own procedures for when you lose your 2FA device.\n\nHere are the general steps you should take, and what you'll typically need:\n\n1.  **Identify the Service:** What website or app are you trying to log into (e.g., Google, Facebook, your bank, an email provider, etc.)?\n\n2.  **Look for \"Trouble Signing In\" or \"Lost Device\" Options:** On the login page, there's usually a link like \"Trouble signing in?\", \"Can't access your account?\", \"Lost your phone?\", or \"Recovery options.\" Click on that.\n\n3.  **Follow Their Recovery Process:** This process will vary by service, but commonly involves:\n    *   **Backup Codes:** If you saved your backup codes when you set up 2FA, now is the time to use them. This is the fastest way back in.\n    *   **Recovery Email/Phone Number:** They might send a code to an alternate email address or phone number you previously registered for recovery purposes.\n    *   **Security Questions:** You might be asked to answer security questions you set up.\n    *   **Identity Verification:** For highly sensitive accounts (like banks), you might need to provide identification, answer detailed questions, or even call their support line.\n    *   **Waiting Period:** Some services have a security waiting period (sometimes days) after you initiate a recovery process to ensure it's really you.\n\n**To help you further, if you tell me which specific service you are trying to access (e.g., \"Google account,\" \"Facebook,\" \"my bank,\" etc.), I can try to give you more specific instructions or point you to their support pages.**\n\n**Important Advice for the Future:**\n*   **Store Backup Codes Safely:** When you set up 2FA, most services provide \"backup codes.\" Download and print these, and store them in a safe, offline location (like a safe deposit box or secure drawer). These are your lifeline if you lose your device.\n*   **Use Multiple 2FA Methods:** If a service allows, set up multiple 2FA methods (e.g., an authenticator app AND a security key, or an authenticator app AND SMS to a secondary number).\n*   **Keep Recovery Information Up-to-Date:** Ensure your recovery email addresses and phone numbers are current.\n\nI hope you can get back into your account quickly!",
+          "error": null,
+          "jev_adequate": true,
+          "score": 4
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 182,
+          "output_tokens": 261,
+          "latency_ms": 6999.034614000038,
+          "text": "I can\u2019t disable two-factor authentication directly, and it shouldn\u2019t be removed without verifying your identity.\n\nTry these official recovery options:\n\n1. Use a trusted device that\u2019s already signed in and go to **Security / Two-step verification**.\n2. Check for **backup codes**, a recovery email, or another verification method.\n3. Use the service\u2019s official **\u201cLost access\u201d / account recovery** page.\n4. Contact the company\u2019s official support team and request an identity check. They may use account details, recovery information, or ID.\n\nAvoid anyone asking you to pay to \u201creactivate\u201d your account or share a verification code. If you tell me which service or company it is, I can point you to its official recovery process or help draft a support request.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 4
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.015652,
+          "input_tokens": 43,
+          "output_tokens": 774,
+          "latency_ms": 9626.361464999945,
+          "text": "I can't access or change settings on any account, but I can help you get back in as quickly as possible. Here are the fastest options, roughly in order:\n\n**1. Check for backup options you may already have**\n- **Backup/recovery codes:** Many services gave you a set of one-time codes when you set up 2FA. Check your password manager, downloads folder, printed papers, or notes.\n- **Another logged-in device:** A laptop, tablet, or browser where you're still signed in can often approve the login or let you change 2FA settings.\n- **Alternate 2FA methods:** On the login screen, look for \"Try another way\" or \"Use a different method.\" You may have a backup phone number, email, or security key set up.\n\n**2. Recover your codes onto a new phone**\n- **Text message codes:** Contact your mobile carrier for a replacement SIM or eSIM with your same number. Many carriers can do this same-day in a store.\n- **Authenticator apps with cloud backup:** Google Authenticator (if synced to your Google account), Microsoft Authenticator, Authy, and 1Password can restore your codes when you sign in on a new device.\n\n**3. Use the service's account recovery process**\nIf none of the above work, use the \"Lost access to your 2FA device?\" or \"Can't get a code?\" link on the login page. Be aware that this can take anywhere from hours to several days, because services deliberately slow it down to prevent account takeovers. Submit it as early as possible, and provide as much verification info as you can (previous passwords, account creation date, recent activity, ID if requested).\n\n**If you tell me which account this is** (Google, Apple, Microsoft, a bank, a work account, etc.), I can give you the exact steps and links for that service. For a work or school account, your IT help desk can usually reset 2FA for you directly, often the same day.\n\nOnce you're back in, it's worth saving backup codes somewhere safe and adding a second 2FA method so this is easier next time.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "ticket-17",
+      "expected": "simple_faq",
+      "actual_label": "simple_faq",
+      "correct": true,
+      "judge_confidence": 0.99,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00080256,
+        "input_tokens": 45,
+        "output_tokens": 1201,
+        "latency_ms": 34657.76770499997,
+        "text": "The dashboard displays the **\u201clast active\u201d timestamp in UTC**. If you need it in your local time, convert it from UTC to your timezone.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "ticket-18",
+      "expected": "bug_report",
+      "actual_label": "bug_report",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.012728,
+        "input_tokens": 64,
+        "output_tokens": 1260,
+        "latency_ms": 18840.602688999978,
+        "text": "# Debugging Intermittent Data Loss in Sync Jobs\n\nThis is a frustrating category of bug. Let me give you a systematic approach, since \"2% loss, no clear pattern, can't reproduce locally\" usually means the bug lives in something environmental or timing-related rather than pure logic.\n\n## First: Confirm what \"2%\" actually means\n\nBefore hunting causes, nail down the shape of the loss:\n\n- **Is it exactly ~2% consistently, or does it vary run-to-run?** A stable percentage suggests a systemic cause (batch size, timeout, pool size). A wildly varying percentage suggests contention/race conditions.\n- **Does it correlate with volume or throughput?** Check if loss rate increases during peak load \u2014 that points to timeouts, connection pool exhaustion, or backpressure.\n- **Is it correlated with specific batches, shards, workers, or time windows?** Even if no *field* pattern exists, check for *structural* patterns (batch position, worker ID, retry count).\n\n## Likely culprit categories (in rough order of probability)\n\n1. **Silent swallowing in error handling** \u2014 a `try/except: pass`, `.catch()` that logs and continues, or a bulk API where partial failures don't raise. This is the #1 cause of \"silent\" drops.\n2. **Batching + partial failure** \u2014 if you batch records and a batch partially fails, do you fail the whole batch or silently accept partial success? Check whether failed items in a batch response are actually inspected.\n3. **Race condition on concurrent writes** \u2014 parallel workers/threads writing to the same downstream store, with a last-write-wins or upsert that overwrites instead of appends.\n4. **Timeout/retry that isn't idempotent** \u2014 request times out, record technically succeeded downstream but client treats it as failed, retry doesn't happen because it's treated as \"already processed\" upstream.\n5. **Pagination/cursor bugs** \u2014 off-by-one on cursor advancement under concurrent inserts, especially if the source system allows writes during your read/sync window.\n6. **Connection pool / resource limits** \u2014 pool exhaustion causing a queued request to silently drop rather than error clearly.\n7. **Deduplication logic misfiring** \u2014 if you dedupe by a hash or key, a hash collision or overly aggressive uniqueness check could be dropping legitimate records.\n\n## How to actually catch it (since local repro fails)\n\n**Add a \"record accounting\" audit layer** \u2014 this is the highest-leverage thing you can do:\n- Log every record ID pulled from source (count in).\n- Log every record ID confirmed written to destination (count out).\n- Diff the two sets in a scheduled job. Now you have exact IDs of drops, not just a percentage \u2014 which changes this from \"unreproducible\" to \"here's exactly what's failing.\"\n\n**Enable request/response logging at the boundary layer**, not just application logs \u2014 you want the actual downstream API responses for records that appear in \"in\" but not \"out.\"\n\n**Check for swallowed exceptions explicitly**:\n```\ngrep -rn \"except.*:\\s*$\" --include=\"*.py\" .\ngrep -rn \"except.*pass\" .\n```\n(or equivalent for your language) \u2014 audit every catch block in the sync path for one that doesn't re-raise, re-queue, or alarm.\n\n**Instrument timing** \u2014 log start/end timestamps per record or batch. If drops cluster near timeout boundaries, that's your smoking gun.\n\n## Questions that would help me narrow this down\n\n- What's the sync architecture \u2014 polling/cursor-based, CDC, queue-based?\n- Batch or per-record processing?\n- What's the destination \u2014 DB, API, queue?\n- Any retry/backoff logic in play?\n- Single worker or parallel/distributed?\n\nIf you can share those details (or logs/code from the write path), I can help you pinpoint it much faster than trial-and-error.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    }
+  ]
+}

@@ -1,0 +1,633 @@
+{
+  "name": "post-call-transcript",
+  "route_name": "experiment/post-call-transcript",
+  "policy": "intent",
+  "roster": [
+    "deepseek/deepseek-v4.1-flash",
+    "anthropic/claude-sonnet-5"
+  ],
+  "accuracy": 1.0,
+  "real_cost_usd": 0.04230608,
+  "frontier_equivalent_usd": 0.047824000000000005,
+  "savings_pct": 11.537972566075616,
+  "items": [
+    {
+      "item_id": "call-01",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 4.642e-05,
+        "input_tokens": 94,
+        "output_tokens": 39,
+        "latency_ms": 2275.258803999918,
+        "text": "42 Baker Street, apartment 4B.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4-flash-0731",
+          "provider": "Cohere",
+          "cost_usd": 3.178e-05,
+          "input_tokens": 147,
+          "output_tokens": 40,
+          "latency_ms": 2312.381966999965,
+          "text": "42 Baker Street, apartment 4B.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 218,
+          "output_tokens": 10,
+          "latency_ms": 1946.6347290000385,
+          "text": "42 Baker Street, apartment 4B.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Anthropic",
+          "cost_usd": 0.00052,
+          "input_tokens": 110,
+          "output_tokens": 30,
+          "latency_ms": 1822.1440239999538,
+          "text": "The delivery address mentioned is **42 Baker Street, Apartment 4B**.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "call-02",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 4.752e-05,
+        "input_tokens": 75,
+        "output_tokens": 47,
+        "latency_ms": 2589.3149609999,
+        "text": "ORD-77213",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "call-03",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 4.158e-05,
+        "input_tokens": 66,
+        "output_tokens": 41,
+        "latency_ms": 1700.5883859999358,
+        "text": "j.martinez88@example.com",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "call-04",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 4.664e-05,
+        "input_tokens": 65,
+        "output_tokens": 49,
+        "latency_ms": 1748.6008189999893,
+        "text": "The customer gave callback number **555-0142**, extension **9**.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4-flash-0731",
+          "provider": "Cohere",
+          "cost_usd": 3.08e-05,
+          "input_tokens": 118,
+          "output_tokens": 51,
+          "latency_ms": 1603.7972170000785,
+          "text": "Callback number: 555-0142  \nExtension: 9",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 190,
+          "output_tokens": 10,
+          "latency_ms": 2297.937862000026,
+          "text": "555-0142, extension 9.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Anthropic",
+          "cost_usd": 0.000338,
+          "input_tokens": 54,
+          "output_tokens": 23,
+          "latency_ms": 1721.8061440000838,
+          "text": "The customer provided the callback number **555-0142, extension 9**.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "call-05",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 4.972e-05,
+        "input_tokens": 61,
+        "output_tokens": 55,
+        "latency_ms": 2146.411401000023,
+        "text": "A-4471",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "call-06",
+      "expected": "analysis",
+      "actual_label": "analysis",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.00515,
+        "input_tokens": 125,
+        "output_tokens": 490,
+        "latency_ms": 6373.836310999991,
+        "text": "## Summary\n\n**Customer Sentiment:** Highly negative. The customer expresses explicit frustration, using strong language (\"extremely frustrated,\" \"unacceptable\") and highlighting a pattern of unresolved issues rather than a single incident.\n\n**Key Details:**\n- This is the **third contact** regarding the same unresolved broken feature\n- Customer perceives a lack of follow-through from previous support interactions\n- Explicit mention of **considering cancellation** \u2014 a direct churn signal\n\n**Escalation Risk: High**\n\nReasons for elevated risk:\n1. **Repeated unresolved issue** \u2014 indicates a breakdown in first-contact resolution or follow-up processes\n2. **Explicit cancellation threat** \u2014 customer has moved from frustration to actively considering leaving\n3. **Trust erosion** \u2014 three failed attempts suggest the customer may doubt the company's ability/willingness to fix the problem\n4. **Tone escalation** \u2014 words like \"unacceptable\" signal the customer feels their patience is exhausted\n\n**Recommended Next Steps:**\n- Prioritize this as a high-severity escalation, not routine follow-up\n- Assign to a senior agent or specialist who can ensure resolution (avoid another handoff without fix)\n- Provide a clear timeline and proactive update rather than waiting for the customer to follow up again\n- Consider a retention/goodwill gesture given the repeated failure and churn risk\n- Document root cause to prevent recurrence and rebuild trust",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "call-07",
+      "expected": "analysis",
+      "actual_label": "analysis",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.0034,
+        "input_tokens": 85,
+        "output_tokens": 323,
+        "latency_ms": 5196.209748000001,
+        "text": "The customer's overall satisfaction with the onboarding experience appears to be **high/positive**. This is based on several key indicators in their response:\n\n1. **Direct positive language**: \"Actually really smooth\" signals a favorable experience, and the word \"actually\" suggests it may have exceeded expectations (perhaps they anticipated it would be more difficult or confusing).\n\n2. **Praise for the rep**: They specifically credit the representative for explaining things \"clearly,\" indicating the support they received was effective and well-communicated.\n\n3. **Expressed confidence**: The customer states they now \"feel confident using the product,\" which is arguably the most important outcome of an onboarding call. Confidence suggests the session achieved its core goal \u2014 enabling the customer to use the product independently and successfully.\n\n**Summary**: The customer had a smooth, clear, and confidence-building onboarding experience, with no complaints or friction points mentioned. This is a strong positive signal for onboarding satisfaction and suggests the rep performed well.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "google/gemini-2.5-flash",
+          "provider": "Google",
+          "cost_usd": 5.19e-05,
+          "input_tokens": 48,
+          "output_tokens": 15,
+          "latency_ms": 4631.86043099995,
+          "text": "The customer's overall satisfaction with the onboarding experience is **very positive**.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 202,
+          "output_tokens": 11,
+          "latency_ms": 1670.8973800000422,
+          "text": "The customer is very satisfied with the onboarding experience.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Anthropic",
+          "cost_usd": 0.00302,
+          "input_tokens": 85,
+          "output_tokens": 285,
+          "latency_ms": 5160.453994999898,
+          "text": "The customer's overall satisfaction with the onboarding experience appears to be **high/positive**. Here's why:\n\n- **\"Actually really smooth\"** \u2013 The word \"actually\" suggests a pleasant surprise, possibly indicating they expected some friction or difficulty but didn't encounter it.\n- **\"The rep explained everything clearly\"** \u2013 This points to satisfaction with the quality of communication and support from the representative.\n- **\"I feel confident using the product now\"** \u2013 This is a strong positive outcome indicator. The goal of onboarding is typically to get users comfortable and self-sufficient with a product, and the customer explicitly states this was achieved.\n\n**Summary:** The customer had a positive onboarding experience with no complaints, praising both the clarity of the explanation and the resulting confidence in using the product. There are no indicators of dissatisfaction or unresolved concerns in this response.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "call-08",
+      "expected": "analysis",
+      "actual_label": "analysis",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.006446,
+        "input_tokens": 113,
+        "output_tokens": 622,
+        "latency_ms": 8028.422157999898,
+        "text": "# Assessment: Yes, This Should Be Flagged\n\nThis call shows warning signs worth escalating, based on two separate issues:\n\n## 1. Broken Commitment (Process Risk)\n- A prior agent promised a **specific, verifiable deadline** (\"fixed by Friday\")\n- That deadline passed with **no resolution and no proactive follow-up**\n- This isn't just a delay\u2014it's a **broken commitment**, which is worse for trust than never promising a date at all\n\n## 2. Explicit Loss of Trust (Trust Risk)\n- The customer didn't just complain about the issue\u2014they stated they **\"don't trust anything I'm told on these calls\"**\n- This is a direct signal that the *relationship*, not just the ticket, is at risk\n- Language like this often precedes escalation to social media, regulatory complaints (if applicable), or churn\n\n## Why the Agent's Response Isn't Enough\n\"Let me personally follow up\" is a reasonable de-escalation step, but on its own it:\n- Doesn't acknowledge the **broken promise** specifically\n- Doesn't offer anything **concrete** (new timeline, ticket number, escalation path)\n- Repeats the same pattern that caused the distrust (a verbal assurance with no accountability structure behind it)\n\n## Recommended Flag Reason\n> \"Customer reports unmet resolution deadline from prior interaction and has explicitly stated loss of trust in support commitments. Recommend manager review of original Friday commitment (who made it, why it wasn't tracked/honored) and confirmation that current follow-up includes a hard deadline + escalation contact, not just a verbal reassurance.\"\n\n**Bottom line:** Flag it\u2014not because the agent did anything wrong in this exchange, but because there's an **upstream process failure** (a promise made without follow-through) that the current agent isn't equipped to fully resolve with reassurance alone.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "call-09",
+      "expected": "analysis",
+      "actual_label": "analysis",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.003812,
+        "input_tokens": 71,
+        "output_tokens": 367,
+        "latency_ms": 5536.469329999932,
+        "text": "Based on this brief exchange, here's my read:\n\n**Customer satisfaction: High**\n- \"That covers it\" indicates their issue was fully resolved\n- \"Thanks for the quick help\" is an explicit positive acknowledgment\n- The word \"quick\" suggests they valued the efficiency of the resolution, not just the outcome\n- No hesitation, follow-up questions, or lingering concerns in the tone\n\n**Risk flag: None apparent**\n\nThere's nothing in this snippet suggesting churn risk, unresolved frustration, or escalation potential. The interaction reads as a clean, positive close.\n\n**One caveat:** This is a very short transcript with no context on what the original issue was. To give you a fully confident assessment, it would help to know:\n- What was the customer's original request/problem?\n- How long did the interaction take?\n- Was this a first-contact resolution or a repeat contact for the same issue?\n\nIf this was, say, the third time they've had to reach out for the same problem, \"quick help\" this time doesn't erase risk from the overall relationship. But based solely on the text shown, this looks like a satisfied customer with a successful resolution.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "call-10",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 4.642e-05,
+        "input_tokens": 61,
+        "output_tokens": 50,
+        "latency_ms": 2186.2848569999187,
+        "text": "RTN-58821",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "google/gemini-2.5-flash",
+          "provider": "Google",
+          "cost_usd": 4.8e-05,
+          "input_tokens": 35,
+          "output_tokens": 15,
+          "latency_ms": 2056.1473100000285,
+          "text": "The return reference number is **RTN-58821**.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 186,
+          "output_tokens": 13,
+          "latency_ms": 1393.8031189999265,
+          "text": "The return reference number is **RTN-58821**.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Anthropic",
+          "cost_usd": 0.000266,
+          "input_tokens": 48,
+          "output_tokens": 17,
+          "latency_ms": 1710.0127449999718,
+          "text": "The return reference number is **RTN-58821**.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "call-11",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 4.312e-05,
+        "input_tokens": 64,
+        "output_tokens": 44,
+        "latency_ms": 3256.436360999942,
+        "text": "March.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "call-12",
+      "expected": "analysis",
+      "actual_label": "analysis",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.006118,
+        "input_tokens": 84,
+        "output_tokens": 595,
+        "latency_ms": 8806.251205999957,
+        "text": "# Analysis of Brand Sentiment Signal\n\n**What this suggests:**\n\nThis is a strong positive sentiment signal, but I'd want to be careful not to over-read a single, brief exchange. What it likely indicates:\n\n- The customer felt genuinely heard during this interaction (their emphasis on \"you guys actually listen\" suggests this may be a contrast to past experiences\u2014either with this company or competitors)\n- The agent's approach in this specific call worked well\n- There's an implicit comparison happening\u2014\"best... of any company\" suggests the customer has a reference point of mediocre-to-poor service elsewhere, making this feel like a relief or pleasant surprise\n\n**What I'd flag for a manager:**\n\n1. **Positive reinforcement (worth flagging up):** This is exactly the kind of interaction worth highlighting to the agent and their manager as a model example\u2014especially if we can identify *what specifically* the agent did (active listening, resolving root cause, tone, etc.) so it can be reinforced or used in training.\n\n2. **Missing context (worth flagging as a gap):** The transcript is too short to know:\n   - What issue was resolved\n   - Whether the customer's praise reflects the *outcome* or just the *listening experience* (a customer can feel heard even if their problem isn't fully solved)\n   - Whether this sentiment holds up after the call ends (e.g., in a follow-up survey)\n\n3. **Pattern-check suggestion:** If this agent or this type of resolution approach shows up repeatedly in positive feedback, that's a signal worth aggregating across calls rather than acting on a single instance.\n\n**Bottom line:** Positive, but treat it as a data point\u2014not a conclusion. I'd recommend pairing this transcript with the full call context and outcome data before drawing firm conclusions about overall brand sentiment.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "call-13",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 4.818e-05,
+        "input_tokens": 69,
+        "output_tokens": 50,
+        "latency_ms": 2496.144119000064,
+        "text": "SN-2291-A",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4-flash-0731",
+          "provider": "Cohere",
+          "cost_usd": 2.856e-05,
+          "input_tokens": 122,
+          "output_tokens": 41,
+          "latency_ms": 1674.7210149999319,
+          "text": "SN-2291-A",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 193,
+          "output_tokens": 6,
+          "latency_ms": 1394.765446000065,
+          "text": "SN-2291-A",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Anthropic",
+          "cost_usd": 0.000478,
+          "input_tokens": 59,
+          "output_tokens": 36,
+          "latency_ms": 1653.1721659999903,
+          "text": "The customer read out serial number **SN-2291-A**, which they mentioned was printed on the back of the device.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "call-14",
+      "expected": "analysis",
+      "actual_label": "analysis",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.007288,
+        "input_tokens": 84,
+        "output_tokens": 712,
+        "latency_ms": 9384.134489000076,
+        "text": "# Escalation Risk Assessment: HIGH\n\nThis call shows clear escalation risk indicators, and here's why:\n\n## Key Risk Signals\n\n**1. Explicit Repeated Requests Denied**\nThe customer states they've asked for a supervisor \"twice now\" and been refused both times. This isn't a first-time request\u2014it's a pattern of denial, which significantly increases frustration.\n\n**2. Disproportionate Response to Issue Size**\nThe phrase \"over a $12 charge\" signals the customer's own awareness that the situation has become disproportionate. When customers highlight the small dollar amount involved, they're usually signaling that the *principle* or *treatment* now matters more than the money itself. This is a classic precursor to complaints escalating to social media, chargebacks, or regulatory complaints (BBB, CFPB, etc.).\n\n**3. Language Choice: \"Genuinely absurd\"**\nThis phrasing indicates the customer feels the situation lacks logical justification\u2014suggesting they feel dismissed or that company policy is being applied thoughtlessly rather than reasonably.\n\n**4. Weak Agent Response**\n\"I apologize for that\" is a generic, low-effort acknowledgment. It does not:\n- Address the supervisor request directly\n- Explain why previous requests were denied\n- Offer a concrete next step\n\nThis kind of response often *increases* frustration because it can feel like another brush-off rather than genuine engagement.\n\n## Recommended Immediate Actions\n- **Acknowledge the specific complaint** (not just a generic apology)\n- **Clarify or reverse the supervisor denial**\u2014either connect them now or explain a clear, reasonable timeframe\n- **Avoid re-litigating the $12 charge** until the escalation/trust issue is resolved first\n- **Consider proactive resolution** (refund/credit) given the low dollar amount, since the cost of continued escalation (time, reputation, potential complaint filing) likely outweighs $12\n\n## Bottom Line\nThe risk here isn't really about the $12\u2014it's about **trust and being heard**. Continued deflection is very likely to push this customer toward public complaints, chargebacks, or regulatory escalation.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "call-15",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 4.466e-05,
+        "input_tokens": 65,
+        "output_tokens": 46,
+        "latency_ms": 1925.8690689999867,
+        "text": "PO-99042",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "call-16",
+      "expected": "analysis",
+      "actual_label": "analysis",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.001956,
+        "input_tokens": 78,
+        "output_tokens": 180,
+        "latency_ms": 2923.8794120000193,
+        "text": "The customer's sentiment about the technician visit is clearly **positive**. Key points from the feedback:\n\n- **Praised the technician's expertise**: Described them as \"very knowledgeable\"\n- **Highlighted efficiency**: The issue was resolved quickly, in just \"ten minutes\"\n- **Overall impression**: Called the experience \"fantastic\"\n\n**Summary:** The customer had a highly satisfactory experience, emphasizing both the technician's competence and the speed of service. There are no complaints or areas of concern mentioned in this feedback.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4-flash-0731",
+          "provider": "Cohere",
+          "cost_usd": 2.884e-05,
+          "input_tokens": 122,
+          "output_tokens": 42,
+          "latency_ms": 3023.7864300000865,
+          "text": "The customer had a very positive sentiment about the technician visit, praising the technician as fantastic, knowledgeable, and quick to fix the issue.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 195,
+          "output_tokens": 21,
+          "latency_ms": 1541.203428000017,
+          "text": "The customer was very pleased with the technician, praising their knowledge and efficiency in fixing the issue quickly.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Anthropic",
+          "cost_usd": 0.001666,
+          "input_tokens": 78,
+          "output_tokens": 151,
+          "latency_ms": 2502.903816000071,
+          "text": "The customer had a **very positive** experience with the technician visit. Specifically, they highlighted:\n\n- **Expertise**: The technician was described as \"very knowledgeable\"\n- **Efficiency**: The issue was resolved quickly, in just \"ten minutes\"\n- **Overall impression**: The customer used enthusiastic language (\"fantastic\") to describe the service\n\n**Summary**: Highly satisfied customer praising both the technician's skill and the speed of service.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "call-17",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 3.982e-05,
+        "input_tokens": 61,
+        "output_tokens": 40,
+        "latency_ms": 1779.0646659999538,
+        "text": "94107",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "call-18",
+      "expected": "analysis",
+      "actual_label": "analysis",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.007682,
+        "input_tokens": 96,
+        "output_tokens": 749,
+        "latency_ms": 10546.076408999965,
+        "text": "# Risk Assessment: Yes, Flag This Call\n\nThis call shows a **legitimate churn risk** worth flagging, and depending on your industry, potentially a **compliance consideration** as well.\n\n## Churn Risk: Clear Signal\n\n- **Explicit churn language**: \"wondering if I should switch providers\" is a direct statement of intent to potentially leave, not casual venting\n- **Pattern identified by customer**: \"second billing error in two months\" indicates the customer is tracking recurring failures \u2014 this suggests declining trust, not a one-off complaint\n- **Minimizing language despite serious content**: \"I don't want to make a big deal\" often signals a customer who is frustrated but conflict-averse \u2014 they may not escalate loudly before leaving. This type of customer often churns silently rather than continuing to complain.\n\n**Recommendation:** Flag for retention/account review regardless of how the billing issue resolves. The billing fix alone may not repair trust \u2014 consider a proactive gesture (credit, apology, follow-up call) beyond just correcting the charge.\n\n## Compliance Consideration: Depends on Context\n\nWorth flagging if your organization tracks:\n- **Repeat billing errors** as a compliance/quality metric (some industries require root-cause tracking after a second occurrence)\n- **Churn-risk disclosures** required for regulated services (telecom, insurance, financial services often have retention-attempt documentation requirements)\n\n## Agent Response: Adequate but Incomplete\n\nThe agent acknowledged and moved to investigate \u2014 reasonable first step, but the response:\n- Did not acknowledge the *pattern* (two errors in two months), only the immediate issue\n- Did not address the churn comment at all\n- Missed an opportunity to ask what would restore confidence, or to offer reassurance about prevention going forward\n\n## Suggested Flags for This Call\n- \u2705 **Churn risk \u2013 Medium/High**\n- \u2705 **Repeat billing error \u2013 process/quality issue**\n- \u26a0\ufe0f **Save/retention follow-up recommended**\n- \u26a0\ufe0f **Agent coaching opportunity**: acknowledge patterns and retention signals explicitly, not just the transactional issue\n\nWould you like me to draft a suggested response the agent could have used to better address both the billing issue and the retention signal?",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    }
+  ]
+}

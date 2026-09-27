@@ -1,0 +1,633 @@
+{
+  "name": "resume-screening",
+  "route_name": "hr/resume-screening",
+  "policy": "intent",
+  "roster": [
+    "deepseek/deepseek-v4.1-flash",
+    "anthropic/claude-sonnet-5"
+  ],
+  "accuracy": 1.0,
+  "real_cost_usd": 0.08897674,
+  "frontier_equivalent_usd": 0.101074,
+  "savings_pct": 11.968715990264556,
+  "items": [
+    {
+      "item_id": "resume-01",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00012518,
+        "input_tokens": 80,
+        "output_tokens": 163,
+        "latency_ms": 4382.041435999895,
+        "text": "The candidate has approximately **5 years of experience** as a Software Engineer (2019\u20132024). Their degree is a **B.S. in Computer Science** from **State University**, earned in **2019**.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4-flash-0731",
+          "provider": "Cohere",
+          "cost_usd": 4.018e-05,
+          "input_tokens": 133,
+          "output_tokens": 77,
+          "latency_ms": 2379.3153159999747,
+          "text": "The candidate has **5 years of experience** as a Software Engineer (2019\u20132024) and holds a **B.S. in Computer Science**.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 205,
+          "output_tokens": 45,
+          "latency_ms": 1260.775960999922,
+          "text": "The candidate has **5 years of experience** as a Software Engineer at Acme Inc. (2019\u20132024) and holds a **Bachelor of Science (B.S.) in Computer Science** from State University.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Anthropic",
+          "cost_usd": 0.001386,
+          "input_tokens": 78,
+          "output_tokens": 123,
+          "latency_ms": 2334.403988999952,
+          "text": "Based on the resume excerpt provided:\n\n**Years of Experience:**\nThe candidate worked as a Software Engineer at Acme Inc from 2019 to 2024, which amounts to approximately **5 years of experience**.\n\n**Degree:**\nThe candidate holds a **Bachelor of Science (B.S.) in Computer Science** from State University, obtained in 2019.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "resume-02",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 5.17e-05,
+        "input_tokens": 58,
+        "output_tokens": 59,
+        "latency_ms": 2135.810122999942,
+        "text": "The skills listed are: Python, Kubernetes, AWS, Terraform, and PostgreSQL.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "resume-03",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 7.612e-05,
+        "input_tokens": 76,
+        "output_tokens": 90,
+        "latency_ms": 3511.2474869999915,
+        "text": "Current: Senior Product Manager at Beta Corp (2021\u2013present).  \nPrevious: Associate PM at Gamma LLC (2018\u20132021).",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "resume-04",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 7.766e-05,
+        "input_tokens": 62,
+        "output_tokens": 97,
+        "latency_ms": 2200.3094599999713,
+        "text": "The candidate holds the **AWS Certified Solutions Architect \u2013 Professional** certification, obtained in **2022**.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4-flash-0731",
+          "provider": "Cohere",
+          "cost_usd": 2.702e-05,
+          "input_tokens": 115,
+          "output_tokens": 39,
+          "latency_ms": 1960.7763089999253,
+          "text": "The candidate holds the **AWS Certified Solutions Architect \u2013 Professional** certification, obtained in **2022**.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 186,
+          "output_tokens": 21,
+          "latency_ms": 1444.1754129999254,
+          "text": "The candidate holds the **AWS Certified Solutions Architect \u2013 Professional** certification, obtained in **2022**.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Anthropic",
+          "cost_usd": 0.001316,
+          "input_tokens": 63,
+          "output_tokens": 119,
+          "latency_ms": 2476.866072000007,
+          "text": "Based on the resume excerpt, the candidate holds the following certification:\n\n**Certification:** AWS Solutions Architect - Professional\n**Obtained:** 2022\n\nThis is a professional-level certification from Amazon Web Services (AWS), which is generally considered an advanced credential demonstrating expertise in designing distributed systems and applications on the AWS platform.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "resume-05",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 5.61e-05,
+        "input_tokens": 57,
+        "output_tokens": 66,
+        "latency_ms": 2928.0439110000316,
+        "text": "The candidate has an M.S. (Master of Science) in Data Science.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "resume-06",
+      "expected": "fit_assessment",
+      "actual_label": "fit_assessment",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.010624,
+        "input_tokens": 97,
+        "output_tokens": 1043,
+        "latency_ms": 16079.70205999993,
+        "text": "Based on what you've described, there's a significant gap between the requirements and this candidate's experience. Let me break down the mismatch honestly, then point to where there might still be value.\n\n**The core problem: 4 years short, and the 4 years don't clearly apply**\n\n- **5+ years distributed systems** vs. **1 year backend work** \u2014 this isn't a rounding error, it's a different career stage. Distributed systems experience is typically about scar tissue: debugging race conditions, handling partial failures, understanding consistency tradeoffs, dealing with systems at scale where \"it works on my machine\" stops mattering. One year at a startup may or may not have exposed them to any of that, depending on what the startup actually built.\n- **3 years frontend** doesn't transfer to distributed-systems depth. It's valuable for understanding full-stack tradeoffs and probably makes them a better communicator/collaborator, but it doesn't substitute for backend seniority.\n- **6 months self-taught Go** signals initiative, but it's not experience \u2014 it's motivation. There's a real difference between having read about goroutines/channels and having debugged a goroutine leak in production at 2am.\n\n**What I'd actually want to know before ruling them out**\n\n1. **What did the 1 year of backend work involve?** Was it CRUD APIs behind a monolith, or did it touch queuing, service-to-service communication, data replication, failure handling? The label \"backend at a startup\" covers a huge range.\n2. **Why are they self-teaching Go right now?** Is this reactive (trying to pad a resume for this application) or has it been a sustained interest that shows in side projects, contributions, blog posts, etc.? That tells you about trajectory, not just current skill.\n3. **What's the actual need behind \"5+ years\"?** Is this a number pulled from a template, or does the role genuinely require someone who can walk in day one and own distributed consensus / sharding / on-call for a complex system? If the team has strong senior engineers already and needs is more \"capable engineer who can ramp fast,\" the calculus changes.\n\n**My honest read**\n\nAs stated, this candidate does not fit a *senior* distributed-systems backend role. The gap isn't just quantitative (years) \u2014 it's that nothing in their background suggests they've had to develop the specific judgment that comes from operating distributed systems under real constraints (network partitions, eventual consistency bugs, cascading failures, etc.).\n\nThat said, they could be a strong **mid-level or backend engineer with growth potential**, especially if:\n- The frontend years show strong engineering fundamentals (testing, code quality, cross-team work)\n- The startup backend year, despite being short, involved real ownership rather than following a senior engineer's lead\n- The Go self-study reflects genuine curiosity rather than resume engineering\n\n**Recommendation:** Don't advance them for this specific senior req unless you're willing to relabel the role or the level. If you like other signals (drive, learning velocity, communication), consider whether there's a mid-level opening, or a structured path where they pair with a senior distributed-systems engineer for 1-2 years first. But going in expecting them to operate at \"5+ years distributed systems\" level would likely set them and the team up for frustration.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "resume-07",
+      "expected": "fit_assessment",
+      "actual_label": "fit_assessment",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.00932,
+        "input_tokens": 95,
+        "output_tokens": 913,
+        "latency_ms": 13540.930938000089,
+        "text": "# Candidate Assessment: Sales Director Role\n\n**Short answer: Weak fit against the stated requirements, but worth a deeper look depending on why those requirements exist.**\n\n## Where the candidate falls short\n\n- **No enterprise experience** \u2014 enterprise sales cycles (6-12+ months, multiple stakeholders, procurement/legal processes, champion-building) are fundamentally different from SMB retail sales. This isn't just \"bigger deals,\" it's a different skill set entirely.\n- **No SaaS experience** \u2014 recurring revenue models, churn/retention dynamics, land-and-expand strategies, and technical buyer conversations don't have an obvious analog in retail.\n- **No 6-figure deal closings** \u2014 this is a direct, measurable requirement they haven't met. It's not a \"probably could\" situation \u2014 there's no evidence.\n\nThis isn't a minor gap \u2014 it's three core requirements unmet simultaneously, in a role at the Director level where you typically want proven capability, not high-potential.\n\n## Questions before ruling them out\n\n1. **Why 8 years in one vertical?** Is this someone who thrived in a narrow lane, or someone who never pushed to grow? Check for progression \u2014 did they move from IC to managing teams, did deal sizes increase over time even within retail?\n2. **Transferable skills check**: Did they sell to franchise owners or larger retail chains where deal complexity, multiple decision-makers, or longer cycles existed even without the \"enterprise\" label?\n3. **Is this a Director (strategic/leadership) or Director (still closing deals) role?** If it's primarily a leadership/coaching role, closing experience matters less than ability to build process, hire, and manage a team \u2014 retail management experience might partially offset this.\n4. **How rigid are the requirements really?** Sometimes \"must have enterprise SaaS\" is aspirational shorthand for \"needs to understand complex sales,\" not a hard filter. Ask the hiring manager if this is a must-have or a proxy for something else (e.g., sophistication, sales process rigor).\n\n## Recommendation\n\n- **If the role is deal-focused and requires immediate quota-carrying impact**: Pass. The learning curve for enterprise SaaS motions is steep, and you're not paying for a training program at Director level.\n- **If the role has runway (ramp time, supportive team, strong onboarding) and the candidate shows exceptional trajectory/leadership signals**: Consider for a screening conversation, but calibrate expectations \u2014 this would be a bet on potential, not a proven fit.\n\n**Bottom line**: On paper, this is a mismatch for the stated must-haves. Don't advance to final rounds without first validating whether the requirements are truly non-negotiable or whether there's a compelling story of transferable skill that the resume doesn't capture.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "google/gemini-2.5-flash",
+          "provider": "Google",
+          "cost_usd": 0.0027412,
+          "input_tokens": 54,
+          "output_tokens": 1090,
+          "latency_ms": 9770.441167999934,
+          "text": "This candidate presents a **high-risk, low-fit scenario** for a Sales Director role requiring enterprise SaaS experience and a track record of closing 6-figure deals.\n\nHere's a breakdown of the assessment:\n\n**Strengths (Transferable Skills):**\n\n*   **8 Years of Sales Experience:** This is a significant foundation. They understand sales cycles, objection handling, closing techniques, negotiation, and building relationships. This isn't someone starting from scratch.\n*   **Motivation/Drive:** To have 8 years in sales, they likely possess a strong work ethic, resilience, and a results-oriented mindset.\n*   **Leadership Potential (Implied):** While not explicitly stated, a Sales Director role suggests leadership aspirations. If they've managed teams or mentored others in their retail roles, that's a plus.\n*   **Customer-Facing Skills:** Retail sales heavily relies on direct customer interaction, understanding needs, and building rapport. These skills are universally valuable.\n\n**Major Weaknesses (Critical Gaps):**\n\n*   **Lack of Enterprise Sales Experience:** This is the most significant hurdle.\n    *   **Sales Cycle Length:** Enterprise sales cycles are typically months, sometimes years, compared to days or weeks in retail.\n    *   **Deal Complexity:** Enterprise deals involve multiple stakeholders (IT, legal, finance, C-suite), complex procurement processes, RFPs, and intricate contract negotiations. Retail sales are often single-decision maker, off-the-shelf.\n    *   **Value Proposition:** Enterprise SaaS sells solutions to complex business problems, often requiring deep understanding of industry pain points and ROI calculations. Retail focuses on product features and immediate gratification.\n    *   **Stakeholder Management:** Navigating internal politics and aligning diverse interests within a large organization is a skill learned through enterprise experience.\n    *   **Risk Aversion:** Large organizations are inherently more risk-averse, requiring more convincing and robust proposals.\n*   **Lack of SaaS Experience:**\n    *   **Product Knowledge:** Understanding the intricacies of software as a service, recurring revenue models, implementation, support, and scalability is crucial.\n    *   **Technical Acumen:** While not needing to be a developer, a Sales Director in SaaS needs to be conversant with technical concepts and how the product integrates into a client's existing tech stack.\n    *   **Selling Intangibles:** SaaS is a service, not a physical product. Selling the future value and ongoing benefits requires a different approach.\n*   **Lack of 6-Figure Deal Track Record:** This is a core requirement of the role. Their experience closing smaller, high-volume retail transactions doesn't translate to negotiating and securing large, complex enterprise contracts. This demonstrates a gap in:\n    *   **Financial Acumen:** Understanding enterprise budgeting, procurement, and financial justification processes.\n    *   **Negotiation Skills:** Large deals involve significant negotiation on price, terms, service level agreements (SLAs), and implementation.\n    *   **Strategic Selling:** Selling to the C-suite and demonstrating strategic value to the business.\n*   **Retail Mindset vs. Enterprise Mindset:** Retail often prioritizes transaction speed and volume. Enterprise sales demand patience, strategic thinking, deep discovery, and relationship building over long periods.\n\n**Fit Assessment:**\n\n*   **Immediate Fit:** Extremely Poor. This candidate lacks the fundamental experience required for the specific demands of the role.\n*   **Long-Term Potential (with significant investment):** Moderate. If the company were willing to make a significant investment in training, mentorship, and a lower-level sales role for a substantial period (e.g., as an AE), this candidate *might* eventually develop the necessary skills. However, for a *Director* role, this is not realistic.\n\n**Recommendation:**\n\n**Do not recommend this candidate for the Sales Director role.**\n\nThey are a square peg in a round hole for this specific position. Hiring them would likely lead to:\n\n*   **Failure to meet targets:** They wouldn't have the experience or network to close 6-figure enterprise SaaS deals.\n*   **Significant ramp-up time:** Even with intense training, the learning curve would be immense, delaying ROI.\n*   **Frustration for the candidate and the company:** The candidate would be set up for failure, and the company would be missing out on critical leadership and revenue.\n*   **Opportunity cost:** A more qualified candidate with direct experience could be generating revenue immediately.\n\n**Alternative Considerations (if you absolutely wanted to explore them for *another* role):**\n\n*   Could they be a strong **Sales Development Representative (SDR)** or **Business Development Representative (BDR)**? Their retail experience could be good for prospecting and initial qualification.\n*   Could they be a **Sales Enablement Specialist** if they have a knack for training and process, given their field experience?\n*   Perhaps a role focused on **SMB SaaS sales** if the company has such an offering and they could learn the SaaS aspects without the full enterprise complexity.\n\nHowever, for *this specific Sales Director role*, it's a clear no. Focus on candidates with demonstrable enterprise SaaS sales experience and a track record of closing large deals.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 208,
+          "output_tokens": 537,
+          "latency_ms": 10322.94157399997,
+          "text": "## Preliminary fit: Low for the current role\n\nThe candidate does not yet meet the two most critical requirements:\n\n- **Enterprise SaaS experience:** No evidence of selling into enterprise accounts or navigating complex sales cycles involving multiple stakeholders, procurement, security, legal, and IT teams.\n- **Six-figure deal closures:** No stated track record of consistently closing contracts in the required deal size.\n\nTheir **8 years of sales experience** may demonstrate persistence, relationship-building, and commercial discipline, but SMB retail sales generally differs substantially from enterprise SaaS sales in deal complexity, sales cycle length, contract structure, and buying process. Experience length alone does not offset those gaps.\n\n### Recommendation\n\n- **For this specific Sales Director role:** Do not move forward unless the candidate can provide unusually strong, verifiable evidence of transferable enterprise-level selling and complex, high-value deal leadership.\n- **Possible alternative:** Consider them for an SMB-focused sales role, account executive role, or a structured path to enterprise SaaS\u2014subject to performance history and leadership potential.\n\n### If the hiring team wants to validate transferability, assess:\n\n- Their largest contracts closed and exact revenue/contract value\n- Quota attainment and consistency\n- Experience selling to multi-stakeholder or executive buyers\n- Experience with consultative selling, procurement, and lengthy negotiations\n- Ability to explain how their retail background would translate to SaaS metrics and customer dynamics\n- Evidence of coaching, pipeline creation, and team leadership\n\n**Bottom line:** Based on the information provided, the candidate is below the bar for an enterprise SaaS Sales Director role and would be a stretch hire rather than a strong match.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Anthropic",
+          "cost_usd": 0.01,
+          "input_tokens": 95,
+          "output_tokens": 981,
+          "latency_ms": 13709.579642999983,
+          "text": "# Candidate Assessment: Poor Fit for Stated Requirements\n\n## The Core Mismatch\n\nThe role requires two specific, non-negotiable qualifications:\n1. **Enterprise SaaS experience** \u2014 Candidate has: none\n2. **Track record closing 6-figure deals** \u2014 Candidate has: unknown, but unlikely given context\n\nThe candidate's background is **SMB retail sales**, which differs from enterprise SaaS in ways that aren't just semantic:\n\n| Dimension | SMB Retail | Enterprise SaaS |\n|---|---|---|\n| Sales cycle | Days/weeks | Months (often 6-18+) |\n| Decision makers | Often 1 person | Multiple stakeholders/committees |\n| Deal size | Likely low 4-5 figures | 6-7 figures |\n| Sales motion | Transactional | Consultative/solution selling |\n| Key skills | Volume, speed, rapport | Navigating procurement, legal, technical buy-in, champions |\n\n## What 8 Years of Experience Actually Tells You\n\nTenure alone isn't a proxy for relevant skill. This candidate has 8 years of experience in a *different discipline*, not 8 years of diminished enterprise SaaS experience. It's closer to hiring a skilled chef with zero experience running a kitchen and calling it \"8 years of restaurant experience.\"\n\n## Where I'd Push Back on the Assessment (Devil's Advocate)\n\nBefore rejecting outright, worth asking:\n- **Is this a Director-level individual contributor role or a people-management role?** If it's primarily about leading/coaching a team, some SMB sales leadership skills may transfer.\n- **Did the candidate sell high-consideration retail items** (e.g., B2B retail supply, franchise sales) that involved longer cycles or bigger checks? \"Retail\" is broad \u2014 worth clarifying.\n- **Is there evidence of rapid learning or upward trajectory** \u2014 e.g., did they consistently outperform peers, get promoted quickly, or already dabble in larger accounts?\n\n## Recommendation\n\n**Do not advance unless you get satisfying answers to the above.** If this is a hard requirement (not a \"nice to have\"), the fundamentals here don't match. Passing them through the pipeline risks:\n- Wasting interview cycles\n- Setting up the candidate to fail if hired\n- Signaling to your team that job requirements are negotiable/inconsistently applied\n\n**If you still want to consider them:** be transparent that this would be a *bet on trajectory and transferable skills*, not a fit on paper \u2014 and structure interviews specifically to probe for evidence of complex, multi-stakeholder selling, resilience through long cycles, and quota performance at scale.\n\n---\n\n**Bottom line:** Based on the information given, this is a **hiring manager judgment call to make consciously**, not a slam dunk to advance. The stated requirements exist for a reason \u2014 don't quietly waive them without a clear rationale.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "resume-08",
+      "expected": "fit_assessment",
+      "actual_label": "fit_assessment",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.012324,
+        "input_tokens": 87,
+        "output_tokens": 1215,
+        "latency_ms": 17005.344588999946,
+        "text": "# Honest Assessment: PhD Researcher \u2192 Production ML Role\n\n## The Fit: Partial, With a Specific Gap\n\nThis candidate is **strong on the \"ML\" part and unproven on the \"production\" part**. Those are genuinely different skill sets, and conflating them is the core hiring mistake to avoid here. Don't treat this as \"junior candidate\" or \"not qualified\" \u2014 treat it as a specific, nameable gap you can probe and potentially bridge.\n\n## What They Likely Have\n\n- Deep understanding of model behavior, statistics, experimental rigor\n- Ability to read/implement papers, adapt novel methods\n- Comfort with ambiguity in problem formulation\n- Likely strong in Python/PyTorch/TF at a code level\n\n## What \"No Production Experience\" Actually Means \u2014 Break It Down\n\nDon't treat this as one gap. It's several, and they matter differently depending on your team's setup:\n\n| Skill | Research Prototype | Production |\n|---|---|---|\n| Code quality | Notebook-driven, one-off scripts | Tested, modular, maintainable |\n| Data assumptions | Static datasets, clean splits | Drift, schema changes, nulls, adversarial inputs |\n| Performance | \"Does it work\" | Latency, throughput, cost at scale |\n| Monitoring | None needed | Model decay, data drift, alerting |\n| Reproducibility | Nice to have | Required (rollback, versioning, audit) |\n| Failure modes | Rerun the notebook | Graceful degradation, fallbacks |\n| Collaboration | Solo or small team | CI/CD, code review, cross-team handoffs (MLE, infra, product) |\n\n## Questions to Ask to Calibrate the Real Gap\n\n1. **\"Walk me through a time a model result surprised you and turned out to be a bug.\"** \u2014 Tests debugging instincts, not just modeling instincts.\n2. **\"How would you take [their thesis model] and serve it to 10,000 requests/second?\"** \u2014 See if they can even reason about the problem, even without hands-on experience.\n3. **\"Have you written unit tests? CI pipelines? Docker?\"** \u2014 Tooling literacy, separate from ML skill.\n4. **\"Tell me about the messiest real-world dataset you worked with.\"** \u2014 Academic datasets are often cleaner than they think.\n\n## The Real Risk\n\nNot that they \"can't learn it\" \u2014 most strong researchers can. The risk is **timeline and mentorship cost**:\n- If you need someone productive in production systems in 4-6 weeks, this is a bad fit.\n- If you have 3-6 months runway and senior MLEs/infra people who can pair with them, this can be a great hire \u2014 research instincts are hard to teach; production hygiene is very teachable.\n\n## Bottom Line\n\n**Fit: Good for the modeling core, gap in engineering/ops maturity.**\n\nThe actual gap isn't \"do they know ML\" \u2014 they clearly do. It's:\n- Software engineering discipline (testing, versioning, code review culture)\n- Systems thinking (latency, scale, failure modes)\n- Operational ownership (monitoring, on-call, model lifecycle post-deployment)\n\nIf your team can absorb 2-3 months of ramp-up with real mentorship, and the role isn't \"hit the ground running on infra day one,\" this is likely a good trade: you get someone who's genuinely good at the hard, differentiated part (ML) and needs to acquire the more standardized, teachable part (production engineering practices).\n\nIf your org has *no* senior MLE/infra support to backstop them, the gap becomes a real liability \u2014 they could ship something that \"works\" but silently degrades, lacks monitoring, or can't be debugged in prod.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "resume-09",
+      "expected": "fit_assessment",
+      "actual_label": "fit_assessment",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.009936,
+        "input_tokens": 93,
+        "output_tokens": 975,
+        "latency_ms": 13888.481812000009,
+        "text": "# Assessment: Print/Branding Designer \u2192 Product Design Role\n\n## The Core Question\nThis isn't really about the design system gap\u2014that's trainable in weeks. The real question is whether this person can think in **systems, states, and interactions** rather than **fixed compositions**.\n\n## What to Investigate in Interview/Portfolio Review\n\n**Red flags to check for:**\n- Does their portfolio show only final polished comps, or do you see process/iteration?\n- Can they articulate *why* a layout works, or only that it looks good?\n- Have they ever designed something that needed to account for empty states, error states, loading, responsive breakpoints, or user-generated content?\n- 6 years at one company can mean deep expertise *or* insulation from diverse problems/feedback loops. Which is it?\n\n**Good signs if present:**\n- Any exposure to digital brand systems (style guides, brand implementation across touchpoints) \u2014 shows systems thinking\n- Evidence of collaborating with non-design stakeholders (marketing, sales) and handling constraints\n- Curiosity about the shift \u2014 have they already started learning Figma/product design on their own?\n\n## Practical Test\nGive them a **small design exercise**: redesign a simple flow (e.g., a signup form or settings page) using your existing component library (share it in advance or during a working session). This reveals:\n- Can they learn/adapt to constraints quickly?\n- Do they respect existing patterns or fight the system?\n- How do they handle ambiguity around interaction states?\n\n## Honest Fit Assessment\n\n| Factor | Risk Level |\n|---|---|\n| Figma/tool proficiency | Low \u2014 learnable in 2-4 weeks |\n| Component library adoption | Low-Medium \u2014 depends on temperament (rigid vs. adaptable) |\n| Product thinking (states, flows, edge cases) | **High** \u2014 this is the real unknown |\n| Single-company background | Medium \u2014 could mean narrow exposure or deep mastery; need references |\n\n## Recommendation\n**Proceed, but don't treat this as a standard mid-level hire.** Consider:\n- Structuring the offer/role as mid-level compensation but with an explicit **ramp-up period** (60-90 days) focused on product fundamentals\n- Pairing them with a senior product designer initially\n- Being honest with them about the gap \u2014 their response to that conversation will tell you a lot\n\n**Biggest risk:** Hiring a talented visual designer who struggles with the *invisible* parts of product design (logic, states, accessibility, technical constraints) and becomes a bottleneck rather than a multiplier six months in.\n\n**Biggest opportunity:** Strong branding/print backgrounds often bring exceptional craft, typography, and visual hierarchy skills that many \"product designers\" lack \u2014 if they can bridge into systems thinking, they could elevate your team's visual quality significantly.\n\nThe single strongest predictor here isn't the resume \u2014 it's how they perform in a live, unfamiliar design exercise under some ambiguity.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "resume-10",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 5.478e-05,
+        "input_tokens": 54,
+        "output_tokens": 65,
+        "latency_ms": 2142.4382939999305,
+        "text": "The candidate speaks English, Spanish, and Mandarin.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4-flash-0731",
+          "provider": "Cohere",
+          "cost_usd": 2.17e-05,
+          "input_tokens": 107,
+          "output_tokens": 24,
+          "latency_ms": 2082.7216929999395,
+          "text": "The candidate speaks English, Spanish, and Mandarin.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 179,
+          "output_tokens": 8,
+          "latency_ms": 1062.4766049999153,
+          "text": "English, Spanish, and Mandarin.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Anthropic",
+          "cost_usd": 0.00094,
+          "input_tokens": 50,
+          "output_tokens": 84,
+          "latency_ms": 2226.2552230000665,
+          "text": "Based on the resume excerpt, the candidate speaks three languages:\n\n1. **English**\n2. **Spanish**\n3. **Mandarin**\n\nThe excerpt states they are \"fluent\" in all three, indicating a strong level of proficiency across these languages.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "resume-11",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00015972,
+        "input_tokens": 63,
+        "output_tokens": 221,
+        "latency_ms": 5548.306135000075,
+        "text": "The excerpt describes a management scope of:\n\n- **Team size:** 12 engineers\n- **Breadth:** three product lines\n- **Duration:** 2020\u20132024\n- **Responsibility:** leading/managing the engineering team across those product lines\n\nSo, the described scope is **leading 12 engineers across three product lines over a four-year period**, indicating both **people management** and **cross-product/portfolio oversight**.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "resume-12",
+      "expected": "fit_assessment",
+      "actual_label": "fit_assessment",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.011136,
+        "input_tokens": 98,
+        "output_tokens": 1094,
+        "latency_ms": 16878.480651999893,
+        "text": "# Fit Assessment: Likely Mismatch, With Specific Gaps to Probe\n\n## The Core Tension\n\nThe role requires managing through **change and scale** \u2014 hiring pipelines, org design, process creation, layered reporting structures. The candidate's experience is managing through **stability** \u2014 same team, same structure, same headcount, for two years. These are genuinely different skill sets, not just \"the same job at different sizes.\"\n\nStable-team management often selects for and reinforces: maintaining existing rhythms, deep trust built over time, minimal need for new process, conflict avoidance being viable. Growth-stage management demands: judgment under ambiguity, comfort with things breaking, rapid trust-building with strangers, and building process/scaffolding from scratch. Two years of stability doesn't just fail to prove the second skill set \u2014 it may have selected against developing it.\n\n## What's Genuinely Unknown (Don't Assume)\n\n- **Why did the team stay at 4 for 2 years?** Could be: no growth budget (constraint, not choice), deliberate small-team strategy, or the manager never advocated for more headcount. These have very different implications.\n- **Was there attrition-avoidance or genuine retention?** A stable team could mean strong management (people don't leave) or stagnation (no growth opportunities, but also no reason to leave).\n- **Has the candidate operated *near* growth without owning it?** E.g., did they hire replacements, absorb people from other reorgs, or partner with a scaling counterpart team? Adjacent exposure matters even without formal ownership.\n\n## Where the Technical Depth Helps \u2014 and Where It's a Trap\n\nStrong IC depth is a real asset in a 15-person org: it earns credibility fast, helps with technical hiring bar-setting, and lets the manager stay useful in ambiguous early-stage technical decisions.\n\nThe trap: at growth stage, the highest-leverage manager activity shifts from \"being technically excellent\" to \"building the machine that produces good outcomes without you.\" Managers with strong IC identity often under-delegate, stay too close to code/design, and are slow to hire because no candidate looks as good as doing it themselves. This is the single most common failure mode to screen for here.\n\n## Recommendation\n\n**Don't reject on paper \u2014 interview specifically for the gap, not for confirmation of the resume.**\n\nStructure the interview around scenario/behavioral questions that simulate growth-stage demands directly, since past behavior in a stable context won't predict it:\n\n- \"Walk me through how you'd design the team structure at 15, 30, and 50 people \u2014 what changes and why?\"\n- \"Tell me about a time you had to make a call with incomplete information and it went wrong. What did you do?\"\n- \"How would you evaluate and hire for a role adjacent to your own expertise, where you're not the strongest technical judge?\"\n- Ask directly: \"Why do you think your team stayed at 4 people for two years?\" \u2014 and listen for self-awareness vs. rationalization.\n\n**Bottom line:** treat this as a candidate with a real, specific, and common gap (scaling/hiring/ambiguity experience) paired with a real asset (technical depth). The decision should hinge on evidence of adaptability and self-awareness in interview, not on the resume shape alone \u2014 but go in skeptical, because growth-stage roles punish learning-on-the-job more than stable roles do.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "resume-13",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 8.162e-05,
+        "input_tokens": 68,
+        "output_tokens": 101,
+        "latency_ms": 7224.99522999999,
+        "text": "The candidate has a **Bachelor of Arts in Economics (2017)** and is a **Full Stack Web Development bootcamp graduate (2021)**.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4-flash-0731",
+          "provider": "Cohere",
+          "cost_usd": 3.402e-05,
+          "input_tokens": 121,
+          "output_tokens": 61,
+          "latency_ms": 2320.140930999969,
+          "text": "The candidate has a Bachelor of Arts in Economics (2017) and is a Full Stack Web Development bootcamp graduate (2021).",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 193,
+          "output_tokens": 28,
+          "latency_ms": 1749.554881999984,
+          "text": "The candidate has a Bachelor of Arts in Economics (2017) and graduated from a Full Stack Web Development bootcamp (2021).",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Anthropic",
+          "cost_usd": 0.003586,
+          "input_tokens": 73,
+          "output_tokens": 344,
+          "latency_ms": 5491.870123000012,
+          "text": "# Educational Background Summary\n\nBased on the resume excerpt, the candidate has:\n\n**Formal Education:**\n- Bachelor of Arts (B.A.) in Economics, completed in 2017\n\n**Supplementary Technical Training:**\n- Full Stack Web Development Bootcamp, completed in 2021\n\n## Interpretation\n\nThis background suggests a candidate who:\n- Started with a traditional liberal arts degree focused on economics (likely covering analytical, quantitative, and research skills)\n- Made a **career transition into tech** approximately 4 years after their undergraduate degree\n- Pursued an intensive, accelerated bootcamp program to gain practical coding skills (typically covering front-end and back-end technologies, databases, and web frameworks)\n\nThis is a common pattern for career-changers moving into software development, combining foundational analytical/critical thinking skills from their degree with hands-on technical skills from the bootcamp. It may be worth exploring in an interview what motivated the transition and what specific technologies/projects were covered in the bootcamp.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "resume-14",
+      "expected": "fit_assessment",
+      "actual_label": "fit_assessment",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.010912,
+        "input_tokens": 111,
+        "output_tokens": 1069,
+        "latency_ms": 14791.55262100005,
+        "text": "The honest answer: not well on paper, but it depends on what's actually driving the requirement.\n\n**Where the gap is real**\n\nSOC 2 and HIPAA are not interchangeable with GDPR, even though they're all \"compliance.\" Different things:\n\n- **GDPR** is principles-based, regulator-driven, centers on data subject rights, lawful basis, cross-border transfer mechanisms.\n- **SOC 2** is an audit framework built around Trust Services Criteria (security, availability, confidentiality, etc.) \u2014 the work is control design, evidence collection, working with auditors, gap remediation. It's operational and technical in a different way than GDPR compliance often is.\n- **HIPAA** has its own regulatory architecture (Privacy Rule, Security Rule, Breach Notification Rule), specific concepts like covered entities/business associates, BAAs, minimum necessary standard \u2014 none of which overlaps meaningfully with GDPR mechanics.\n\nSomeone with zero exposure to either will not know the vocabulary, the audit cadence, the control frameworks, or the regulator relationships (HHS/OCR vs. EU DPAs) on day one. If the role needs someone to walk in and run a SOC 2 audit cycle or manage a HIPAA risk assessment immediately, this is a real gap, not a stretch.\n\n**Where transferable skill matters**\n\nThat said, GDPR experience isn't irrelevant \u2014 it signals:\n- Comfort with regulatory frameworks generally, reading and applying rules to operations\n- Experience translating legal requirements into policies/controls\n- Familiarity with data protection concepts (data mapping, risk assessment, incident response, vendor management) that echo across all three frameworks\n- Ability to work cross-functionally with security/engineering teams, which is often the harder skill to teach than the specific framework\n\nSomeone who's done GDPR well has usually built muscle in exactly the kind of analytical and cross-functional work that SOC 2/HIPAA also require. The frameworks are learnable in weeks to a few months for someone who's already fluent in compliance work generally.\n\n**The real question to ask**\n\nFit depends on:\n1. **Timeline** \u2014 do you need SOC 2/HIPAA expertise immediately, or can you support a 2-3 month ramp-up?\n2. **Team structure** \u2014 is there someone else (security lead, outside counsel, consultant) who owns the technical framework details, or is this person the sole SME?\n3. **Seniority** \u2014 for a senior/lead role owning audits solo, this is a bigger risk. For a role that's part of a broader compliance function with support, it's much more manageable.\n\n**Bottom line**\n\nThis candidate does *not* meet the literal requirement as stated. If the requirement is truly \"deep familiarity\" meaning hands-on audit/control experience, they're underqualified right now and you should be honest with yourself about the ramp time and risk. If the requirement is really \"someone who can become the SOC 2/HIPAA expert\" and general regulatory fluency + trainability matters more than existing framework knowledge, they could be a strong candidate \u2014 but that's a different requirement than what's written, and you should recalibrate the job posting/interview questions accordingly rather than stretch this candidate's experience to fit language that doesn't match.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "resume-15",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00016082,
+        "input_tokens": 68,
+        "output_tokens": 221,
+        "latency_ms": 9936.857678000024,
+        "text": "It describes that the candidate has freelance/contract work experience, serving 14 different clients over a four-year period from 2019 to 2023. This suggests a varied client base, self-employed or contract-based work, and experience managing multiple engagements rather than a single traditional full-time role.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "resume-16",
+      "expected": "fit_assessment",
+      "actual_label": "fit_assessment",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.009134,
+        "input_tokens": 97,
+        "output_tokens": 894,
+        "latency_ms": 13149.154114999987,
+        "text": "# Assessing Fit for Staff Infrastructure Engineer\n\nThe details you've given are a reasonable starting filter, but they're not sufficient to make a real assessment. Here's how I'd think about it:\n\n## What the current signals actually tell you\n\n**9 years at large-scale companies running K8s at scale** \u2014 This tells you the candidate has been *exposed to* scale, not that they *created or owned* solutions to scale problems. There's a big difference between:\n- Operating within infrastructure someone else designed\n- Being the person who made the architectural calls when things broke at 3am\n- Driving the decisions that prevented the 3am pages in the first place\n\n**Two CNCF contributions** \u2014 This is a positive signal for technical depth and community engagement, but weight depends heavily on:\n- What the contributions actually were (a doc fix vs. a core scheduler improvement are both \"contributions\")\n- Whether they were solo work or done as part of a team/job requirement\n- How central the project is (contributing to etcd internals \u2260 contributing to a peripheral tool)\n\n## What's missing that actually determines staff-level fit\n\nStaff is a *scope and leverage* role, not a *tenure and exposure* role. I'd want to know:\n\n1. **Systems-level ownership** \u2014 Did they own a system end-to-end, including its failure modes, or were they one of many people touching a large system?\n2. **Cross-team influence** \u2014 Have they driven technical decisions that other teams had to adopt? Staff engineers create leverage beyond their own output.\n3. **Judgment under ambiguity** \u2014 Can they describe a time they made a bet on an unproven technical direction, with the reasoning, and how it played out (including if they were wrong)?\n4. **Mentorship/multiplier effect** \u2014 Have they raised the technical bar for others, not just shipped their own work?\n5. **Communication with non-infra stakeholders** \u2014 Can they explain tradeoffs to product/eng leadership in a way that changes decisions?\n\n## My honest take\n\nThis profile clears the bar for a **strong senior engineer**. Whether it clears **staff** depends entirely on the *depth and narrative* behind those bullet points \u2014 which a resume can't show you.\n\n**Recommendation:** Don't score this from the resume. Structure the interview loop specifically to probe:\n- Ask for a system they consider themselves the DRI for \u2014 go deep on a production incident and post-mortem they led\n- Ask about the CNCF contributions in detail \u2014 what problem was it solving, how did they navigate the review process, what pushback did they get\n- Ask about a technical disagreement with a peer or lead \u2014 how it resolved, and whether they were right\n\nIf you want, tell me what your loop currently looks like and I can help you design questions that specifically distinguish senior from staff-level judgment.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "google/gemini-2.5-flash",
+          "provider": "Google",
+          "cost_usd": 0.0033109,
+          "input_tokens": 53,
+          "output_tokens": 1318,
+          "latency_ms": 11188.995979000083,
+          "text": "This candidate presents a very strong profile for a Staff Infrastructure Engineer role. Let's break down the assessment based on the provided information:\n\n**Overall Assessment: Excellent Fit**\n\nThis candidate appears to be a highly qualified and potentially outstanding candidate for a Staff Infrastructure Engineer role. The combination of extensive experience, large-scale Kubernetes exposure, and open-source contributions points to a technically adept and influential individual.\n\n---\n\n**Detailed Assessment:**\n\n**Strengths:**\n\n1.  **Extensive Experience (9 years):**\n    *   **Staff-Level Readiness:** 9 years is a solid amount of time to have developed deep expertise, strategic thinking, and the ability to operate independently. This length of experience often correlates with a candidate's readiness to take on the broader responsibilities of a Staff Engineer.\n    *   **Breadth and Depth:** Over 9 years, they would have likely encountered a vast array of infrastructure challenges, technologies, and architectural patterns, moving beyond just \"doing\" to \"designing\" and \"leading.\"\n\n2.  **Large-Scale Companies:**\n    *   **Robustness and Reliability:** Experience at large-scale companies implies exposure to, and likely responsibility for, systems that demand high availability, performance, security, and scalability. This is critical for infrastructure roles.\n    *   **Process and Best Practices:** Large organizations typically have well-defined processes, incident management, change management, and security protocols. The candidate would be familiar with these and likely contributed to their improvement.\n    *   **Complexity Management:** Large-scale infrastructure inherently involves managing complex interdependencies, integrations, and diverse technology stacks.\n\n3.  **Kubernetes at Significant Scale:**\n    *   **Core Competency:** Kubernetes is the de facto standard for container orchestration in modern infrastructure. \"Significant scale\" implies they've dealt with the challenges of managing large clusters, high pod counts, complex networking, storage, and cost optimization within a Kubernetes environment.\n    *   **Troubleshooting & Performance:** Expertise at this scale would involve advanced troubleshooting, performance tuning, and potentially custom operator development or extensibility.\n    *   **Industry Relevance:** This is a highly sought-after skill set.\n\n4.  **Two Relevant Open-Source Contributions to CNCF Projects:**\n    *   **Technical Leadership & Influence:** This is arguably the most impressive aspect. Contributing to CNCF projects (e.g., Kubernetes, Prometheus, Envoy, etcd, Helm, etc.) demonstrates:\n        *   **Deep Understanding:** They don't just *use* these tools; they understand their internals well enough to contribute to their development.\n        *   **Problem Solving at a Fundamental Level:** They've identified gaps or areas for improvement and implemented solutions.\n        *   **Community Engagement:** They can collaborate with a global community of experts.\n        *   **Mentorship Potential:** They can likely guide junior engineers on how these tools work and how to leverage them effectively.\n        *   **Thought Leadership:** This suggests they are on the cutting edge of infrastructure technology and actively shaping its future.\n    *   **\"Relevant\" is Key:** Assuming these contributions are genuinely impactful (e.g., not just typos fixes), they demonstrate a profound level of expertise and commitment to the infrastructure ecosystem.\n\n**Potential Staff Engineer Qualities Demonstrated:**\n\n*   **Technical Expertise (Deep):** Clearly demonstrated by K8s scale and OSS contributions.\n*   **Problem Solving (Advanced):** Solving problems at the scale of large companies and contributing to OSS projects requires sophisticated problem-solving skills.\n*   **Strategic Thinking:** Operating at scale often forces strategic considerations around architecture, reliability, and cost. OSS contributions also often stem from identifying strategic needs.\n*   **Leadership/Mentorship Potential:** Contributing to OSS often involves guiding others, writing clear documentation, and influencing design.\n*   **Communication:** Effective OSS contributions require clear communication.\n*   **Impact:** This candidate has demonstrably made an impact beyond their immediate team through OSS contributions.\n\n**Potential Areas for Deeper Exploration in Interview (Not Weaknesses, but Points to Validate):**\n\n*   **Scope of \"Staff\":** Staff roles vary. Need to understand if their experience aligns with your specific Staff expectations (e.g., cross-team influence, architectural ownership, technical strategy, mentoring, long-term vision vs. hands-on execution).\n*   **Breadth of Infrastructure Knowledge:** While K8s is strong, explore their experience with other critical infrastructure domains:\n    *   Networking (advanced routing, CDNs, service mesh beyond just basic ingress)\n    *   Storage (distributed storage, data lakes, object storage)\n    *   Databases (relational, NoSQL, data warehousing)\n    *   Observability (advanced Prometheus/Grafana, tracing, logging at scale)\n    *   Security (Kubernetes security, cloud security, identity management)\n    *   Cloud Providers (AWS, GCP, Azure - deep experience with native services)\n*   **Architectural Design & Review:** Can they design complex systems from scratch and effectively review others' designs?\n*   **Incident Management & Post-mortems:** Their role in high-severity incidents, preventative measures, and driving organizational learning.\n*   **Mentorship & Influence:** Specific examples of mentoring engineers, leading technical initiatives, or influencing architectural decisions without direct authority.\n*   **Trade-offs & Business Acumen:** How do they balance technical perfection with business needs, cost constraints, and time-to-market?\n*   **Communication Skills:** How effectively can they explain complex technical concepts to non-technical stakeholders or junior engineers?\n*   **Why they are looking:** Given such a strong profile, understanding their motivations is important. Are they seeking new challenges, greater impact, or a different culture?\n\n**Conclusion:**\n\nThis candidate appears to be an **exceptional fit** for a Staff Infrastructure Engineer role. Their combination of deep, relevant experience, work at scale, and significant open-source contributions paints a picture of a highly competent, influential, and forward-thinking engineer.\n\nThe interview process should focus on validating these strengths and exploring the nuances of their experience to ensure alignment with the specific responsibilities and cultural fit of *your* Staff role. They are likely a candidate who could immediately make a significant positive impact on the team and organization.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 3
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 203,
+          "output_tokens": 964,
+          "latency_ms": 17311.946413999976,
+          "text": "## Preliminary assessment: Strong fit\u2014advance to Staff-level interview\n\nBased on the available evidence, the candidate appears technically strong and likely capable of operating at Staff level. Nine years running Kubernetes at significant scale suggests deep production experience, and relevant CNCF contributions add evidence of technical credibility, collaboration, and engagement beyond a single team.\n\nHowever, tenure and technical expertise alone do not establish Staff-level scope. The key question is whether the candidate has shaped infrastructure strategy and outcomes across multiple teams or the broader organization.\n\n### Evidence supporting Staff-level potential\n\n- **Large-scale Kubernetes experience:** Likely exceeds the platform-engineering baseline expected for a Senior engineer and indicates comfort with reliability, capacity, upgrades, failure modes, and operational complexity.\n- **CNCF contributions:** Demonstrates ability to design and propose changes in an open, review-driven environment. This is particularly relevant for infrastructure roles requiring technical influence.\n- **Sustained experience:** Nine years at large-scale companies suggests consistent technical judgment and exposure to evolving infrastructure practices.\n- **Likely system-level thinking:** Running Kubernetes at scale generally requires reasoning across compute, networking, storage, security, observability, automation, and organizational tooling.\n\n### Important gaps to validate\n\nThe Staff designation depends primarily on **scope and influence**, so the interview process should establish whether the candidate has:\n\n1. **Owned platform capabilities used by multiple teams**, not merely operated infrastructure for one team.\n2. **Influenced architecture or company-wide standards** through proposals, migrations, or technical governance.\n3. **Led ambiguous, cross-team initiatives** with unclear requirements and substantial organizational impact.\n4. **Mentored engineers and developed senior technical leaders**, rather than only delivering high-quality individual work.\n5. **Led major incident response or reliability programs**, including post-incident learning and durable preventative work.\n6. **Communicated trade-offs effectively** to engineering and business stakeholders.\n7. **Measured impact**, such as improved availability, reduced toil, lower infrastructure cost, faster delivery, or increased platform adoption.\n\nThe quality and scope of the two CNCF contributions should also be examined: Were they narrow bug fixes, substantial features, architectural changes, or efforts requiring sustained maintainer and community leadership?\n\n### Recommended interview emphasis\n\n- Architecture review: design a multi-cluster or large-scale Kubernetes platform with explicit reliability, security, networking, upgrade, and cost trade-offs.\n- Reliability scenario: lead through a cascading failure and explain how organizational learning is converted into systemic improvements.\n- Technical leadership: describe a cross-team infrastructure decision where the candidate changed direction through evidence and influence rather than authority.\n- Impact review: quantify business and engineering outcomes from the most consequential platform work.\n- Scope calibration: compare the candidate\u2019s responsibilities with Staff expectations: organization-wide technical strategy, multi-team leverage, and disproportionate impact beyond their own team.\n\n### Hiring recommendation\n\n**Advance the candidate, with a Staff-level calibration rather than assuming the title from experience.** The available signal is strongly positive for Staff *technical depth* and likely Staff-level potential. A hire/no-hire decision should depend on demonstrated evidence of **organization-wide leverage, technical strategy, and measurable impact**.\n\nIf the candidate has owned cross-team platform capabilities, shaped company-wide standards, led major reliability initiatives, and produced measurable outcomes, the fit would be excellent. If their work has been highly competent but limited to a single team or primarily individual execution, the evidence may be closer to strong Senior performance than Staff scope.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Anthropic",
+          "cost_usd": 0.009934,
+          "input_tokens": 97,
+          "output_tokens": 974,
+          "latency_ms": 13607.342604999985,
+          "text": "# Assessing Fit for Staff Infrastructure Engineer Role\n\nThe details you've given (9 years, large-scale K8s experience, CNCF contributions) are a reasonable starting signal, but they're credentials, not evidence of staff-level capability. Here's how I'd actually evaluate fit:\n\n## What This Background Suggests (Positively)\n\n- **Scale exposure**: Running K8s at significant scale means they've likely encountered real failure modes\u2014noisy neighbors, etcd performance cliffs, control plane saturation, cascading failures\n- **OSS contributions**: Suggests they can read/navigate complex codebases and engage with technical communities, which correlates with depth\n- **Tenure**: 9 years is enough to have gone through multiple incident cycles and architecture iterations, not just greenfield builds\n\n## What's Missing From This Summary \u2014 And Why It Matters More\n\nStaff-level is not about scale exposure alone; it's about **leverage and judgment**. I'd want to probe:\n\n1. **Was this candidate driving decisions, or executing them?**\n   9 years at \"large-scale companies\" could mean staff-equivalent architect work, or it could mean senior IC work inside a very mature platform team where the hard decisions were already made. Ask specifically: *what systems did they design, not just operate?*\n\n2. **What were the two CNCF contributions?**\n   A one-line bug fix and a substantial feature/design doc merged into a core project (e.g., a scheduler enhancement, a controller redesign) are wildly different signals. This needs specifics, not a count.\n\n3. **Cross-team influence**\n   Staff engineers are expected to move orgs, not just systems. Did they set standards, mentor other seniors, resolve cross-team architecture conflicts, or write RFCs that others adopted?\n\n4. **Depth on failure, not just uptime**\n   Ask for a war story: a severe production incident they diagnosed and the systemic fix (not just the patch) they drove afterward. This tests both technical depth and organizational maturity.\n\n5. **Judgment under ambiguity**\n   Staff-level work often means making calls with incomplete information and owning the consequences. Their trajectory on a genuinely ambiguous, high-stakes technical bet (e.g., migrating primitives, deprecating a widely-used internal system) is more revealing than years of tenure.\n\n## Recommendation\n\n**Proceed to a structured technical + behavioral interview loop specifically targeting the above**, particularly:\n- A system design session focused on trade-offs at scale (not textbook K8s knowledge)\n- A deep-dive on one incident and one architecture decision they owned end-to-end\n- Reference checks focused on *scope of influence*, not just competence\n\nThe profile is a plausible staff candidate, but the summary as given is equally consistent with a strong senior engineer who hasn't yet operated with staff-level scope. The resume gets them the interview; it shouldn't be mistaken for the signal itself.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "resume-17",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 7.304e-05,
+        "input_tokens": 71,
+        "output_tokens": 87,
+        "latency_ms": 2016.7789109999603,
+        "text": "Total: **7 years** of professional experience.  \nRoles: **4 years as QA Engineer** and **3 years as SDET**.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "resume-18",
+      "expected": "fit_assessment",
+      "actual_label": "fit_assessment",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.014674,
+        "input_tokens": 107,
+        "output_tokens": 1446,
+        "latency_ms": 19936.37003899994,
+        "text": "# Assessing SMB CSM Experience for Enterprise Role ($250k ACV)\n\nThis is a common but risky hiring pattern. The skills are related but not equivalent, and the gap is often underestimated by both candidates and hiring managers. Here's a breakdown:\n\n## What Likely Transfers\n\n- **Core CSM instincts**: onboarding discipline, adoption tracking, churn-risk pattern recognition, QBR cadence\n- **Customer empathy and relationship-building fundamentals**\n- **Tooling familiarity** (Gainsight, Catalyst, etc.) if used\n- **Product knowledge**, if same product/category\n\n## What Does NOT Transfer (and this is the real risk)\n\n**1. Stakeholder complexity**\nSMB accounts at <$10k ACV typically have 1-2 stakeholders, often the buyer = user = champion. At $250k ACV, you're navigating economic buyers, technical evaluators, end-user champions, procurement, legal, and sometimes exec sponsors \u2014 often across departments with competing incentives. This is a fundamentally different skill: multi-threading, political navigation, executive communication.\n\n**2. Renewal complexity and stakes**\nA $10k renewal is often a low-touch, near-automatic motion (sometimes even handled via email or self-serve). A $250k renewal is a negotiated, multi-month process involving business case justification, budget cycles, procurement/legal review, and often competitive displacement risk. Losing one $250k account may equal losing 25+ SMB accounts in revenue impact \u2014 the tolerance for error is much lower.\n\n**3. Executive presence**\nEnterprise CSMs need credibility presenting to VP/C-level stakeholders, running strategic business reviews tied to ROI and outcomes \u2014 not just product usage. This is a learned, often coached skill, not a natural extension of SMB rapport-building.\n\n**4. Commercial sophistication**\nEnterprise renewals often involve expansion motions, multi-year contracts, custom terms, and coordination with Sales/AEs on account strategy. SMB CSMs rarely own or participate in this kind of commercial complexity.\n\n**5. Pace and depth per account**\nSMB CSMs typically manage large portfolios (50-200+ accounts) with lighter touch per account. Enterprise CSMs manage far fewer accounts (10-30) with deep, strategic engagement each. This is an inverse ratio \u2014 the muscle memory of \"efficient, scaled touch\" needs to be replaced by \"deep, tailored account strategy.\"\n\n## The Honest Assessment\n\nThis maps to roughly **40-50% skill transfer**, concentrated in soft skills and product/domain knowledge, with a **significant gap in the higher-stakes, higher-complexity mechanics** of the job \u2014 the parts most likely to determine success or failure in year one.\n\n## Questions to Probe in Interview\n\n- Ask for a specific example of a renewal that involved **conflict or resistance from a stakeholder who wasn't the primary champion**. SMB reps often don't have real examples here.\n- Ask them to **role-play a QBR with a VP-level economic buyer** who is skeptical of ROI. Watch for whether they default to feature/usage talk vs. business outcome framing.\n- Ask how they've handled a situation where **the champion loved the product but procurement/legal delayed or blocked renewal**. If they have no story, they haven't operated in this environment.\n- Ask about their **largest deal size and most complex multi-stakeholder situation**, even if it wasn't their \"average\" \u2014 this tells you if they have any edge-case experience to build from.\n\n## Recommendation\n\nNot a disqualifier, but **not a like-for-like hire either**. This works if:\n- You have a strong ramp/coaching plan (ideally pairing with a senior enterprise CSM or AE for the first 2-3 renewals)\n- The candidate shows clear self-awareness about the gap and hunger to develop the missing skills (rather than assuming \"customers are customers\")\n- You're not dropping them into a make-or-break renewal in their first 90 days\n\nIf you need someone to hit the ground running on a $250k, multi-stakeholder renewal in month two, this is a mismatch. If you can invest in ramp time, the transferable soft skills may be worth the trade-off \u2014 but go in with eyes open about what's actually different, not just optimistic that \"CS is CS.\"",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    }
+  ]
+}

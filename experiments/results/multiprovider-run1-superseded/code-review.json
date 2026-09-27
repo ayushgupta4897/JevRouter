@@ -1,0 +1,633 @@
+{
+  "name": "code-review",
+  "route_name": "eng/code-review",
+  "policy": "complexity",
+  "roster": [
+    "deepseek/deepseek-v4.1-flash",
+    "anthropic/claude-sonnet-5"
+  ],
+  "accuracy": 0.5555555555555556,
+  "real_cost_usd": 0.043803840000000004,
+  "frontier_equivalent_usd": 0.19618000000000002,
+  "savings_pct": 77.67160770720767,
+  "items": [
+    {
+      "item_id": "rev-01",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.43999999999999995,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00054648,
+        "input_tokens": 51,
+        "output_tokens": 811,
+        "latency_ms": 20612.709515000006,
+        "text": "Style issues with:\n\n```python\ndef get_user( id ):\n```\n\n1. **Spaces inside the parentheses**  \n   PEP 8 says not to put spaces immediately inside parentheses.  \n   `pycodestyle` would flag this as:\n   - `E201 whitespace after '('`\n   - `E202 whitespace before ')'`\n\n   Preferred:\n   ```python\n   def get_user(id):\n   ```\n\n2. **Parameter name `id` shadows a built-in**  \n   `id` is a Python built-in function. While not strictly a PEP 8 formatting error, it\u2019s poor style because it shadows the built-in and can confuse readers.\n\n   Better:\n   ```python\n   def get_user(user_id):\n   ```\n\nCorrected version:\n\n```python\ndef get_user(user_id):\n    ...\n```\n\nIf the project uses type hints, something like:\n\n```python\ndef get_user(user_id: int) -> User | None:\n    ...\n```",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "z-ai/glm-5.3-flash",
+          "provider": "BaseTen",
+          "cost_usd": 0.0001156,
+          "input_tokens": 34,
+          "output_tokens": 221,
+          "latency_ms": 4653.1531829998585,
+          "text": "Here are the style issues with that function signature:\n\n## Issues\n\n1. **Spaces around the parameter** \u2014 `id` is wrapped in unnecessary spaces:\n   - Python (PEP 8): \"Avoid extraneous whitespace... immediately inside parentheses, brackets or braces.\" Should be `(id)`, not `( id )`.\n\n2. **`id` shadows a builtin** \u2014 `id` is a built-in function in Python. PEP 8 advises against shadowing builtins. A more descriptive name like `user_id` is better anyway.\n\n## Corrected version\n\n```python\ndef get_user(user_id: int) -> User:\n    ...\n```\n\nAlso worth noting: type hints (`user_id: int`) and a return annotation are best practice even though they're optional \u2014 but the two issues above are the ones directly in the signature as written.\n\nIf this is a different language, let me know \u2014 e.g., in JavaScript/TypeScript the `id` shadowing concern doesn't apply, but the padding spaces are still non-idiomatic for most style guides.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 177,
+          "output_tokens": 157,
+          "latency_ms": 3172.2275359998093,
+          "text": "Style issues:\n\n- Use `snake_case` without spaces: `def get_user(user_id):`\n- Remove the spaces inside the parentheses.\n- Avoid naming the parameter `id`, which shadows Python\u2019s built-in `id()` function. Use `user_id` instead.\n\nRecommended:\n\n```python\ndef get_user(user_id):\n    ...\n```",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Anthropic",
+          "cost_usd": 0.004948,
+          "input_tokens": 34,
+          "output_tokens": 488,
+          "latency_ms": 7683.138106000115,
+          "text": "# Style Issues with `def get_user( id ):`\n\n## 1. Extra spaces inside parentheses\n```python\n# Current\ndef get_user( id ):\n\n# PEP 8 compliant\ndef get_user(id):\n```\nPEP 8 recommends no whitespace immediately inside parentheses.\n\n## 2. Shadowing the built-in `id`\n`id` is a built-in Python function (returns an object's identity). Using it as a parameter name shadows the built-in within the function scope, which can cause confusing bugs if you (or a future maintainer) accidentally rely on the built-in inside this function.\n\n**Better alternatives:**\n```python\ndef get_user(user_id):\ndef get_user(uid):\n```\n\n## 3. Missing type hints (recommended, not strictly required)\nModern Python style (especially for public/library functions) typically includes type annotations:\n```python\ndef get_user(user_id: int) -> User:\n```\n\n## 4. Missing docstring (minor/context-dependent)\nIf this is part of a public API, a short docstring is good practice:\n```python\ndef get_user(user_id: int) -> User:\n    \"\"\"Retrieve a user by their ID.\"\"\"\n```\n\n---\n\n### Summary \u2014 Recommended fix:\n```python\ndef get_user(user_id: int) -> User:\n    \"\"\"Retrieve a user by their ID.\"\"\"\n    ...\n```\n\nThe two **must-fix** issues are the extraneous spaces and shadowing `id`; the type hints and docstring are best-practice enhancements depending on your project's conventions.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "rev-02",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.56,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00015972,
+        "input_tokens": 57,
+        "output_tokens": 223,
+        "latency_ms": 5987.897691999933,
+        "text": "Use `accountBalance` \u2014 or `userAccountBalance` if the function handles multiple users/accounts and you need to disambiguate.\n\n`balance` is also acceptable if the function is clearly scoped to one user\u2019s account, but `accountBalance` is more explicit and readable.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "rev-03",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.78,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00050864,
+        "input_tokens": 47,
+        "output_tokens": 755,
+        "latency_ms": 20274.00881099993,
+        "text": "No. If the file never references `os` \u2014 e.g. `os.path`, `os.environ`, `os.getcwd()`, etc. \u2014 then `import os` is unnecessary.\n\nIt\u2019s just an unused import. Python won\u2019t need it, and linters will usually flag it as unused (`F401` in flake8/ruff). You should remove it unless:\n\n- You\u2019re intentionally importing it for a side effect. (`os` has no relevant side effects in normal use.)\n- Some dynamic code uses it indirectly, e.g. a string passed to `exec`/`eval` that expects `os` to exist in the namespace. That\u2019s unusual and generally discouraged.\n\nSo in normal code: **no, it is not needed.**",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "rev-04",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.74,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00053768,
+        "input_tokens": 53,
+        "output_tokens": 797,
+        "latency_ms": 24110.743230000026,
+        "text": "Use:\n\n```python\nif x is None:\n    ...\n```\n\nand for the negative:\n\n```python\nif x is not None:\n    ...\n```\n\nThis is the correct Python style. `None` is a singleton, and `is` checks identity, which is exactly what you want when checking for `None`.\n\nPEP 8 explicitly says:\n\n> Comparisons to singletons like `None` should always be done with `is` or `is not`, never the equality operators.\n\nWhy avoid `x == None`?\n\n- `==` can be overloaded by custom `__eq__` methods, so it may behave unexpectedly.\n- For objects like NumPy arrays, `x == None` can return an array instead of a boolean, causing errors in an `if`.\n- `x is None` is unambiguous and fast.\n\nAlso avoid this if you are specifically checking for `None`:\n\n```python\nif not x:\n    ...\n```\n\nbecause `0`, `\"\"`, `[]`, `{}`, and `False` are also falsey, but they are not `None`.\n\nSo the correct line is:\n\n```python\nif x is None:\n```",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4-flash-0731",
+          "provider": "Cohere",
+          "cost_usd": 9.156e-05,
+          "input_tokens": 106,
+          "output_tokens": 274,
+          "latency_ms": 2932.355406999932,
+          "text": "Use:\n\n```python\nif x is None:\n```\n\nThis is the correct and recommended style.\n\n### Why?\n\n- `None` is a singleton in Python \u2014 there is only one `None` object.\n- `is` checks **identity** \u2014 whether `x` is the same object as `None`.\n- `==` checks **equality** \u2014 whether `x` is *equal to* `None`, which can be overridden by custom classes.\n\nFor example:\n\n```python\nclass Foo:\n    def __eq__(self, other):\n        return other is None\n\nx = Foo()\nx == None   # True\nx is None   # False\n```\n\nSo `== None` can give misleading results with custom `__eq__` implementations.\n\n### PEP 8 says:\n\n> Comparisons to singletons like `None` should always be done with `is` or `is not`, never the equality operators.\n\nSo always write:\n\n```python\nif x is None:\n    ...\nif x is not None:\n    ...\n```",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 179,
+          "output_tokens": 130,
+          "latency_ms": 2555.5704739999783,
+          "text": "Use:\n\n```python\nif x is None:\n```\n\n`is` checks whether `x` and `None` are the same object. Since `None` is a singleton, this is the conventional and correct style.\n\n```python\nif x == None:\n```\n\nalso happens to work for many ordinary values, but `==` checks value equality and can behave differently for objects with custom equality logic. It is generally discouraged.\n\nA related recommendation is to check `None` explicitly rather than relying on falsey values, because values such as `0`, `\"\"`, `[]`, and `False` are falsey but are not `None`.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 4
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Anthropic",
+          "cost_usd": 0.004808,
+          "input_tokens": 34,
+          "output_tokens": 474,
+          "latency_ms": 6134.71717199991,
+          "text": "# `if x is None:` is the correct style\n\nThis is specified in Python's official style guide, [PEP 8](https://peps.python.org/pep-0008/):\n\n> Comparisons to singletons like `None` should always be done with `is` or `is not`, never the equality operators.\n\n## Why it matters\n\n**1. `==` can be overridden, `is` cannot**\n\nThe `==` operator calls the `__eq__` method, which classes can override with custom (and sometimes surprising) behavior:\n\n```python\nclass Weird:\n    def __eq__(self, other):\n        return True\n\nw = Weird()\nprint(w == None)  # True  \ud83d\ude31\nprint(w is None)  # False \u2705 (correct!)\n```\n\n**2. `is` checks identity, which is what you actually want**\n\n`None` is a singleton \u2014 there's only ever one instance of it in a running Python program. When you check `if x is None`, you're asking \"is `x` literally the same object as `None`?\" That's almost always the semantic check you intend.\n\n**3. `is` is slightly faster**\n\n`is` performs a simple pointer comparison, while `==` may trigger method resolution and function calls.\n\n## Summary\n\n| Use | For |\n|---|---|\n| `is` / `is not` | `None`, `True`, `False` (and other singletons) |\n| `==` / `!=` | Value equality (numbers, strings, lists, etc.) |\n\nSo yes \u2014 always prefer:\n```python\nif x is None:\n    ...\nif x is not None:\n    ...\n```",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "rev-05",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.19999999999999996,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00042372,
+        "input_tokens": 45,
+        "output_tokens": 627,
+        "latency_ms": 18434.696751000047,
+        "text": "\ud83d\udea9 **Flagged:** Inconsistent indentation \u2014 mixed tabs and spaces.\n\n**Why it matters:**\n- Can cause `TabError`/parse errors in Python.\n- Renders differently across editors and diff tools.\n- Creates noisy diffs and hurts readability.\n\n**Fix:** Normalize the function/file to one indentation style, preferably spaces (e.g., 4 spaces per level), then enforce it with a formatter/linter like Black, Prettier, or gofmt, plus an `.editorconfig`.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "rev-06",
+      "expected": "strong",
+      "actual_label": "strong",
+      "correct": true,
+      "judge_confidence": 0.020000000000000018,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.01212,
+        "input_tokens": 60,
+        "output_tokens": 1200,
+        "latency_ms": 14376.054809999914,
+        "text": "# Race Condition Analysis\n\n## The Core Problem\n\nWhen two async tasks both do read-modify-write on a shared counter without synchronization, you get a classic **check-then-act** race condition. Even though Python's GIL (or single-threaded async event loop) prevents true parallel execution, **any `await` point** during the read-modify-write sequence allows another task to interleave.\n\n## Example of Vulnerable Code\n\n```python\ncounter = 0\n\nasync def get_next_id():\n    global counter\n    current = counter        # READ\n    await asyncio.sleep(0)   # <-- yield point! Another task can run here\n    counter = current + 1    # WRITE (using stale 'current')\n    return current\n```\n\n### Why this breaks:\n```\nTask A: reads counter (0)\nTask A: awaits, yields control\nTask B: reads counter (0)        <- still 0!\nTask B: awaits, yields control\nTask A: writes counter = 0 + 1 = 1, returns ID 0\nTask B: writes counter = 0 + 1 = 1, returns ID 0  <- COLLISION!\n```\n\n**Key insight:** Even without an explicit `await` in the \"obvious\" place, any call to another `async def` function, `asyncio.sleep()`, I/O operation, or database call between the read and write creates a window for this race.\n\n## Fixes\n\n### Option 1: asyncio.Lock (safest, most explicit)\n```python\ncounter = 0\nlock = asyncio.Lock()\n\nasync def get_next_id():\n    global counter\n    async with lock:\n        current = counter\n        # any await here is now safe\u2014other tasks block on the lock\n        counter = current + 1\n        return current\n```\n\n### Option 2: Avoid awaiting inside the critical section\nIf there's genuinely no `await` between read and write, it's actually safe in a single-threaded event loop:\n```python\ncounter = 0\n\ndef get_next_id():  # not even async \u2014 no yield point possible\n    global counter\n    current = counter\n    counter += 1\n    return current\n```\n\u26a0\ufe0f **Danger:** This is fragile. If someone later adds `await` inside this function (e.g., logging, DB write) without noticing it's a \"critical section,\" the race reappears silently.\n\n### Option 3: itertools.count (atomic-ish, no lock needed)\n```python\nfrom itertools import count\n_id_counter = count()\n\ndef get_next_id():\n    return next(_id_counter)  # thread-safe due to CPython's internal atomicity\n```\nGood for simple cases, but doesn't compose well if you need additional logic (e.g., persisting the counter).\n\n### Option 4: If truly multi-threaded (not just async)\nUse `threading.Lock` instead of `asyncio.Lock`, since `asyncio.Lock` is **not** thread-safe across OS threads\u2014only across coroutines in the same event loop.\n\n## Red Flags to Look For in Review\n- [ ] Is there **any** `await` between reading and writing the counter?\n- [ ] Is the counter shared across multiple event loops or threads (asyncio.Lock won't help there)?\n- [ ] Does the function call *any* other async function that might itself await, even transitively?\n- [ ] Is the \"increment\" actually `+= 1` (which is read-modify-write, not atomic) rather than a single atomic op?\n- [ ] Are IDs persisted/recovered correctly on crash (separate but related bug: in-memory counters reset on restart, causing collisions with previously issued IDs)?\n\n## Recommended Fix\nUse **Option 1 (asyncio.Lock)** as the default \u2014 it's explicit, safe even if async operations are later added inside the critical section, and clearly communicates intent to future maintainers.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "rev-07",
+      "expected": "strong",
+      "actual_label": "weak",
+      "correct": false,
+      "judge_confidence": 0.3400000000000001,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.0016478,
+        "input_tokens": 74,
+        "output_tokens": 2472,
+        "latency_ms": 31595.36691800008,
+        "text": "Yes, that is a real bug **if negative inputs are possible** for that function. A recursive function must either:\n\n1. have a base case that is guaranteed to be reached for every input in its allowed domain, or\n2. explicitly reject inputs outside its domain before recursing.\n\nIf the only base case is something like `n == 0`, and the recursive call is `n - 1`, then `n = -1` becomes `-2`, then `-3`, \u2026 forever. Depending on the language/runtime, that causes a stack overflow or an infinite loop.\n\nExample bug:\n\n```js\nfunction factorial(n) {\n  if (n === 0) return 1;\n  return n * factorial(n - 1);\n}\n```\n\nCalling `factorial(-1)` never hits the base case.\n\nThe fix depends on what negative inputs mean. For factorial, they are usually invalid, so fail fast:\n\n```js\nfunction factorial(n) {\n  if (!Number.isInteger(n) || n < 0) {\n    throw new RangeError(\"factorial expects a non-negative integer\");\n  }\n\n  if (n <= 1) return 1;\n  return n * factorial(n - 1);\n}\n```\n\nOr use an iterative version to avoid stack depth issues entirely:\n\n```js\nfunction factorial(n) {\n  if (!Number.isInteger(n) || n < 0) {\n    throw new RangeError(\"factorial expects a non-negative integer\");\n  }\n\n  let result = 1;\n  for (let i = 2; i <= n; i++) {\n    result *= i;\n  }\n  return result;\n}\n```\n\nIf negative inputs are actually valid for your function, then you need to define the correct base case or termination condition for them, e.g.:\n\n```js\nif (n <= 0) return someBaseValue;\n```\n\nBut for most factorial/sum/Fibonacci-style functions, negative is not valid, so the correct fix is a guard clause that throws or returns an error before any recursion. So yes: real bug, and the fix is explicit input validation plus a base case that covers the full valid domain.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Together",
+          "cost_usd": 0.0023358,
+          "input_tokens": 74,
+          "output_tokens": 1928,
+          "latency_ms": 12677.359260999992,
+          "text": "Yes\u2014it\u2019s a real bug unless the function explicitly documents/enforces `n >= 0` as a precondition.\n\nExample:\n\n```python\ndef f(n):\n    if n == 0:\n        return 1\n    return n * f(n - 1)\n```\n\nCalling `f(-1)` gives:\n\n```text\nf(-1) -> f(-2) -> f(-3) -> ...\n```\n\nIt never reaches `0`, so in Python/Java/C#/JS/etc. it eventually raises `RecursionError`/`StackOverflowError`. In a language with tail-call optimization it may not overflow, but it still loops forever.\n\nThe fix depends on what negative input should mean.\n\nIf negative input is invalid:\n\n```python\ndef f(n):\n    if n < 0:\n        raise ValueError(\"n must be non-negative\")\n    if n == 0:\n        return 1\n    return n * f(n - 1)\n```\n\nIf negative input should behave like zero:\n\n```python\ndef f(n):\n    if n <= 0:\n        return 1\n    return n * f(n - 1)\n```\n\nBut don\u2019t just change `n == 0` to `n <= 0` unless treating negatives as zero is actually correct\u2014it stops the crash but may silently produce wrong results.\n\nIf negatives are valid, add a proper base case for them, or normalize before recursing:\n\n```python\ndef f(n):\n    if n < 0:\n        return f(-n)   # only if that is mathematically correct\n    if n == 0:\n        return 1\n    return n * f(n - 1)\n```\n\nBest practice: validate inputs at the top, define the base case for every possible argument path, and make sure each recursive call moves toward a base case. Also test `-1`, `0`, `1`, and boundary values.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 199,
+          "output_tokens": 448,
+          "latency_ms": 6644.320254999911,
+          "text": "Yes. If negative inputs are valid, this is a termination bug: the recursion has no reachable base case for them, so it continues until the call stack is exhausted.\n\nThe fix is to make the base case cover the entire non-recursive domain:\n\n```python\ndef recursive_function(n):\n    if n <= 0:\n        return initial_value\n    return recursive_function(n - 1)\n```\n\nUse the function\u2019s actual result for `initial_value`.\n\nIf negative inputs are **not** valid, reject them explicitly instead:\n\n```python\ndef recursive_function(n):\n    if n < 0:\n        raise ValueError(\"n must be non-negative\")\n    if n == 0:\n        return initial_value\n    return recursive_function(n - 1)\n```\n\nWhich fix is correct depends on the intended contract. In either case, add tests for zero, the smallest valid value, and invalid negative values. Also, if arbitrarily large inputs must be supported, an iterative loop may be preferable because Python still limits recursion depth even for valid positive inputs.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Anthropic",
+          "cost_usd": 0.00942,
+          "input_tokens": 70,
+          "output_tokens": 928,
+          "latency_ms": 11285.660895999854,
+          "text": "# Analysis: Yes, This Is a Real Bug\n\nThis is a legitimate and common class of bug. The typical scenario looks like this:\n\n```python\ndef countdown(n):\n    if n == 0:\n        return \"Done!\"\n    print(n)\n    return countdown(n - 1)\n```\n\nThis works fine for `n = 5, 10, 100`, etc. But call it with `n = -3`, and it never hits `n == 0`. Instead it recurses `-3, -4, -5, -6, ...` forever, eventually exhausting the call stack and crashing with a `RecursionError` (Python) or `StackOverflowError` (Java/C++, etc.).\n\n## Why This Happens\n\nThe root cause is usually one of:\n1. **Assuming non-negative input without validating it** \u2014 the base case only checks for one exact value (`n == 0`) rather than a range or condition.\n2. **Trusting the caller** to never pass invalid data, which breaks down in larger codebases or when the function is exposed publicly (APIs, user input, etc.).\n3. **Off-by-one style errors** where decrementing crosses zero without landing exactly on it (e.g., stepping by 2 from an odd number).\n\n## The Fix\n\nThere are two complementary fixes: **guard the base case** and **validate input**.\n\n### 1. Fix the base case to catch the whole range, not just one value\n\n```python\ndef countdown(n):\n    if n <= 0:          # catches 0 AND negative numbers\n        return \"Done!\"\n    print(n)\n    return countdown(n - 1)\n```\n\n### 2. Add explicit input validation (fail fast, with a clear error)\n\n```python\ndef countdown(n):\n    if n < 0:\n        raise ValueError(f\"n must be non-negative, got {n}\")\n    if n == 0:\n        return \"Done!\"\n    print(n)\n    return countdown(n - 1)\n```\n\n## Which Fix to Choose?\n\n| Approach | When to use |\n|---|---|\n| `n <= 0` guard | When negative input is a valid \"no-op\" case and silently stopping is acceptable |\n| Raise an exception | When negative input signals a caller error that should be surfaced immediately |\n| Both | Best practice \u2014 validate at the entry point, and keep the base case defensive too |\n\n## General Principle\n\n**Always design base cases as inequalities/ranges (`<=`, `>=`) rather than exact equality (`==`) whenever the recursive step moves monotonically toward a target.** This makes the function robust to:\n- Negative inputs\n- Non-integer step sizes that could skip over the exact base value\n- Concurrent modification or floating-point drift in the recursive argument\n\nAdditionally, for any recursive function, it's good practice to ask \"what happens if this is called with unexpected input (negative, zero, very large, non-integer)?\" as part of writing it \u2014 not just after the crash shows up in production.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "rev-08",
+      "expected": "strong",
+      "actual_label": "weak",
+      "correct": false,
+      "judge_confidence": 0.6399999999999999,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00093874,
+        "input_tokens": 73,
+        "output_tokens": 1398,
+        "latency_ms": 34069.65060000016,
+        "text": "Yes. If the decorator keys the cache only by the first argument, then any other argument that affects the result must be either constant for a given first argument or included in the key. Otherwise the cache can return a result computed for a different second argument.\n\nExample:\n\n```python\n@cache_by_first_arg\ndef get_price(product_id, currency):\n    return lookup_price(product_id, currency)\n\nget_price(123, \"USD\")  # computes 10.00, cached under key 123\nget_price(123, \"EUR\")  # cache hit for key 123, returns 10.00\n                        # but should have computed the EUR price, e.g. 9.20\n```\n\nSo the wrong value is produced in this scenario:\n\n1. Call `f(a, b1)` and cache the result under key `a`.\n2. Later call `f(a, b2)` where `b2 != b1` and `b2` changes the result.\n3. The decorator returns the cached `b1` result instead of calling the function for `b2`.\n\nThis is a correctness bug, not just a performance issue. It can also become a security/privacy issue if the second argument is something like `user_id`, `tenant_id`, `locale`, `permissions`, or `currency`.\n\nThe fix is to include every argument that can affect the result in the cache key, e.g.:\n\n```python\nkey = (arg1, arg2)\n# or generally:\nkey = (args, tuple(sorted(kwargs.items())))\n```\n\nor use `functools.lru_cache`, which keys by all arguments by default when they are hashable.\n\nIf the second argument is intentionally guaranteed to never vary for a given first argument, then the cache may be safe, but that invariant should be explicit and enforced. Otherwise, yes, it will eventually return wrong cached values.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "rev-09",
+      "expected": "strong",
+      "actual_label": "weak",
+      "correct": false,
+      "judge_confidence": 0.6399999999999999,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00111474,
+        "input_tokens": 69,
+        "output_tokens": 1666,
+        "latency_ms": 33473.74886500006,
+        "text": "Yes. Directly concatenating an HTTP request parameter into SQL is the classic **SQL injection** vulnerability.\n\nExample unsafe pattern:\n\n```java\nString sql = \"SELECT * FROM users WHERE username = '\" \n           + request.getParameter(\"username\") + \"'\";\n```\n\nAn attacker can send something like:\n\n```text\n' OR '1'='1' --\n```\n\nor worse, depending on the database and permissions. The database receives attacker-controlled SQL as part of the query, not as data.\n\n## Correct fix: parameterized queries / prepared statements\n\nUse placeholders and bind the request value as a parameter. The database then treats it strictly as data, never as SQL code.\n\n### JDBC\n\n```java\nString sql = \"SELECT * FROM users WHERE username = ?\";\n\ntry (PreparedStatement ps = conn.prepareStatement(sql)) {\n    ps.setString(1, request.getParameter(\"username\"));\n\n    try (ResultSet rs = ps.executeQuery()) {\n        // ...\n    }\n}\n```\n\n### Python\n\n```python\ncur.execute(\n    \"SELECT * FROM users WHERE username = %s\",\n    (username,)\n)\n```\n\n### PHP PDO\n\n```php\n$stmt = $pdo->prepare(\"SELECT * FROM users WHERE username = :username\");\n$stmt->execute([\":username\" => $_GET[\"username\"]]);\n```\n\n### Node.js / PostgreSQL\n\n```js\ndb.query(\"SELECT * FROM users WHERE username = $1\", [req.query.username]);\n```\n\nThe placeholder syntax varies by database/driver, but the principle is the same: **never build executable SQL by concatenating untrusted input.**\n\n## Dynamic WHERE clauses\n\nIf you are building a WHERE clause from optional filters, concatenate only fixed SQL fragments, and add placeholders for values:\n\n```java\nList<String> clauses = new ArrayList<>();\nList<Object> params = new ArrayList<>();\n\nif (name != null) {\n    clauses.add(\"name = ?\");\n    params.add(name);\n}\n\nif (email != null) {\n    clauses.add(\"email = ?\");\n    params.add(email);\n}\n\nString sql = \"SELECT * FROM users\";\nif (!clauses.isEmpty()) {\n    sql += \" WHERE \" + String.join(\" AND \", clauses);\n}\n```\n\nThen bind `params` to the prepared statement.\n\n## Special cases: identifiers cannot be parameterized\n\nYou cannot bind table names, column names, `ASC`/`DESC`, or SQL keywords as parameters. For those, use a strict allowlist:\n\n```java\nMap<String, String> allowedSortColumns = Map.of(\n    \"name\", \"name\",\n    \"email\", \"email\",\n    \"created_at\", \"created_at\"\n);\n\nString sort = allowedSortColumns.get(request.getParameter(\"sort\"));\nif (sort == null) {\n    throw new IllegalArgumentException(\"Invalid sort column\");\n}\n\nString sql = \"SELECT * FROM users ORDER BY \" + sort;\n```\n\nThat is safe because the value comes from your allowlist, not directly from the request.\n\n## What not to rely on\n\n- Input validation alone is not a fix.\n- Escaping quotes manually is fragile and database-specific.\n- Stored procedures are not automatically safe if they build dynamic SQL inside.\n- WAFs are only a mitigation, not the correct fix.\n- Least privilege helps reduce impact, but does not remove the vulnerability.\n\n**Correct fix:** use parameterized queries/prepared statements for all request values, and use an allowlist for any dynamic SQL identifiers such as column names or sort directions.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "rev-10",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.52,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.0002915,
+        "input_tokens": 47,
+        "output_tokens": 426,
+        "latency_ms": 10476.274211000145,
+        "text": "```python\n@property\ndef name(self):\n    \"\"\"Return the name.\"\"\"\n    return self._name\n```\n\nIf the method is named like `get_name`, use:\n\n```python\ndef get_name(self):\n    \"\"\"Return the name.\"\"\"\n    return self._name\n```",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Together",
+          "cost_usd": 0.0004389,
+          "input_tokens": 47,
+          "output_tokens": 354,
+          "latency_ms": 3231.8990149999536,
+          "text": "```python\ndef name(self):\n    \"\"\"Return the value of `self._name`.\"\"\"\n    return self._name\n```\n\nIf it\u2019s a property getter:\n\n```python\n@property\ndef name(self):\n    \"\"\"Return the value of `self._name`.\"\"\"\n    return self._name\n```",
+          "error": null,
+          "jev_adequate": true,
+          "score": 4
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 172,
+          "output_tokens": 79,
+          "latency_ms": 1937.9576690000704,
+          "text": "```python\n@property\ndef name(self):\n    \"\"\"Return the object's name.\"\"\"\n    return self._name\n```",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Anthropic",
+          "cost_usd": 0.001854,
+          "input_tokens": 27,
+          "output_tokens": 180,
+          "latency_ms": 2612.1029310002086,
+          "text": "Here's the getter method with a docstring added:\n\n```python\ndef name(self):\n    \"\"\"Return the name.\"\"\"\n    return self._name\n```\n\nIf you'd like a more detailed docstring (e.g., specifying the return type or adding more context), here's an expanded version:\n\n```python\ndef name(self):\n    \"\"\"\n    Get the name.\n\n    Returns:\n        str: The current value of the name attribute.\n    \"\"\"\n    return self._name\n```\n\nFeel free to share the actual method signature (including the property decorator, if any, and type hints) if you'd like the docstring tailored more precisely to your code.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "rev-11",
+      "expected": "weak",
+      "actual_label": "strong",
+      "correct": false,
+      "judge_confidence": 0.10000000000000009,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.004972,
+        "input_tokens": 41,
+        "output_tokens": 489,
+        "latency_ms": 5650.6443959999615,
+        "text": "Yes, `MAX_RETRIES = 3` follows standard convention correctly.\n\n**The rule:** In most languages, constants use `UPPER_SNAKE_CASE` \u2014 all caps with underscores separating words.\n\n**This applies to:**\n- Python (by convention, though not enforced): `MAX_RETRIES = 3`\n- JavaScript/TypeScript (especially with `const` at module level): `const MAX_RETRIES = 3`\n- Java: `static final int MAX_RETRIES = 3`\n- C/C++: `#define MAX_RETRIES 3` or `const int MAX_RETRIES = 3`\n- Go: `const MaxRetries = 3` (exception \u2014 Go uses PascalCase/camelCase, not UPPER_SNAKE_CASE)\n- Ruby: `MAX_RETRIES = 3`\n\n**Why it matters:**\n- Immediately signals \"this value won't change\" to anyone reading the code\n- Distinguishes constants from regular variables (`maxRetries` or `max_retries`) and classes (`MaxRetries`)\n\n**One caveat:** If this is language-specific, let me know which one you're using \u2014 Go is a notable exception to the UPPER_SNAKE_CASE rule, and some style guides (like Airbnb's JS guide) only recommend all-caps for values that are truly immutable and meaningfully constant (not just any variable declared with `const`).\n\nIf you tell me the language/framework, I can confirm more precisely.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "rev-12",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.30000000000000004,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00067408,
+        "input_tokens": 49,
+        "output_tokens": 1005,
+        "latency_ms": 24325.943009000184,
+        "text": "**Flagged: bad practice.** Catching broad `except Exception:` and silently `pass`-ing is an anti-pattern.\n\nWhy it\u2019s problematic:\n- It hides unexpected bugs like `TypeError`, `AttributeError`, `KeyError`, etc.\n- Silent failure makes debugging and production incidents much harder.\n- Callers may assume the operation succeeded and continue with invalid state.\n- It can mask serious issues: failed I/O, auth errors, data corruption, network failures.\n- Tests may pass even when real errors are occurring.\n- It violates fail-fast principles.\n\nBetter patterns:\n\n```python\n# Catch only what you expect and can handle\ntry:\n    do_something()\nexcept SpecificError as e:\n    logger.warning(\"do_something failed: %s\", e)\n    raise  # or handle meaningfully\n```\n\nIf you truly must catch broadly, at least log and re-raise:\n\n```python\ntry:\n    do_something()\nexcept Exception:\n    logger.exception(\"Unexpected failure in do_something\")\n    raise\n```\n\nAvoid this:\n\n```python\ntry:\n    do_something()\nexcept Exception:\n    pass  # \u274c swallows all errors silently\n```\n\nRecommendation: replace the broad catch with specific exception types, log with context, and either handle the error or let it propagate. If you share the function, I can suggest a concrete rewrite.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "rev-13",
+      "expected": "strong",
+      "actual_label": "weak",
+      "correct": false,
+      "judge_confidence": 0.19999999999999996,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00265716,
+        "input_tokens": 78,
+        "output_tokens": 4000,
+        "latency_ms": 95530.09948800014,
+        "text": "",
+        "error": "empty visible answer",
+        "jev_adequate": false,
+        "score": 1
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Together",
+          "cost_usd": 0.0048234,
+          "input_tokens": 78,
+          "output_tokens": 4000,
+          "latency_ms": 25777.01164599989,
+          "text": "Yes. If the pool actually makes a connection available to another borrower while a transaction on that physical connection is still open, that is a real correctness bug\u2014usually a serious one.\n\nThe key point: a database transaction is associated with the **physical connection/session**, not with the application\u2019s logical \u201cborrower\u201d or `@Transactional` method. If connection `C` has an open transaction and is returned to the pool, then the next borrower that gets `C` is not starting a new database transaction. It is executing inside the previous transaction.\n\nSo the second borrower can:\n\n- see uncommitted writes made by the first logical transaction;\n- have its own writes committed or rolled back by the first transaction\u2019s later commit/rollback;\n- commit the first transaction\u2019s work prematurely;\n- roll back the first transaction\u2019s work unexpectedly;\n- hold or wait on locks from the first transaction;\n- and, under concurrency, even use the same JDBC connection from two threads at once. JDBC connections are generally not thread-safe.\n\nThis is not prevented by `READ COMMITTED`, `REPEATABLE READ`, or even `SERIALIZABLE`. A transaction is always allowed to see its own uncommitted changes. Here the database sees one transaction, while the application thinks there are two.\n\nExample:\n\n```java\nConnection c = pool.borrow();\nc.setAutoCommit(false);\nc.prepareStatement(\"update account set balance = 0 where id = 1\").executeUpdate();\n\npool.return(c); // BUG if transaction still open and pool does not clean up\n\nConnection c2 = pool.borrow(); // may be same physical connection\nc2.createStatement()\n  .executeQuery(\"select balance from account where id = 1\"); // sees uncommitted 0\n```\n\nThat is a dirty read from the application\u2019s perspective, even though at the database level it is the same transaction.\n\nA correct pool must enforce the invariant:\n\n> A connection must not be handed out again until its previous transaction is completed and its session state is reset.\n\nOn check-in/return, a defensive pool should do something like:\n\n- if `autoCommit == false` and the connection is dirty, roll back;\n- reset `autoCommit`;\n- reset isolation level, read-only, catalog/schema, session variables, temp",
+          "error": null,
+          "jev_adequate": true,
+          "score": 4
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Together",
+          "cost_usd": 0.0042258,
+          "input_tokens": 78,
+          "output_tokens": 3502,
+          "latency_ms": 21029.006342999994,
+          "text": "Yes\u2014**if the pool actually hands that connection to another borrower before the transaction has definitively ended, it is a real, serious correctness bug**. It is not just a theoretical isolation issue.\n\nTransactions are bound to the **physical connection/session**, not to a logical request. If borrower A does:\n\n```text\nconn = pool.acquire()\nbegin transaction\nupdate ...\npool.release(conn)   // BUG: transaction still open\ncommit later\n```\n\nand borrower B then acquires the same physical connection, B is not starting a fresh logical transaction. B has inherited A\u2019s open transaction and session state. So B can:\n\n- read rows A updated but did not commit;\n- commit A\u2019s uncommitted work as a side effect of B\u2019s `COMMIT`;\n- roll back A\u2019s work as a side effect of B\u2019s `ROLLBACK`;\n- inherit locks, temp tables, session variables, prepared statements, cursors, advisory locks, `SET` state, row-security context, etc.;\n- race with A\u2019s later commit/rollback.\n\nIsolation levels do **not** prevent this, because a transaction is always allowed to see its own uncommitted writes. The problem is that two logical transactions have been accidentally merged into one physical transaction.\n\nUnder high concurrency this becomes much more likely, but it is a bug even under low concurrency if the connection is reused before the transaction ends. The effect is worse than a dirty read: B can commit or roll back A\u2019s work, or A can commit B\u2019s work.\n\nImportant nuance: if \u201creturned to the pool\u201d means \u201crelease was called, but the pool quarantines the connection and does not lend it out until the commit/rollback future completes,\u201d then it is not a bug. The bug is lending out a connection whose transaction/session state is still in flight.\n\nCorrect contract:\n\n- Do not release a connection to the pool until `COMMIT` or `ROLLBACK` has completed successfully.\n- If commit is asynchronous, release only in the callback/future completion after `COMMIT`/`ROLLBACK` is confirmed.\n- Use a transaction manager/scoped connection so `try/finally` guarantees rollback on error and commit/rollback before release.\n- The pool should defensively detect `inTransaction` on release/borrow and reject/quarantine/reset, but pool reset cannot safely \u201cfix\u201d an app that intended to commit later. A defensive rollback on release would destroy A\u2019s work or race with A\u2019s later commit.\n\nSo: **as described, yes\u2014real correctness bug. The fix is to make transaction completion and connection release atomic from the pool\u2019s perspective.**",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Anthropic",
+          "cost_usd": 0.01435,
+          "input_tokens": 85,
+          "output_tokens": 1418,
+          "latency_ms": 19550.25466799998,
+          "text": "# Yes, this is a real correctness bug \u2014 and a serious one\n\nReturning a connection to the pool before its transaction fully commits (or rolls back) creates a race condition with significant consequences beyond just \"seeing uncommitted data.\" Let me break down why this is real and what it actually breaks.\n\n## Why this happens\n\nCommon root causes in pool implementations:\n\n1. **Async commit acknowledgment race**: The pool releases the connection on `commit()` *call* rather than on confirmed *completion* \u2014 e.g., firing commit and returning the connection to the free list before the driver confirms the commit finished (especially with async drivers, pipelining, or protocols like PostgreSQL's extended query protocol).\n2. **Missing state check on release**: The pool's \"return\" path doesn't verify `connection.transactionStatus == IDLE`, so a connection mid-transaction (or even mid-commit) gets recycled.\n3. **Exception path leaks**: An error during commit is caught somewhere in a wrapper, but the `finally`-style release logic runs anyway before rollback/retry completes.\n4. **Session-level state contamination**: Even if data isn't literally visible early, session settings (isolation level, search_path, prepared statements, advisory locks) from the previous transaction leak into the next borrower.\n\n## Why \"reads uncommitted data from another transaction\" undersells it\n\nIf Borrower B gets the connection while A's transaction is still resolving:\n\n- **B might issue statements that get implicitly attached to A's transaction** (if the DB thinks it's still open), corrupting A's transaction with B's writes/reads \u2014 this is worse than a dirty read, it's cross-transaction contamination.\n- **B's queries could block or deadlock** waiting on locks A's transaction still holds, causing mysterious latency spikes attributed to \"the database being slow.\"\n- **If A's transaction later rolls back**, work that B *thought* was committed (because B saw it and moved on) is silently undone \u2014 this violates durability guarantees the application depends on.\n- **Isolation level bleed**: if A set `SERIALIZABLE` and it's not reset before B uses it, B silently gets stronger/weaker guarantees than requested.\n\nThis is functionally similar to (though distinct from) the classic **connection pool \"leaked session state\" bug** class, and it's the same category of issue that caused real production incidents in ORMs (e.g., early SQLAlchemy/Hibernate misconfigurations, asyncpg pool misuse).\n\n## How to verify it's actually happening\n\nAsk for or check:\n1. **Is `release()` called before or after `await commit()` resolves?** Look at ordering: `pool.release(conn); return conn.commit()` is buggy; `await conn.commit(); pool.release(conn)` is correct.\n2. **Is there a connection state guard on borrow?** e.g. `assert conn.transaction_status == 'idle'` before handing it out \u2014 absence of this check is itself a smell even if the race is rare.\n3. **Reproduce under load**: spin up N threads doing `BEGIN; INSERT; sleep(random); COMMIT`, and N other threads doing reads on borrowed connections, with logging on connection object identity + transaction id. Dirty reads or \"phantom rollback\" will show up under sufficient concurrency (this may require injecting artificial delay to make the race observable, since in low latency environments the window can be too narrow to see without stress testing).\n\n## The fix\n\n- **Release must happen strictly after commit/rollback acknowledgment**, in the continuation/callback, not before or in parallel.\n- **Add a defensive check on both return and borrow**: refuse to pool a connection that isn't in `idle` transaction state (log/discard it instead \u2014 treat it as a leaked/corrupt connection, not reusable).\n- **Reset session state** (`DISCARD ALL` / equivalent) on return if you allow any session-level mutations, not just transaction state.\n- Prefer **RAII/scope-guard patterns** (`try/finally`, `async with`) tying release strictly to the *end of the awaited completion*, not to a callback that fires optimistically early.\n\nSo: yes, treat this as a P0 correctness bug, not a theoretical concern \u2014 it can cause silent data corruption and non-reproducible-looking bugs that are extremely painful to diagnose in production.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "rev-14",
+      "expected": "strong",
+      "actual_label": "strong",
+      "correct": true,
+      "judge_confidence": 0.08000000000000007,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.012812,
+        "input_tokens": 71,
+        "output_tokens": 1267,
+        "latency_ms": 16710.002214000044,
+        "text": "# What Happens When the Lock Holder Crashes\n\n## The Mechanics\n\nA database-row-based lock typically looks like this:\n\n```sql\n-- Acquire\nINSERT INTO locks (resource_id, holder, acquired_at) \nVALUES ('resource_x', 'worker_123', NOW())\n-- fails on unique constraint if lock already held\n\n-- Release\nDELETE FROM locks WHERE resource_id = 'resource_x' AND holder = 'worker_123'\n```\n\nThe lock is \"held\" as long as that row exists. There's no TTL, no background reaper, no lease renewal \u2014 the row is permanent until explicitly deleted by the release path.\n\n## The Failure Sequence\n\n1. **Worker acquires the lock** \u2014 inserts the row successfully. It now owns `resource_x`.\n\n2. **Worker crashes** \u2014 OOM kill, deploy restart, unhandled exception that skips the `finally`/cleanup block, node failure, network partition that severs it from everything including its own shutdown hooks. The `DELETE` never executes.\n\n3. **The row persists indefinitely.** The database has no idea the \"owner\" is gone. There's no heartbeat, no session tied to the row, nothing analogous to Redis `EXPIRE` or a Zookeeper ephemeral node tied to a session.\n\n4. **Every subsequent attempt to acquire the lock fails**, because as far as the system is concerned, `worker_123` still legitimately holds it. New workers get their `INSERT` rejected forever.\n\n## The Cascading Effect\n\n- The protected resource (e.g., a job, a partition, a critical section) becomes **permanently unprocessable** \u2014 not just delayed, but stuck until a human intervenes.\n- If other workers retry with backoff, they queue up forever, retrying against a lock that will never be released.\n- If this lock is on the critical path of a queue-processing loop, that **entire queue backs up** behind the stuck resource.\n- Monitoring may not immediately reveal the cause \u2014 you'll see \"job stuck,\" \"queue depth growing,\" or \"worker retry storm,\" not \"lock table has a dead row,\" unless someone thinks to check that specific table.\n- Recovery requires **manual deletion of the row** \u2014 someone has to notice, diagnose, connect to the DB, and run `DELETE FROM locks WHERE resource_id = 'resource_x'`. There's no self-healing.\n\n## Why This Is Structurally Different From a Timing Bug\n\nThis isn't a rare race condition \u2014 it's a **guaranteed eventual outage**. Given enough time and enough lock acquisitions, a crash during the critical section is inevitable (deploys, OOM, hardware failure, network blips all cause this). The system has no way to distinguish \"lock legitimately held by a slow-but-alive worker\" from \"lock held by a corpse.\" Every crash during a held lock is a permanent leak with no automatic remediation.\n\n## What's Missing\n\nTo make this safe, the lock needs one of:\n\n- **An expiry/TTL** (`expires_at` column), checked and enforced on acquisition \u2014 a new worker can \"steal\" the lock if `expires_at < NOW()`.\n- **A heartbeat/lease renewal** \u2014 holder periodically extends `expires_at`; if it stops (because it's dead), the lease lapses.\n- **Tie the lock to a session/connection** the database can detect as dead (e.g., Postgres advisory locks tied to a connection/`pg_locks`, which are automatically released if the connection drops) \u2014 this offloads liveness detection to the DB rather than the application.\n- **A reaper process** that periodically scans for locks older than some sane maximum and force-releases them, alerting when it does.\n\nWithout one of these, \"lock never expires\" isn't a theoretical edge case \u2014 it's a matter of *when*, not *if*, some resource gets stuck forever until someone manually intervenes.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "rev-15",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.3400000000000001,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00034518,
+        "input_tokens": 42,
+        "output_tokens": 509,
+        "latency_ms": 12369.502280000006,
+        "text": "\ud83d\udea9 Flagged: **line 42 has trailing whitespace.**\n\nFix: remove spaces/tabs at the end of line 42.  \nExample: `sed -i '42s/[[:blank:]]*$//' <file>` or enable \u201ctrim trailing whitespace on save\u201d in your editor.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "rev-16",
+      "expected": "strong",
+      "actual_label": "weak",
+      "correct": false,
+      "judge_confidence": 0.3600000000000001,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00213202,
+        "input_tokens": 76,
+        "output_tokens": 3205,
+        "latency_ms": 70075.62902000018,
+        "text": "Yes\u2014if the retry sends a new payment request without a shared idempotency key, it can cause a double charge.\n\nWhy: a lost response leaves the outcome ambiguous. The first request may have reached the payment API and succeeded, but the client never received the success response. If the code catches **any** exception and retries, it sends a second, independent charge request. Unless the payment API can recognize that second request as a replay of the first, it will treat it as a new charge.\n\nThe specific exception you mentioned is especially dangerous because it already indicates that the payment may have succeeded. Retrying it as if it were a transient failure is the wrong semantic: it is not \u201ctry again,\u201d it is \u201cthis may already be done.\u201d\n\nRetry-with-backoff only changes timing; it does not make a non-idempotent payment operation safe.\n\nSafe handling usually requires:\n\n- Generating an idempotency key per payment/order **before** the first attempt.\n- Reusing that same key on every retry.\n- Retrying only errors that are safe/ambiguous to retry, and only with that same key.\n- Treating \u201calready succeeded\u201d / duplicate / idempotency-key errors as success or as a signal to query status, not as retryable failures.\n- Reconciling ambiguous outcomes by querying payment status using the idempotency key or payment/order ID.\n\nSo: yes, this can double-charge if the retry is treated as a new payment. If the API enforces idempotency and the retry reuses the exact same idempotency key, it should not double-charge\u2014but \u201cretry on any exception\u201d is still unsafe because it may loop on a terminal/ambiguous outcome or create a new charge if the key is missing or regenerated.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Together",
+          "cost_usd": 0.0036588,
+          "input_tokens": 76,
+          "output_tokens": 3030,
+          "latency_ms": 17455.62085300003,
+          "text": "Yes. This can cause a double charge unless the retry is properly idempotent and that specific exception is handled correctly.\n\nThe key issue is that a payment API call is normally **not idempotent by default**. Each request can mean \u201ccreate a new charge.\u201d When the response is lost, the client cannot tell whether:\n\n- the request never reached the API,\n- the API failed before charging, or\n- the API actually succeeded but the response was lost.\n\nSo a blind retry can submit a second charge instruction.\n\nThe specific exception matters a lot:\n\n- If the API raises an exception saying \u201cpayment already succeeded\u201d / \u201cduplicate request\u201d / \u201cidempotency key already used,\u201d that is often a **success or terminal signal**, not a transient failure.\n- If your retry logic catches `Exception` and retries that too, you are treating a successful-but-ambiguous operation as a failure.\n- If the retry then uses a **new idempotency key**, or no idempotency key, the API sees it as a completely new payment and may charge again.\n- If the retry uses the **same idempotency key**, the API should deduplicate and not double-charge. But you may instead loop/backoff forever if the API keeps raising the duplicate/already-succeeded exception.\n\nSo the safe pattern is:\n\n1. Generate one idempotency key per logical payment.\n2. Reuse that same key for every retry of that payment.\n3. Retry only on transient errors: timeouts, connection resets, 5xx, maybe 429.\n4. Treat business errors like `card_declined`, `invalid_request`, `already_succeeded`, `duplicate_transaction` as non-retryable.\n5. For `already_succeeded` or duplicate exceptions, treat as success or reconcile by checking payment status with the idempotency key/transaction ID.\n\nIn short: backoff alone does not prevent double charges. Retrying a non-idempotent payment call on any exception \u2014 especially one that indicates the first payment already succeeded \u2014 can absolutely cause a double charge if the retry is not tied to the same idempotency key.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 200,
+          "output_tokens": 358,
+          "latency_ms": 6178.247593999913,
+          "text": "Yes. A retry can cause a double charge.\n\nThe sequence could be:\n\n1. The payment provider successfully charges the card.\n2. The provider\u2019s response is lost or the client times out while waiting.\n3. The client receives an exception and assumes the payment failed.\n4. The retry sends what appears to be a new payment request.\n5. If the provider has no idempotency protection, it processes the charge again.\n\nThe key issue is that **an exception does not necessarily mean the server-side operation failed**. The payment may have succeeded even though the client did not receive confirmation. Exponential backoff only delays the retry; it does not prevent duplication.\n\nRetries are generally safe only when the payment API supports **idempotency**, typically by sending the same unique idempotency key for all attempts. The provider then recognizes the retry and returns the original result rather than creating another charge. If the API lacks that capability, the client should avoid blindly retrying ambiguous failures and instead query the payment status or use a reconciliation process.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 4
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Anthropic",
+          "cost_usd": 0.010488,
+          "input_tokens": 69,
+          "output_tokens": 1035,
+          "latency_ms": 13331.689641000139,
+          "text": "Yes \u2014 this is a classic and dangerous bug pattern. Here's the mechanism:\n\n## Why it causes double charges\n\nThe failure mode you're describing is the classic **\"successful operation, lost acknowledgment\"** case:\n\n1. Client sends payment request\n2. Server processes the charge successfully\n3. Server tries to send the response back\n4. Network blip / timeout / connection drop \u2014 the response never reaches the client\n5. Client's HTTP call throws an exception (timeout, connection error, etc.)\n6. Retry logic catches **any exception** and retries\n7. Client sends the *same* payment request again (unless idempotency is enforced)\n8. Server has no way to know this is a retry of an already-completed charge \u2014 it processes it again\n9. Customer is charged twice\n\nThe key problem is conflating two very different failure categories:\n\n- **Failures where the operation didn't happen** (connection refused, DNS failure, 5xx before processing) \u2014 safe to retry\n- **Failures where the operation succeeded but you couldn't confirm it** (timeout after send, dropped connection during response, the specific \"already processed\" exception you mentioned) \u2014 retrying blindly is dangerous\n\nIf the API has a *specific exception* for \"this payment already succeeded, but I couldn't get the response back to you,\" that's the API practically waving a flag saying \"don't retry this as a new charge \u2014 go look up what happened instead.\" Catching it in a generic `except Exception` retry block throws that signal away.\n\n## What should happen instead\n\n1. **Don't retry on that specific exception.** Catch it separately and treat it as a *reconciliation* case, not a retry case.\n2. **Use idempotency keys.** Generate a unique idempotency key per logical payment attempt (e.g., a UUID tied to the order/cart), and send it with every attempt, including retries. Most payment APIs (Stripe, Adyen, etc.) will deduplicate on this key server-side and return the original result instead of charging again.\n3. **On ambiguous failure (timeout, network drop), don't assume failure \u2014 reconcile.** Query the API for the status of that idempotency key/transaction before deciding whether to retry.\n4. **Only broadly retry \"safe\" errors** \u2014 e.g., connection refused, 503, DNS failures \u2014 where you're confident the request never reached the payment processor.\n\n## Minimal fix conceptually\n\n```python\ntry:\n    charge(payment_request, idempotency_key=key)\nexcept AlreadyProcessedError:\n    # Do NOT retry. Look up the actual result instead.\n    result = get_payment_status(idempotency_key=key)\nexcept (ConnectionError, Timeout):\n    # Ambiguous \u2014 safest is idempotency key + retry, not blind retry\n    retry_with_backoff(charge, payment_request, idempotency_key=key)\nexcept TransientServerError:\n    retry_with_backoff(charge, payment_request, idempotency_key=key)\n```\n\nThe core fix is: **idempotency keys make retries safe; blanket exception handling makes retries dangerous.** The two need to work together \u2014 retry logic without idempotency is a double-charge bug waiting to happen, especially once you have an exception type that literally means \"this already succeeded.\"",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "rev-17",
+      "expected": "weak",
+      "actual_label": "strong",
+      "correct": false,
+      "judge_confidence": 0.16000000000000003,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.00306,
+        "input_tokens": 40,
+        "output_tokens": 298,
+        "latency_ms": 4183.794132999992,
+        "text": "# Suggested Rename\n\n`calcTax` \u2192 `calc_tax`\n\nThis follows Python-style snake_case convention (all lowercase, words separated by underscores).\n\n## Additional considerations:\n\n- If the codebase prefers more descriptive names, you might consider `calculate_tax` for clarity, depending on existing naming patterns (e.g., if other functions use abbreviated forms like `calc_` vs. full words like `calculate_`).\n- Check for consistency: search the codebase for similar functions (e.g., `calc_discount`, `calc_total`) to match the established pattern\u2014whether abbreviations are preferred or discouraged.\n- Don't forget to update all call sites, references, imports, and any associated tests or documentation when performing the rename.\n\n**Recommended:** `calc_tax` (if abbreviations are already used elsewhere) or `calculate_tax` (if the codebase favors full descriptive names).",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "rev-18",
+      "expected": "strong",
+      "actual_label": "weak",
+      "correct": false,
+      "judge_confidence": 0.3600000000000001,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00151954,
+        "input_tokens": 85,
+        "output_tokens": 2274,
+        "latency_ms": 54395.83597699994,
+        "text": "The failure mode is **silent deduplication bypass under retries/redelivery**, which turns an at-least-once pipeline into repeated execution of the same business operation.\n\nBecause the dedup key includes the consumer\u2019s **arrival timestamp**, the key is not stable for the logical event. It is stable only for a specific delivery attempt. A duplicate caused by a lost ack, timeout, consumer restart, queue redelivery, rebalance, or upstream retry will arrive later and therefore get a different arrival timestamp. The dedup store sees two different keys and treats them as two different events.\n\nIn production, that typically shows up as:\n\n- Duplicate side effects: double charges, double orders, double inventory decrements, duplicate emails/pushes, duplicate ledger entries, double credits.\n- State corruption: counters incremented twice, balances wrong, two rows created where one was expected, downstream state that assumes exactly-once processing becomes inconsistent.\n- Race conditions: two duplicate handlers run concurrently under different dedup keys, both pass dedup, and interleave updates into the same record.\n- Cascading failure under retry storms: retries are exactly when duplicates happen, and that is also when dedup should work. Instead it misses them, multiplying load against downstream services and amplifying the original incident.\n- Noisy/poison downstream behavior: if a downstream unique constraint catches the duplicate, the second message may fail and go to a DLQ or cause error loops; if it does not, the duplicate silently corrupts data.\n\nSo the actual production failure is not \u201cdedup occasionally misses a duplicate.\u201d It is that **the dedup mechanism fails open precisely under the conditions it exists to handle**, allowing non-idempotent side effects to execute more than once. The fix is to key dedup on a stable event ID or idempotency key assigned by the producer, or a deterministic hash of immutable event fields\u2014not on the consumer-side arrival timestamp.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    }
+  ]
+}

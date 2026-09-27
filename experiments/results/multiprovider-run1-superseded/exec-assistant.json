@@ -1,0 +1,635 @@
+{
+  "name": "exec-assistant",
+  "route_name": "exec/email-triage",
+  "policy": "intent",
+  "roster": [
+    "openai/gpt-oss-120b",
+    "deepseek/deepseek-v4.1-flash",
+    "anthropic/claude-sonnet-5",
+    "anthropic/claude-opus-5.5"
+  ],
+  "accuracy": 1.0,
+  "real_cost_usd": 0.10625080999999999,
+  "frontier_equivalent_usd": 0.220188,
+  "savings_pct": 51.74541301069995,
+  "items": [
+    {
+      "item_id": "exec-01",
+      "expected": "schedule",
+      "actual_label": "schedule",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00039644,
+        "input_tokens": 50,
+        "output_tokens": 584,
+        "latency_ms": 21362.13786799999,
+        "text": "I can\u2019t directly change your calendar from this chat, since I don\u2019t have calendar access here.\n\nIf you enable calendar access, I can move it for you. Otherwise, here\u2019s a ready-to-send update:\n\n**Subject:** Design team meeting moved to 3:30 PM  \nHi Design Team \u2014 tomorrow\u2019s 2:00 PM meeting has been moved to **3:30 PM in the same room**. Thanks!",
+        "error": null,
+        "jev_adequate": true,
+        "score": 4
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "google/gemini-2.5-flash",
+          "provider": "Google",
+          "cost_usd": 0.0001113,
+          "input_tokens": 21,
+          "output_tokens": 42,
+          "latency_ms": 2383.1553080000276,
+          "text": "Okay, I've moved your 2 PM meeting with the design team to **3:30 PM tomorrow** in the **same room**.\n\nIs there anything else I can help you with today?",
+          "error": null,
+          "jev_adequate": true,
+          "score": 1
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 176,
+          "output_tokens": 119,
+          "latency_ms": 2952.3060020000003,
+          "text": "I can\u2019t access your calendar directly. Please update the meeting with the design team to **3:30 pm tomorrow**, keeping the **same room**.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 2
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.00766,
+          "input_tokens": 35,
+          "output_tokens": 376,
+          "latency_ms": 4834.465230999967,
+          "text": "I can't access your calendar, so I can't move the meeting myself. Here's how to do it quickly:\n\n**Google Calendar:** Open the 2pm event, click the pencil (Edit) icon, change the date to tomorrow and the time to 3:30pm, then click **Save** and choose to notify guests.\n\n**Outlook:** Open the meeting, change the start time to 3:30pm tomorrow, confirm the room is still listed under Location, and click **Send Update**.\n\n**Apple Calendar:** Double-click the event, update the date and time, then confirm when prompted to notify attendees.\n\nBefore you save, it's worth checking that the room is free at 3:30pm tomorrow. Most calendar apps show a room conflict warning or let you view room availability.\n\nHere's a message you could send the team:\n\n> Hi team, I've moved our design meeting to **tomorrow at 3:30pm**, same room. Let me know if that time doesn't work for you. Thanks!\n\nIf you tell me which calendar app you use, I can give more specific steps.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "exec-02",
+      "expected": "schedule",
+      "actual_label": "schedule",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.0005093,
+        "input_tokens": 50,
+        "output_tokens": 755,
+        "latency_ms": 25869.88961700001,
+        "text": "I can\u2019t directly access your calendar or inbox from here, but here\u2019s how to handle both:\n\n**Accept Priya\u2019s Thursday invite:**\n> Thanks, Priya \u2014 Thursday works for me. I\u2019ve accepted the invite. Looking forward to it.\n\n**Decline the vendor\u2019s Thursday invite at the same time:**\n> Thanks for the invitation. Unfortunately, I have a conflict at that time on Thursday, so I won\u2019t be able to attend. Please share any materials or follow up afterward.\n\nCalendar action:\n- Priya\u2019s invite \u2192 **Accept**\n- Vendor\u2019s invite \u2192 **Decline** with note: \u201cConflict with another commitment.\u201d\n\nIf you paste the invite details, I can tailor both messages exactly.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "exec-03",
+      "expected": "schedule",
+      "actual_label": "schedule",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.0004862,
+        "input_tokens": 47,
+        "output_tokens": 721,
+        "latency_ms": 26551.624362000097,
+        "text": "I can\u2019t access your calendar or the CFO\u2019s calendar, so I can\u2019t identify the actual open slot yet.\n\nTo find a 30-minute overlap for next week (Mon May 11\u2013Fri May 15, 2026, assuming that\u2019s your next week), please share either:\n\n1. **Calendar access** to both calendars (Google/Outlook), or  \n2. **Free/busy times** for you and the CFO, including your **timezone** and working hours.\n\nIf you paste availability like:\n\n- **You:** Mon 9\u201311, Tue 1\u20133, Wed 10\u20134\u2026\n- **CFO:** Mon 10\u201312, Tue 2\u20134, Thu 9\u201311\u2026\n- **Timezone:** e.g., ET\n- **Preferred meeting length:** 30 min\n\nI\u2019ll calculate the overlapping 30-minute slot(s) and can draft the invite.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "exec-04",
+      "expected": "schedule",
+      "actual_label": "schedule",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00032076,
+        "input_tokens": 42,
+        "output_tokens": 472,
+        "latency_ms": 18236.42974500001,
+        "text": "I can\u2019t directly access or cancel your calendar events. Please cancel the 9am event in your calendar app, or send me the event details/calendar link and I can help draft a cancellation note or find a new time.\n\nDraft note if needed:  \n\u201cHi all \u2014 I need to cancel our 9am tomorrow due to a scheduling conflict. Apologies for the short notice; let\u2019s find a new time that works.\u201d",
+        "error": null,
+        "jev_adequate": true,
+        "score": 4
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "google/gemini-2.5-flash",
+          "provider": "Google",
+          "cost_usd": 6.36e-05,
+          "input_tokens": 12,
+          "output_tokens": 24,
+          "latency_ms": 2529.727951000041,
+          "text": "Okay, I've cancelled your 9 AM appointment for tomorrow. Is there anything else I can help you with?",
+          "error": null,
+          "jev_adequate": true,
+          "score": 1
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 168,
+          "output_tokens": 100,
+          "latency_ms": 3454.006949000018,
+          "text": "What event is scheduled for 9:00 a.m. tomorrow, and which calendar or service should I cancel it from? Also, please confirm your time zone.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 2
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.007436,
+          "input_tokens": 29,
+          "output_tokens": 366,
+          "latency_ms": 5875.515683999993,
+          "text": "I can't access your calendar or accounts, so I can't cancel the meeting for you. Here's how to do it quickly, depending on what you use:\n\n**Google Calendar:** Open the event \u2192 click the trash icon (or \"Delete\") \u2192 choose whether to notify guests \u2192 Send.\n**Outlook:** Open the meeting \u2192 click \"Cancel Meeting\" (if you're the organizer) or \"Decline\" (if you're an attendee) \u2192 add a note \u2192 Send.\n**Apple Calendar:** Tap the event \u2192 \"Delete Event\" (or \"Decline\" if invited) at the bottom.\n\nIf you'd like to send a note, here's a quick draft:\n\n> Hi [Name],\n>\n> Something has come up and I have a conflict with our 9am meeting tomorrow. Apologies for the short notice. Could we reschedule? I'm available [insert times]. Let me know what works for you.\n>\n> Thanks,\n> [Your name]\n\nIf you tell me who the meeting is with and how formal it should be, I can tailor the message.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "exec-05",
+      "expected": "summarize",
+      "actual_label": "summarize",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": "Together",
+        "cost_usd": 0.00011115,
+        "input_tokens": 101,
+        "output_tokens": 160,
+        "latency_ms": 1399.3824359999962,
+        "text": "I don\u2019t have the email thread to work from. Could you paste the messages (or the key excerpts) here? Once I can see the content, I\u2019ll be able to give you a concise summary of what\u2019s been decided, what\u2019s still open, and who\u2019s responsible for each item.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "exec-06",
+      "expected": "summarize",
+      "actual_label": "summarize",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": "Together",
+        "cost_usd": 0.0001014,
+        "input_tokens": 92,
+        "output_tokens": 146,
+        "latency_ms": 1529.028917000005,
+        "text": "I\u2019m happy to help you pull together a concise summary, but I\u2019ll need to see the actual email/thread you\u2019d like summarized. Could you paste the text (or the relevant portions) here? Once I have the content, I can extract the key points and let you know exactly where the parties landed on the NDA redlines.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "exec-07",
+      "expected": "summarize",
+      "actual_label": "summarize",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": "Together",
+        "cost_usd": 0.0001566,
+        "input_tokens": 88,
+        "output_tokens": 239,
+        "latency_ms": 1495.7989790000283,
+        "text": "Sure thing! To distill the exchange into three concise bullet points, I\u2019ll need to see the actual email thread. Could you paste the 12\u2011email conversation (or the key portions) here? Once I have the content, I\u2019ll boil it down for you.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4-flash-0731",
+          "provider": "Cohere",
+          "cost_usd": 5.824e-05,
+          "input_tokens": 104,
+          "output_tokens": 156,
+          "latency_ms": 2414.8518370000147,
+          "text": "I\u2019d be happy to help condense the thread\u2014could you paste the recruiter emails or share the key details? Once I see them, I\u2019ll boil it down to three bullet points.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 175,
+          "output_tokens": 56,
+          "latency_ms": 2264.364482000019,
+          "text": "Please paste or forward the 12-email exchange, and I\u2019ll condense it into three bullet points covering:\n\n- Key decisions and commitments  \n- Outstanding actions or questions  \n- Current status and next steps",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.002704,
+          "input_tokens": 36,
+          "output_tokens": 128,
+          "latency_ms": 3207.1603559999176,
+          "text": "I don't see the email thread in your message. Could you paste it here? You can copy the emails in directly, oldest to newest if possible, and I'll condense them into three bullet points.\n\nIf you'd like the bullets focused on something specific, such as next steps, compensation details, or interview logistics, let me know that too.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "exec-08",
+      "expected": "draft_reply",
+      "actual_label": "draft_reply",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.005018,
+        "input_tokens": 44,
+        "output_tokens": 493,
+        "latency_ms": 8174.098039,
+        "text": "Subject: Re: Runway Question\n\nHi [Name],\n\nFair question, and I'd rather give you the real picture than a polished one.\n\nAs of [month], we have [X months] of runway at current burn, which puts us at roughly [month/year] before we'd need to have new funding closed or revenue materially change the equation. That's based on our current spend rate \u2014 if we hit the milestones we're targeting on [sales/product/etc.], that timeline extends; if [key risk/dependency] slips, it compresses.\n\nWe're not in immediate danger, but I don't want to sugarcoat it either: this isn't a \"we have all the time in the world\" situation. We're actively [managing burn / building the pipeline / starting early conversations with investors \u2014 whatever's true], and I'll keep you posted as things firm up. I'd rather flag a tightening timeline early than surprise you later.\n\nHappy to walk through the numbers in more detail whenever useful \u2014 either on our next call or sooner if you'd like.\n\nBest,\n[Your name]\n\n---\n\nA few things worth adjusting before you send this:\n- Fill in actual numbers \u2014 vague \"runway is fine\" reassurance without figures tends to erode trust with board members faster than an honest number would.\n- If there's genuine uncertainty in the burn rate (e.g., pending hires, contract renewals), it's worth naming that explicitly rather than presenting a single date as fact.\n- If you're actively fundraising, decide how much detail you want to share about stage/conversations \u2014 board members often appreciate a status hint even if it's early.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "exec-09",
+      "expected": "draft_reply",
+      "actual_label": "draft_reply",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.007412,
+        "input_tokens": 51,
+        "output_tokens": 731,
+        "latency_ms": 9968.006511999989,
+        "text": "# Draft Response\n\n**Subject: Re: Your Recent Service Delay Concern**\n\nDear [Customer Name],\n\nThank you for reaching out, and please accept my sincere apologies for the frustration this delay has caused you. I understand how disruptive this has been to your operations, and I want you to know we take your concerns seriously.\n\nWe're actively investigating what happened on our end to cause this timeline to slip. I don't want to speculate on root causes before we've completed that review, but I can assure you that resolving this\u2014and understanding how to prevent it going forward\u2014is a priority for our team.\n\nIn the meantime, here's what we're doing:\n- [Specific remediation step, e.g., \"Assigning a dedicated point of contact for your account\"]\n- [Specific remediation step, e.g., \"Expediting the remaining work with priority status\"]\n- [Timeline for next update, e.g., \"Following up by [date] with a full status report\"]\n\nI know this isn't the experience you expected from us, and I appreciate your patience while we work through this. Please don't hesitate to reach out directly if you have questions in the meantime.\n\n[Your Name]\n\n---\n\n**A few notes on why I drafted it this way:**\n\n- I apologized for the *impact* (\"frustration,\" \"disruption\") rather than for a specific *failure* \u2014 this is genuine and empathetic without being an admission of contractual breach.\n- \"Investigating what happened\" acknowledges something went wrong without characterizing it as an SLA violation.\n- I avoided phrases like \"we fell short of our commitment\" or \"we missed our SLA,\" which could be read as admissions.\n- I focused the bulk of the email on forward-looking action, which is usually what de-escalates an upset customer anyway.\n\n**One flag for you:** depending on your contract language and jurisdiction, even sympathetic apologies can sometimes be referenced in disputes. If this customer relationship is high-stakes or already headed toward a formal claim, it's worth a quick gut-check with legal on this specific draft before sending \u2014 not because it admits anything, but because they may want to control timing (e.g., matching this message to whatever they conclude in the SLA review).\n\nWant me to adjust tone (more formal/more warm), add the specific remediation details, or draft a shorter version for a quick reply?",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "exec-10",
+      "expected": "draft_reply",
+      "actual_label": "draft_reply",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.003524,
+        "input_tokens": 32,
+        "output_tokens": 346,
+        "latency_ms": 5337.154519000023,
+        "text": "Subject: Re: Partnership Proposal\n\nDear [Name],\n\nThank you for taking the time to put together this partnership proposal and for thinking of us as a potential collaborator. I really appreciate the thought and effort behind it.\n\nAfter careful consideration, we've decided not to move forward with the partnership at this time. This isn't a reflection of the quality of your proposal, but rather a matter of timing and current priorities on our end.\n\nThat said, I'd genuinely like to keep the door open for the future. Our circumstances may look quite different next year, and I'd welcome the chance to revisit this conversation down the line. Please feel free to check back in, or I'm happy to reach out when the timing seems better suited on our side.\n\nThanks again for your patience and understanding. Wishing you continued success with [project/company name] in the meantime.\n\nWarm regards,\n[Your Name]\n[Your Title/Company]\n\n---\n\nWant me to tailor this further\u2014more formal, more casual, or specific to the details of the original proposal (industry, names, etc.)? Just share those details and I can refine it.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "google/gemini-2.5-flash",
+          "provider": "Google",
+          "cost_usd": 0.0008823,
+          "input_tokens": 16,
+          "output_tokens": 351,
+          "latency_ms": 4284.157219999997,
+          "text": "Subject: Regarding Your Partnership Proposal - [Your Company Name]\n\nDear [Contact Person Name],\n\nThank you so much for reaching out to us with your partnership proposal for [mention their project/initiative, e.g., \"the upcoming 'InnovateTech' conference\" or \"your marketing campaign\"]. We truly appreciate you considering [Your Company Name] as a potential partner and for taking the time to present such a thoughtful and well-prepared plan.\n\nWe've carefully reviewed your proposal and while we are very impressed with [mention something specific you liked, e.g., \"the innovative approach to reaching your target audience\" or \"the potential impact of your initiative\"], we've decided that we won't be able to move forward with a partnership at this particular time.\n\nOur current strategic focus and resource allocation for [mention the relevant period, e.g., \"the remainder of this year\" or \"our Q3 initiatives\"] are already committed to other key projects.\n\nHowever, we are genuinely interested in exploring potential collaborations in the future. We believe there could be a strong alignment between our organizations, and we would be very open to revisiting this opportunity next year.\n\nPlease feel free to keep us informed of your progress, and we would welcome the chance to reconnect around [mention a specific timeframe if possible, e.g., \"early next year,\" or \"Q1 of 20XX\"] to discuss how we might be able to work together.\n\nThank you again for your understanding and for considering [Your Company Name]. We wish you the very best with [their project/initiative].\n\nSincerely,\n\n[Your Name]\n[Your Title]\n[Your Company Name]\n[Your Contact Information]",
+          "error": null,
+          "jev_adequate": true,
+          "score": 4
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 172,
+          "output_tokens": 128,
+          "latency_ms": 3505.585855999925,
+          "text": "Subject: Re: Partnership Proposal\n\nHi [Name],\n\nThank you for thinking of us for this partnership opportunity and for taking the time to share your proposal. We appreciate your interest in working with us.\n\nAfter reviewing it, we\u2019ve decided not to move forward at this time due to our current priorities and scheduling. However, we\u2019d be happy to reconnect next year to discuss whether there may be a better fit then.\n\nThank you again, and we wish you every success with the initiative.\n\nBest,  \n[Your Name]  \n[Your Company]",
+          "error": null,
+          "jev_adequate": true,
+          "score": 4
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.009076,
+          "input_tokens": 34,
+          "output_tokens": 447,
+          "latency_ms": 6542.764200000079,
+          "text": "Here's a polite decline that keeps the door open. Replace the bracketed details with your own:\n\n---\n\n**Subject:** Re: Partnership Proposal\n\nHi [Name],\n\nThank you for reaching out and for the thought you put into your proposal. We appreciate you considering [Your Company] as a partner, and we enjoyed learning more about [their company/project].\n\nAfter careful consideration, we've decided not to move forward at this time. Our priorities and resources for the rest of this year are already committed to [current initiatives/existing commitments], and we wouldn't be able to give this partnership the attention it deserves.\n\nThat said, we see real potential in working together, particularly around [specific area of alignment, if applicable]. We'd welcome the chance to revisit the conversation next year as we begin planning for [Q1/2026/the next cycle]. Would it be alright if we reconnected around [month]?\n\nThank you again for thinking of us. We wish you continued success with [project/initiative] and look forward to staying in touch.\n\nBest regards,\n[Your Name]\n[Title]\n[Company]\n[Contact Information]\n\n---\n\nIf you share the original proposal or some details (the company, what they offered, your real reason for declining), I can tailor it to sound more personal and specific.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "exec-11",
+      "expected": "draft_reply",
+      "actual_label": "draft_reply",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.004156,
+        "input_tokens": 43,
+        "output_tokens": 407,
+        "latency_ms": 6236.177364000014,
+        "text": "Here's a draft \u2014 swap in names/specifics as needed:\n\n---\n\nHey team! \ud83c\udf89\n\nWe did it \u2014 launch is live! Seriously, I'm so proud of how everyone pulled together on this. There were some late nights and last-minute fires, but you all handled it like champs.\n\nTake a beat this week to breathe (and maybe brag to your friends a little, you've earned it). Couldn't have asked for a better crew to build this with.\n\nDrinks/coffee on me soon to celebrate properly \ud83d\ude4c\n\n\u2014 [Your name]\n\n---\n\nWant me to tweak the tone (more hype, more low-key), make it shorter, or add specifics about the product/team?",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "exec-12",
+      "expected": "research",
+      "actual_label": "research",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-opus-5.5",
+        "provider": "Anthropic",
+        "cost_usd": 0.014812,
+        "input_tokens": 53,
+        "output_tokens": 730,
+        "latency_ms": 9693.122189000063,
+        "text": "I'd be glad to help, but the three scenarios didn't come through. Could you paste or describe them? For each one, these details matter most:\n\n**For each scenario:**\n- Pre- and post-money valuation and amount raised\n- Share classes (common, preferred series, any dual-class or super-voting shares)\n- Ownership percentages by holder group (founders, investors, option pool, advisors)\n- Option pool size and whether it's created pre- or post-money\n- Board composition (founder seats, investor seats, independents)\n- Protective provisions or veto rights granted to investors\n- Voting agreements, drag-along rights, or proxy arrangements\n- Any convertible notes or SAFEs converting, with their caps and discounts\n\n**Company context:**\n- How many future rounds you expect before exit or IPO\n- Whether founders' shares are subject to vesting or acceleration\n\n**How I'll compare them**\n\nOnce I have the details, I'll assess each scenario on:\n\n1. **Immediate voting power.** Founder share of total votes, not just economic ownership. These can differ sharply with dual-class structures.\n2. **Board control.** Who controls the board often matters more than share voting, since the board makes most major decisions.\n3. **Investor veto rights.** Protective provisions can give minority investors effective control over key actions (new financing, sale, budget) regardless of ownership.\n4. **Dilution trajectory.** I'll model how founder voting power erodes over likely future rounds, since a structure that looks safe now may cross critical thresholds (50%, 33%) after Series B or C.\n5. **Durability mechanisms.** Sunset clauses on super-voting shares, transfer restrictions, and whether control survives a founder's departure.\n\n**A caveat for the board:** my analysis can help frame the discussion, but voting control depends heavily on the exact language in your charter, voting agreements, and investor rights agreements. Have company counsel review the final structure before you commit.\n\nSend over the scenarios and I'll put together a side-by-side comparison.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "exec-13",
+      "expected": "research",
+      "actual_label": "research",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-opus-5.5",
+        "provider": "Anthropic",
+        "cost_usd": 0.02292,
+        "input_tokens": 55,
+        "output_tokens": 1135,
+        "latency_ms": 13939.545515999953,
+        "text": "I don't have access to previous conversations or your internal documents, so I don't know which vendor you're using, what their new pricing looks like, or which two alternatives you discussed last quarter. I also can't browse live pricing pages, so any public pricing I know could be outdated.\n\nIf you share some details, I can do a real comparison. Here's what would help and how I'd structure the analysis.\n\n## What I need from you\n\n1. **Vendor names**: the current vendor and the two alternatives\n2. **Product category**: e.g., CRM, cloud hosting, payroll, data warehouse\n3. **The new pricing model**: what changed (per-seat to usage-based, new tiers, bundling, price increase)\n4. **Your usage profile**: seats/users, volume metrics (API calls, storage, transactions), growth expectations\n5. **Quotes or pricing pages** for the alternatives, if you have them\n6. **Contract status**: renewal date, term length, termination clauses, any committed spend\n\n## How I'd structure the comparison\n\n**1. Normalize pricing to your actual usage**\n- Model total annual cost for each vendor at current usage, plus projected usage at 12 and 36 months\n- Watch for hidden variables: overage rates, tier cliffs, minimum commitments, feature gating (e.g., SSO or audit logs only in enterprise tiers)\n\n**2. Compare 3-year total cost of ownership, not list price**\n- Subscription or usage fees\n- Required add-ons and support tiers\n- Expected discounts (new customers often get 15\u201330% or more in year one, and incumbents often match to retain you)\n\n**3. Estimate switching costs**\n\n| Category | What to estimate |\n|---|---|\n| Migration | Data export/import, transformation, validation effort |\n| Integration rework | APIs, connectors, custom scripts, SSO/identity setup |\n| Parallel running | Paying for both systems during cutover |\n| Staff time | Engineering, IT, and project management hours |\n| Training | Productivity dip, training materials, admin re-certification |\n| Contract exit | Early termination fees, unused committed spend |\n| Risk | Downtime, data loss, compliance re-validation |\n| Opportunity cost | Other projects delayed by the migration |\n\n**4. Calculate break-even**\n- Annual savings from switching \u00f7 one-time switching costs = payback period\n- As a rule of thumb, a payback under 12\u201318 months usually justifies switching. Beyond 24 months, the case is often weak unless there are non-price benefits.\n\n**5. Factor in non-price differences**\n- Feature gaps, reliability/SLA, support quality, roadmap, security/compliance posture, lock-in risk of the new vendor\n\n## A practical tip\n\nEven if switching doesn't pencil out, competitive quotes are your strongest leverage in renegotiating with the incumbent. Many teams land on \"stay, but at a better rate.\"\n\nSend me whatever details you have, even rough numbers, and I'll build out the comparison and a switching-cost estimate.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Together",
+          "cost_usd": 0.0019809,
+          "input_tokens": 59,
+          "output_tokens": 1636,
+          "latency_ms": 13022.74186999989,
+          "text": "I can\u2019t complete the actual research yet because I don\u2019t have access to your last-quarter discussion, the vendor names, the new pricing terms, your usage data, or the two alternatives. I also can\u2019t see internal emails/Slack or your contract unless you paste the details.\n\nIf you give me these inputs, I can produce a side-by-side competitive analysis and switching-cost estimate:\n\n1. **Current vendor + new pricing model**  \n   - Pricing metric: seats, API calls, transactions, GB, MAU, etc.  \n   - Tiers, minimums, overages, annual commitment, discount rules, price escalation.  \n   - Contract end date, termination clauses, auto-renewal.\n\n2. **The two alternatives from last quarter**  \n   - Vendor names or pricing links/screenshots.  \n   - Same pricing details above.\n\n3. **Your current usage**  \n   - Actual monthly/quarterly volumes for the pricing metric.  \n   - Growth forecast, peak usage, number of users/admins/integrations.\n\n4. **Switching context**  \n   - Current integrations, custom code, data volume, SSO, compliance/security requirements.  \n   - Internal engineering/ops time cost, training needs, parallel-run requirements.\n\nHere\u2019s the framework I\u2019d use:\n\n| Cost category | Current vendor new | Alternative 1 | Alternative 2 |\n|---|---:|---:|---:|\n| Subscription/platform fee | | | |\n| Usage/overage | | | |\n| Minimum commitment true-up | | | |\n| Implementation/onboarding | | | |\n| Data migration/export | | | |\n| Integration rework | | | |\n| Training/change management | | | |\n| Support/admin overhead | | | |\n| Exit/termination fees | | | |\n| **24-month TCO** | | | |\n\n**Switching costs to estimate**\n- One-time: implementation, migration, API/integration changes, SSO, security review, data validation, training, parallel run.\n- Recurring: higher support burden, process workarounds, admin time, reduced efficiency during transition.\n- Contractual: early termination fees, unused prepaid credits, minimum commitments.\n- Risk costs: downtime, data loss, compliance gaps, delayed roadmap.\n\n**Competitive test**\n- Normalize all vendors to the same usage scenarios: current, +25%, +100%.\n- Compare **24-month TCO**, not headline price.\n- Calculate break-even:  \n  `Break-even months = total switching cost \u00f7 monthly savings vs. current vendor`\n- If break-even exceeds your contract horizon or risk tolerance, the new pricing may still be \u201ccompetitive\u201d on paper but not worth switching.\n\nIf you paste the vendor names, last quarter\u2019s alternatives, your usage numbers, and the new pricing sheet, I can build the comparison table, estimate switching costs, and give a recommendation.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 185,
+          "output_tokens": 320,
+          "latency_ms": 7032.173731999933,
+          "text": "I can do that, but I don\u2019t have the prior-quarter discussion or the vendors\u2019 details in this chat. Please send:\n\n- Current vendor and the new pricing model\n- The two alternative vendors/products\n- Pricing links or quotes\n- Expected usage: seats, volume/API calls, storage, transactions, etc.\n- Current contract term, renewal date, and any negotiated discounts\n- Required integrations, compliance needs, and a rough implementation timeline\n\nI\u2019ll compare:\n\n1. **Total cost of ownership** at low, expected, and high usage, including overages, minimums, and contract lock-ins.\n2. **Feature and service fit**, including support, SLAs, security, and integrations.\n3. **Switching costs**: migration effort, data export/import, retraining, parallel running, integration rebuilds, and termination fees.\n4. **Risk**: price volatility, vendor viability, concentration risk, and exit options.\n5. **Recommendation**: stay, switch, or negotiate\u2014with a quantified business case.\n\nIf the prior discussion is in a shared document, thread, or email, paste the relevant details or provide access instructions.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 4
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.0197,
+          "input_tokens": 55,
+          "output_tokens": 974,
+          "latency_ms": 12165.144929000007,
+          "text": "I don't have any record of last quarter's discussion, and I can't see which vendor you use or what their new pricing looks like. Each conversation with me starts fresh, and I can't access your internal documents, email, or contracts. So I can't name the vendor or the two alternatives. But I can do the analysis once you fill in a few details.\n\n## What I need from you\n\n1. **Current vendor and product category** (e.g., \"Salesforce for CRM,\" \"Datadog for observability\")\n2. **The new pricing model**: the announcement, a pricing page link, or a summary (per-seat \u2192 usage-based, new tiers, etc.)\n3. **The two alternatives** you considered\n4. **Your usage profile**: seats/users, volume (API calls, GB, transactions), key features you rely on, and expected growth\n5. **Contract status**: renewal date, term length, auto-renew or termination clauses, any committed spend\n6. **Integration footprint**: what systems connect to this tool, and roughly how much custom work is built on it\n\nEven rough numbers help.\n\n## How I'll structure the analysis\n\n**Pricing comparison**\n- Normalize all three to the same unit (annual cost at your current usage, plus at 1.5\u00d7 and 2\u00d7 growth)\n- Flag pricing traps: overage rates, feature gating across tiers, minimum commits, price-increase caps (or their absence)\n- Separate list price from realistic negotiated price. Alternatives often discount heavily to win a switch.\n\n**Switching costs**\n- **Direct:** migration services, data export/transformation, parallel-run period (paying for two systems), early termination fees\n- **Internal labor:** engineering time to rebuild integrations, admin reconfiguration, testing\n- **Productivity dip:** retraining and the learning curve, usually 1\u20133 months of reduced efficiency\n- **Risk:** data loss or fidelity issues, downtime, features that don't map one-to-one\n- **Hidden lock-in:** proprietary data formats, custom workflows, historical data you'd lose access to\n\n**Bottom line**\n- Break-even period: how many months of savings it takes to recover switching costs\n- A recommendation: switch, stay, or use the alternatives as leverage to renegotiate. The last option is often the highest-ROI move.\n\n## A note on sources\n\nI can't browse the web live, so for current public pricing I'd be working from what I learned in training, which may be outdated. Pasting in current pricing pages or quotes will make the comparison much more reliable.\n\nSend over whatever you have, and I'll build out the comparison.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "exec-14",
+      "expected": "research",
+      "actual_label": "research",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-opus-5.5",
+        "provider": "Anthropic",
+        "cost_usd": 0.016032,
+        "input_tokens": 63,
+        "output_tokens": 789,
+        "latency_ms": 10911.75434999991,
+        "text": "I don't have any details on the two targets yet. Nothing about them has been shared in our conversation, and I can't see prior chats or your files. If you paste in what you have, I can build a real risk comparison rather than two side-by-side summaries.\n\n**What to share (whatever you have):**\n- Names or descriptions of both targets, including industry, size, and business model\n- Deal terms: price or valuation, structure (stock/asset, cash/equity, earnouts), financing\n- Financials: revenue, growth, margins, cash flow, debt, customer concentration\n- Diligence findings or red flags so far\n- Your strategic rationale: what each deal is supposed to accomplish for you\n- Any CIMs, memos, or model outputs (text excerpts work fine)\n\n**How I'll structure the comparison:**\n\nInstead of profiling each target separately, I'll compare them head-to-head across the risk dimensions that usually decide these calls:\n\n1. **Valuation risk:** How much of the price depends on assumptions that might not hold? How much downside if growth disappoints?\n2. **Revenue quality:** Recurring vs. transactional revenue, customer concentration, churn, contract terms.\n3. **Integration risk:** Cultural fit, systems overlap, key-person dependency, how much has to go right post-close.\n4. **Strategic risk:** How directly each deal serves the thesis, and what happens if the thesis is wrong.\n5. **Financial and structural risk:** Leverage, working capital, off-balance-sheet liabilities, and how the deal structure shifts risk between you and the seller.\n6. **Legal, regulatory, and diligence gaps:** Litigation, IP, compliance, antitrust, and what you still don't know.\n7. **Execution and timing risk:** Competing bidders, financing certainty, management retention.\n\nFor each dimension, I'll call out which target carries more risk, why, and whether it's mitigable (through price, structure, reps and warranties, or earnouts) or inherent. I'll finish with the two or three questions most likely to decide the call.\n\nIf you're short on time, even a rough paragraph on each target plus the deal price is enough for me to start and flag where the gaps are.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "exec-15",
+      "expected": "schedule",
+      "actual_label": "schedule",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00074866,
+        "input_tokens": 49,
+        "output_tokens": 1118,
+        "latency_ms": 30448.86846399993,
+        "text": "I can\u2019t access your calendar directly, so I can\u2019t send the decline myself. Here\u2019s a concise reply you can use:\n\n> Hi [Organizer],  \n> I\u2019m declining the recurring Friday sync going forward. I don\u2019t need to be on it anymore\u2014please remove me from the series/invite.  \n> Thanks,  \n> [Your Name]\n\nIf you\u2019re doing it in your calendar app:\n- **Google Calendar:** open the event \u2192 **Decline** \u2192 choose **This and following events** if available.\n- **Outlook:** open the recurring meeting \u2192 **Decline** \u2192 **Decline Series** or ask the organizer to remove you from the series.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "exec-16",
+      "expected": "draft_reply",
+      "actual_label": "draft_reply",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Anthropic",
+        "cost_usd": 0.007654,
+        "input_tokens": 47,
+        "output_tokens": 756,
+        "latency_ms": 10035.876396000049,
+        "text": "Here's a warm draft that acknowledges their request without committing to specific Q3 figures yet. I've added placeholders where you can drop in specifics \u2014 let me know if you want me to adjust the tone (more casual/formal) or add any concrete wins you *can* share.\n\n---\n\n**Subject:** Re: Q3 Investor Update\n\nHi [Name],\n\nGreat to hear from you, and thank you for checking in \u2014 I always appreciate your engagement with the business.\n\nWe're still closing out Q3 and want to make sure the numbers we share are fully accurate and give you the clearest picture, so I'd rather not send anything partial or preliminary. We're on track to have final figures ready by [date \u2014 e.g., \"the end of next week\"], and I'll get a full update to you as soon as they're locked.\n\nIn the meantime, a few highlights I can share now:\n- [Qualitative win #1 \u2014 e.g., \"We closed [X] new customers this quarter\"]\n- [Qualitative win #2 \u2014 e.g., \"Product launch for Y is on track for Z\"]\n- [Any hiring, partnership, or milestone news]\n\nThanks for your patience \u2014 I want to get this right rather than rushed. Happy to hop on a quick call in the meantime if useful, otherwise expect the full update from me by [date].\n\nTalk soon,\n[Your name]\n\n---\n\nWant me to make this shorter/punchier, or tailor it further once you tell me a bit about the investor relationship (e.g., lead investor, board member, casual angel)?",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "z-ai/glm-5.3-flash",
+          "provider": "BaseTen",
+          "cost_usd": 0.00016415,
+          "input_tokens": 41,
+          "output_tokens": 316,
+          "latency_ms": 5172.0977830000265,
+          "text": "Here's a draft you can adapt:\n\n---\n\nHi [Name],\n\nGreat to hear from you, and thanks for checking in \u2014 we're as eager as you are to share where things landed!\n\nWe're still finalizing our Q3 numbers and want to make sure what we send you is accurate and complete, so nothing to share quite yet. Our full update will go out by [date], and we'll be sure to include [anything you plan to highlight \u2014 e.g., pipeline growth, new hires, product milestones].\n\nIn the meantime, if there's anything specific you're curious about or want to make sure we cover in the update, just let me know. Happy to hop on a call too if that's easier.\n\nThanks for your continued support!\n\nBest,\n[Your name]\n\n---\n\nA few notes:\n- I included a placeholder date so you're committing to a timeline rather than just delaying \u2014 investors tend to appreciate that.\n- Offering a call gives you flexibility if they push back and want something sooner.\n- If this investor is more casual with you, you could soften it further with something like \"Numbers are still baking \u2014 full update coming by [date]!\"\n\nWant me to adjust the tone (more formal, more casual) or tailor it to a specific investor relationship?",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 182,
+          "output_tokens": 88,
+          "latency_ms": 2782.220806000055,
+          "text": "Thanks for checking in! We\u2019re still finalizing our Q3 numbers, so I\u2019d rather wait until everything is locked before sharing them. I\u2019d be happy to provide a qualitative update in the meantime, or send the full results as soon as they\u2019re approved. I appreciate your patience.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 3
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.010796,
+          "input_tokens": 49,
+          "output_tokens": 530,
+          "latency_ms": 7972.523706000061,
+          "text": "Here's a draft you can adapt. If you paste the investor's original message, I can tailor it more closely.\n\n---\n\n**Subject:** Re: Update Request\n\nHi [Name],\n\nThanks so much for reaching out, and for your continued interest and support. It really means a lot to the team.\n\nWe're in the process of finalizing our Q3 numbers now and want to make sure everything is buttoned up before we share. I'd rather send you something complete and accurate than a preliminary snapshot. You can expect the full update by [date / \"in the next few weeks\"].\n\nIn the meantime, I'm happy to share that [brief qualitative highlight, e.g., \"we've made great progress on our product roadmap\" / \"we recently brought on a key hire\" / \"customer momentum has been encouraging\"]. I'll go into more detail in the full update.\n\nIf it'd be helpful, I'd also be glad to set up a quick call once the numbers are ready to walk you through them.\n\nThanks again for checking in. Talk soon!\n\nWarm regards,\n[Your Name]\n\n---\n\n**A few optional tweaks:**\n- **More casual:** Swap the opening for \"Great to hear from you!\" and cut the last paragraph down to one line.\n- **No timeline commitment:** Replace the date with \"as soon as they're finalized.\"\n- **Skip the highlight:** If you'd rather not share anything yet, just drop that paragraph. The email still works without it.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "exec-17",
+      "expected": "summarize",
+      "actual_label": "summarize",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": "Together",
+        "cost_usd": 9.63e-05,
+        "input_tokens": 86,
+        "output_tokens": 139,
+        "latency_ms": 1227.307785999983,
+        "text": "I\u2019m happy to help you pull out the main points of contention, but I\u2019ll need to see the actual discussion you\u2019re referring to. Could you please paste the relevant excerpts (or a brief summary) of the engineering\u2011product conversation? Once I have that context, I can distill the key disagreements and present them in a concise summary.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "exec-18",
+      "expected": "research",
+      "actual_label": "research",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-opus-5.5",
+        "provider": "Anthropic",
+        "cost_usd": 0.021796,
+        "input_tokens": 54,
+        "output_tokens": 1079,
+        "latency_ms": 13596.649033999938,
+        "text": "I can work through this with you, but I don't have the lease terms or your growth plan yet. Here's what I need and how I'll compare them, so you can send everything in one go.\n\n## What I need from you\n\n**For each lease:**\n- Base rent (per sq ft or total) and square footage\n- Term length\n- **Escalation structure:** fixed % annually, CPI-linked (with any cap/floor), stepped increases, or market reviews (upward-only?)\n- **Break clause details:**\n  - When it can be exercised (e.g., end of year 5 only, or rolling after year 3)\n  - Notice period\n  - Break penalty or fee (e.g., X months' rent, unamortized incentives)\n  - Conditions (e.g., must be current on rent, must give vacant possession, must reinstate the space). Strict conditions can make a break clause hard to use in practice.\n  - Whether it's tenant-only or mutual\n- Incentives: rent-free months, fit-out contribution, and whether they're clawed back on break\n- Service charges/opex, and whether you're responsible for dilapidations/reinstatement at exit\n- Expansion or contraction rights: right of first refusal on adjacent space, option to give back floors\n- Renewal options\n\n**About your growth plan:**\n- Current headcount and projected headcount by year (even rough ranges)\n- How confident you are in that projection. Is it funded, or dependent on a raise or revenue milestones?\n- Hybrid/remote policy and desks-per-person ratio\n- Any plausible scenario where you'd need to relocate, shrink sharply, or be acquired\n- Your discount rate or cost of capital, if you have one (otherwise I'll use a reasonable assumption)\n\n## How I'll compare them\n\n1. **Total cost of occupancy over the full term** for each lease: rent with escalations, opex, and fit-out net of incentives. I'll express it as both a nominal total and a net present value.\n2. **Cost-to-exit at each break point:** what you'd have paid by then, plus penalties, clawbacks, and reinstatement. This shows what the flexibility actually costs.\n3. **Scenario analysis** against your plan:\n   - *Base case:* you hit your headcount targets\n   - *High growth:* you outgrow the space early. Which lease lets you leave or expand more cheaply?\n   - *Downside:* growth stalls or reverses. Which lease limits your exposure?\n4. **Escalation risk:** for CPI-linked or market-review terms, I'll model a few inflation paths so you can see the range, not just the expected case.\n5. **Space fit:** when each option becomes too small or too large given your headcount curve.\n6. **Recommendation** covering which lease wins under which scenarios, how much you're paying for flexibility, whether that premium is worth it given your confidence in the plan, and which terms are worth negotiating (e.g., softening break conditions, capping CPI).\n\nYou can paste the key terms or a summary of the heads of terms. Approximate numbers are fine to start. Once I have them, I'll build out the comparison.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    }
+  ]
+}

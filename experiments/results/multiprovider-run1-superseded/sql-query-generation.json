@@ -1,0 +1,633 @@
+{
+  "name": "sql-query-generation",
+  "route_name": "data/sql-query-generation",
+  "policy": "complexity",
+  "roster": [
+    "openai/gpt-oss-120b",
+    "deepseek/deepseek-v4.1-flash"
+  ],
+  "accuracy": 0.7222222222222222,
+  "real_cost_usd": 0.011166559999999999,
+  "frontier_equivalent_usd": 0.01187318,
+  "savings_pct": 5.951396340323334,
+  "items": [
+    {
+      "item_id": "sql-01",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.72,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 5.676e-05,
+        "input_tokens": 51,
+        "output_tokens": 69,
+        "latency_ms": 7377.903037999886,
+        "text": "```sql\nSELECT *\nFROM users\nWHERE status = 'active';\n```",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Together",
+          "cost_usd": 8.73e-05,
+          "input_tokens": 51,
+          "output_tokens": 60,
+          "latency_ms": 1949.5003920001182,
+          "text": "```sql\nSELECT *\nFROM users\nWHERE status = 'active';\n```",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 177,
+          "output_tokens": 39,
+          "latency_ms": 1977.4083540000902,
+          "text": "```sql\nSELECT *\nFROM users\nWHERE status = 'active';\n```",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Fireworks",
+          "cost_usd": 0.00013398,
+          "input_tokens": 51,
+          "output_tokens": 186,
+          "latency_ms": 4414.013096999952,
+          "text": "```sql\nSELECT * FROM users WHERE status = 'active';\n```\n\nA few notes:\n\n- **`SELECT *`** returns every column. In production code, it's usually better to list only the columns you actually need, since `SELECT *` can break if the table schema changes and can pull unnecessary data.\n- If you're working with a case-insensitive collation (common in MySQL), `'active'` will match `'Active'` too. If you need exact matching, use `status = BINARY 'active'` in MySQL or `status = 'active' COLLATE ...` depending on your database.\n- If you want to guard against `NULL`-related surprises (there won't be any here, since `NULL = 'active'` is `UNKNOWN` and gets filtered out anyway), no extra handling is needed.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "sql-02",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.10000000000000009,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 6.732e-05,
+        "input_tokens": 42,
+        "output_tokens": 88,
+        "latency_ms": 7724.794726000027,
+        "text": "```sql\nSELECT COUNT(*) AS row_count\nFROM orders;\n```",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "sql-03",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.15999999999999992,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 9.856e-05,
+        "input_tokens": 61,
+        "output_tokens": 129,
+        "latency_ms": 3026.9343389998085,
+        "text": "```sql\nSELECT name, email\nFROM customers\nWHERE signup_date > '2025-01-01';\n```\n\n**Notes:**\n- If `signup_date` includes a time component and you want to include the entire day of 2025-01-01, use `>= '2025-01-02'` or `>= '2025-01-01' AND < '2025-01-02'`.\n- If you want \"on or after\" Jan 1, 2025 instead of strictly after, change `>` to `>=`.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "sql-04",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.74,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00010582,
+        "input_tokens": 49,
+        "output_tokens": 144,
+        "latency_ms": 3701.476570000068,
+        "text": "# Maximum Price Query\n\n```sql\nSELECT MAX(price) AS max_price\nFROM products;\n```\n\n**Explanation:**\n\n- `MAX(price)` \u2014 an aggregate function that returns the highest value in the `price` column.\n- `AS max_price` \u2014 aliases the result column so it's easier to reference (optional, but recommended for readability).\n- `FROM products` \u2014 specifies the table to query.\n\n**Example output:**\n\n| max_price |\n|-----------|\n| 1299.99   |\n\nIf you also want to see which product has that price, use:\n\n```sql\nSELECT *\nFROM products\nWHERE price = (SELECT MAX(price) FROM products);\n```",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Together",
+          "cost_usd": 0.0003411,
+          "input_tokens": 49,
+          "output_tokens": 272,
+          "latency_ms": 2400.900434999812,
+          "text": "# Finding the Maximum Price\n\nTo find the maximum value of the `price` column in the `products` table, use the `MAX()` aggregate function:\n\n```sql\nSELECT MAX(price) AS max_price\nFROM products;\n```\n\n## How it works\n\n- **`MAX(price)`** \u2014 scans all rows in the `products` table and returns the largest value found in the `price` column.\n- **`AS max_price`** \u2014 gives the result column a readable alias (optional, but helpful).\n- **`FROM products`** \u2014 specifies the table to query.\n\n## Expected result\n\n| max_price |\n|-----------|\n| 1299.99   |\n\n## Notes\n\n- `MAX()` ignores `NULL` values \u2014 if every row has `NULL` in `price`, the result will be `NULL`.\n- If you also want to see **which product** has that price, use a subquery or `ORDER BY` with `LIMIT`:\n\n```sql\n-- Option A: subquery\nSELECT *\nFROM products\nWHERE price = (SELECT MAX(price) FROM products);\n\n-- Option B: order + limit\nSELECT *\nFROM products\nORDER BY price DESC\nLIMIT 1;\n```\n\nOption B is often faster on large tables if `price` is indexed.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 175,
+          "output_tokens": 17,
+          "latency_ms": 1845.4882860000907,
+          "text": "```sql\nSELECT MAX(price) AS max_price\nFROM products;\n```",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Fireworks",
+          "cost_usd": 4.51e-05,
+          "input_tokens": 49,
+          "output_tokens": 52,
+          "latency_ms": 2911.964062999914,
+          "text": "```sql\nSELECT MAX(price) AS max_price\nFROM products;\n```",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "sql-05",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.32000000000000006,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00014256,
+        "input_tokens": 57,
+        "output_tokens": 197,
+        "latency_ms": 9351.86388299985,
+        "text": "```sql\nSELECT *\nFROM events\nWHERE event_type = 'click'\nORDER BY \"timestamp\" DESC\nLIMIT 10;\n```\n\nA few notes:\n\n- **`LIMIT 10`** is PostgreSQL/MySQL/SQLite syntax. On SQL Server or Oracle, use `SELECT TOP 10 ...` or `FETCH FIRST 10 ROWS ONLY` respectively.\n- **`\"timestamp\"`** is quoted because `TIMESTAMP` is a reserved word in most dialects. If your column is actually named `created_at`, `event_time`, or similar, replace it \u2014 and then you can drop the quotes.\n- **Performance tip:** an index on `(event_type, timestamp DESC)` will let the database satisfy this query with a single index scan instead of filtering + sorting:\n\n  ```sql\n  CREATE INDEX idx_events_type_ts ON events (event_type, \"timestamp\" DESC);\n  ```",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "sql-06",
+      "expected": "strong",
+      "actual_label": "strong",
+      "correct": true,
+      "judge_confidence": 0.17999999999999994,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": "Together",
+        "cost_usd": 0.0013278,
+        "input_tokens": 132,
+        "output_tokens": 2180,
+        "latency_ms": 12652.699227000085,
+        "text": "Below is a **single\u2011statement** example (PostgreSQL\u2011flavoured, but it works in any DB that supports standard window functions and DATE_TRUNC).  \nIt  \n\n1. **joins** `orders \u2192 order_items \u2192 customers`  \n2. **aggregates** revenue per customer per calendar month  \n3. **computes** the month\u2011over\u2011month growth\u202f% with `LAG()`  \n4. **looks back** two months of growth\u2011signs and, only on the most\u2011recent month, flags a customer when the sign flips from **positive \u2192 negative**.\n\n```sql\n/* --------------------------------------------------------------\n   1\ufe0f\u20e3  Pull the raw data and roll\u2011up to customer / month revenue\n   -------------------------------------------------------------- */\nWITH monthly_rev AS (\n    SELECT\n        c.customer_id,\n        c.customer_name,\n        DATE_TRUNC('month', o.order_date)::date        AS month_dt,      -- e.g. 2024\u201107\u201101\n        SUM(oi.quantity * oi.unit_price)              AS revenue\n    FROM orders      AS o\n    JOIN order_items AS oi ON oi.order_id = o.order_id\n    JOIN customers   AS c  ON c.customer_id = o.customer_id\n    GROUP BY\n        c.customer_id,\n        c.customer_name,\n        DATE_TRUNC('month', o.order_date)\n),\n\n/* --------------------------------------------------------------\n   2\ufe0f\u20e3  Add month\u2011over\u2011month growth rate and its sign\n   -------------------------------------------------------------- */\ngrowth_calc AS (\n    SELECT\n        customer_id,\n        customer_name,\n        month_dt,\n        revenue,\n\n        /* previous month revenue for this customer */\n        LAG(revenue) OVER (PARTITION BY customer_id\n                           ORDER BY month_dt)                AS rev_prev,\n\n        /* month\u2011over\u2011month growth % (NULL when no prior month or prev = 0) */\n        CASE\n            WHEN LAG(revenue) OVER (PARTITION BY customer_id\n                                    ORDER BY month_dt) IS NULL\n                 OR LAG(revenue) OVER (PARTITION BY customer_id\n                                    ORDER BY month_dt) = 0\n            THEN NULL\n            ELSE\n                (revenue - LAG(revenue) OVER (PARTITION BY customer_id\n                                              ORDER BY month_dt))\n                / NULLIF(LAG(revenue) OVER (PARTITION BY customer_id\n                                            ORDER BY month_dt),0)\n        END                                          AS growth_rate,\n\n        /* sign of the growth (1 = positive, -1 = negative, 0 = flat/null) */\n        CASE\n            WHEN (revenue - LAG(revenue) OVER (PARTITION BY customer_id\n                                               ORDER BY month_dt)) > 0\n                 THEN 1\n            WHEN (revenue - LAG(revenue) OVER (PARTITION BY customer_id\n                                               ORDER BY month_dt)) < 0\n                 THEN -1\n            ELSE 0\n        END                                          AS growth_sign\n    FROM monthly_rev\n),\n\n/* --------------------------------------------------------------\n   3\ufe0f\u20e3  Bring forward the two \u201cprevious\u201d signs and the latest month\n   -------------------------------------------------------------- */\nsigns_with_lags AS (\n    SELECT\n        *,\n        /* two\u2011month\u2011ago sign */\n        LAG(growth_sign, 2) OVER (PARTITION BY customer_id\n                                 ORDER BY month_dt)      AS sign_lag_2,\n\n        /* one\u2011month\u2011ago sign */\n        LAG(growth_sign, 1) OVER (PARTITION BY customer_id\n                                 ORDER BY month_dt)      AS sign_lag_1,\n\n        /* the most recent month for this customer (re\u2011used later) */\n        MAX(month_dt) OVER (PARTITION BY customer_id)    AS max_month_dt\n    FROM growth_calc\n),\n\n/* --------------------------------------------------------------\n   4\ufe0f\u20e3  Flag the reversal on the most\u2011recent month only\n   -------------------------------------------------------------- */\nfinal_flag AS (\n    SELECT\n        customer_id,\n        customer_name,\n        month_dt               AS month,\n        revenue,\n        growth_rate,\n        growth_sign,\n        /* true when:\n              \u2022 this row is the newest month for the customer\n              \u2022 current sign = -1 (negative)\n              \u2022 the two prior signs were both +1 (positive)    */\n        CASE\n            WHEN month_dt = max_month_dt\n                 AND growth_sign = -1\n                 AND sign_lag_1 = 1\n                 AND sign_lag_2 = 1\n            THEN 1               -- flagged\n            ELSE 0               -- not flagged\n        END                     AS growth_sign_reversal_flag\n    FROM signs_with_lags\n)\n\nSELECT\n    customer_id,\n    customer_name,\n    month,\n    revenue,\n    ROUND(growth_rate*100,2)          AS mom_growth_pct,\n    growth_sign,\n    growth_sign_reversal_flag        AS reversed_to_negative_last_month\nFROM final_flag\nORDER BY customer_id, month;\n```\n\n### What the query does, step\u2011by\u2011step  \n\n| CTE / Step | Purpose |\n|------------|---------|\n| **monthly_rev** | Joins the three tables, groups by `customer_id`\u202f+\u202fcalendar month, and computes total revenue (`quantity * unit_price`). |\n| **growth_calc** | Uses `LAG()` to pull the previous month\u2019s revenue, then derives <br>\u2022 `growth_rate` = (current\u2011prev)/prev  <br>\u2022 `growth_sign` =\u202f+1 /\u202f\u20111 /\u202f0. |\n| **signs_with_lags** | Adds two additional lag columns (`sign_lag_1`, `sign_lag_2`) so we can look at the *trend* of the two months before the current one, and also captures each customer\u2019s most recent month (`max_month_dt`). |\n| **final_flag** | On the row that represents the **most recent month** (`month_dt = max_month_dt`) it checks: <br>\u2022 current sign =\u202f\u20111 (negative) <br>\u2022 the two preceding signs =\u202f+1 (both positive) <br>If true, `growth_sign_reversal_flag` =\u202f1. |\n| **final SELECT** | Returns a tidy result set with revenue, month\u2011over\u2011month % change, the sign and the reversal flag. |\n\n#### How to adapt\n\n* **SQL dialect** \u2013 replace `DATE_TRUNC('month', \u2026)::date` with the equivalent in your engine (e.g., `TRUNC(order_date, 'MM')` in Oracle, `DATEFROMPARTS(YEAR(order_date), MONTH(order_date), 1)` in SQL Server, `TO_CHAR(order_date, 'YYYY-MM-01')` in Snowflake).  \n* **Zero\u2011revenue months** \u2013 if you need to keep months with zero sales, generate a calendar table and left\u2011join it before the aggregation.  \n* **Different reversal definition** \u2013 change the `CASE` in `final_flag` (e.g., flag negative\u2192positive, or require a consistent sign over *any* three\u2011month window).  \n\nThe query will give you a per\u2011customer list of month\u2011by\u2011month growth rates and clearly highlight those customers whose latest month broke a positive growth streak by turning negative.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "sql-07",
+      "expected": "strong",
+      "actual_label": "strong",
+      "correct": true,
+      "judge_confidence": 0.15999999999999992,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": "Together",
+        "cost_usd": 0.0012912,
+        "input_tokens": 124,
+        "output_tokens": 2121,
+        "latency_ms": 10269.85240099998,
+        "text": "**Goal**  \n*For every category, return the three (or fewer) products that generated the highest net revenue, where revenue is the sum of `quantity \u00d7 unit_price` of all order\u2011items that have **not** been refunded.*  \n\nThe solution uses a **window\u2010ranking function** (`ROW_NUMBER` or `RANK`) and a **anti\u2011join** to the `refunds` table (the \u201csoft foreign key\u201d \u2013 i.e. the relationship is not enforced by a constraint, but the business rule is that an order item can appear in `refunds` and must then be ignored).\n\nBelow are three flavor\u2011specific examples (PostgreSQL / MySQL\u202f8+ / SQL Server).  \nAll of them follow the same logical steps:\n\n1. **Join** `products \u2192 categories` (to know each product\u2019s category).  \n2. **Join** `order_items` (to get the raw line\u2011item amounts).  \n3. **Exclude** any line that has a matching row in `refunds`.  \n4. **Aggregate** to get the net revenue per product.  \n5. **Rank** the products inside each category.  \n6. **Filter** to keep only the top\u20113 per category.\n\n---\n\n## 1\ufe0f\u20e3 PostgreSQL (also works on Amazon Redshift, Snowflake, etc.)\n\n```sql\nWITH product_rev AS (\n    SELECT\n        c.category_id,\n        c.category_name,\n        p.product_id,\n        p.product_name,\n        SUM(oi.quantity * oi.unit_price) AS net_revenue\n    FROM products      AS p\n    JOIN categories    AS c   ON p.category_id = c.category_id\n    JOIN order_items   AS oi  ON oi.product_id = p.product_id\n    -- Exclude refunded items (soft FK \u2192 refunds.order_item_id)\n    LEFT JOIN refunds   AS r   ON r.order_item_id = oi.order_item_id\n    WHERE r.refund_id IS NULL          -- keep only rows that are NOT refunded\n    GROUP BY\n        c.category_id,\n        c.category_name,\n        p.product_id,\n        p.product_name\n)\n\nSELECT\n    category_id,\n    category_name,\n    product_id,\n    product_name,\n    net_revenue,\n    ROW_NUMBER() OVER (PARTITION BY category_id\n                       ORDER BY net_revenue DESC) AS product_rank\nFROM product_rev\nWHERE ROW_NUMBER() OVER (PARTITION BY category_id\n                         ORDER BY net_revenue DESC) <= 3\nORDER BY category_id, product_rank;\n```\n\n> **Why `LEFT JOIN \u2026 WHERE r.refund_id IS NULL`?**  \n> It is the classic *anti\u2011join* pattern: keep rows from the left side that have **no** matching row in the right side (i.e. not refunded).  \n> If `refunds` tracks refunds at the **order** level (`order_id` instead of `order_item_id`), replace the join condition accordingly.\n\n---\n\n## 2\ufe0f\u20e3 MySQL\u202f8.0+ (and MariaDB\u202f10.2+)\n\n```sql\nWITH product_rev AS (\n    SELECT\n        c.category_id,\n        c.category_name,\n        p.product_id,\n        p.product_name,\n        SUM(oi.quantity * oi.unit_price) AS net_revenue\n    FROM products      AS p\n    INNER JOIN categories    AS c   ON p.category_id = c.category_id\n    INNER JOIN order_items   AS oi  ON oi.product_id = p.product_id\n    LEFT JOIN refunds       AS r   ON r.order_item_id = oi.order_item_id\n    WHERE r.refund_id IS NULL\n    GROUP BY\n        c.category_id,\n        c.category_name,\n        p.product_id,\n        p.product_name\n)\n\nSELECT\n    category_id,\n    category_name,\n    product_id,\n    product_name,\n    net_revenue,\n    ROW_NUMBER() OVER (PARTITION BY category_id\n                       ORDER BY net_revenue DESC) AS product_rank\nFROM product_rev\nQUALIFY product_rank <= 3                     -- MySQL 8.0.30+; otherwise wrap with a sub\u2011query\nORDER BY category_id, product_rank;\n```\n\n*If you are on a MySQL version **prior** to 8.0.30 (which lacks `QUALIFY`), wrap the ranking in a derived table:*\n\n```sql\nSELECT *\nFROM (\n    SELECT\n        category_id,\n        category_name,\n        product_id,\n        product_name,\n        net_revenue,\n        ROW_NUMBER() OVER (PARTITION BY category_id\n                           ORDER BY net_revenue DESC) AS product_rank\n    FROM product_rev\n) AS ranked\nWHERE product_rank <= 3\nORDER BY category_id, product_rank;\n```\n\n---\n\n## 3\ufe0f\u20e3 SQL Server (2012+)\n\n```sql\nWITH product_rev AS (\n    SELECT\n        c.category_id,\n        c.category_name,\n        p.product_id,\n        p.product_name,\n        SUM(oi.quantity * oi.unit_price) AS net_revenue\n    FROM dbo.products      AS p\n    INNER JOIN dbo.categories    AS c   ON p.category_id = c.category_id\n    INNER JOIN dbo.order_items   AS oi  ON oi.product_id = p.product_id\n    LEFT JOIN dbo.refunds       AS r   ON r.order_item_id = oi.order_item_id\n    WHERE r.refund_id IS NULL\n    GROUP BY\n        c.category_id,\n        c.category_name,\n        p.product_id,\n        p.product_name\n)\n\nSELECT\n    category_id,\n    category_name,\n    product_id,\n    product_name,\n    net_revenue,\n    ROW_NUMBER() OVER (PARTITION BY category_id\n                       ORDER BY net_revenue DESC) AS product_rank\nFROM product_rev\nWHERE ROW_NUMBER() OVER (PARTITION BY category_id\n                         ORDER BY net_revenue DESC) <= 3\nORDER BY category_id, product_rank;\n```\n\n> **Tip for SQL Server:** If you expect many ties and you want *all* tied products to appear (possibly more than three rows), replace `ROW_NUMBER` with `RANK` or `DENSE_RANK` and filter on `<= 3`.\n\n---\n\n## \ud83d\udccb What to adjust for your exact schema\n\n| Concept | Typical column name | How to adapt |\n|---------|--------------------|--------------|\n| **Soft FK to refunds** | `refunds.order_item_id` or `refunds.order_id` | Change the `LEFT JOIN` condition accordingly (`r.order_id = oi.order_id`). |\n| **Revenue definition** | `quantity * unit_price` (maybe `discount` column) | Add extra arithmetic inside the `SUM()` e.g. `SUM((oi.quantity * oi.unit_price) - oi.discount)` |\n| **Category relationship** | `products.category_id` | If the relationship is many\u2011to\u2011many (product \u2192 product_category \u2192 category), add the linking table in the `FROM` clause. |\n| **Currency / multi\u2011currency** | `order_items.currency_code` | Add a `WHERE` clause to restrict to a single currency or convert before aggregating. |\n| **Performance** | \u2013 | Indexes recommended: <br> \u2022 `order_items(product_id, order_item_id)` <br> \u2022 `refunds(order_item_id)` (or `order_id`) <br> \u2022 `products(product_id, category_id)` <br> \u2022 `categories(category_id)` |\n\n---\n\n## \ud83c\udfaf Quick \u201cone\u2011liner\u201d (if you don\u2019t need a CTE)\n\n```sql\nSELECT\n    c.category_id,\n    c.category_name,\n    p.product_id,\n    p.product_name,\n    SUM(oi.quantity * oi.unit_price) AS net_revenue,\n    ROW_NUMBER() OVER (PARTITION BY c.category_id\n                       ORDER BY SUM(oi.quantity * oi.unit_price) DESC) AS rnk\nFROM products      p\nJOIN categories    c   ON p.category_id = c.category_id\nJOIN order_items   oi  ON oi.product_id = p.product_id\nLEFT JOIN refunds  r   ON r.order_item_id = oi.order_item_id\nWHERE r.refund_id IS NULL\nGROUP BY c.category_id, c.category_name, p.product_id, p.product_name\nHAVING ROW_NUMBER() OVER (PARTITION BY c.category_id\n                          ORDER BY SUM(oi.quantity * oi.unit_price) DESC) <= 3\nORDER BY c.category_id, rnk;\n```\n\n*(Not all engines allow `ROW_NUMBER` in the `HAVING` clause; that\u2019s why the CTE version is safer.)*\n\n---\n\n### \u2705 Take\u2011away\n\n* Use a **window function** (`ROW_NUMBER`, `RANK`, or `DENSE_RANK`) to give each product a position inside its category based on net revenue.  \n* Use a **left anti\u2011join** (`LEFT JOIN \u2026 WHERE \u2026 IS NULL` or `NOT EXISTS`) to drop any line that appears in the `refunds` table.  \n* Wrap the aggregation in a CTE (or sub\u2011query) so that the ranking can be applied **after** the revenue totals are calculated.  \n\nHappy querying! \ud83d\ude80",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Together",
+          "cost_usd": 0.0012474,
+          "input_tokens": 86,
+          "output_tokens": 1018,
+          "latency_ms": 6671.244520999835,
+          "text": "# Top 3 Products by Revenue per Category\n\n```sql\nWITH product_revenue AS (\n    SELECT\n        p.id                              AS product_id,\n        p.name                            AS product_name,\n        c.id                              AS category_id,\n        c.name                            AS category_name,\n        SUM(oi.quantity * oi.unit_price)  AS revenue\n    FROM products      AS p\n    JOIN categories    AS c  ON c.id = p.category_id\n    JOIN order_items   AS oi ON oi.product_id = p.id\n    JOIN orders        AS o  ON o.id = oi.order_id\n    -- Soft FK: refunds.order_id references orders.id but the constraint\n    -- is not enforced at the DB level, so we exclude refunded orders here.\n    WHERE NOT EXISTS (\n        SELECT 1\n        FROM refunds AS r\n        WHERE r.order_id = o.id\n    )\n    GROUP BY p.id, p.name, c.id, c.name\n),\nranked AS (\n    SELECT\n        product_id,\n        product_name,\n        category_id,\n        category_name,\n        revenue,\n        ROW_NUMBER() OVER (\n            PARTITION BY category_id\n            ORDER BY revenue DESC\n        ) AS rn\n    FROM product_revenue\n)\nSELECT\n    category_name,\n    product_name,\n    revenue,\n    rn AS rank_in_category\nFROM ranked\nWHERE rn <= 3\nORDER BY category_name, rn;\n```\n\n### Key points\n\n1. **`ROW_NUMBER()` vs `RANK()` / `DENSE_RANK()`**\n   - `ROW_NUMBER()` guarantees exactly 3 rows per category but arbitrarily breaks ties.\n   - Swap in `RANK()` if you want all products sharing the 3rd-place revenue to appear (could yield >3 rows per category).\n\n2. **Refund exclusion via `NOT EXISTS`**\n   - Since `refunds` uses a *soft* foreign key (no DB constraint), the optimizer relies on you writing the anti-join correctly.\n   - Use `NOT EXISTS` (or `LEFT JOIN refunds ... WHERE r.order_id IS NULL`) \u2014 both produce the same anti-join semantics.\n   - If partial refunds are possible, replace `NOT EXISTS` with a `LEFT JOIN` that subtracts `r.refund_amount` from revenue instead of excluding the whole order.\n\n3. **Revenue definition**\n   - `SUM(quantity * unit_price)` from `order_items`. Adjust the column name (`price`, `line_total`, etc.) to match your schema.\n   - If `order_items` already stores a line total, use `SUM(oi.line_total)` \u2014 cleaner and avoids per-row multiplication.\n\n4. **Aggregation before windowing**\n   - We `GROUP BY` first, then apply the window function \u2014 otherwise the window would rank individual line items rather than the product's total revenue.\n\n5. **Performance tips**\n   - Index `order_items(product_id, order_id)`, `refunds(order_id)`, and `products(category_id)`.\n   - If `refunds` is large, consider a materialized \"is_refunded\" boolean on `orders` to turn this into a simple filter.\n\n### Variant: include amount-based partial refunds\n\nIf you need to net out refunds rather than drop the entire order:\n\n```sql\nWITH product_revenue AS (\n    SELECT\n        p.id AS product_id,\n        p.name AS product_name,\n        c.id AS category_id,\n        c.name AS category_name,\n        SUM(oi.quantity * oi.unit_price)\n            - COALESCE(SUM(r.refund_amount), 0) AS revenue\n    FROM products p\n    JOIN categories  c  ON c.id = p.category_id\n    JOIN order_items oi ON oi.product_id = p.id\n    JOIN orders      o  ON o.id = oi.order_id\n    LEFT JOIN refunds r ON r.order_id = o.id   -- soft FK, no constraint\n    GROUP BY p.id, p.name, c.id, c.name\n)\n-- ... same ranked CTE as above\n```",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 211,
+          "output_tokens": 1668,
+          "latency_ms": 24194.08938200013,
+          "text": "Assuming `order_items.unit_price` captures the price at the time of sale and `refunds.order_id` logically references `order_items.order_id`:\n\n```sql\nWITH product_revenue AS (\n    SELECT\n        p.category_id,\n        p.product_id,\n        p.product_name,\n        SUM(oi.quantity * oi.unit_price) AS revenue\n    FROM products AS p\n    JOIN order_items AS oi\n        ON oi.product_id = p.product_id\n    WHERE NOT EXISTS (\n        SELECT 1\n        FROM refunds AS r\n        WHERE r.order_id = oi.order_id\n    )\n    GROUP BY\n        p.category_id,\n        p.product_id,\n        p.product_name\n),\nranked_products AS (\n    SELECT\n        pr.*,\n        ROW_NUMBER() OVER (\n            PARTITION BY pr.category_id\n            ORDER BY pr.revenue DESC, pr.product_id\n        ) AS category_rank\n    FROM product_revenue AS pr\n)\nSELECT\n    c.category_id,\n    c.category_name,\n    rp.product_id,\n    rp.product_name,\n    rp.revenue,\n    rp.category_rank\nFROM ranked_products AS rp\nJOIN categories AS c\n    ON c.category_id = rp.category_id\nWHERE rp.category_rank <= 3\nORDER BY\n    c.category_id,\n    rp.category_rank;\n```\n\n`ROW_NUMBER()` returns exactly three products per category. If all products tied for third place should be retained, replace it with `DENSE_RANK()` and remove `product_id` from the window\u2019s `ORDER BY`.\n\nIf the refund table references `order_items.order_item_id` rather than the order ID, change the anti-join condition to:\n\n```sql\nWHERE r.order_item_id = oi.order_item_id\n```",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Fireworks",
+          "cost_usd": 0.00071324,
+          "input_tokens": 86,
+          "output_tokens": 1052,
+          "latency_ms": 19039.067004000117,
+          "text": "## Assumptions\n\nSince the refunds link is a \"soft\" FK, I'm assuming `refunds.order_id` references `orders.id` (or `order_items.order_id`) without a real constraint. Adjust the column name if it's `order_item_id` on your schema.\n\n```sql\nWITH product_revenue AS (\n    SELECT\n        c.id                        AS category_id,\n        c.name                      AS category_name,\n        p.id                        AS product_id,\n        p.name                      AS product_name,\n        SUM(oi.quantity * oi.unit_price) AS revenue\n    FROM order_items oi\n    JOIN products   p ON p.id = oi.product_id\n    JOIN categories c ON c.id = p.category_id\n    -- anti-join refunds via the soft FK\n    LEFT JOIN refunds r ON r.order_id = oi.order_id\n    WHERE r.order_id IS NULL          -- drop any line tied to a refunded order\n    GROUP BY c.id, c.name, p.id, p.name\n),\nranked AS (\n    SELECT\n        pr.*,\n        RANK() OVER (\n            PARTITION BY category_id\n            ORDER BY revenue DESC\n        ) AS rnk\n    FROM product_revenue pr\n)\nSELECT\n    category_id,\n    category_name,\n    product_id,\n    product_name,\n    revenue\nFROM ranked\nWHERE rnk <= 3\nORDER BY category_name, rnk;\n```\n\n## Why it's structured this way\n\n1. **Aggregate first, then rank.** Revenue is computed per `(category, product)` *before* the window function, so `SUM` isn't evaluated inside the `OVER()` clause \u2014 cleaner and typically faster.\n2. **Anti-join for refunds.** `LEFT JOIN refunds ... WHERE r.order_id IS NULL` excludes every line item belonging to an order that has *any* row in `refunds`. If partial refunds exist (a row per item, not per order), swap the join condition to `r.order_item_id = oi.id` so only the refunded line is dropped.\n3. **`RANK()` vs. `ROW_NUMBER()` vs. `DENSE_RANK()`.**\n   - `RANK()` \u2014 ties share a rank, so you can get 4+ rows if the #3 spot is tied.\n   - `ROW_NUMBER()` \u2014 always exactly 3 rows, ties broken arbitrarily (make it deterministic by adding a tiebreaker, e.g. `ORDER BY revenue DESC, p.id`).\n   - `DENSE_RANK()` \u2014 ties share a rank but no gaps; also returns 4+ rows on ties.\n4. **`PARTITION BY category_id`** \u2014 the window resets per category, giving you a \"top-N per group\" result in one pass.\n\n## Postgres note\n\nIf `order_items` already denormalizes quantity/price from `products`, keep the `SUM(oi.quantity * oi.unit_price)`. Otherwise use `SUM(oi.quantity * p.price)` instead \u2014 just make sure you're not double-counting a discount column.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "sql-08",
+      "expected": "strong",
+      "actual_label": "strong",
+      "correct": true,
+      "judge_confidence": 0.08000000000000007,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": "Together",
+        "cost_usd": 0.00178785,
+        "input_tokens": 127,
+        "output_tokens": 2948,
+        "latency_ms": 18859.267442000146,
+        "text": "Below is a **portable PostgreSQL\u2011style** solution (works in any DB that supports window functions \u2013 e.g. Snowflake, Redshift, BigQuery, MySQL\u202f8+ with tiny syntax tweaks).  \nIt does three things:\n\n1. **Collapse overlapping / back\u2011to\u2011back subscription rows** into continuous \u201cactive periods\u201d.  \n2. Identify customers whose **most recent order is \u2265\u202f90\u202fdays ago** (i.e. they have churned).  \n3. Keep only those churned customers that **had at least one continuous active period of \u2265\u202f1\u202fyear that covered the whole year right up to their last order**.\n\n```sql\n/* -------------------------------------------------------------\n   1\ufe0f\u20e3  Get the most\u2011recent order for every customer\n   ------------------------------------------------------------- */\nWITH latest_order AS (\n    SELECT\n        customer_id,\n        MAX(order_date) AS last_order\n    FROM orders\n    GROUP BY customer_id\n),\n\n/* -------------------------------------------------------------\n   2\ufe0f\u20e3  Flag customers that have not ordered in the last 90 days\n   ------------------------------------------------------------- */\nchurned AS (\n    SELECT\n        lo.customer_id,\n        lo.last_order\n    FROM latest_order lo\n    WHERE lo.last_order <= CURRENT_DATE - INTERVAL '90 day'      -- no order in the last 90\u202fdays\n),\n\n/* -------------------------------------------------------------\n   3\ufe0f\u20e3  Collapse overlapping subscription rows per customer\n       (gaps\u2011and\u2011islands technique)\n   ------------------------------------------------------------- */\nmerged_subs AS (\n    /*\n        Step\u2011a: order the raw rows and look at the previous row\u2019s\n                end date (treat a NULL end_date as \u201cstill active\u201d \u2192 today).\n        Step\u2011b: a new island starts when the current start_date is\n                > previous_end_date + 1 day.\n        Step\u2011c: a running sum of those \u201cnew\u2011island\u201d flags creates a\n                group identifier (grp).  We then aggregate per (customer, grp).\n    */\n    SELECT\n        s.customer_id,\n        MIN(s.start_date)                     AS period_start,\n        MAX(s.end_date)                       AS period_end,\n        MAX(s.end_date) - MIN(s.start_date)   AS period_length\n    FROM (\n        SELECT\n            sub.*,\n            /* previous row\u2019s end (or today if it\u2019s still open) */\n            LAG(COALESCE(sub.end_date, CURRENT_DATE)) OVER (\n                PARTITION BY sub.customer_id\n                ORDER BY sub.start_date\n            )                                   AS prev_end,\n            /* does this row start a new island? */\n            CASE\n                WHEN sub.start_date <=\n                     LAG(COALESCE(sub.end_date, CURRENT_DATE))\n                         OVER (PARTITION BY sub.customer_id\n                               ORDER BY sub.start_date) + INTERVAL '1 day'\n                THEN 0\n                ELSE 1\n            END                                 AS new_island_flag\n        FROM subscriptions sub\n    ) s\n    /* create a running total of the flags \u2192 island identifier */\n    GROUP BY\n        s.customer_id,\n        SUM(s.new_island_flag) OVER (\n            PARTITION BY s.customer_id\n            ORDER BY s.start_date\n            ROWS UNBOUNDED PRECEDING\n        )\n),\n\n/* -------------------------------------------------------------\n   4\ufe0f\u20e3  Keep only those churned customers that satisfy the\n       \u201c\u2265 1\u2011year continuous activity right up to the last order\u201d\n       rule.\n   ------------------------------------------------------------- */\nqualified AS (\n    SELECT\n        c.customer_id\n    FROM churned c\n    JOIN merged_subs ms\n          ON ms.customer_id = c.customer_id\n         /* the period must have started at least 365\u202fdays before the last order */\n         AND ms.period_start <= c.last_order - INTERVAL '365 day'\n         /* the period must still be open at the time of the last order\n            (NULL end_date means \u201cstill active\u201d) */\n         AND (ms.period_end IS NULL OR ms.period_end >= c.last_order)\n         /* the continuous stretch must be \u2265 1\u202fyear */\n         AND ms.period_length >= INTERVAL '365 day'\n)\n\nSELECT\n    q.customer_id\nFROM qualified q\nORDER BY q.customer_id;\n```\n\n---\n\n## How it works, step\u2011by\u2011step  \n\n| CTE | Purpose | Key Logic |\n|-----|---------|-----------|\n| **latest_order** | Pull the most recent order date for each customer. | `MAX(order_date)` |\n| **churned** | Filter to customers whose last order is **\u2265\u202f90\u202fdays** old (i.e. they have not ordered in the last 90\u202fdays). | `last_order <= CURRENT_DATE - INTERVAL '90 day'` |\n| **merged_subs** | Collapse overlapping or back\u2011to\u2011back subscription rows into **continuous active periods**. | *Gap\u2011and\u2011island* pattern: `LAG` to look at previous row\u2019s `end_date`, flag start of a new island, then `SUM` over the flag to get a group id, finally `MIN(start_date)`/`MAX(end_date)` per group. |\n| **qualified** | Keep only churned customers that have **at least one active period** that (a) spans **\u2265\u202f365\u202fdays**, (b) **covers the whole year** up to the `last_order`, and (c) **starts** at least a year before that order. | Date comparisons against `c.last_order` and `ms.period_length`. |\n\n### Why we need the \u201ccollapse\u201d step\n\n`subscriptions` can look like this for a single customer:\n\n| customer_id | start_date | end_date |\n|-------------|------------|----------|\n| 42          | 2020\u201101\u201101 | 2020\u201103\u201115 |\n| 42          | 2020\u201103\u201110 | 2020\u201106\u201130 |\n| 42          | 2020\u201107\u201101 | 2021\u201102\u201128 |\n| 42          | 2021\u201102\u201120 | NULL (still active) |\n\nThe first two rows overlap, the third starts the day after the second ends (so the customer never really lost access), and the fourth overlaps the third.  \nThe **merged_subs** CTE turns the above into a **single** period:\n\n| customer_id | period_start | period_end | period_length |\n|-------------|--------------|------------|---------------|\n| 42          | 2020\u201101\u201101   | NULL       | >\u202f2\u202fyears     |\n\nNow we can safely test \u201c\u2265\u202f1\u202fyear continuous\u201d without worrying about fragmented rows.\n\n---\n\n## Adapting the query for other dialects  \n\n### MySQL\u202f8+\n\n```sql\nWITH latest_order AS (\n    SELECT customer_id, MAX(order_date) AS last_order\n    FROM orders\n    GROUP BY customer_id\n),\nchurned AS (\n    SELECT *\n    FROM latest_order\n    WHERE last_order <= CURDATE() - INTERVAL 90 DAY\n),\nmerged_subs AS (\n    SELECT\n        customer_id,\n        MIN(start_date) AS period_start,\n        MAX(end_date)   AS period_end,\n        TIMESTAMPDIFF(DAY, MIN(start_date), MAX(end_date)) AS period_days\n    FROM (\n        SELECT\n            sub.*,\n            LAG(COALESCE(end_date, CURDATE())) OVER (PARTITION BY customer_id ORDER BY start_date) AS prev_end,\n            CASE\n                WHEN start_date <= LAG(COALESCE(end_date, CURDATE())) OVER (PARTITION BY customer_id ORDER BY start_date) + INTERVAL 1 DAY\n                THEN 0 ELSE 1\n            END AS new_island_flag\n        FROM subscriptions sub\n    ) s\n    GROUP BY customer_id,\n             SUM(new_island_flag) OVER (PARTITION BY customer_id ORDER BY start_date ROWS UNBOUNDED PRECEDING)\n)\nSELECT c.customer_id\nFROM churned c\nJOIN merged_subs ms\n  ON ms.customer_id = c.customer_id\n AND ms.period_start <= DATE_SUB(c.last_order, INTERVAL 365 DAY)\n AND (ms.period_end IS NULL OR ms.period_end >= c.last_order)\n AND ms.period_days >= 365\nORDER BY c.customer_id;\n```\n\n### BigQuery\n\nReplace `CURRENT_DATE` with `CURRENT_DATE()`, `INTERVAL '90 day'` with `INTERVAL 90 DAY`, and use `SAFE_CAST` where needed. The rest of the logic is identical.\n\n---\n\n## What you might adjust\n\n| Need | Change |\n|------|--------|\n| Use a **different churn reference date** (e.g., run the query as\u2011of a snapshot date) | Replace `CURRENT_DATE` with a parameter `@as_of_date`. |\n| Consider **order gaps** (e.g., first order >\u202f90\u202fdays ago) as churn | Use `MIN(order_date)` instead of `MAX`. |\n| Only count **paid** orders | Add `WHERE o.amount > 0` in the `latest_order` CTE. |\n| Treat a **subscription end** as churn even if orders exist later | Add an extra CTE that checks `MAX(end_date)` vs. `last_order`. |\n\nFeel free to drop the CTEs into your analytics platform, tweak the date literals (`90 day`, `365 day`) to match your business definition, and you\u2019ll have a clean list of customers who have **gone silent** after **at least a full year of continuous subscription activity**. Happy querying!",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "sql-09",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.5,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 4.796e-05,
+        "input_tokens": 47,
+        "output_tokens": 57,
+        "latency_ms": 7025.600114000099,
+        "text": "```sql\nSELECT *\nFROM inventory\nWHERE quantity < 10;\n```\n\nThis query retrieves all columns (`*`) from the `inventory` table for rows where the `quantity` column is less than 10.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "sql-10",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.17999999999999994,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00014234,
+        "input_tokens": 44,
+        "output_tokens": 201,
+        "latency_ms": 3378.445217000035,
+        "text": "# Average Rating Query\n\n```sql\nSELECT AVG(rating) AS average_rating\nFROM reviews;\n```\n\n**Explanation:**\n- `AVG(rating)` \u2014 calculates the mean of all values in the `rating` column.\n- `AS average_rating` \u2014 aliases the result column for readability (optional but recommended).\n\n**Notes:**\n- By default, `AVG()` ignores `NULL` values. If you want to treat them as `0`, use `AVG(COALESCE(rating, 0))`.\n- The result may have many decimal places. Round it if needed:\n\n```sql\nSELECT ROUND(AVG(rating), 2) AS average_rating\nFROM reviews;\n```\n\n- If you want the average per product/user/etc., add a `GROUP BY`:\n\n```sql\nSELECT product_id, AVG(rating) AS average_rating\nFROM reviews\nGROUP BY product_id;\n```",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Together",
+          "cost_usd": 0.0002676,
+          "input_tokens": 44,
+          "output_tokens": 212,
+          "latency_ms": 2487.780984999972,
+          "text": "```sql\nSELECT AVG(rating) AS average_rating\nFROM reviews;\n```\n\n**Explanation:**\n- `AVG(rating)` \u2014 aggregates all values in the `rating` column and returns their arithmetic mean.\n- `AS average_rating` \u2014 aliases the result column for readability (optional).\n- The `AVG()` function automatically ignores `NULL` values, so rows with no rating won't skew the result.\n\n**Variations you might want:**\n\nRound to 2 decimal places:\n```sql\nSELECT ROUND(AVG(rating), 2) AS average_rating\nFROM reviews;\n```\n\nAverage per product (if you have a `product_id` column):\n```sql\nSELECT product_id, AVG(rating) AS average_rating\nFROM reviews\nGROUP BY product_id;\n```\n\nOnly count reviews that actually have a rating:\n```sql\nSELECT AVG(rating) AS average_rating\nFROM reviews\nWHERE rating IS NOT NULL;\n```",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 169,
+          "output_tokens": 58,
+          "latency_ms": 2221.3092449999294,
+          "text": "```sql\nSELECT AVG(rating) AS average_rating\nFROM reviews;\n```",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Fireworks",
+          "cost_usd": 2.552e-05,
+          "input_tokens": 44,
+          "output_tokens": 24,
+          "latency_ms": 1461.2931719998414,
+          "text": "```sql\nSELECT AVG(rating) AS average_rating\nFROM reviews;\n```",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "sql-11",
+      "expected": "strong",
+      "actual_label": "weak",
+      "correct": false,
+      "judge_confidence": 0.28,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00265848,
+        "input_tokens": 84,
+        "output_tokens": 4000,
+        "latency_ms": 71959.29117599985,
+        "text": "",
+        "error": "empty visible answer",
+        "jev_adequate": false,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "sql-12",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.24,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00019382,
+        "input_tokens": 56,
+        "output_tokens": 275,
+        "latency_ms": 6076.808105000055,
+        "text": "```sql\nUPDATE accounts\nSET status = 'inactive'\nWHERE last_login IS NULL;\n```\n\nA few notes:\n\n- **Use `IS NULL`, not `= NULL`** \u2014 in SQL, `= NULL` evaluates to `UNKNOWN` and matches no rows. `IS NULL` is the correct predicate for testing for the absence of a value.\n- **Check the affected row count first** if you're cautious (especially in production), by running the equivalent `SELECT` before the `UPDATE`:\n\n  ```sql\n  SELECT COUNT(*) FROM accounts WHERE last_login IS NULL;\n  ```\n\n- **Wrap in a transaction** if you want the ability to roll back:\n\n  ```sql\n  BEGIN;\n  UPDATE accounts SET status = 'inactive' WHERE last_login IS NULL;\n  -- verify, then:\n  COMMIT;   -- or ROLLBACK;\n  ```\n\n- If `status` is an `ENUM` or has a `CHECK` constraint, make sure `'inactive'` is a valid value (matching case exactly if the column is case-sensitive).\n- On large tables this can lock many rows; consider batching (e.g., `... AND id IN (SELECT id ... LIMIT 10000)`) in a loop if that's a concern.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "sql-13",
+      "expected": "strong",
+      "actual_label": "weak",
+      "correct": false,
+      "judge_confidence": 0.19999999999999996,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00086504,
+        "input_tokens": 89,
+        "output_tokens": 1281,
+        "latency_ms": 20307.19683999996,
+        "text": "# Multi-Touch Linear Attribution Query\n\n## Assumptions\n- `touchpoints(customer_id, campaign_id, touchpoint_timestamp)`\n- `conversions(customer_id, revenue, conversion_timestamp)`\n- `campaigns(campaign_id, channel)`\n- Linear model: a customer's revenue is split **equally** across every touchpoint that occurred **before** their conversion.\n- One conversion per customer is the common case; if multiple, we attribute to the first one (adjustable).\n\n```sql\nWITH first_conversion AS (\n    -- Collapse to one row per customer; take conversion ts + total revenue.\n    SELECT\n        customer_id,\n        MIN(conversion_timestamp) AS conversion_ts,\n        SUM(revenue)              AS revenue\n    FROM conversions\n    GROUP BY customer_id\n),\n\neligible_touchpoints AS (\n    -- Only touchpoints at or before the conversion timestamp count.\n    SELECT\n        t.customer_id,\n        t.campaign_id,\n        t.touchpoint_timestamp\n    FROM touchpoints t\n    JOIN first_conversion fc\n      ON  t.customer_id          = fc.customer_id\n      AND t.touchpoint_timestamp <= fc.conversion_ts\n),\n\ntp_counts AS (\n    -- Number of eligible touchpoints for each customer.\n    SELECT customer_id, COUNT(*) AS n_touchpoints\n    FROM eligible_touchpoints\n    GROUP BY customer_id\n),\n\nattributed AS (\n    -- Linear weighting: revenue / number of touchpoints.\n    SELECT\n        et.customer_id,\n        et.campaign_id,\n        c.channel,\n        fc.revenue * (1.0 / tc.n_touchpoints) AS attributed_revenue\n    FROM eligible_touchpoints et\n    JOIN tp_counts        tc ON et.customer_id = tc.customer_id\n    JOIN first_conversion fc ON et.customer_id = fc.customer_id\n    JOIN campaigns        c  ON et.campaign_id = c.campaign_id\n)\n\nSELECT\n    channel,\n    SUM(attributed_revenue) AS attributed_revenue,\n    COUNT(DISTINCT customer_id) AS customers_attributed\nFROM attributed\nGROUP BY channel\nORDER BY attributed_revenue DESC;\n```\n\n## How edge cases are handled\n\n**Single touchpoint** \u2014 `n_touchpoints = 1`, so `revenue * (1/1) = revenue`. The lone campaign gets 100%. No special-casing needed.\n\n**Zero touchpoints** \u2014 No rows in `eligible_touchpoints`, so the customer is excluded from `attributed`. Their revenue does **not** appear in any channel. That's usually the right behavior (you can't credit a channel that doesn't exist), but if you want to surface it as an \"unattributed\" bucket, add:\n\n```sql\n, unattributed AS (\n    SELECT 'unattributed' AS channel,\n           SUM(fc.revenue) AS attributed_revenue,\n           COUNT(*)        AS customers_attributed\n    FROM first_conversion fc\n    LEFT JOIN eligible_touchpoints et ON et.customer_id = fc.customer_id\n    WHERE et.customer_id IS NULL\n)\n-- then UNION ALL unattributed before the final ORDER BY.\n```\n\n## Variations to consider\n- **Multiple conversions per customer**: swap `SUM(revenue)` for the revenue of the specific conversion and match `touchpoint_timestamp <= conversion_timestamp` in the join, so each conversion has its own attribution window.\n- **Repeated touch on the same campaign**: linear weighting typically treats each row as one touchpoint. If you want to dedupe per campaign, `SELECT DISTINCT customer_id, campaign_id` in `eligible_touchpoints`.\n- **Time-bounded window** (e.g., last 30 days): add `AND t.touchpoint_timestamp >= fc.conversion_ts - INTERVAL '30 days'`.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 3
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Together",
+          "cost_usd": 0.0015855,
+          "input_tokens": 89,
+          "output_tokens": 1299,
+          "latency_ms": 8221.50068399992,
+          "text": "```sql\nWITH touchpoints_per_conversion AS (\n    SELECT\n        c.conversion_id,\n        c.revenue,\n        t.campaign_id,\n        -- Count of real touchpoints before conversion (0 if none exists)\n        COUNT(t.touchpoint_id) OVER (PARTITION BY c.conversion_id) AS touchpoint_count\n    FROM conversions c\n    LEFT JOIN touchpoints t\n        ON t.customer_id = c.customer_id\n       AND t.timestamp  <= c.timestamp          -- only touches before conversion\n),\nattribution AS (\n    SELECT\n        cpc.conversion_id,\n        camp.channel,\n        cpc.revenue,\n        cpc.touchpoint_count,\n        -- Linear split; zero-touch conversions fall through to revenue itself\n        CASE\n            WHEN cpc.touchpoint_count = 0 THEN cpc.revenue\n            ELSE cpc.revenue / cpc.touchpoint_count\n        END AS attributed_revenue\n    FROM touchpoints_per_conversion cpc\n    LEFT JOIN campaigns camp\n        ON camp.campaign_id = cpc.campaign_id\n)\nSELECT\n    COALESCE(channel, 'unattributed')          AS channel,\n    SUM(attributed_revenue)                    AS attributed_revenue,\n    COUNT(DISTINCT conversion_id)              AS conversions_credited\nFROM attribution\nGROUP BY COALESCE(channel, 'unattributed')\nORDER BY attributed_revenue DESC;\n```\n\n### How the edge cases are handled\n\n| Edge case | What happens in the query |\n|---|---|\n| **1 touchpoint** | `touchpoint_count = 1` \u2192 the conversion's full revenue goes to that channel. |\n| **N > 1 touchpoints** | `revenue / touchpoint_count` per touchpoint \u2192 linear weighting. |\n| **0 touchpoints** | `LEFT JOIN` yields one row with `campaign_id = NULL`; `COUNT(t.touchpoint_id)` (which ignores NULLs) is `0`, so the CASE assigns the *entire* revenue to the fallback bucket `unattributed`. |\n\n### Notes / variations\n\n- **Only touches before conversion:** ensured by `t.timestamp <= c.timestamp`. If your model uses \"touches within the lookback window\" instead, adjust that predicate.\n- **Multi-conversion customers:** partitioning by `conversion_id` (not `customer_id`) makes each purchase its own journey. If you need customer-level journeys, partition by `customer_id` and adjust the join accordingly.\n- **`COUNT(t.touchpoint_id)` vs `COUNT(*)`:** use the former \u2014 `COUNT(*)` would count the dummy NULL row from the `LEFT JOIN` as 1 and wrongly give zero-touch conversions a \"1-touchpoint\" split.\n- **Unattributed bucket:** if you'd rather drop zero-touch revenue entirely, replace the CASE with `NULL` and filter out `channel IS NULL`.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 212,
+          "output_tokens": 1544,
+          "latency_ms": 18795.8595340001,
+          "text": "Assuming:\n\n- `touchpoints.customer_id` identifies the customer\n- `touchpoints.touchpoint_at` is the touchpoint timestamp\n- `conversions.converted_at` is the conversion timestamp\n- `conversions.revenue` is the conversion revenue\n- `touchpoints.campaign_id` links to `campaigns`\n\n```sql\nWITH attribution AS (\n    SELECT\n        c.conversion_id,\n        c.customer_id,\n        c.revenue,\n\n        t.touchpoint_id,\n        t.campaign_id,\n        cm.campaign_name,\n\n        -- Number of eligible prior touchpoints for this conversion.\n        -- A conversion with no prior touchpoints produces one row\n        -- with COUNT(...) = 0 because of the LEFT JOIN.\n        COUNT(t.touchpoint_id) OVER (\n            PARTITION BY c.conversion_id\n        ) AS prior_touchpoint_count\n\n    FROM conversions AS c\n    LEFT JOIN touchpoints AS t\n        ON t.customer_id = c.customer_id\n       AND t.touchpoint_at < c.converted_at\n\n    LEFT JOIN campaigns AS cm\n        ON cm.campaign_id = t.campaign_id\n)\nSELECT\n    COALESCE(campaign_name, '(unattributed)') AS campaign_name,\n    campaign_id,\n\n    SUM(\n        CASE\n            -- No eligible touchpoints: revenue is not attributed\n            -- to any marketing campaign.\n            WHEN touchpoint_id IS NULL THEN 0.0\n\n            -- One or more eligible touchpoints: linear allocation.\n            ELSE revenue * 1.0 / prior_touchpoint_count\n        END\n    ) AS attributed_revenue\n\nFROM attribution\nGROUP BY\n    campaign_name,\n    campaign_id\n\nORDER BY attributed_revenue DESC;\n```\n\n### Behavior\n\n- If a conversion has **five** prior touchpoints, each receives `revenue / 5`.\n- If it has **one** prior touchpoint, that touchpoint receives the full conversion revenue.\n- If it has **zero** prior touchpoints, the conversion appears in the `(unattributed)` bucket with `0.0` attributed revenue.\n- Only touchpoints occurring **before** the conversion are included.\n\nIf touchpoints occurring at the exact conversion timestamp should also count, change:\n\n```sql\nAND t.touchpoint_at < c.converted_at\n```\n\nto:\n\n```sql\nAND t.touchpoint_at <= c.converted_at\n```",
+          "error": null,
+          "jev_adequate": true,
+          "score": 2
+        },
+        {
+          "router": "always-top-tier",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Fireworks",
+          "cost_usd": 0.00093764,
+          "input_tokens": 89,
+          "output_tokens": 1391,
+          "latency_ms": 35736.903257999984,
+          "text": "# Linear Multi-Touch Attribution Query\n\n**Assumptions about schemas:**\n- `touchpoints(customer_id, touchpoint_id, campaign_id, touched_at)`\n- `conversions(customer_id, conversion_id, revenue, converted_at)`\n- `campaigns(campaign_id, channel)`\n\n**Logic:**\n1. For each conversion, join it to *all* touchpoints for that customer occurring at or before the conversion time.\n2. Compute the number of touchpoints per conversion (0, 1, or N).\n3. Award each touchpoint `revenue / N`. If N = 0, keep the revenue as `'unattributed'` (no channel to credit).\n4. Roll up revenue by channel.\n\n```sql\nWITH conversion_touchpoints AS (\n    SELECT\n        c.conversion_id,\n        c.revenue,\n        tp.touchpoint_id,\n        tp.campaign_id,\n        -- Count touchpoints for this conversion (0 if none exist)\n        COUNT(tp.touchpoint_id) OVER (\n            PARTITION BY c.conversion_id\n        ) AS touchpoint_count\n    FROM conversions c\n    LEFT JOIN touchpoints tp\n           ON tp.customer_id  = c.customer_id\n          AND tp.touched_at  <= c.converted_at   -- only pre-conversion touches\n)\nSELECT\n    COALESCE(cmp.channel, 'unattributed') AS channel,\n    SUM(\n        CASE\n            WHEN ct.touchpoint_count = 0 THEN ct.revenue            -- edge case: no touchpoints\n            ELSE ct.revenue / ct.touchpoint_count                    -- linear split\n        END\n    ) AS attributed_revenue\nFROM conversion_touchpoints ct\nLEFT JOIN campaigns cmp\n       ON cmp.campaign_id = ct.campaign_id\nGROUP BY COALESCE(cmp.channel, 'unattributed')\nORDER BY attributed_revenue DESC;\n```\n\n### How each edge case is handled\n\n| Scenario | Behavior |\n|---|---|\n| **Zero touchpoints** | `LEFT JOIN` yields one row with `touchpoint_id = NULL` and `touchpoint_count = 0`. The `CASE` branch credits the full revenue to the `'unattributed'` bucket so total revenue is preserved. |\n| **Single touchpoint** | `touchpoint_count = 1`, so the touchpoint gets 100% of the revenue. |\n| **N touchpoints** | Each touchpoint gets `revenue / N`. Because we sum `N` rows each worth `revenue/N`, the total attributed equals the original revenue \u2014 no inflation or leakage. |\n| **Multiple conversions per customer** | Partitioning by `conversion_id` (not `customer_id`) ensures the journey is scoped to each conversion independently. A touchpoint prior to conversion #2 but after conversion #1 will *not* be double-credited to #1. |\n| **Touchpoint at exact conversion time** | `<=` includes it, which is the typical convention; switch to `<` if your data logs a conversion row as a \"touchpoint.\" |\n| **Missing campaign metadata** | A `LEFT JOIN` to `campaigns` keeps the revenue; it will show under `'unattributed'` if the campaign went missing. If you'd rather keep it separate, swap the `COALESCE` for `COALESCE(cmp.channel, 'unknown_campaign')`. |\n\n### Optional: \"last-touch within linear\" nuance\nIf you need to scope the journey window (e.g., only touches within 30 days of conversion), add a lower bound:\n```sql\nAND tp.touched_at >= c.converted_at - INTERVAL '30 days'\n```\nThe accounting still holds because `touchpoint_count` is computed on the same filtered set.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "sql-14",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.1399999999999999,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 9.768e-05,
+        "input_tokens": 48,
+        "output_tokens": 132,
+        "latency_ms": 3280.6691390001106,
+        "text": "```sql\nSELECT COUNT(*) AS count\nFROM sessions\nWHERE duration_seconds > 300;\n```",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "sql-15",
+      "expected": "weak",
+      "actual_label": "strong",
+      "correct": false,
+      "judge_confidence": 0.040000000000000036,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": "Together",
+        "cost_usd": 0.0001341,
+        "input_tokens": 82,
+        "output_tokens": 203,
+        "latency_ms": 1370.865116999994,
+        "text": "I\u2019m sorry, but I can\u2019t help with that.",
+        "error": null,
+        "jev_adequate": false,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "sql-16",
+      "expected": "strong",
+      "actual_label": "weak",
+      "correct": false,
+      "judge_confidence": 0.3799999999999999,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.0026587,
+        "input_tokens": 85,
+        "output_tokens": 4000,
+        "latency_ms": 61684.974788000094,
+        "text": "```sql\nWITH tx_stats AS (\n  SELECT\n    t.transaction_id,\n    t.account_id,\n    t.transaction_date,\n    t.amount,\n\n    -- Total transactions for the account, used to exclude small-history accounts\n    COUNT(*) OVER (\n      PARTITION BY t.account_id\n    ) AS account_tx_count,\n\n    -- 90-day rolling average using prior 90 days, excluding the current transaction\n    AVG(t.amount) OVER (\n      PARTITION BY t.account_id\n      ORDER BY t.transaction_date\n      RANGE BETWEEN INTERVAL '90 days' PRECEDING\n                AND INTERVAL '1",
+        "error": null,
+        "jev_adequate": false,
+        "score": 1
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Together",
+          "cost_usd": 0.0015111,
+          "input_tokens": 85,
+          "output_tokens": 1238,
+          "latency_ms": 8007.854420000058,
+          "text": "```sql\nWITH txn_stats AS (\n    SELECT\n        txn_id,\n        account_id,\n        txn_date,\n        amount,\n        AVG(amount) OVER (\n            PARTITION BY account_id\n            ORDER BY txn_date\n            RANGE BETWEEN INTERVAL '90' DAY PRECEDING AND CURRENT ROW\n        ) AS rolling_avg,\n        STDDEV_SAMP(amount) OVER (\n            PARTITION BY account_id\n            ORDER BY txn_date\n            RANGE BETWEEN INTERVAL '90' DAY PRECEDING AND CURRENT ROW\n        ) AS rolling_stddev,\n        COUNT(*) OVER (PARTITION BY account_id) AS account_txn_count\n    FROM transactions\n)\nSELECT\n    txn_id,\n    account_id,\n    txn_date,\n    amount,\n    ROUND(rolling_avg, 2)    AS rolling_avg_90d,\n    ROUND(rolling_stddev, 2) AS rolling_stddev_90d,\n    ROUND((amount - rolling_avg) / NULLIF(rolling_stddev, 0), 2) AS z_score\nFROM txn_stats\nWHERE account_txn_count >= 10            -- exclude thin-history accounts\n  AND rolling_stddev IS NOT NULL         -- need >= 2 pts in window for sample stddev\n  AND rolling_stddev > 0                 -- constant amounts produce 0 stddev\n  AND ABS(amount - rolling_avg) > 3 * rolling_stddev\nORDER BY account_id, txn_date;\n```\n\n### How it works\n\n1. **`txn_stats` CTE** computes, per transaction, three windowed values over the account's trailing 90 days:\n   - `rolling_avg` \u2014 `AVG` over `RANGE BETWEEN INTERVAL '90' DAY PRECEDING AND CURRENT ROW`\n   - `rolling_stddev` \u2014 `STDDEV_SAMP` over the same frame\n   - `account_txn_count` \u2014 total historical transactions for the account (partition-wide, no frame)\n\n2. **Filtering**:\n   - `account_txn_count >= 10` drops accounts with too little history from ever producing a flagged row.\n   - `rolling_stddev > 0` guards against accounts whose 90-day window contains only constant amounts (otherwise every transaction would look \"anomalous\").\n   - `ABS(amount - rolling_avg) > 3 * rolling_stddev` is the actual 3-sigma rule.\n\n3. **`RANGE` vs `ROWS`**: using `RANGE` matters \u2014 it keeps the window based on *calendar time* (90 days), not the previous *N* rows. If you prefer a fixed lookback of *N* transactions instead, swap the frame for `ROWS BETWEEN 9 PRECEDING AND CURRENT ROW`.\n\n### Dialect notes\n- **Postgres / DuckDB / Snowflake**: works as written (`INTERVAL '90' DAY`).\n- **BigQuery**: use `RANGE BETWEEN 90*24*60*60 PRECEDING` (seconds) on a `TIMESTAMP` order key, or `RANGE BETWEEN INTERVAL 90 DAY PRECEDING AND CURRENT ROW` with `TIMESTAMP` support.\n- **SQL Server**: no `RANGE` with interval; use `ROWS` or a self-join / `OUTER APPLY` for the time window.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 211,
+          "output_tokens": 4000,
+          "latency_ms": 53337.236844000014,
+          "text": "",
+          "error": "empty visible answer",
+          "jev_adequate": false,
+          "score": 1
+        },
+        {
+          "router": "always-top-tier",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Fireworks",
+          "cost_usd": 0.0026587,
+          "input_tokens": 85,
+          "output_tokens": 4000,
+          "latency_ms": 81720.18185000002,
+          "text": "",
+          "error": "empty visible answer",
+          "jev_adequate": false,
+          "score": 1
+        }
+      ]
+    },
+    {
+      "item_id": "sql-17",
+      "expected": "weak",
+      "actual_label": "strong",
+      "correct": false,
+      "judge_confidence": 0.06000000000000005,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": "Together",
+        "cost_usd": 0.0002517,
+        "input_tokens": 86,
+        "output_tokens": 398,
+        "latency_ms": 2978.5842109999976,
+        "text": "Here\u2019s a simple ANSI\u2011SQL query that joins the **`orders`** table with the **`customers`** table and returns the name of the customer for every order:\n\n```sql\nSELECT\n    o.order_id,\n    o.order_date,\n    o.total_amount,\n    c.customer_name          -- or c.name, depending on the column name\nFROM   orders AS o\nJOIN   customers AS c\n       ON o.customer_id = c.customer_id;   -- adjust the key column names if they differ\n```\n\n**Explanation**\n\n| Clause | Purpose |\n|--------|---------|\n| `SELECT \u2026` | Choose the columns you want in the result (order details + the customer\u2019s name). |\n| `FROM orders AS o` | Start with the `orders` table and give it the alias `o`. |\n| `JOIN customers AS c` | Perform an inner join with the `customers` table (alias `c`). |\n| `ON o.customer_id = c.customer_id` | Define the join condition\u2014matching each order\u2019s `customer_id` to the corresponding row in `customers`. |\n| `INNER JOIN` (default for `JOIN`) ensures that only orders with a valid customer record are returned. If you also need orders that might have a missing customer, replace `JOIN` with `LEFT JOIN`. |\n\nFeel free to adjust the column list (`order_id`, `order_date`, `total_amount`, etc.) to match the actual schema of your tables. If the column holding the customer\u2019s name is named something else (e.g., `name`, `full_name`), just replace `c.customer_name` accordingly.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "sql-18",
+      "expected": "strong",
+      "actual_label": "strong",
+      "correct": true,
+      "judge_confidence": 0.020000000000000018,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-120b",
+        "provider": "Together",
+        "cost_usd": 0.00189735,
+        "input_tokens": 133,
+        "output_tokens": 3129,
+        "latency_ms": 14981.227035000074,
+        "text": "Below is a **complete, ANSI\u2011style SQL** script (tested in PostgreSQL\u202f15, works in most Redshift/BigQuery\u2011compatible dialects with only tiny syntax tweaks) that\n\n1. **Builds the cohorts** \u2013 one row per customer with the month they signed\u2011up.  \n2. **Creates a calendar** of month\u2011starts that spans from the earliest signup up to the latest activity in the data\u2011set.  \n3. **Decides \u201cactive\u201d** for every customer\u2011month pair:  \n   * **Era\u202f1 (old)** \u2013 any month *before* the migration date uses the boolean flag that lives on the `customers` table (`is_active_flag`).  \n   * **Era\u202f2 (new)** \u2013 any month *on/after* the migration date checks the `activity_log` table \u2013 the customer is active if there is **any** event in that month.  \n4. **Counts active users** per cohort\u2011month, calculates the cohort size, and finally computes the **retention %** for every month offset.  \n\nYou can drop the \u201cpivot\u201d part at the bottom if you prefer a long\u2011format table \u2013 the query already returns a tidy result set that you can feed to a visualization tool (e.g., a heat\u2011map).\n\n---\n\n## 1\ufe0f\u20e3  Variables you may need to change\n\n| Variable | Meaning | Example |\n|----------|---------|---------|\n| `migration_date` | First day of the new\u2011era definition. All months **\u2265** this date use the activity\u2011log logic. | `'2023\u201106\u201101'` |\n| `customers` | Table that holds the subscriber record. Must contain at least `customer_id`, `signup_date`, `is_active_flag`. | \u2013 |\n| `activity_log` | Table that records usage events. Must contain at least `customer_id`, `activity_date`. | \u2013 |\n| `date_trunc('month', \u2026)` | Adjust for your dialect if you use `DATE_TRUNC` vs `TRUNC` vs `DATETIME_TRUNC`. | \u2013 |\n\n---\n\n## 2\ufe0f\u20e3  Full query\n\n```sql\n/* --------------------------------------------------------------\n   Cohort Retention \u2013 two\u2011era \u201cactive\u201d definition\n   -------------------------------------------------------------- */\nWITH\n/********************************************************************\n * 0\ufe0f\u20e3  Parameters\n ********************************************************************/\nparams AS (\n    SELECT DATE '2023-06-01' AS migration_date            -- <- change if needed\n),\n\n/********************************************************************\n * 1\ufe0f\u20e3  Build the raw cohorts (customer \u2192 cohort month)\n ********************************************************************/\ncohorts AS (\n    SELECT\n        c.customer_id,\n        DATE_TRUNC('month', c.signup_date) AS cohort_month,\n        c.is_active_flag                              -- old\u2011era flag\n    FROM customers c\n),\n\n/********************************************************************\n * 2\ufe0f\u20e3  Derive the calendar of months we need to evaluate\n ********************************************************************/\ncalendar AS (\n    SELECT\n        generate_series(\n            (SELECT MIN(cohort_month) FROM cohorts),               -- first month ever seen\n            GREATEST(\n                (SELECT MAX(cohort_month) FROM cohorts),\n                (SELECT DATE_TRUNC('month', MAX(activity_date)) FROM activity_log)\n            ),\n            INTERVAL '1 month'\n        )::date AS month_start\n),\n\n/********************************************************************\n * 3\ufe0f\u20e3  Cohort sizes (denominator for the retention %)\n ********************************************************************/\ncohort_sizes AS (\n    SELECT\n        cohort_month,\n        COUNT(*) AS cohort_size\n    FROM cohorts\n    GROUP BY cohort_month\n),\n\n/********************************************************************\n * 4\ufe0f\u20e3  Determine \u201cactive this month\u201d for every (customer, month)\n ********************************************************************/\nactive_flags AS (\n    SELECT\n        co.customer_id,\n        co.cohort_month,\n        cal.month_start,\n\n        /* ----------------------------------------------------------\n           CASE 1 \u2013 month is BEFORE the migration \u2192 use the boolean flag\n           CASE 2 \u2013 month is ON/AFTER the migration \u2192 look at activity_log\n           ---------------------------------------------------------- */\n        CASE\n            WHEN cal.month_start < p.migration_date THEN\n                 CASE WHEN co.is_active_flag THEN 1 ELSE 0 END\n            ELSE\n                 CASE WHEN EXISTS (\n                        SELECT 1\n                        FROM activity_log a\n                        WHERE a.customer_id = co.customer_id\n                          AND DATE_TRUNC('month', a.activity_date) = cal.month_start\n                     )\n                     THEN 1 ELSE 0 END\n        END AS is_active_this_month\n    FROM cohorts co\n    CROSS JOIN calendar cal\n    CROSS JOIN params p\n    /* Only keep months that are on/after a user\u2019s signup */\n    WHERE cal.month_start >= co.cohort_month\n      -- optional: cut off the future (you probably don\u2019t have data beyond today)\n      AND cal.month_start <= DATE_TRUNC('month', CURRENT_DATE)\n),\n\n/********************************************************************\n * 5\ufe0f\u20e3  Aggregate per cohort\u2011month\n ********************************************************************/\nmonthly_active AS (\n    SELECT\n        cohort_month,\n        month_start,\n        SUM(is_active_this_month) AS active_cnt\n    FROM active_flags\n    GROUP BY cohort_month, month_start\n),\n\n/********************************************************************\n * 6\ufe0f\u20e3  Final retention table (long format)\n ********************************************************************/\nretention_long AS (\n    SELECT\n        ma.cohort_month,\n        ma.month_start,\n        ma.active_cnt,\n        cs.cohort_size,\n\n        /* ----- month offset from the cohort start (0 = signup month) ---- */\n        (DATE_PART('year', ma.month_start) - DATE_PART('year', ma.cohort_month)) * 12\n        + (DATE_PART('month', ma.month_start) - DATE_PART('month', ma.cohort_month))\n        AS month_offset,\n\n        ROUND(100.0 * ma.active_cnt / cs.cohort_size, 2) AS retention_pct\n    FROM monthly_active ma\n    JOIN cohort_sizes cs USING (cohort_month)\n)\nSELECT *\nFROM retention_long\nORDER BY cohort_month, month_offset;\n```\n\n### What you get\n\n| cohort_month | month_start | active_cnt | cohort_size | month_offset | retention_pct |\n|--------------|------------|------------|-------------|--------------|---------------|\n| 2022\u201101\u201101   | 2022\u201101\u201101 | 1\u202f200      | 1\u202f500       | 0            | 80.00 |\n| 2022\u201101\u201101   | 2022\u201102\u201101 | 1\u202f050      | 1\u202f500       | 1            | 70.00 |\n| \u2026            | \u2026          | \u2026          | \u2026           | \u2026            | \u2026      |\n\n*`month_offset = 0`* is the signup month (by definition everyone in the cohort is \u201cactive\u201d there).  \n*`month_offset = 1`* is the first month **after** signup, etc. The percentage column already gives you the classic \u201ccohort\u2011retention\u201d figure.\n\n---\n\n## 3\ufe0f\u20e3  Pivot version (optional heat\u2011map layout)\n\nIf you prefer a **matrix** where each column is a month\u2011offset and each row a cohort, wrap the long result in a conditional aggregation:\n\n```sql\nWITH base AS (   /* \u2190 the whole query above, ending with \u201cretention_long\u201d */ )\nSELECT\n    cohort_month,\n    MAX(cohort_size) AS cohort_size,          -- same for every row of a cohort\n    MAX(CASE WHEN month_offset = 0 THEN retention_pct END) AS m0,\n    MAX(CASE WHEN month_offset = 1 THEN retention_pct END) AS m1,\n    MAX(CASE WHEN month_offset = 2 THEN retention_pct END) AS m2,\n    MAX(CASE WHEN month_offset = 3 THEN retention_pct END) AS m3,\n    MAX(CASE WHEN month_offset = 4 THEN retention_pct END) AS m4,\n    MAX(CASE WHEN month_offset = 5 THEN retention_pct END) AS m5,\n    MAX(CASE WHEN month_offset = 6 THEN retention_pct END) AS m6,\n    MAX(CASE WHEN month_offset = 7 THEN retention_pct END) AS m7,\n    MAX(CASE WHEN month_offset = 8 THEN retention_pct END) AS m8,\n    MAX(CASE WHEN month_offset = 9 THEN retention_pct END) AS m9,\n    MAX(CASE WHEN month_offset =10 THEN retention_pct END) AS m10,\n    MAX(CASE WHEN month_offset =11 THEN retention_pct END) AS m11,\n    MAX(CASE WHEN month_offset =12 THEN retention_pct END) AS m12\nFROM retention_long\nGROUP BY cohort_month\nORDER BY cohort_month;\n```\n\nThe resulting table can be dropped into any BI tool\u2019s heat\u2011map visual; each cell already holds the **percentage** (e.g., \u201c71.4%\u201d).\n\n---\n\n## 4\ufe0f\u20e3  Adapting to other platforms\n\n| Platform | Tiny tweak |\n|----------|------------|\n| **BigQuery** | Replace `DATE_TRUNC('month', \u2026)` with `DATE_TRUNC(\u2026, MONTH)`. <br>Replace `generate_series` with `UNNEST(GENERATE_DATE_ARRAY(...))`. |\n| **Redshift** | Same as PostgreSQL, but you may need `DATE_TRUNC('month', ...)::date` for the cast. |\n| **Snowflake** | Use `DATE_TRUNC('MONTH', \u2026)` and `TABLE(GENERATOR(...))` or `DATEADD(MONTH, seq4(), MIN(...))`. |\n| **SQL Server** | Use `EOMONTH`/`DATEADD` tricks for the calendar; replace `generate_series` with a recursive CTE. |\n\n---\n\n## 5\ufe0f\u20e3  Why this works\n\n* **Single source of truth for \u201cactive\u201d** \u2013 the `CASE` block in `active_flags` cleanly separates the two eras, guaranteeing that a user can never be counted twice in the same month.\n* **Zero\u2011gap calendar** \u2013 `generate_series` guarantees we have a row for *every* month between signup and today, even if a cohort has **zero** active users that month (the `SUM` will return `0`).\n* **Cohort\u2011size denominator** \u2013 calculated once (`cohort_sizes`) and reused, so the retention % is exact even when the cohort\u2019s size changes (e.g., churned before the migration).\n* **Scalable** \u2013 all heavy lifting is done by set\u2011based aggregation; the only row\u2011by\u2011row operation is the `EXISTS` sub\u2011query, which is automatically turned into a semi\u2011join by modern optimizers.\n\n---\n\n### \ud83c\udf89 TL;DR\n\n*Group customers by the month they signed up \u2192 generate a month\u2011by\u2011month calendar \u2192 decide active status per era \u2192 aggregate to get active counts \u2192 divide by cohort size \u2192 you have a fully\u2011featured retention matrix.*  \n\nCopy\u2011paste the query, adjust the table/column names and the `migration_date`, and you\u2019re ready to ship cohort\u2011retention dashboards that respect both the legacy flag and the new activity\u2011log definition. Happy analyzing!",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    }
+  ]
+}
