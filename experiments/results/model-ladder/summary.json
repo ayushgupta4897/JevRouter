@@ -1,0 +1,48 @@
+{
+  "head_to_head": {
+    "always-cheapest": {
+      "prompts": 6,
+      "cost_usd": 0.00094618,
+      "mean_score": 5,
+      "score_ge_4": 6,
+      "scored": 6,
+      "jev_adequate": [
+        6,
+        6
+      ],
+      "failed_or_empty": 0
+    },
+    "deferent": {
+      "prompts": 6,
+      "cost_usd": 0.01464426,
+      "mean_score": 4.5,
+      "score_ge_4": 5,
+      "scored": 6,
+      "jev_adequate": [
+        6,
+        6
+      ],
+      "failed_or_empty": 0
+    },
+    "always-strongest": {
+      "prompts": 6,
+      "cost_usd": 0.030087999999999997,
+      "mean_score": 4.666666666666667,
+      "score_ge_4": 6,
+      "scored": 6,
+      "jev_adequate": [
+        6,
+        6
+      ],
+      "failed_or_empty": 0
+    }
+  },
+  "models_used": {
+    "qwen/qwen3.7-flash": 5,
+    "openai/gpt-6-luna": 4,
+    "google/gemini-3.8-flash": 5,
+    "anthropic/claude-sonnet-5": 4
+  },
+  "routed_cost_usd": 0.057160050000000004,
+  "total_spend_usd": 0.12017622999999997
+}
