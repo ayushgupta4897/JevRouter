@@ -24,10 +24,12 @@ from pydantic import BaseModel, Field
 
 from jevjudge.cascade import Judge, build_judge_from_env
 
+from . import cache
 from .algorithms import CompiledRoute, compile_route_algorithm
 from .compiler import ConfigError, load_clients_file, load_team_file
 from .decide import UnexpectedRealCallError, decide
 from .messages import to_libsy_messages
+from .schema import ModelPricing
 
 logger = logging.getLogger("routerctl.decision_server")
 
@@ -35,6 +37,9 @@ logger = logging.getLogger("routerctl.decision_server")
 class DecisionRequest(BaseModel):
     model: str = Field(min_length=1, description="The route name, e.g. 'deployment/transcription'.")
     messages: list[dict] = Field(min_length=1)
+    session: cache.SessionState | None = Field(
+        default=None, description="Which model served the previous turn, for cache-aware switching.",
+    )
 
 
 class RouteTable:
@@ -46,6 +51,7 @@ class RouteTable:
         self.teams_dir = teams_dir
         self.clients_path = clients_path or (teams_dir.parent / "clients.yaml")
         self.routes: dict[str, CompiledRoute] = {}
+        self.pricing: dict[str, ModelPricing] = {}
         self._content_hash: str | None = None
 
     def _hash(self) -> str:
@@ -57,8 +63,9 @@ class RouteTable:
 
     def load(self) -> None:
         # clients.yaml is still validated (catches typos, the reserved-name check, etc.) even
-        # though a decision-only server never dials out to a client's base_url itself.
-        load_clients_file(self.clients_path)
+        # though a decision-only server never dials out to a client's base_url itself. Its
+        # pricing table is what cache-aware switching prices a model switch with.
+        clients = load_clients_file(self.clients_path)
         routes: dict[str, CompiledRoute] = {}
         team_paths = sorted(self.teams_dir.glob("*.yaml"))
         if not team_paths:
@@ -69,7 +76,7 @@ class RouteTable:
                 if route.name in routes:
                     raise ConfigError(f"route name {route.name!r} is used twice", file=str(path))
                 routes[route.name] = compile_route_algorithm(route)
-        self.routes = routes
+        self.routes, self.pricing = routes, clients.pricing
         self._content_hash = self._hash()
 
     def maybe_reload(self) -> bool:
@@ -123,8 +130,11 @@ def build_app(teams_dir: Path, clients_path: Path | None = None, poll_seconds: f
             # gets noticed, reported as a plain 500 without leaking internals to the client.
             logger.exception("decision-only invariant violated on route %r", req.model)
             raise HTTPException(500, "internal routing error") from error
+        decision = cache.apply(decision, compiled, req.session, table.pricing, compiled.route.cache, req.messages)
         if decision.judge_error:
-            logger.warning("route %r: judge unreachable, fell back to its safe default: %s", req.model, decision.judge_error)
+            held = (decision.cache or {}).get("held_current_model")
+            fallback = "held the session's current model" if held else "fell back to its safe default"
+            logger.warning("route %r: judge unreachable, %s: %s", req.model, fallback, decision.judge_error)
         return asdict(decision)
 
     return app

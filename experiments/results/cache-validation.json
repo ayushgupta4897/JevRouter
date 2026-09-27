@@ -1,0 +1,928 @@
+{
+  "run_date": "2026-09-27",
+  "prices": {
+    "gpt-5.6-luna": {
+      "input": 0.2,
+      "cached_input": 0.02,
+      "output": 1.2,
+      "cache_write": 0.25,
+      "cache_ttl_seconds": 1800,
+      "min_cacheable_tokens": 1024
+    },
+    "gpt-5.6-terra": {
+      "input": 2.0,
+      "cached_input": 0.2,
+      "output": 12.0,
+      "cache_write": 2.5,
+      "cache_ttl_seconds": 1800,
+      "min_cacheable_tokens": 1024
+    },
+    "gpt-5.6-sol": {
+      "input": 4.0,
+      "cached_input": 0.4,
+      "output": 20.0,
+      "cache_write": 5.0,
+      "cache_ttl_seconds": 1800,
+      "min_cacheable_tokens": 1024
+    },
+    "gpt-6-astra": {
+      "input": 10.0,
+      "cached_input": 1.0,
+      "output": 50.0,
+      "cache_write": 12.5,
+      "cache_ttl_seconds": 1800,
+      "min_cacheable_tokens": 1024
+    }
+  },
+  "premise": [
+    {
+      "call": 1,
+      "model": "gpt-5.6-terra",
+      "prompt_tokens": 7743,
+      "cached_tokens": 0,
+      "cache_write_tokens": 7740,
+      "cost_usd": 0.01944
+    },
+    {
+      "call": 2,
+      "model": "gpt-5.6-terra",
+      "prompt_tokens": 7781,
+      "cached_tokens": 7723,
+      "cache_write_tokens": 55,
+      "cost_usd": 0.00889
+    },
+    {
+      "call": 3,
+      "model": "gpt-5.6-luna",
+      "prompt_tokens": 7737,
+      "cached_tokens": 0,
+      "cache_write_tokens": 7734,
+      "cost_usd": 0.00194
+    },
+    {
+      "call": 4,
+      "model": "gpt-5.6-terra",
+      "prompt_tokens": 7737,
+      "cached_tokens": 7723,
+      "cache_write_tokens": 11,
+      "cost_usd": 0.00193
+    }
+  ],
+  "scripted": [
+    {
+      "arm": "sol/terra ungated",
+      "turns_detail": [
+        {
+          "turn": 1,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "prompt_tokens": 7742,
+          "cached_tokens": 0,
+          "cache_write_tokens": 7739,
+          "cost_usd": 0.0388,
+          "gate_reason": null
+        },
+        {
+          "turn": 2,
+          "policy_pick": "gpt-5.6-terra",
+          "served_by": "gpt-5.6-terra",
+          "prompt_tokens": 7807,
+          "cached_tokens": 0,
+          "cache_write_tokens": 7804,
+          "cost_usd": 0.0267,
+          "gate_reason": null
+        },
+        {
+          "turn": 3,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "prompt_tokens": 7824,
+          "cached_tokens": 7739,
+          "cache_write_tokens": 82,
+          "cost_usd": 0.0037,
+          "gate_reason": null
+        },
+        {
+          "turn": 4,
+          "policy_pick": "gpt-5.6-terra",
+          "served_by": "gpt-5.6-terra",
+          "prompt_tokens": 7846,
+          "cached_tokens": 7804,
+          "cache_write_tokens": 39,
+          "cost_usd": 0.0018,
+          "gate_reason": null
+        },
+        {
+          "turn": 5,
+          "policy_pick": "gpt-5.6-terra",
+          "served_by": "gpt-5.6-terra",
+          "prompt_tokens": 7901,
+          "cached_tokens": 7843,
+          "cache_write_tokens": 55,
+          "cost_usd": 0.0073,
+          "gate_reason": null
+        },
+        {
+          "turn": 6,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "prompt_tokens": 8332,
+          "cached_tokens": 7821,
+          "cache_write_tokens": 508,
+          "cost_usd": 0.0058,
+          "gate_reason": null
+        },
+        {
+          "turn": 7,
+          "policy_pick": "gpt-5.6-terra",
+          "served_by": "gpt-5.6-terra",
+          "prompt_tokens": 8354,
+          "cached_tokens": 7898,
+          "cache_write_tokens": 453,
+          "cost_usd": 0.0028,
+          "gate_reason": null
+        },
+        {
+          "turn": 8,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "prompt_tokens": 8402,
+          "cached_tokens": 8329,
+          "cache_write_tokens": 70,
+          "cost_usd": 0.0138,
+          "gate_reason": null
+        },
+        {
+          "turn": 9,
+          "policy_pick": "gpt-5.6-terra",
+          "served_by": "gpt-5.6-terra",
+          "prompt_tokens": 8868,
+          "cached_tokens": 8351,
+          "cache_write_tokens": 514,
+          "cost_usd": 0.0031,
+          "gate_reason": null
+        },
+        {
+          "turn": 10,
+          "policy_pick": "gpt-5.6-terra",
+          "served_by": "gpt-5.6-terra",
+          "prompt_tokens": 8893,
+          "cached_tokens": 8865,
+          "cache_write_tokens": 25,
+          "cost_usd": 0.0023,
+          "gate_reason": null
+        }
+      ],
+      "turns": 10,
+      "switches": 7,
+      "cost_usd": 0.1061,
+      "cache_hit_rate": 0.789
+    },
+    {
+      "arm": "sol/terra gated",
+      "turns_detail": [
+        {
+          "turn": 1,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "prompt_tokens": 7741,
+          "cached_tokens": 0,
+          "cache_write_tokens": 7738,
+          "cost_usd": 0.0388,
+          "gate_reason": "no_session"
+        },
+        {
+          "turn": 2,
+          "policy_pick": "gpt-5.6-terra",
+          "served_by": "gpt-5.6-terra",
+          "prompt_tokens": 7806,
+          "cached_tokens": 0,
+          "cache_write_tokens": 7803,
+          "cost_usd": 0.0267,
+          "gate_reason": "downgrade_saves_money"
+        },
+        {
+          "turn": 3,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "prompt_tokens": 7823,
+          "cached_tokens": 7738,
+          "cache_write_tokens": 82,
+          "cost_usd": 0.0037,
+          "gate_reason": "upgrade"
+        },
+        {
+          "turn": 4,
+          "policy_pick": "gpt-5.6-terra",
+          "served_by": "gpt-5.6-terra",
+          "prompt_tokens": 7845,
+          "cached_tokens": 7803,
+          "cache_write_tokens": 39,
+          "cost_usd": 0.0018,
+          "gate_reason": "downgrade_saves_money"
+        },
+        {
+          "turn": 5,
+          "policy_pick": "gpt-5.6-terra",
+          "served_by": "gpt-5.6-terra",
+          "prompt_tokens": 7900,
+          "cached_tokens": 7842,
+          "cache_write_tokens": 55,
+          "cost_usd": 0.0085,
+          "gate_reason": "same_model"
+        },
+        {
+          "turn": 6,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "prompt_tokens": 8293,
+          "cached_tokens": 7820,
+          "cache_write_tokens": 470,
+          "cost_usd": 0.0056,
+          "gate_reason": "upgrade"
+        },
+        {
+          "turn": 7,
+          "policy_pick": "gpt-5.6-terra",
+          "served_by": "gpt-5.6-terra",
+          "prompt_tokens": 8315,
+          "cached_tokens": 7897,
+          "cache_write_tokens": 415,
+          "cost_usd": 0.0027,
+          "gate_reason": "downgrade_saves_money"
+        },
+        {
+          "turn": 8,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "prompt_tokens": 8363,
+          "cached_tokens": 8290,
+          "cache_write_tokens": 70,
+          "cost_usd": 0.014,
+          "gate_reason": "upgrade"
+        },
+        {
+          "turn": 9,
+          "policy_pick": "gpt-5.6-terra",
+          "served_by": "gpt-5.6-terra",
+          "prompt_tokens": 8765,
+          "cached_tokens": 8312,
+          "cache_write_tokens": 450,
+          "cost_usd": 0.0029,
+          "gate_reason": "downgrade_saves_money"
+        },
+        {
+          "turn": 10,
+          "policy_pick": "gpt-5.6-terra",
+          "served_by": "gpt-5.6-terra",
+          "prompt_tokens": 8790,
+          "cached_tokens": 8762,
+          "cache_write_tokens": 25,
+          "cost_usd": 0.0023,
+          "gate_reason": "same_model"
+        }
+      ],
+      "turns": 10,
+      "switches": 7,
+      "cost_usd": 0.107,
+      "cache_hit_rate": 0.79
+    },
+    {
+      "arm": "sol/luna ungated",
+      "turns_detail": [
+        {
+          "turn": 1,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "prompt_tokens": 7741,
+          "cached_tokens": 0,
+          "cache_write_tokens": 7738,
+          "cost_usd": 0.0388,
+          "gate_reason": null
+        },
+        {
+          "turn": 2,
+          "policy_pick": "gpt-5.6-luna",
+          "served_by": "gpt-5.6-luna",
+          "prompt_tokens": 7806,
+          "cached_tokens": 0,
+          "cache_write_tokens": 7803,
+          "cost_usd": 0.0027,
+          "gate_reason": null
+        },
+        {
+          "turn": 3,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "prompt_tokens": 7823,
+          "cached_tokens": 7738,
+          "cache_write_tokens": 82,
+          "cost_usd": 0.0037,
+          "gate_reason": null
+        },
+        {
+          "turn": 4,
+          "policy_pick": "gpt-5.6-luna",
+          "served_by": "gpt-5.6-luna",
+          "prompt_tokens": 7845,
+          "cached_tokens": 7803,
+          "cache_write_tokens": 39,
+          "cost_usd": 0.0002,
+          "gate_reason": null
+        },
+        {
+          "turn": 5,
+          "policy_pick": "gpt-5.6-luna",
+          "served_by": "gpt-5.6-luna",
+          "prompt_tokens": 7902,
+          "cached_tokens": 7842,
+          "cache_write_tokens": 57,
+          "cost_usd": 0.0008,
+          "gate_reason": null
+        },
+        {
+          "turn": 6,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "prompt_tokens": 8218,
+          "cached_tokens": 7820,
+          "cache_write_tokens": 395,
+          "cost_usd": 0.0053,
+          "gate_reason": null
+        },
+        {
+          "turn": 7,
+          "policy_pick": "gpt-5.6-luna",
+          "served_by": "gpt-5.6-luna",
+          "prompt_tokens": 8245,
+          "cached_tokens": 7899,
+          "cache_write_tokens": 343,
+          "cost_usd": 0.0003,
+          "gate_reason": null
+        },
+        {
+          "turn": 8,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "prompt_tokens": 8293,
+          "cached_tokens": 8215,
+          "cache_write_tokens": 75,
+          "cost_usd": 0.0143,
+          "gate_reason": null
+        },
+        {
+          "turn": 9,
+          "policy_pick": "gpt-5.6-luna",
+          "served_by": "gpt-5.6-luna",
+          "prompt_tokens": 8745,
+          "cached_tokens": 8242,
+          "cache_write_tokens": 500,
+          "cost_usd": 0.0003,
+          "gate_reason": null
+        },
+        {
+          "turn": 10,
+          "policy_pick": "gpt-5.6-luna",
+          "served_by": "gpt-5.6-luna",
+          "prompt_tokens": 8772,
+          "cached_tokens": 8742,
+          "cache_write_tokens": 27,
+          "cost_usd": 0.0002,
+          "gate_reason": null
+        }
+      ],
+      "turns": 10,
+      "switches": 7,
+      "cost_usd": 0.0666,
+      "cache_hit_rate": 0.79
+    },
+    {
+      "arm": "sol/luna gated",
+      "turns_detail": [
+        {
+          "turn": 1,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "prompt_tokens": 7741,
+          "cached_tokens": 0,
+          "cache_write_tokens": 7738,
+          "cost_usd": 0.0388,
+          "gate_reason": "no_session"
+        },
+        {
+          "turn": 2,
+          "policy_pick": "gpt-5.6-luna",
+          "served_by": "gpt-5.6-luna",
+          "prompt_tokens": 7806,
+          "cached_tokens": 0,
+          "cache_write_tokens": 7803,
+          "cost_usd": 0.0027,
+          "gate_reason": "downgrade_saves_money"
+        },
+        {
+          "turn": 3,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "prompt_tokens": 7823,
+          "cached_tokens": 7738,
+          "cache_write_tokens": 82,
+          "cost_usd": 0.0037,
+          "gate_reason": "upgrade"
+        },
+        {
+          "turn": 4,
+          "policy_pick": "gpt-5.6-luna",
+          "served_by": "gpt-5.6-luna",
+          "prompt_tokens": 7845,
+          "cached_tokens": 7803,
+          "cache_write_tokens": 39,
+          "cost_usd": 0.0002,
+          "gate_reason": "downgrade_saves_money"
+        },
+        {
+          "turn": 5,
+          "policy_pick": "gpt-5.6-luna",
+          "served_by": "gpt-5.6-luna",
+          "prompt_tokens": 7900,
+          "cached_tokens": 7842,
+          "cache_write_tokens": 55,
+          "cost_usd": 0.0007,
+          "gate_reason": "same_model"
+        },
+        {
+          "turn": 6,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "prompt_tokens": 8227,
+          "cached_tokens": 7820,
+          "cache_write_tokens": 404,
+          "cost_usd": 0.0053,
+          "gate_reason": "upgrade"
+        },
+        {
+          "turn": 7,
+          "policy_pick": "gpt-5.6-luna",
+          "served_by": "gpt-5.6-luna",
+          "prompt_tokens": 8251,
+          "cached_tokens": 7897,
+          "cache_write_tokens": 351,
+          "cost_usd": 0.0003,
+          "gate_reason": "downgrade_saves_money"
+        },
+        {
+          "turn": 8,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "prompt_tokens": 8299,
+          "cached_tokens": 8224,
+          "cache_write_tokens": 72,
+          "cost_usd": 0.0147,
+          "gate_reason": "upgrade"
+        },
+        {
+          "turn": 9,
+          "policy_pick": "gpt-5.6-luna",
+          "served_by": "gpt-5.6-luna",
+          "prompt_tokens": 8767,
+          "cached_tokens": 8248,
+          "cache_write_tokens": 516,
+          "cost_usd": 0.0003,
+          "gate_reason": "downgrade_saves_money"
+        },
+        {
+          "turn": 10,
+          "policy_pick": "gpt-5.6-luna",
+          "served_by": "gpt-5.6-luna",
+          "prompt_tokens": 8794,
+          "cached_tokens": 8764,
+          "cache_write_tokens": 27,
+          "cost_usd": 0.0002,
+          "gate_reason": "same_model"
+        }
+      ],
+      "turns": 10,
+      "switches": 7,
+      "cost_usd": 0.0669,
+      "cache_hit_rate": 0.79
+    }
+  ],
+  "scripted_note": "Parsed from the run's console output: that run crashed in phase 3 (since fixed) before writing JSON. Per-turn costs are rounded to 4 decimals; completion token counts were not printed. Phase 2 spend is estimated from those rounded costs.",
+  "e2e": [
+    {
+      "arm": "e2e jev sol/terra ungated",
+      "turns": 8,
+      "switches": 0,
+      "cost_usd": 0.09936,
+      "cache_hit_rate": 0.869,
+      "models": [
+        "gpt-5.6-sol",
+        "gpt-5.6-sol",
+        "gpt-5.6-sol",
+        "gpt-5.6-sol",
+        "gpt-5.6-sol",
+        "gpt-5.6-sol",
+        "gpt-5.6-sol",
+        "gpt-5.6-sol"
+      ],
+      "turns_detail": [
+        {
+          "turn": 1,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "switched": false,
+          "prompt_tokens": 7739,
+          "cached_tokens": 0,
+          "cache_write_tokens": 7736,
+          "completion_tokens": 7,
+          "cost_usd": 0.038832,
+          "gate_reason": "no_session"
+        },
+        {
+          "turn": 2,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "switched": false,
+          "prompt_tokens": 7804,
+          "cached_tokens": 7736,
+          "cache_write_tokens": 65,
+          "completion_tokens": 469,
+          "cost_usd": 0.012811399999999999,
+          "gate_reason": "no_session"
+        },
+        {
+          "turn": 3,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "switched": false,
+          "prompt_tokens": 8179,
+          "cached_tokens": 7801,
+          "cache_write_tokens": 375,
+          "completion_tokens": 8,
+          "cost_usd": 0.0051674,
+          "gate_reason": "no_session"
+        },
+        {
+          "turn": 4,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "switched": false,
+          "prompt_tokens": 8201,
+          "cached_tokens": 8176,
+          "cache_write_tokens": 22,
+          "completion_tokens": 11,
+          "cost_usd": 0.0036124,
+          "gate_reason": "no_session"
+        },
+        {
+          "turn": 5,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "switched": false,
+          "prompt_tokens": 8256,
+          "cached_tokens": 8198,
+          "cache_write_tokens": 55,
+          "completion_tokens": 580,
+          "cost_usd": 0.015166200000000001,
+          "gate_reason": "no_session"
+        },
+        {
+          "turn": 6,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "switched": false,
+          "prompt_tokens": 8581,
+          "cached_tokens": 8253,
+          "cache_write_tokens": 325,
+          "completion_tokens": 11,
+          "cost_usd": 0.005158200000000001,
+          "gate_reason": "no_session"
+        },
+        {
+          "turn": 7,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "switched": false,
+          "prompt_tokens": 8608,
+          "cached_tokens": 8578,
+          "cache_write_tokens": 27,
+          "completion_tokens": 8,
+          "cost_usd": 0.0037382,
+          "gate_reason": "no_session"
+        },
+        {
+          "turn": 8,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "switched": false,
+          "prompt_tokens": 8656,
+          "cached_tokens": 8605,
+          "cache_write_tokens": 48,
+          "completion_tokens": 559,
+          "cost_usd": 0.014874,
+          "gate_reason": "no_session"
+        }
+      ]
+    },
+    {
+      "arm": "e2e jev sol/terra gated",
+      "turns": 8,
+      "switches": 0,
+      "cost_usd": 0.09664,
+      "cache_hit_rate": 0.87,
+      "models": [
+        "gpt-5.6-sol",
+        "gpt-5.6-sol",
+        "gpt-5.6-sol",
+        "gpt-5.6-sol",
+        "gpt-5.6-sol",
+        "gpt-5.6-sol",
+        "gpt-5.6-sol",
+        "gpt-5.6-sol"
+      ],
+      "turns_detail": [
+        {
+          "turn": 1,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "switched": false,
+          "prompt_tokens": 7742,
+          "cached_tokens": 0,
+          "cache_write_tokens": 7739,
+          "completion_tokens": 7,
+          "cost_usd": 0.038847,
+          "gate_reason": "no_session"
+        },
+        {
+          "turn": 2,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "switched": false,
+          "prompt_tokens": 7807,
+          "cached_tokens": 7739,
+          "cache_write_tokens": 65,
+          "completion_tokens": 600,
+          "cost_usd": 0.015432600000000001,
+          "gate_reason": "same_model"
+        },
+        {
+          "turn": 3,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "switched": false,
+          "prompt_tokens": 7824,
+          "cached_tokens": 7804,
+          "cache_write_tokens": 17,
+          "completion_tokens": 8,
+          "cost_usd": 0.0033786000000000003,
+          "gate_reason": "same_model"
+        },
+        {
+          "turn": 4,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "switched": false,
+          "prompt_tokens": 7846,
+          "cached_tokens": 7821,
+          "cache_write_tokens": 22,
+          "completion_tokens": 11,
+          "cost_usd": 0.0034704000000000002,
+          "gate_reason": "same_model"
+        },
+        {
+          "turn": 5,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "switched": false,
+          "prompt_tokens": 7901,
+          "cached_tokens": 7843,
+          "cache_write_tokens": 55,
+          "completion_tokens": 526,
+          "cost_usd": 0.0139442,
+          "gate_reason": "same_model"
+        },
+        {
+          "turn": 6,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "switched": false,
+          "prompt_tokens": 8229,
+          "cached_tokens": 7898,
+          "cache_write_tokens": 328,
+          "completion_tokens": 8,
+          "cost_usd": 0.004971200000000001,
+          "gate_reason": "same_model"
+        },
+        {
+          "turn": 7,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "switched": false,
+          "prompt_tokens": 8253,
+          "cached_tokens": 8226,
+          "cache_write_tokens": 24,
+          "completion_tokens": 8,
+          "cost_usd": 0.0035824,
+          "gate_reason": "same_model"
+        },
+        {
+          "turn": 8,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "switched": false,
+          "prompt_tokens": 8301,
+          "cached_tokens": 8250,
+          "cache_write_tokens": 48,
+          "completion_tokens": 473,
+          "cost_usd": 0.013012,
+          "gate_reason": "same_model"
+        }
+      ]
+    }
+  ],
+  "long_context": [
+    {
+      "arm": "30K gpt-5.6-sol/gpt-5.6-terra ungated",
+      "turns": 6,
+      "switches": 1,
+      "cost_usd": 0.28204,
+      "cache_hit_rate": 0.666,
+      "models": [
+        "gpt-5.6-sol",
+        "gpt-5.6-sol",
+        "gpt-5.6-terra",
+        "gpt-5.6-terra",
+        "gpt-5.6-terra",
+        "gpt-5.6-terra"
+      ],
+      "turns_detail": [
+        {
+          "turn": 1,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "switched": false,
+          "prompt_tokens": 31111,
+          "cached_tokens": 0,
+          "cache_write_tokens": 31108,
+          "completion_tokens": 7,
+          "cost_usd": 0.155692,
+          "gate_reason": null
+        },
+        {
+          "turn": 2,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "switched": false,
+          "prompt_tokens": 31176,
+          "cached_tokens": 31108,
+          "cache_write_tokens": 65,
+          "completion_tokens": 532,
+          "cost_usd": 0.023420200000000002,
+          "gate_reason": null
+        },
+        {
+          "turn": 3,
+          "policy_pick": "gpt-5.6-terra",
+          "served_by": "gpt-5.6-terra",
+          "switched": true,
+          "prompt_tokens": 31522,
+          "cached_tokens": 0,
+          "cache_write_tokens": 31519,
+          "completion_tokens": 7,
+          "cost_usd": 0.0788875,
+          "gate_reason": null
+        },
+        {
+          "turn": 4,
+          "policy_pick": "gpt-5.6-terra",
+          "served_by": "gpt-5.6-terra",
+          "switched": false,
+          "prompt_tokens": 31543,
+          "cached_tokens": 31519,
+          "cache_write_tokens": 21,
+          "completion_tokens": 11,
+          "cost_usd": 0.006494300000000001,
+          "gate_reason": null
+        },
+        {
+          "turn": 5,
+          "policy_pick": "gpt-5.6-terra",
+          "served_by": "gpt-5.6-terra",
+          "switched": false,
+          "prompt_tokens": 31598,
+          "cached_tokens": 31540,
+          "cache_write_tokens": 55,
+          "completion_tokens": 321,
+          "cost_usd": 0.0103035,
+          "gate_reason": null
+        },
+        {
+          "turn": 6,
+          "policy_pick": "gpt-5.6-terra",
+          "served_by": "gpt-5.6-terra",
+          "switched": false,
+          "prompt_tokens": 31935,
+          "cached_tokens": 31595,
+          "cache_write_tokens": 337,
+          "completion_tokens": 6,
+          "cost_usd": 0.0072395,
+          "gate_reason": null
+        }
+      ]
+    },
+    {
+      "arm": "30K gpt-5.6-sol/gpt-5.6-terra gated",
+      "turns": 6,
+      "switches": 0,
+      "cost_usd": 0.24354,
+      "cache_hit_rate": 0.831,
+      "models": [
+        "gpt-5.6-sol",
+        "gpt-5.6-sol",
+        "gpt-5.6-sol",
+        "gpt-5.6-sol",
+        "gpt-5.6-sol",
+        "gpt-5.6-sol"
+      ],
+      "turns_detail": [
+        {
+          "turn": 1,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "switched": false,
+          "prompt_tokens": 31111,
+          "cached_tokens": 0,
+          "cache_write_tokens": 31108,
+          "completion_tokens": 7,
+          "cost_usd": 0.155692,
+          "gate_reason": "no_session"
+        },
+        {
+          "turn": 2,
+          "policy_pick": "gpt-5.6-sol",
+          "served_by": "gpt-5.6-sol",
+          "switched": false,
+          "prompt_tokens": 31176,
+          "cached_tokens": 31108,
+          "cache_write_tokens": 65,
+          "completion_tokens": 496,
+          "cost_usd": 0.0227002,
+          "gate_reason": "same_model"
+        },
+        {
+          "turn": 3,
+          "policy_pick": "gpt-5.6-terra",
+          "served_by": "gpt-5.6-sol",
+          "switched": false,
+          "prompt_tokens": 31534,
+          "cached_tokens": 31173,
+          "cache_write_tokens": 358,
+          "completion_tokens": 8,
+          "cost_usd": 0.0144312,
+          "gate_reason": "downgrade_not_worth_losing_cache"
+        },
+        {
+          "turn": 4,
+          "policy_pick": "gpt-5.6-terra",
+          "served_by": "gpt-5.6-sol",
+          "switched": false,
+          "prompt_tokens": 31556,
+          "cached_tokens": 31531,
+          "cache_write_tokens": 22,
+          "completion_tokens": 11,
+          "cost_usd": 0.012954400000000001,
+          "gate_reason": "downgrade_not_worth_losing_cache"
+        },
+        {
+          "turn": 5,
+          "policy_pick": "gpt-5.6-terra",
+          "served_by": "gpt-5.6-sol",
+          "switched": false,
+          "prompt_tokens": 31611,
+          "cached_tokens": 31553,
+          "cache_write_tokens": 55,
+          "completion_tokens": 529,
+          "cost_usd": 0.0234882,
+          "gate_reason": "downgrade_not_worth_losing_cache"
+        },
+        {
+          "turn": 6,
+          "policy_pick": "gpt-5.6-terra",
+          "served_by": "gpt-5.6-sol",
+          "switched": false,
+          "prompt_tokens": 31902,
+          "cached_tokens": 31608,
+          "cache_write_tokens": 291,
+          "completion_tokens": 8,
+          "cost_usd": 0.0142702,
+          "gate_reason": "downgrade_not_worth_losing_cache"
+        }
+      ]
+    }
+  ],
+  "spend_by_run": {
+    "phase1": 0.0322,
+    "phase2": 0.3466,
+    "phase3_4": 0.72157
+  },
+  "total_spend_usd": 1.1004
+}

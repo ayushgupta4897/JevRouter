@@ -478,7 +478,122 @@ proxy mode's own e2e script, with one addition specific to this mode:
 address and asserts decisions still succeed — if this router ever attempted to call a target,
 every request in that script would fail with a connection error instead.
 
-## 12. Roadmap
+## 12. Cache-aware switching (2026-09-27)
+
+### 12.1 The problem
+
+Prompt caches are per model and per provider. When a session moves to a different model, the
+next turn re-sends the whole conversation at full price. On OpenAI GPT-5.6+ and on Anthropic
+that re-send is billed as a cache *write* at 1.25× input. Staying costs 0.1× input. So a cold
+switch costs about 12.5× what staying warm costs on the prefix, and a cheaper model is not the
+same as a cheaper turn. Deferent originally decided each turn on its own, which is where
+per-request routers lose money on long sessions. Switchyard doesn't cover it either:
+`cache_eligibility.rs` is eval-only, and its session affinity (`AffinityRouter`,
+`capable_hold_turns`) is process-local, keyed by a session header that decision mode never
+receives, and never puts a price on the cache.
+
+### 12.2 How others handle it (researched 2026-09-27)
+
+| Who | Approach | What we took |
+|---|---|---|
+| OpenAI | Automatic prefix caching. GPT-5.6+: reads 0.1×, writes 1.25×, 30-min TTL, 1,024-token minimum. `usage.prompt_tokens_details.{cached_tokens, cache_write_tokens}`. No sign that tiers share a cache. | The pricing model and the usage fields |
+| Anthropic | `cache_control` breakpoints: writes 1.25× (5 min) or 2× (1 h), reads 0.1× (0.05× on Opus 5.5); minimum 512–4,096 tokens. Changing effort or thinking settings invalidates cached messages. | `cache_write` and `min_cacheable_tokens` as per-model settings |
+| OpenRouter | Provider stickiness per (account, model, conversation), 10-min idle expiry. The Auto Router reuses a model "while it remains among the top candidates". The Jev Router weighs expected gain against cost, including lost cache. | Confirms the approach. The public criticism of Jev Router's "one-way premium trap" (keeping the premium model for "what colour is a banana?") shaped §12.3's pricing of downgrades |
+| vLLM Semantic Router (SAAR) | Hard locks for tool results, 300-s idle reset, a switch penalty that grows with session length and input price; 79% fewer switches. | The closest analogue. We price the penalty in dollars instead of using weights |
+| LiteLLM | Measured "a switch is not an eviction": 97% of switch-backs landed warm at a 5-min TTL. `session_affinity` is off by default. | `other_warm_caches`. §12.4 reproduced this on real OpenAI calls |
+| SGLang, Dynamo, llm-d | KV and prefix-aware routing between *replicas* of one model. | Not applicable: that's choosing a replica, not a model |
+
+### 12.3 Design
+
+A stateless gate runs after the route's own policy decision (`routerctl/cache.py`). The gateway
+reports session state in the request, so no session table lives in Deferent. The rules, in order:
+
+1. **Nothing to protect, so follow the policy:**
+   * no `session`
+   * the current model isn't in this route
+   * no prices for either model
+   * idle time ≥ the model's TTL
+   * prefix below the provider's cacheable minimum
+2. **Judge outage, so hold the current model.** A fall-open default would pay a cold write on
+   every request until the judge recovers.
+3. **Upgrade (the pricier model on a warm turn), a quality call.** Allowed, unless the judge's
+   confidence is below `upgrade_min_confidence`. This hysteresis around the threshold is what
+   damps oscillation.
+4. **Downgrade, a cost call priced exactly.** Take the cost of staying warm for `horizon_turns`
+   and the cost of a cold first turn (at `cache_write`) followed by warm turns on the cheaper
+   model. Switch only if switching saves at least `switch_margin`. If the target model still
+   holds an earlier prefix (`other_warm_caches`), only the turns since then count as cold.
+
+Because downgrades are priced rather than banned, the gate can't fall into the premium trap. If
+the cheaper model is cheaper even cold, it switches. That's true of luna vs. sol at every size
+tested, because luna's cold rate is below sol's warm rate.
+
+### 12.4 Real validation (`experiments/cache_validation.py`, results in `experiments/results/cache-validation.json`)
+
+The script plays the gateway against real OpenAI. Every dollar figure is real `usage` × the
+prices in `clients.yaml`. Each arm gets a random nonce at the start of the prompt, so no arm can
+use another arm's cache. Total spend was $1.10.
+
+1. **Premise, ~7.7K-token prefix:**
+
+   | Call | Cached tokens | Written tokens |
+   |---|---|---|
+   | terra, cold | 0 | 7,740 |
+   | terra again | 7,723 | 55 |
+   | luna (a switch) | 0 | 7,734 |
+   | back to terra | 7,723 | 11 |
+
+   So caches are per model, and a switch-back within the TTL is warm.
+
+2. **Scripted flip-flop, 10 turns, ~8K context.** Gated and ungated cost the same:
+   * sol ↔ terra: $0.107 gated vs. $0.106 ungated
+   * sol ↔ luna: $0.067 vs. $0.067
+
+   The gate agreed with every switch. At this size, the output-price gap outweighs one cold
+   write. The first cold write into each model is the only real cost, because both caches stay
+   warm for 30 minutes. It's still a useful result: the gate added no false holds.
+
+3. **Long context, ~31K tokens.** Two hard turns on sol, then four easy follow-ups the policy
+   sends to terra.
+   * Ungated: a $0.079 cold write into terra.
+   * Gated: holds sol (`downgrade_not_worth_losing_cache`) at a warm 0.1× read rate.
+   * Result: **$0.2435 vs. $0.2820 for the session (−14%)**, and **$0.065 vs. $0.103 for the
+     four follow-ups (−37%)**, all served by the stronger model.
+
+4. **End to end: real decision server, real Jev judge, complexity route sol/terra.** Jev picked
+   sol on all 8 turns, including "What region is this log from?". The gate reported `same_model`
+   throughout. This is a separate finding about complexity routing, not about caching: Jev judges
+   the whole request, and with an 8K-token log in context it forecasts "needs the strong model"
+   even for trivial questions. It's worth a follow-up, for example judging complexity on the
+   latest user turn plus a summary.
+
+**What this means.** The gate earns its keep on long contexts, where one cold write costs more
+than several warm turns. On short contexts it rightly gets out of the way. Flip-flopping between
+two models that are both already warm is cheap on OpenAI's 30-minute TTL. That matches
+LiteLLM's measurement, and it's why the gate prices `other_warm_caches` rather than treating
+every switch as losing a cache. Evidence from the design review, not a new experiment: our own
+Sol price was out of date ($5/$30 in `evals/models.py`; the current promotional price is $4/$20
+"at least through November 21, 2026"). That's fixed, and earlier Sol cost figures in this
+document are slightly high.
+
+### 12.5 Limitations and traps not handled
+
+* **Token counts are estimates** (characters ÷ 4) unless the gateway sends `cached_prefix_tokens`.
+  When it does, the real count wins.
+* **Long-context pricing isn't modelled.** Above 272K input tokens, OpenAI doubles input and
+  cache rates and charges 1.5× on output.
+* **Adjusting effort instead of switching** isn't implemented. On Anthropic, changing effort or
+  thinking settings invalidates cached messages. On OpenAI, effort changes are only cache-safe
+  through `configuration_update` items. A future "stay but raise effort" option has to be sent in
+  those cache-safe forms, or it's just another cold switch.
+* **Cache-busting prefixes are the gateway's problem:** timestamps early in the system prompt,
+  unordered tool lists, tool definitions changing mid-session. The gate can't see them. When the
+  gateway reports real `cached_prefix_tokens`, a busted prefix shows up as a low count and the
+  gate stops protecting it.
+* **Caches aren't shared across providers.** `current_client` distinguishes the same model on
+  two clients. Provider stickiness below that level (OpenRouter's) belongs to the gateway.
+
+## 13. Roadmap
 
 1. **Routing-accuracy validation**: the judge-only eval (predict vs. a ground-truth label from
    running both tiers) and Switchyard's `benchmark/` TB2.1 subset with the Jev judge vs. the LLM
@@ -501,7 +616,12 @@ every request in that script would fail with a connection error instead.
    rule, the same idea as item 2 above but built for the stateless, per-request shape decision
    mode actually needs rather than Switchyard's session-tracked native algorithm.
 
-## 13. Sources
+7. **Complexity judging on long contexts** (found in §12.4): with an 8K-token document in
+   context, Jev forecast "strong" even for one-line lookups. Try judging the latest user turn,
+   plus a compact description of the context, instead of the whole request, and measure the
+   effect on routing accuracy with the existing eval harness.
+
+## 14. Sources
 
 Switchyard: repo README, `docs/routing_algorithms/*.md`, `crates/libsy/src/algorithms/util/llm_judge.rs`,
 `crates/libsy/src/prompts/*`, `benchmark/routing-profiles/*`; NVIDIA blog "Route AI Agent Workloads
@@ -512,3 +632,10 @@ api.typesafe.ai/openapi.json); docs.typesafe.ai/api; Pydantic AI TypeSafe docs; 
 harness with Jev"; APIMaster "Jev vs LLMs"; "The Jev File" independent checks; systemonemodels.org
 alternatives index; OpenRouter Decisions endpoint notes; DevelopersIO "replacing model routing with
 TypeSafe (Jev)"; Sean Goedecke, "System One models can train their own replacements".
+Cache-aware switching (§12, all checked 2026-09-27): developers.openai.com/api/docs/guides/prompt-caching,
+/api/docs/pricing, /api/docs/models/gpt-5.6-sol; platform.claude.com/docs/en/build-with-claude/prompt-caching;
+openrouter.ai/docs/guides/best-practices/prompt-caching; openrouter.ai/blog/announcements/introducing-the-new-auto-router;
+x.com/OpenRouter/status/2103610898690855161 (Jev Router); vllm.ai/blog/2026-06-02-session-aware-agentic-routing;
+docs.litellm.ai/docs/auto_router/prompt_caching; lmsys.org/blog/2024-12-04-sglang-v0-4;
+docs.nvidia.com/dynamo/latest/user-guides/kv-cache-aware-routing; blog.dailydoseofds.com "A cheaper model
+does not imply a cheaper turn"; jfrog.com/blog/why-model-routing-backfires.

@@ -166,13 +166,57 @@ Deferent never needs to know Bifrost (or LiteLLM, or your own gateway) exists, a
 as a real forwarding proxy instead (Switchyard itself, with live reload) — see
 [`docs/TEAM_CONFIG.md`](docs/TEAM_CONFIG.md) for both modes.
 
+## Cache-aware switching
+
+Provider prompt caches are per model. Move a long session to a different model and the next
+turn pays full price, plus a 1.25× cache-write premium on GPT-5.6+, to re-send the whole
+conversation. A router that re-decides every turn can cost more than it saves.
+
+So a decision can also weigh the cache. Tell Deferent which model served the previous turn and
+how much of the conversation it has cached, and it prices the switch before recommending it:
+
+```json
+{"model": "deployment/coding-agent", "messages": [...],
+ "session": {"current_model": "gpt-5.6-sol", "cached_prefix_tokens": 31176, "idle_seconds": 40}}
+```
+
+* **Downgrades have to pay for themselves.** Deferent compares staying warm against paying a cold
+  first turn on the cheaper model, over the next few turns. If switching doesn't save money, it
+  holds the current model.
+* **Upgrades need a decisive verdict.** A borderline judge verdict won't throw away a warm cache.
+  A clear one will.
+* **A cold cache is free to leave.** First turn, idle past the provider's TTL, or a prefix too
+  short to cache: the policy decides alone.
+* **A judge outage holds the current model.** It doesn't fall back to the default tier, which
+  would pay a cold write on every request until the judge recovers.
+
+Every response has a `cache` block that says what happened and why, so an override is never
+silent. For example: `{"reason": "downgrade_not_worth_losing_cache", "held_current_model": true,
+"policy_model": "gpt-5.6-terra", "stay_cost_usd": 0.1241, "switch_cost_usd": 0.1388}`. The
+policy's own pick stays first in `fallback_model_ids`. Leave out `session` and nothing changes.
+
+The gateway already has what it needs. On OpenAI, `cached_prefix_tokens` is the previous turn's
+`usage.prompt_tokens`. Prices live in `clients.yaml` under `pricing:`, and the config is in
+[`docs/TEAM_CONFIG.md`](docs/TEAM_CONFIG.md#cache-aware-switching).
+
+Tested against real OpenAI calls (`experiments/cache_validation.py`, real usage × real prices):
+
+* **Caches are per model.** A switch showed 0 cached tokens.
+* **Switching back within the TTL is warm.** Flip-flopping between two already-warm models turned
+  out cheap; the first cold write is what costs money.
+* **Long context:** a 31K-token session with a hard start and easy follow-ups cost **14% less**
+  gated. The four follow-ups alone cost **37% less**, and they stayed on the stronger model.
+* **Short context:** on an 8K-token context the gate correctly allowed every switch.
+
+The full record is in [`docs/DECISION.md` §12](docs/DECISION.md#12-cache-aware-switching-2026-09-27).
+
 ## Quickstart
 
 ```bash
 scripts/build.sh                  # builds switchyard-server + bindings + jevjudge + routerctl, ~3 min
 source .venv/bin/activate
 
-pytest jevjudge routerctl -q      # 68 tests: compilers, live-reload, fail-open, every policy
+pytest jevjudge routerctl -q      # 127 tests: compilers, live-reload, fail-open, cache gate, every policy
 routerctl validate teams/          # schema check + a real switchyard-server --dry-run
 
 scripts/e2e_routerctl_decide.sh   # proves decision-only end to end (target genuinely never dialed)
