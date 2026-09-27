@@ -12,3 +12,15 @@ clients:
     format: openai_chat
     base_url: https://openrouter.ai/api/v1
     api_key_env: OPENROUTER_API_KEY
+
+# Per-model prices (USD per 1M tokens), used only by cache-aware switching in decision mode to
+# price the prompt cache a model switch would throw away. Omit a model and switches involving it
+# simply follow the policy. Source: developers.openai.com/api/docs/pricing, standard tier, short
+# context (<= 272K input tokens), checked 2026-09-27. GPT-5.6+ caching: reads 0.1x input,
+# writes 1.25x input, 30-minute TTL, 1,024-token minimum. gpt-5.6-sol's price is promotional
+# "through November 21, 2026" -- revisit then.
+pricing:
+  gpt-5.6-luna:  { input: 0.20,  cached_input: 0.02, cache_write: 0.25,  output: 1.20,  cache_ttl_seconds: 1800 }
+  gpt-5.6-terra: { input: 2.00,  cached_input: 0.20, cache_write: 2.50,  output: 12.00, cache_ttl_seconds: 1800 }
+  gpt-5.6-sol:   { input: 4.00,  cached_input: 0.40, cache_write: 5.00,  output: 20.00, cache_ttl_seconds: 1800 }
+  gpt-6-astra:   { input: 10.00, cached_input: 1.00, cache_write: 12.50, output: 50.00, cache_ttl_seconds: 1800 }

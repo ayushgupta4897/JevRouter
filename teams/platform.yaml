@@ -21,3 +21,8 @@ routes:
       weak: { id: gpt-5.6-sol, client: openai }
       strong: { id: gpt-6-astra, client: openai }
     confirmations: 2
+    # Agent sessions run long, so the prompt cache is worth protecting. Weigh any switch over
+    # the next 10 turns instead of the default 5. (Every route gets cache-aware switching by
+    # default; it only kicks in when the gateway sends `session`.)
+    cache:
+      horizon_turns: 10

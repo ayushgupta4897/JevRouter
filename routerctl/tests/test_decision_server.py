@@ -119,3 +119,103 @@ def test_route_table_reload_picks_up_a_new_route_and_rejects_a_broken_one(teams_
     (teams_dir / "y.yaml").write_text("team: y\nroutes: []\n")  # min_length=1 -> invalid
     assert table.maybe_reload() is False  # reload rejected
     assert set(table.routes) == {"deployment/qa", "deployment/new"}  # last-good table kept live
+
+
+# ---------------------------------------------------------------------------- cache-aware switching
+
+# Identical prices on both tiers: any switch away from a warm model is then pure cache loss, so
+# the gate must hold it -- whichever tier the mock judge happens to pick. Keeps these tests
+# deterministic without depending on the mock's verdict.
+PRICED_CLIENTS_YAML = CLIENTS_YAML + """\
+pricing:
+  m-weak:   { input: 2.0, cached_input: 0.2, output: 12.0 }
+  m-strong: { input: 2.0, cached_input: 0.2, output: 12.0 }
+"""
+
+LONG_HISTORY = [
+    {"role": "user", "content": "x" * 40_000},       # ~10K tokens: well above the cache minimum
+    {"role": "assistant", "content": "y" * 40_000},
+    {"role": "user", "content": "and now?"},
+]
+
+
+@pytest.fixture
+def priced_teams_dir(teams_dir):
+    (teams_dir.parent / "clients.yaml").write_text(PRICED_CLIENTS_YAML)
+    return teams_dir
+
+
+def test_every_decision_says_what_the_cache_gate_did(teams_dir):
+    app = build_app(teams_dir, judge=mock_judge())
+    with TestClient(app) as client:
+        body = client.post("/v1/decide", json={"model": "deployment/qa", "messages": [{"role": "user", "content": "hello"}]}).json()
+        assert body["cache"] == {"reason": "no_session", "held_current_model": False, "policy_model": body["selected_model"]}
+
+
+def test_switch_away_from_a_warm_model_is_held_and_explained(priced_teams_dir):
+    app = build_app(priced_teams_dir, judge=mock_judge())
+    with TestClient(app) as client:
+        pick = client.post("/v1/decide", json={"model": "deployment/qa", "messages": LONG_HISTORY}).json()["selected_model"]
+        other = "m-strong" if pick == "m-weak" else "m-weak"
+        body = client.post("/v1/decide", json={
+            "model": "deployment/qa", "messages": LONG_HISTORY,
+            "session": {"current_model": other, "cached_prefix_tokens": 20_000, "idle_seconds": 30},
+        }).json()
+        assert body["selected_model"] == other
+        assert body["fallback_model_ids"][0] == pick  # the policy's own pick stays available
+        assert body["cache"]["held_current_model"] is True
+        assert body["cache"]["reason"] == "downgrade_not_worth_losing_cache"
+        assert body["cache"]["policy_model"] == pick
+        assert body["cache"]["stay_cost_usd"] < body["cache"]["switch_cost_usd"]
+
+
+def test_staying_on_the_same_model_is_followed(priced_teams_dir):
+    app = build_app(priced_teams_dir, judge=mock_judge())
+    with TestClient(app) as client:
+        pick = client.post("/v1/decide", json={"model": "deployment/qa", "messages": LONG_HISTORY}).json()["selected_model"]
+        body = client.post("/v1/decide", json={"model": "deployment/qa", "messages": LONG_HISTORY, "session": {"current_model": pick}}).json()
+        assert body["selected_model"] == pick
+        assert body["cache"]["reason"] == "same_model"
+
+
+def test_expired_cache_lets_the_policy_switch_freely(priced_teams_dir):
+    app = build_app(priced_teams_dir, judge=mock_judge())
+    with TestClient(app) as client:
+        pick = client.post("/v1/decide", json={"model": "deployment/qa", "messages": LONG_HISTORY}).json()["selected_model"]
+        other = "m-strong" if pick == "m-weak" else "m-weak"
+        body = client.post("/v1/decide", json={"model": "deployment/qa", "messages": LONG_HISTORY, "session": {"current_model": other, "idle_seconds": 3600}}).json()
+        assert body["selected_model"] == pick
+        assert body["cache"]["reason"] == "cache_expired"
+
+
+def test_judge_outage_mid_session_holds_the_current_model(priced_teams_dir):
+    app = build_app(priced_teams_dir, judge=unreachable_judge())
+    with TestClient(app) as client:
+        body = client.post("/v1/decide", json={"model": "deployment/qa", "messages": LONG_HISTORY, "session": {"current_model": "m-weak"}}).json()
+        assert body["judge_error"] is not None
+        assert body["selected_model"] == "m-weak"  # not the fail-open capable tier
+        assert body["cache"]["reason"] == "judge_unavailable_hold"
+
+
+@pytest.mark.parametrize("session", [
+    {"current_model": "m-weak", "surprise": 1},          # typo'd field: rejected, not ignored
+    {"current_model": "m-weak", "cached_prefix_tokens": -1},
+    {"current_model": "m-weak", "remaining_turns": 0},
+    {"current_model": "m-weak", "other_warm_caches": {"m-strong": -5}},
+])
+def test_malformed_session_is_a_422(teams_dir, session):
+    app = build_app(teams_dir, judge=mock_judge())
+    with TestClient(app) as client:
+        resp = client.post("/v1/decide", json={"model": "deployment/qa", "messages": LONG_HISTORY, "session": session})
+        assert resp.status_code == 422
+
+
+def test_pricing_reloads_with_clients_yaml(teams_dir):
+    from routerctl.decision_server import RouteTable
+
+    table = RouteTable(teams_dir)
+    table.load()
+    assert table.pricing == {}
+    (teams_dir.parent / "clients.yaml").write_text(PRICED_CLIENTS_YAML)
+    assert table.maybe_reload() is True
+    assert set(table.pricing) == {"m-weak", "m-strong"}

@@ -24,7 +24,10 @@ class ModelPricing:
 CATALOG: dict[str, ModelPricing] = {
     "gpt-5.6-luna": ModelPricing("gpt-5.6-luna", 0.20, 1.20, "cheapest GPT-5.6 tier"),
     "gpt-5.6-terra": ModelPricing("gpt-5.6-terra", 2.00, 12.00, "balanced GPT-5.6 tier"),
-    "gpt-5.6-sol": ModelPricing("gpt-5.6-sol", 5.00, 30.00, "flagship GPT-5.6 tier; promo pricing through 2026-11-21"),
+    # Promo price per developers.openai.com (re-checked 2026-09-27), "at least through November
+    # 21, 2026". Results recorded before that check (docs/DECISION.md, experiments/REPORT.md)
+    # priced Sol at the old $5/$30, so their Sol costs are slightly overstated.
+    "gpt-5.6-sol": ModelPricing("gpt-5.6-sol", 4.00, 20.00, "flagship GPT-5.6 tier; promo pricing through 2026-11-21"),
     "gpt-6-astra": ModelPricing("gpt-6-astra", 10.00, 50.00, "new flagship, launched 2026-09-03"),
     # Jev itself, for completeness when comparing router-judge cost, not answer quality.
     "jev-latest": ModelPricing("jev-latest", 0.042, 0.0, "TypeSafe System One; output is unmetered"),

@@ -53,12 +53,38 @@ class ClientDef(BaseModel):
     max_retries: int | None = Field(default=None, ge=0, le=10)
 
 
+class ModelPricing(BaseModel):
+    """What one model costs, in USD per 1M tokens -- only needed for cache-aware routing, which
+    has to price the cache a model switch would throw away. Platform-managed, like clients."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    input: float = Field(ge=0)
+    cached_input: float = Field(ge=0, description="Price of input tokens served from the prompt cache.")
+    output: float = Field(ge=0)
+    cache_write: float | None = Field(
+        default=None, ge=0,
+        description="Price of input tokens written into the cache, for providers that charge a "
+        "premium for it (Anthropic: 1.25x input for the 5-minute cache; OpenAI GPT-5.6+: 1.25x). "
+        "Omit where writes cost the normal input price (older OpenAI models, Gemini implicit).",
+    )
+    cache_ttl_seconds: int = Field(default=300, ge=1, description="Idle time after which the cache is assumed cold.")
+    min_cacheable_tokens: int = Field(default=1024, ge=0, description="Prefixes shorter than this are never cached.")
+
+    @model_validator(mode="after")
+    def _cached_not_above_input(self) -> "ModelPricing":
+        if self.cached_input > self.input:
+            raise ConfigError(f"cached_input ({self.cached_input}) cannot exceed input ({self.input})")
+        return self
+
+
 class ClientsFile(BaseModel):
     """The platform-managed ``clients.yaml``: every upstream a team's routes may reference."""
 
     model_config = ConfigDict(extra="forbid")
 
     clients: dict[str, ClientDef]
+    pricing: dict[str, ModelPricing] = Field(default_factory=dict, description="Keyed by model id.")
 
     @model_validator(mode="after")
     def _reserved_name(self) -> "ClientsFile":
@@ -185,11 +211,38 @@ RoutePolicy = Annotated[
 ]
 
 
+class CacheConfig(BaseModel):
+    """Cache-aware switching for one route (decision-only mode). Inert unless a request says
+    which model served the session's previous turn -- see `routerctl/cache.py`."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    enabled: bool = True
+    horizon_turns: int = Field(
+        default=5, ge=1,
+        description="How many upcoming turns a switch's cost or savings is weighed over.",
+    )
+    expected_output_tokens: int = Field(default=500, ge=0, description="Per-turn output estimate, for pricing a turn.")
+    switch_margin: float = Field(
+        default=0.10, ge=0, le=1,
+        description="A downgrade must save at least this fraction of staying's cost over the horizon.",
+    )
+    upgrade_min_confidence: float = Field(
+        default=0.2, ge=0, le=1,
+        description="An upgrade that would drop a warm cache needs a judge verdict at least this "
+        "decisive; a borderline verdict holds the current model instead.",
+    )
+
+
+_ROUTE_LEVEL_KEYS = {"name", "policy", "cache"}
+
+
 class Route(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     name: str = Field(description="The model ID clients send, e.g. 'deployment/transcription'.")
     policy: RoutePolicy
+    cache: CacheConfig = Field(default_factory=CacheConfig)
 
     @model_validator(mode="before")
     @classmethod
@@ -198,15 +251,18 @@ class Route(BaseModel):
         # pydantic's discriminated union reads -- so the route's other fields (models, default,
         # judge, ...) live at the same level as `policy`, not nested under a `spec:` key. This
         # reshapes {name, policy, **rest} -> {name, policy: {policy: <tag>, **rest}} once, so
-        # both the human-facing YAML and the discriminated union stay simple.
+        # both the human-facing YAML and the discriminated union stay simple. Route-level keys
+        # (`cache`) stay on the route, not the policy.
         if not isinstance(data, dict) or "policy" not in data:
             return data
         if isinstance(data["policy"], dict):
             return data
-        name = data.get("name")
         policy_tag = data["policy"]
-        rest = {k: v for k, v in data.items() if k not in {"name", "policy"}}
-        return {"name": name, "policy": {"policy": policy_tag, **rest}}
+        rest = {k: v for k, v in data.items() if k not in _ROUTE_LEVEL_KEYS}
+        reshaped = {"name": data.get("name"), "policy": {"policy": policy_tag, **rest}}
+        if "cache" in data:
+            reshaped["cache"] = data["cache"]
+        return reshaped
 
     @model_validator(mode="after")
     def _valid_name(self) -> "Route":

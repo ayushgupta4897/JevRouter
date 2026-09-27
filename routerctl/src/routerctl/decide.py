@@ -39,6 +39,7 @@ class Decision:
     # verified empirically (see routerctl/tests/test_decide.py). Never silent: check this field.
     latency_ms: float
     outcome_id: str | None
+    cache: dict | None = None  # set by cache.apply(): what the cache gate did and why
 
 
 def _windowed(request: dict, recent_turn_window: int | None) -> dict:

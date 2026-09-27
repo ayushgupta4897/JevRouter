@@ -158,6 +158,71 @@ connection pool rather than duplicating it. If you need genuinely different sett
 "same" model in two routes, give it a second entry in `clients.yaml` instead of relying on
 `extra_body` to distinguish them — `routerctl validate` will refuse to compile that ambiguity.
 
+## Cache-aware switching
+
+Decision-only mode. It's on for every route, and it does nothing until a request includes
+`session`, which says which model served the previous turn. The gateway then gets a decision
+that prices what a model switch would cost in lost prompt cache. The design and real-world
+results are in `docs/DECISION.md` §12.
+
+**Per route (optional).** The defaults suit most routes:
+
+```yaml
+  - name: deployment/coding-agent
+    policy: escalation
+    models: { ... }
+    cache:
+      enabled: true                 # false = always follow the policy
+      horizon_turns: 10             # weigh a switch over this many upcoming turns (default 5)
+      expected_output_tokens: 500   # per-turn output estimate for pricing (default 500)
+      switch_margin: 0.10           # a downgrade must save >= 10% over the horizon (default)
+      upgrade_min_confidence: 0.2   # a weaker verdict won't drop a warm cache to upgrade (default)
+```
+
+Raise `horizon_turns` for long agent sessions. It makes downgrades harder, because a cold start
+costs you once and the saving comes back every turn after.
+
+**Prices (platform-managed, `clients.yaml`).** Prices are in USD per 1M tokens, keyed by model
+id. A switch involving a model with no price listed just follows the policy.
+
+```yaml
+pricing:
+  gpt-5.6-terra: { input: 2.00, cached_input: 0.20, cache_write: 2.50, output: 12.00, cache_ttl_seconds: 1800 }
+```
+
+| Field | Default | Meaning |
+|---|---|---|
+| `input`, `cached_input`, `output` | required | Standard rates. `cached_input` must be ≤ `input`. |
+| `cache_write` | none | Premium for writing uncached input into the cache: 1.25× input on OpenAI GPT-5.6+ and on Anthropic's 5-minute cache. Omit it where writes cost the normal input price. |
+| `cache_ttl_seconds` | 300 | Idle time after which the cache counts as gone. OpenAI GPT-5.6+ is 1800. |
+| `min_cacheable_tokens` | 1024 | Prompts shorter than this are never cached. It's 512–4096 on Anthropic, depending on model. |
+
+**The request's `session` field.** Every field is optional, and unknown fields are rejected.
+
+| Field | What the gateway sends |
+|---|---|
+| `current_model` | The model that served the previous turn. |
+| `current_client` | Its client, if the route uses the same model on more than one. |
+| `cached_prefix_tokens` | How much of the conversation that model now has cached: everything read from cache *plus* everything written. On OpenAI, that's the previous turn's `usage.prompt_tokens`. On Anthropic, it's `cache_read_input_tokens + cache_creation_input_tokens`. Don't send the read count alone: a cold turn reads 0 but still leaves the cache warm. |
+| `idle_seconds` | Seconds since the previous turn. |
+| `remaining_turns` | If you know how many turns are left, this overrides `horizon_turns`. |
+| `other_warm_caches` | `{model_id: tokens}` for other models this session used within their TTL. Measured on real OpenAI calls: switching back to one is warm, so it's priced that way. |
+
+Every decision's `cache.reason` is one of the following.
+
+The gate followed the policy's pick when the reason is:
+* `no_session`, `same_model`, `disabled`
+* `current_not_in_route`, `no_pricing`
+* `cache_expired`, `prefix_below_cache_minimum`
+* `upgrade`, `downgrade_saves_money`
+
+The gate held the current model when the reason is:
+* `downgrade_not_worth_losing_cache`
+* `upgrade_verdict_too_borderline`
+* `judge_unavailable_hold`
+
+When the gate holds, the policy's pick stays first in `fallback_model_ids`.
+
 ## What "live" actually means
 
 Both modes watch every file and reject a bad edit while keeping your last good config serving —

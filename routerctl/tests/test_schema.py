@@ -206,3 +206,47 @@ def test_judge_can_be_overridden_per_route():
     judge = team.routes[0].policy.judge
     assert judge.id == "gpt-5.6-terra"
     assert judge.client == "openai"
+
+
+# ---------------------------------------------------------------------------- cache-aware routing
+
+
+def _route(**extra) -> dict:
+    return {"name": "r", "policy": "complexity", "models": {"weak": {"id": "a", "client": "openai"}, "strong": {"id": "b", "client": "openai"}}, **extra}
+
+
+def test_cache_block_stays_on_the_route_not_the_policy():
+    route = TeamFile.model_validate({"team": "x", "routes": [_route(cache={"horizon_turns": 8, "switch_margin": 0.2})]}).routes[0]
+    assert route.cache.horizon_turns == 8
+    assert route.cache.switch_margin == 0.2
+    assert route.policy.policy == "complexity"
+
+
+def test_cache_defaults_to_enabled_when_omitted():
+    route = TeamFile.model_validate({"team": "x", "routes": [_route()]}).routes[0]
+    assert route.cache.enabled is True
+    assert route.cache.horizon_turns == 5
+
+
+@pytest.mark.parametrize("cache", [{"horizon_turns": 0}, {"switch_margin": 1.5}, {"upgrade_min_confidence": -0.1}, {"horizn_turns": 5}])
+def test_cache_block_is_validated(cache):
+    with pytest.raises(ValidationError):
+        TeamFile.model_validate({"team": "x", "routes": [_route(cache=cache)]})
+
+
+def test_pricing_parses_with_openai_style_cache_writes():
+    clients = ClientsFile.model_validate({
+        "clients": {"openai": {"base_url": "https://api.openai.com/v1"}},
+        "pricing": {"gpt-5.6-terra": {"input": 2.0, "cached_input": 0.2, "cache_write": 2.5, "output": 12.0, "cache_ttl_seconds": 1800}},
+    })
+    terra = clients.pricing["gpt-5.6-terra"]
+    assert (terra.cache_write, terra.cache_ttl_seconds, terra.min_cacheable_tokens) == (2.5, 1800, 1024)
+
+
+def test_pricing_rejects_a_cached_rate_above_the_input_rate():
+    with pytest.raises(ValidationError, match="cannot exceed"):
+        ClientsFile.model_validate({"clients": {"openai": {"base_url": "x"}}, "pricing": {"m": {"input": 1.0, "cached_input": 2.0, "output": 1.0}}})
+
+
+def test_pricing_is_optional():
+    assert ClientsFile.model_validate({"clients": {"openai": {"base_url": "x"}}}).pricing == {}
