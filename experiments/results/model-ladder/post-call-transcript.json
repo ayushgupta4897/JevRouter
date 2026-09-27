@@ -1,0 +1,587 @@
+{
+  "name": "post-call-transcript",
+  "route_name": "experiment/post-call-transcript",
+  "policy": "intent",
+  "roster": [
+    "mistralai/ministral-8b-2512",
+    "deepseek/deepseek-v4-pro"
+  ],
+  "accuracy": 1.0,
+  "routed_cost_usd": 0.004499776959999999,
+  "models_used": {
+    "mistralai/ministral-8b-2512": 10,
+    "deepseek/deepseek-v4-pro": 8
+  },
+  "items": [
+    {
+      "item_id": "call-01",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "mistralai/ministral-8b-2512",
+        "provider": "Mistral",
+        "cost_usd": 1.38e-05,
+        "input_tokens": 70,
+        "output_tokens": 22,
+        "latency_ms": 696.6347990000941,
+        "text": "The delivery address mentioned in the transcript is:\n\n**42 Baker Street, Apartment 4B**",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "mistralai/ministral-8b-2512",
+          "provider": "Mistral",
+          "cost_usd": 1.38e-05,
+          "input_tokens": 70,
+          "output_tokens": 22,
+          "latency_ms": 829.3340410000383,
+          "text": "The delivery address mentioned in the transcript is:\n\n**42 Baker Street, Apartment 4B**",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "deepseek/deepseek-v4-pro",
+          "provider": "Baidu",
+          "cost_usd": 7.76048e-05,
+          "input_tokens": 68,
+          "output_tokens": 78,
+          "latency_ms": 2665.1898249999704,
+          "text": "The delivery address mentioned is 42 Baker Street, apartment 4B.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "call-02",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "mistralai/ministral-8b-2512",
+        "provider": "Mistral",
+        "cost_usd": 1.05e-05,
+        "input_tokens": 52,
+        "output_tokens": 18,
+        "latency_ms": 820.676924999816,
+        "text": "The order number mentioned in the transcript is **ORD-77213**.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "call-03",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "mistralai/ministral-8b-2512",
+        "provider": "Mistral",
+        "cost_usd": 8.7e-06,
+        "input_tokens": 40,
+        "output_tokens": 18,
+        "latency_ms": 1607.7232430000095,
+        "text": "The customer provided the email address:\n\n**j.martinez88@example.com**",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "call-04",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "mistralai/ministral-8b-2512",
+        "provider": "Mistral",
+        "cost_usd": 9.9e-06,
+        "input_tokens": 43,
+        "output_tokens": 23,
+        "latency_ms": 829.5481650000056,
+        "text": "The customer gave the callback number **555-0142** with **extension 9**.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "mistralai/ministral-8b-2512",
+          "provider": "Mistral",
+          "cost_usd": 9.9e-06,
+          "input_tokens": 43,
+          "output_tokens": 23,
+          "latency_ms": 699.8022249999849,
+          "text": "The customer gave the callback number **555-0142** with **extension 9**.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "deepseek/deepseek-v4-pro",
+          "provider": "Baidu",
+          "cost_usd": 6.686485e-05,
+          "input_tokens": 39,
+          "output_tokens": 77,
+          "latency_ms": 2306.7535790000875,
+          "text": "The customer provided the callback number 555-0142, extension 9.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "call-05",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "mistralai/ministral-8b-2512",
+        "provider": "Mistral",
+        "cost_usd": 7.95e-06,
+        "input_tokens": 37,
+        "output_tokens": 16,
+        "latency_ms": 724.0273190000153,
+        "text": "The appointment number that was cancelled is **A-4471**.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "call-06",
+      "expected": "analysis",
+      "actual_label": "analysis",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4-pro",
+        "provider": "StreamLake",
+        "cost_usd": 0.000118958,
+        "input_tokens": 75,
+        "output_tokens": 160,
+        "latency_ms": 16859.154694999917,
+        "text": "The customer is extremely frustrated and angry due to a recurring issue that hasn\u2019t been resolved after multiple calls. Their sentiment is one of high dissatisfaction, with a clear threat to cancel, indicating a high escalation risk. If the problem isn\u2019t resolved promptly, the customer may churn, leading to potential loss and possible negative word-of-mouth.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "call-07",
+      "expected": "analysis",
+      "actual_label": "analysis",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4-pro",
+        "provider": "StreamLake",
+        "cost_usd": 6.8324e-05,
+        "input_tokens": 51,
+        "output_tokens": 91,
+        "latency_ms": 4002.447663999874,
+        "text": "The customer is satisfied with the onboarding experience, describing it as \"really smooth\" and feeling confident after the rep's clear explanation.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "mistralai/ministral-8b-2512",
+          "provider": "Mistral",
+          "cost_usd": 2.88e-05,
+          "input_tokens": 53,
+          "output_tokens": 139,
+          "latency_ms": 1628.9095700001326,
+          "text": "The customer's **overall satisfaction with the onboarding experience appears to be very high**. Their positive feedback\u2014including clear explanations, confidence in using the product, and a smooth process\u2014indicates a strong, positive experience.\n\n**Key indicators of satisfaction:**\n\u2705 **Smooth process** \u2013 No friction or confusion.\n\u2705 **Clear communication** \u2013 The rep explained things effectively.\n\u2705 **Confidence in product use** \u2013 The customer feels prepared and capable.\n\n**Likely rating:** **9\u201310/10** (or \"Very satisfied\" in a survey scale).\n\nWould you like help phrasing a follow-up question or analyzing this further?",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "deepseek/deepseek-v4-pro",
+          "provider": "StreamLake",
+          "cost_usd": 5.9276e-05,
+          "input_tokens": 51,
+          "output_tokens": 78,
+          "latency_ms": 3276.242782000054,
+          "text": "The customer expressed high satisfaction, describing the onboarding as smooth, clear, and leaving them feeling confident.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "call-08",
+      "expected": "analysis",
+      "actual_label": "analysis",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4-pro",
+        "provider": "Cloudflare",
+        "cost_usd": 0.0019389,
+        "input_tokens": 156,
+        "output_tokens": 690,
+        "latency_ms": 28042.770047999966,
+        "text": "Yes. This should be flagged as a trust risk.\n\nThe customer explicitly states they were promised a fix by Friday, it still hasn\u2019t happened, and they \u201cdon\u2019t trust anything\u201d they\u2019re told on calls. That indicates a broken commitment and elevated escalation risk. A manager should be made aware so the issue can be reviewed and the follow-up can be handled with appropriate oversight.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "call-09",
+      "expected": "analysis",
+      "actual_label": "analysis",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4-pro",
+        "provider": "Venice",
+        "cost_usd": 0.000653575,
+        "input_tokens": 46,
+        "output_tokens": 175,
+        "latency_ms": 8457.335274000116,
+        "text": "The customer appears very satisfied with the interaction, as indicated by their clear and positive response: \u201cNo, that covers it, thanks for the quick help!\u201d This suggests the issue was resolved efficiently and the service was appreciated. There is no risk to flag based on this exchange.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "call-10",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "mistralai/ministral-8b-2512",
+        "provider": "Mistral",
+        "cost_usd": 8.7e-06,
+        "input_tokens": 38,
+        "output_tokens": 20,
+        "latency_ms": 712.8046600000744,
+        "text": "The return reference number in the transcript is:\n\n**RTN-58821**",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "mistralai/ministral-8b-2512",
+          "provider": "Mistral",
+          "cost_usd": 8.1e-06,
+          "input_tokens": 38,
+          "output_tokens": 16,
+          "latency_ms": 470.2746069999648,
+          "text": "The return reference number is **RTN-58821**.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "deepseek/deepseek-v4-pro",
+          "provider": "StreamLake",
+          "cost_usd": 4.0078e-05,
+          "input_tokens": 35,
+          "output_tokens": 52,
+          "latency_ms": 2371.054933999858,
+          "text": "The return reference number is RTN-58821.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "call-11",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "mistralai/ministral-8b-2512",
+        "provider": "Mistral",
+        "cost_usd": 7.35e-06,
+        "input_tokens": 38,
+        "output_tokens": 11,
+        "latency_ms": 586.2626919999911,
+        "text": "The customer's plan renews in **March**.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "call-12",
+      "expected": "analysis",
+      "actual_label": "analysis",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4-pro",
+        "provider": "Azure",
+        "cost_usd": 0.00068337,
+        "input_tokens": 57,
+        "output_tokens": 150,
+        "latency_ms": 6876.05977599992,
+        "text": "This exchange suggests **strong positive brand sentiment**, specifically around customer service quality. The customer explicitly states it\u2019s their best support experience ever, highlighting that the agent \u201cactually listened\u201d \u2014 which implies the brand\u2019s support culture values empathy and attention over scripts or dismissiveness.\n\n**Would I flag anything for a manager?**  \nYes \u2014 but as positive reinforcement, not a problem. I\u2019d flag this as a **kudos-worthy interaction** for the agent\u2019s record, and suggest the manager consider:\n- Sharing the call internally as a best-practice example\n- Using the customer\u2019s feedback for a testimonial with permission\n- Noting that \u201clistening\u201d is a standout differentiator worth preserving as the team scales",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "call-13",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "mistralai/ministral-8b-2512",
+        "provider": "Mistral",
+        "cost_usd": 9.45e-06,
+        "input_tokens": 45,
+        "output_tokens": 18,
+        "latency_ms": 636.7179179999312,
+        "text": "The customer read out the serial number:\n\n**SN-2291-A**",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "mistralai/ministral-8b-2512",
+          "provider": "Mistral",
+          "cost_usd": 9.45e-06,
+          "input_tokens": 45,
+          "output_tokens": 18,
+          "latency_ms": 632.1120060001704,
+          "text": "The customer read out the serial number:\n\n**SN-2291-A**",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "deepseek/deepseek-v4-pro",
+          "provider": "StreamLake",
+          "cost_usd": 5.3795e-05,
+          "input_tokens": 43,
+          "output_tokens": 70,
+          "latency_ms": 13871.738767000124,
+          "text": "The customer read out the serial number **SN-2291-A**.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "call-14",
+      "expected": "analysis",
+      "actual_label": "analysis",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4-pro",
+        "provider": "Baidu",
+        "cost_usd": 0.0002778529,
+        "input_tokens": 54,
+        "output_tokens": 374,
+        "latency_ms": 25478.50932799997,
+        "text": "Yes, this call indicates an escalation risk. The customer has explicitly requested a supervisor twice and been denied both times, which directly violates standard customer service protocols and fuels frustration. Being stonewalled over a trivial $12 charge signals to the customer that the company is unwilling to resolve even minor issues, making them feel powerless and disrespected. This can easily lead to further escalation outside the current channel\u2014such as public complaints, chargebacks, legal complaints, or social media backlash\u2014damaging brand reputation and customer loyalty. A mere apology without action does not address the root cause and may inflame the situation further.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "call-15",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "mistralai/ministral-8b-2512",
+        "provider": "Mistral",
+        "cost_usd": 9.15e-06,
+        "input_tokens": 42,
+        "output_tokens": 19,
+        "latency_ms": 502.5659350001206,
+        "text": "The purchase order number given by the customer was **PO-99042**.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "call-16",
+      "expected": "analysis",
+      "actual_label": "analysis",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4-pro",
+        "provider": "SiliconFlow",
+        "cost_usd": 0.00041882466,
+        "input_tokens": 43,
+        "output_tokens": 113,
+        "latency_ms": 9929.045202999987,
+        "text": "The customer was highly satisfied with the technician visit, describing the technician as fantastic, very knowledgeable, and efficient for fixing the issue in just ten minutes.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "mistralai/ministral-8b-2512",
+          "provider": "Mistral",
+          "cost_usd": 1.575e-05,
+          "input_tokens": 44,
+          "output_tokens": 61,
+          "latency_ms": 990.5496750000111,
+          "text": "The customer\u2019s sentiment about the technician visit is **extremely positive**. They praised the technician for being **knowledgeable, efficient, and effective**, highlighting that the issue was resolved **quickly (in just 10 minutes)**. The overall experience was clearly satisfactory and left a strong impression.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "deepseek/deepseek-v4-pro",
+          "provider": "AtlasCloud",
+          "cost_usd": 0.00052178,
+          "input_tokens": 43,
+          "output_tokens": 133,
+          "latency_ms": 5120.940496999992,
+          "text": "The customer expressed very positive sentiment about the technician visit, describing the technician as fantastic and very knowledgeable, and noting the issue was resolved quickly in ten minutes.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "call-17",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "mistralai/ministral-8b-2512",
+        "provider": "Mistral",
+        "cost_usd": 7.8e-06,
+        "input_tokens": 38,
+        "output_tokens": 14,
+        "latency_ms": 450.35961100006716,
+        "text": "The customer provided the zip code **94107**.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "call-18",
+      "expected": "analysis",
+      "actual_label": "analysis",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4-pro",
+        "provider": "Baidu",
+        "cost_usd": 0.0002466724,
+        "input_tokens": 70,
+        "output_tokens": 321,
+        "latency_ms": 5705.600857000036,
+        "text": "Yes, this call shows a churn risk worth flagging. The customer explicitly states they are considering switching providers after a second billing error in two months, which is a direct indicator of potential churn. While repeated billing errors could hint at underlying compliance issues (e.g., inaccurate billing practices), the transcript itself focuses on the customer\u2019s intent to leave, making churn risk the primary concern.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    }
+  ]
+}

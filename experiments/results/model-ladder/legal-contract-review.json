@@ -1,0 +1,587 @@
+{
+  "name": "legal-contract-review",
+  "route_name": "legal/contract-review",
+  "policy": "intent",
+  "roster": [
+    "qwen/qwen3.7-flash",
+    "anthropic/claude-sonnet-5"
+  ],
+  "accuracy": 1.0,
+  "routed_cost_usd": 0.07862401000000001,
+  "models_used": {
+    "qwen/qwen3.7-flash": 10,
+    "anthropic/claude-sonnet-5": 8
+  },
+  "items": [
+    {
+      "item_id": "legal-01",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "qwen/qwen3.7-flash",
+        "provider": "Alibaba",
+        "cost_usd": 4.209e-05,
+        "input_tokens": 51,
+        "output_tokens": 312,
+        "latency_ms": 3828.4896249999747,
+        "text": "Based on the clause provided:\n\n- **Effective Date:** March 1, 2027  \n- **Initial Term Length:** 24 months",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "qwen/qwen3.7-flash",
+          "provider": "Alibaba",
+          "cost_usd": 4.274e-05,
+          "input_tokens": 51,
+          "output_tokens": 317,
+          "latency_ms": 3821.2209870000606,
+          "text": "- **Effective Date:** March 1, 2027  \n- **Initial Term Length:** 24 months",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Claude Platform on AWS",
+          "cost_usd": 0.00232,
+          "input_tokens": 60,
+          "output_tokens": 220,
+          "latency_ms": 4109.489101999998,
+          "text": "# Contract Terms Extracted\n\n**Effective Date:** March 1, 2027\n\n**Initial Term Length:** 24 months (2 years)\n\n**Calculated End Date of Initial Term:** February 28, 2029 (or February 29, 2029, if 2028... note: 2029 is not a leap year, so the term would end February 28, 2029)\n\n---\n\n**Summary:** The Agreement commences on **March 1, 2027** and runs for an initial term of **24 months**, concluding on **February 28, 2029**, unless terminated earlier or renewed/extended pursuant to other provisions in the Agreement (e.g., renewal or termination clauses, if applicable).",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "legal-02",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "qwen/qwen3.7-flash",
+        "provider": "Alibaba",
+        "cost_usd": 7.609e-05,
+        "input_tokens": 49,
+        "output_tokens": 574,
+        "latency_ms": 6729.4214379999175,
+        "text": "Based on the clause provided:\n\n* **Acme Corp**: Delaware corporation\n* **Beta LLC**: California limited liability company (LLC)",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "legal-03",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "qwen/qwen3.7-flash",
+        "provider": "Alibaba",
+        "cost_usd": 3.163e-05,
+        "input_tokens": 36,
+        "output_tokens": 235,
+        "latency_ms": 3056.9864609999513,
+        "text": "The governing law is the **laws of the State of New York**.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "legal-04",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "qwen/qwen3.7-flash",
+        "provider": "Alibaba",
+        "cost_usd": 5.354e-05,
+        "input_tokens": 47,
+        "output_tokens": 401,
+        "latency_ms": 5091.548888000034,
+        "text": "Based on the clause:\n\n* **Total Contract Value:** $480,000\n* **Payment Schedule:** Four equal quarterly installments (which amounts to $120,000 paid every three months)",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "qwen/qwen3.7-flash",
+          "provider": "Alibaba",
+          "cost_usd": 5.133e-05,
+          "input_tokens": 47,
+          "output_tokens": 384,
+          "latency_ms": 4371.902091000038,
+          "text": "Based on the clause:\n- **Total Contract Value:** $480,000\n- **Payment Schedule:** Paid in four equal quarterly installments of $120,000 each (paid every three months).",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Claude Platform on AWS",
+          "cost_usd": 0.003888,
+          "input_tokens": 54,
+          "output_tokens": 378,
+          "latency_ms": 4835.895555999969,
+          "text": "# Contract Value and Payment Schedule\n\nBased on the clause provided:\n\n**Total Contract Value:** $480,000\n\n**Payment Schedule:**\n- **Number of installments:** 4 (four)\n- **Frequency:** Quarterly\n- **Amount per installment:** $120,000 ($480,000 \u00f7 4)\n\n**Summary Table:**\n\n| Installment | Timing | Amount |\n|:-----------:|:------:|:------:|\n| 1st Payment | Q1 | $120,000 |\n| 2nd Payment | Q2 | $120,000 |\n| 3rd Payment | Q3 | $120,000 |\n| 4th Payment | Q4 | $120,000 |\n| **Total** | | **$480,000** |\n\n**Note:** The clause does not specify exact due dates (e.g., specific calendar dates or \"within X days of quarter start/end\"). If you need precise payment due dates, you may want to check if the contract includes additional terms elsewhere specifying:\n- The start date of the payment schedule\n- Specific due dates within each quarter (e.g., \"the 1st of each quarter\" or \"net 30 from invoice\")",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "legal-05",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 0.99,
+      "routed": {
+        "router": "deferent",
+        "model": "qwen/qwen3.7-flash",
+        "provider": "Alibaba",
+        "cost_usd": 5.87e-05,
+        "input_tokens": 63,
+        "output_tokens": 437,
+        "latency_ms": 5268.692856000143,
+        "text": "Based on the clause provided:\n\n* **Renewal Terms:** The agreement automatically renews for **successive one-year terms**.\n* **Notice Period:** Either party must give **written notice of non-renewal at least 90 days** before the end of the current term to avoid automatic renewal.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "legal-06",
+      "expected": "risk_flagging",
+      "actual_label": "risk_flagging",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Claude Platform on AWS",
+        "cost_usd": 0.0111,
+        "input_tokens": 115,
+        "output_tokens": 1087,
+        "latency_ms": 13881.235162999928,
+        "text": "# Assessment: Liability Cap Clause\n\nThis clause is **fairly standard and not unusually risky** \u2014 it's actually a common, balanced formulation seen in many commercial agreements. However, there are nuances worth flagging depending on which side you represent.\n\n## Why It's Generally Standard\n\n1. **Cap tied to fees paid** \u2014 Limiting liability to fees paid (rather than an arbitrary fixed number) is one of the most common approaches in vendor/SaaS/services agreements.\n\n2. **12-month lookback** \u2014 A trailing 12-month period is typical. Some contracts use a shorter window (e.g., fees paid in the preceding 6 months) or a longer one (e.g., total contract value), so this is a middle-of-the-road choice.\n\n3. **Carve-out for gross negligence/willful misconduct** \u2014 This is a widely accepted exception. Courts in many jurisdictions won't enforce liability caps for gross negligence or willful misconduct anyway, so this carve-out mostly reflects existing legal defaults rather than creating new risk.\n\n4. **\"Whether in contract, tort, or otherwise\"** \u2014 This broad language is standard drafting to ensure the cap applies regardless of the legal theory of claim, closing loopholes that might otherwise let a plaintiff plead around the cap via tort claims.\n\n## Points Worth Scrutinizing (Customer/Client Perspective)\n\n| Issue | Concern |\n|---|---|\n| **Undefined \"gross negligence\"** | Not defined in the clause \u2014 could lead to disputes over what qualifies. Some jurisdictions (like many U.S. states) don't clearly define this either, creating ambiguity. |\n| **No carve-outs for other key risks** | Notably absent: **data breach/confidentiality breach, IP infringement indemnity, and personal injury/property damage**. Many negotiated agreements exclude these from the cap or set a separate, higher \"super-cap.\" |\n| **Low-fee engagements** | If the vendor's fees are low (e.g., a $10K/year contract) but the potential damage from failure is high (e.g., critical infrastructure, data loss), the cap could be grossly inadequate relative to actual risk exposure. |\n| **Mutual or one-sided?** | The clause caps *Vendor's* liability but says nothing about the customer's liability \u2014 worth checking if there's a reciprocal cap elsewhere, or whether this asymmetry is intentional. |\n\n## Bottom Line\n\n**Not unusual on its face** \u2014 this is boilerplate risk-allocation language you'd expect in most vendor contracts. The real risk lies in **what's missing** (specific carve-outs for data breach, IP indemnity, confidentiality) rather than what's written. Whether it's \"risky\" depends entirely on:\n- The **nature of services** (higher risk for data-sensitive, safety-critical, or IP-heavy engagements)\n- The **fee-to-risk ratio** (low fees + high potential exposure = inadequate cap)\n- **Your negotiating position** (vendor vs. customer)\n\n**Recommendation:** If you're the customer, push for a carve-out (or separate cap) for data breaches, confidentiality violations, and IP indemnification claims, and consider whether the fee-based cap adequately reflects your actual risk exposure.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "legal-07",
+      "expected": "risk_flagging",
+      "actual_label": "risk_flagging",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Claude Platform on AWS",
+        "cost_usd": 0.008646,
+        "input_tokens": 113,
+        "output_tokens": 842,
+        "latency_ms": 10303.813918999822,
+        "text": "# Analysis: Unusual Risk in This Indemnification Clause\n\n**Yes, this clause poses significant and unusual risk to Client for several compounding reasons:**\n\n## 1. **Coverage of Vendor's Own Negligence**\nThis is the most serious red flag. The clause explicitly requires Client to indemnify Vendor even when **Vendor itself is negligent**. This inverts the typical risk allocation logic\u2014normally a party should bear responsibility for its own wrongdoing, not shift that cost to a counterparty who wasn't at fault.\n\n- In many jurisdictions, indemnification for a party's own negligence must be **specifically and conspicuously stated** (which this clause does, making it likely enforceable)\n- Some states have anti-indemnity statutes that void or limit such clauses in specific contexts (construction, certain service contracts)\u2014worth checking applicable law\n\n## 2. **Unlimited Scope (\"any and all,\" \"without limitation\")**\n- No cap on damages\n- No carve-outs for indirect, consequential, or punitive damages\n- This means Client could be liable for expenses far exceeding the value of the contract itself\n\n## 3. **Broad Triggering Event (\"arising from Client's use of the Services\")**\nThis language is vague and expansive\u2014it doesn't limit indemnification to:\n- Breach of contract by Client\n- Client's own negligence or misconduct\n- Third-party claims specifically\n\nAs written, virtually **any claim connected to Client's use** could trigger indemnification, even if Client did nothing wrong.\n\n## 4. **One-Sided Structure**\nThere's no reciprocal indemnification from Vendor to Client. This is a **unilateral risk transfer** favoring Vendor entirely.\n\n## 5. **\"Defend\" Obligation**\nBeyond just paying damages, Client must also **defend** Vendor\u2014meaning Client bears litigation costs and control burdens, potentially even before liability is established.\n\n---\n\n## **Practical Recommendation**\nThis clause should be flagged for renegotiation. Suggested revisions:\n- **Strike \"including claims arising from Vendor's own negligence\"** or limit it to claims proportional to Client's fault\n- Add a **cap on liability** (e.g., tied to fees paid)\n- Narrow the trigger to **third-party claims** resulting from Client's **breach or misuse**\n- Exclude **gross negligence/willful misconduct by Vendor** from any indemnity obligation\n- Consider requesting **mutual indemnification**\n\nWould you like me to draft a redlined/revised version of this clause?",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "qwen/qwen3.7-flash",
+          "provider": "Alibaba",
+          "cost_usd": 0.0002343,
+          "input_tokens": 75,
+          "output_tokens": 1785,
+          "latency_ms": 22611.96752900014,
+          "text": "**Yes, this indemnification clause poses significant and unusual risk to the Client.** The primary issue lies in the phrase **\u201cincluding claims arising from Vendor\u2019s own negligence.\u201d** Here\u2019s a breakdown of why this is concerning under standard commercial contract norms:\n\n### \ud83d\udd34 Core Risks\n1. **Shifts Fault-Based Liability Unfairly**  \n   Indemnification is meant to allocate financial responsibility for losses caused by a party\u2019s own actions or breaches. Requiring the Client to cover the Vendor\u2019s negligence completely reverses basic fault allocation principles. The Client should not be financially or legally responsible for harm caused by the Vendor\u2019s failure to perform competently or safely.\n\n2. **Deviation from Market Standard**  \n   In virtually all technology, services, and SaaS agreements, vendor-client indemnification is either:\n   - **Unidirectional & balanced**: Client indemnifies for misuse/breach; Vendor indemnifies for IP infringement, bodily injury, or property damage caused by the Vendor.\n   - **Carved out for fault**: Even when clients indemnify vendors, exceptions are routinely made for the vendor\u2019s gross negligence, willful misconduct, or sole negligence. This clause includes none.\n\n3. **Overbroad & Unbounded Language**  \n   `\"Any and all claims, damages, and expenses of any kind, without limitation\"` removes natural contractual guardrails. Combined with the negligence trigger, it could theoretically capture losses unrelated to the Client\u2019s conduct, speculative damages, or even consequences of the Vendor\u2019s intentional misconduct.\n\n4. **Insurance Coverage Gaps**  \n   Most professional liability, E&O, or general commercial policies exclude coverage for:\n   - The insured\u2019s own negligence\n   - Contractual indemnities that assume liability for the other party\u2019s fault\n   If the Client is forced to pay the Vendor\u2019s defense or settlement due to the Vendor\u2019s negligence, insurance may deny coverage, leaving the Client exposed to direct out-of-pocket loss.\n\n5. **Potential Enforceability Issues**  \n   Many jurisdictions view clauses that force one party to indemnify another for its own negligence as unconscionable, against public policy, or unenforceable. Some states/countries have explicit anti-indemnity statutes (especially in services, construction, and tech), though their application varies.\n\n### \ud83d\udcdd Typical Negotiation Positions\nA commercially reasonable revision would:\n- **Delete** `\"including claims arising from Vendor's own negligence\"`\n- Limit Client indemnification to: `(a) third-party claims arising from Client\u2019s actual use or misuse of the Services, (b) Client\u2019s breach of the agreement, or (c) Client\u2019s negligent or willful acts`\n- Add standard carve-outs for `gross negligence, willful misconduct, or independent third-party fault`\n- Require that indemnified claims be `third-party only`, properly notified, and subject to the Vendor\u2019s cooperation/control rights\n\n### \u2705 Bottom Line\nWhile indemnification itself is standard, **this specific drafting is a major red flag**. It places disproportionate, unusual, and potentially uninsurable risk on the Client by making them financially liable for the Vendor\u2019s own mistakes. It should be revised before execution, preferably through mutual fault-based allocations or explicit exclusions for the Vendor\u2019s negligence.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Claude Platform on AWS",
+          "cost_usd": 0.012106,
+          "input_tokens": 113,
+          "output_tokens": 1188,
+          "latency_ms": 13405.700453000009,
+          "text": "# Analysis: Indemnification Clause Risk Assessment\n\n**Yes, this clause poses significant and unusual risk to Client.** Here's why:\n\n## 1. Indemnification for Vendor's Own Negligence\nThis is the most alarming feature. The clause explicitly requires Client to indemnify Vendor even when **Vendor itself is negligent**. This inverts the typical risk allocation \u2014 normally, a party bears responsibility for its own wrongdoing. Here, Client absorbs liability for Vendor's failures, mistakes, or substandard performance.\n\n## 2. Uncapped, Unlimited Scope (\"any and all,\" \"without limitation\")\n- No cap on the dollar amount of exposure.\n- No carve-outs for types of damages (e.g., excludes nothing \u2014 covers direct, indirect, consequential, punitive damages).\n- This creates open-ended financial exposure that could vastly exceed the value of the underlying contract.\n\n## 3. Broad Triggering Event (\"arising from Client's use of the Services\")\n- This causal link is vague and expansive. Almost any claim could be argued to \"arise from\" use of the Services, even if only tangentially connected.\n- No requirement that the claim be *caused by* Client's wrongful conduct, misuse, or breach \u2014 merely that it *arise from* use.\n\n## 4. Three-Pronged Obligation: Indemnify, Defend, AND Hold Harmless\n- The duty to \"**defend**\" is often more burdensome than indemnify \u2014 it typically requires Client to pay Vendor's legal costs **as they're incurred**, often before liability is even established.\n- This means Client may be forced to fund Vendor's defense in a lawsuit stemming from Vendor's own negligent conduct.\n\n## 5. No Reciprocity\nThe clause is entirely one-directional. Vendor bears no corresponding obligation to indemnify Client for Vendor's misconduct, creating an asymmetric risk allocation typical in vendor-favorable boilerplate.\n\n## 6. Potential Enforceability Issues (Jurisdiction-Dependent)\nMany jurisdictions restrict or void indemnification clauses covering a party's own negligence unless the language is exceptionally clear and specific (satisfying the \"conspicuousness\" or \"express negligence\" doctrine). While this clause does explicitly mention Vendor's negligence, Client should verify:\n- Whether local law prohibits such clauses in certain contexts (e.g., construction, consumer contracts).\n- Whether gross negligence, willful misconduct, or violations of law are excluded.\n\n---\n\n## Recommended Redlines\n- **Strike \"including claims arising from Vendor's own negligence\"** \u2014 indemnification should not extend to Vendor's own fault.\n- **Add proportionate liability language**: Client indemnifies only to the extent claims arise from Client's own negligence, willful misconduct, or breach.\n- **Insert a liability cap** tied to fees paid or a fixed dollar amount.\n- **Exclude indirect/consequential/punitive damages**.\n- **Add mutual indemnification** so Vendor bears responsibility for its own negligence, breach, or IP infringement.\n- **Replace \"arising from Client's use\"** with **\"arising from Client's breach of this Agreement or negligent/willful misconduct in connection with use of the Services.\"**\n\n---\n\n**Bottom line:** This clause shifts an extraordinary and unusual amount of risk onto Client, including risk for Vendor's own wrongdoing, with no financial ceiling. It is heavily vendor-favorable and should be renegotiated before signing.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "legal-08",
+      "expected": "risk_flagging",
+      "actual_label": "risk_flagging",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Claude Platform on AWS",
+        "cost_usd": 0.00721,
+        "input_tokens": 95,
+        "output_tokens": 702,
+        "latency_ms": 9569.36311200002,
+        "text": "# Analysis: One-Sided Termination Clause\n\n**Yes, this clause is significantly risky for the Client.** Here's why:\n\n## Key Problems\n\n**1. Unilateral Right**\nThe clause grants termination rights **only to Vendor** (\"terminated by Vendor\"). The Client has no corresponding right to terminate under the same terms \u2014 creating a fundamental imbalance in the parties' contractual power.\n\n**2. No Cause Required**\n\"For any reason or no reason\" means Vendor can walk away arbitrarily \u2014 even for reasons unrelated to performance, market conditions, or convenience \u2014 with zero justification needed.\n\n**3. Grossly Inadequate Notice**\n24 hours is an extremely short window. This leaves Client with:\n- No realistic time to find a replacement vendor\n- No opportunity to transition services/data\n- Potential operational disruption or business interruption\n- Risk if Client's own downstream obligations (to customers, regulators, etc.) depend on continuity\n\n**4. No Refund of Prepaid Fees**\nThis is the most punitive element. Client could:\n- Pay for a year of service upfront\n- Have Vendor terminate on day 2 for no reason\n- Receive **no refund** for the ~363 days of unused service\n\nThis effectively lets Vendor retain unearned fees while unilaterally ending the relationship \u2014 a windfall with no corresponding benefit to Client.\n\n## Cumulative Effect\nTogether, these provisions mean Client bears:\n- **Financial risk** (sunk costs, no refund)\n- **Operational risk** (minimal transition time)\n- **Uncertainty risk** (no stability or reliance interest in the contract term)\n\nThis is a classic \"vendor-favorable\" clause that shifts virtually all termination risk onto the Client.\n\n## Suggested Negotiation Points\n- Mutual termination rights (not just Vendor's)\n- Longer notice period (30-90 days is standard)\n- Pro-rata refund of prepaid, unused fees\n- Termination for convenience should require **reasonable** notice, or be limited to termination for cause with cure periods\n\nWould you like sample redlined language to propose instead?",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "legal-09",
+      "expected": "risk_flagging",
+      "actual_label": "risk_flagging",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Claude Platform on AWS",
+        "cost_usd": 0.009794,
+        "input_tokens": 87,
+        "output_tokens": 962,
+        "latency_ms": 12588.382092000074,
+        "text": "# Risk Analysis: Assignment Clause\n\n**Short answer: Yes, this creates meaningful risk\u2014primarily for the counterparty facing an assignment, not the assigning party.**\n\n## Who Bears the Risk\n\nThis clause is **mutual on its face** but often creates **asymmetric risk in practice**, depending on the parties' relative circumstances:\n\n### Risk to the Non-Assigning Party\n- **Loss of counterparty choice**: You may have contracted with this entity specifically because of its reputation, financial strength, personnel, or strategic fit. A merger/acquisition can hand your contract to a competitor, a company with worse credit, or an entity with conflicting interests.\n- **No consent right, no notice requirement (as drafted)**: The clause doesn't require *advance notice*\u2014only that consent isn't needed. You could learn about the assignment after the fact.\n- **Successor may lack capacity or intent to perform**: An acquirer might not value the deal the same way, leading to poor service, deprioritization, or disputes.\n\n### Risk to the Assigning Party\n- Generally minimal\u2014this clause *enables* deal flexibility (M&A, restructuring) without needing to renegotiate every contract, which is the whole point.\n\n## Key Structural Issues to Flag\n\n1. **\"Substantially all assets\" is undefined** \u2014 ambiguous threshold invites disputes (50%? 80%? by revenue or book value?).\n\n2. **No notice obligation** \u2014 even a requirement for post-closing notice would materially improve the non-assigning party's position.\n\n3. **No carve-out for competitors** \u2014 if you're contracting with a company for confidentiality, IP licensing, or exclusivity reasons, having the contract assignable to a direct competitor via acquisition is a significant risk.\n\n4. **No financial/creditworthiness condition** \u2014 a highly leveraged buyout could saddle you with a much weaker counterparty.\n\n5. **Mutuality may be illusory** \u2014 if one party is a startup likely to be acquired and the other is a stable enterprise, the \"mutual\" right to assign disproportionately benefits the startup's future acquirer, not the enterprise.\n\n## Practical Negotiation Points\n\n- Add a **notice requirement** (e.g., \"within 30 days of closing\").\n- Add a **competitor carve-out**: assignment prohibited if the successor is a direct competitor.\n- Consider a **termination right** for the non-assigning party upon change of control (common in SaaS, licensing, and services agreements).\n- Clarify **\"substantially all assets\"** with a percentage threshold.\n\n## Bottom Line\n\nThis is a standard M&A-facilitation clause, but as drafted it **favors deal flexibility over counterparty protection**. Whether that risk matters depends on why you chose this counterparty in the first place\u2014if identity, exclusivity, or non-compete concerns are central to the deal, this clause deserves negotiation, not just acceptance as \"market standard.\"",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "legal-10",
+      "expected": "risk_flagging",
+      "actual_label": "risk_flagging",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Claude Platform on AWS",
+        "cost_usd": 0.009848,
+        "input_tokens": 104,
+        "output_tokens": 964,
+        "latency_ms": 12480.346961000123,
+        "text": "# Analysis of the Venue Clause\n\n**Yes, this clause meaningfully disadvantages the Client.** Here's why:\n\n## 1. Unilateral Forum Selection\nThe clause locks venue to **Vendor's home jurisdiction only** \u2014 not a neutral location, not Client's jurisdiction, and not even a mutually negotiated third-party forum. This is inherently asymmetric: Vendor never has to litigate away from home, while Client always does.\n\n## 2. Practical Litigation Costs Fall Entirely on Client\nIf a dispute arises, Client must:\n- Retain local counsel in an unfamiliar jurisdiction\n- Travel for hearings, depositions, and trial\n- Absorb costs and logistical burdens that Vendor never faces\n\nThis cost asymmetry can deter Client from pursuing legitimate claims at all \u2014 effectively giving Vendor a built-in advantage regardless of the merits of any dispute.\n\n## 3. Waiver of Jurisdictional and Venue Objections\nThe clause doesn't just set venue \u2014 it has Client **affirmatively waive any objection** to personal jurisdiction or venue. This eliminates two key defenses Client might otherwise raise if sued in an inconvenient or unfair forum, such as:\n- Lack of minimum contacts with Vendor's jurisdiction\n- Forum non conveniens arguments\n\nClient is preemptively giving up procedural protections *before* any dispute even exists, without knowing the circumstances that might make Vendor's forum genuinely unfair (e.g., changed business locations, evidence/witnesses concentrated elsewhere).\n\n## 4. Home-Court Advantage in Substantive Law\nVendor's local courts will likely apply **Vendor's state's procedural rules and potentially favorable local precedent**, and local judges/juries may have subtle familiarity or sympathy toward a local business. This is a real, if intangible, disadvantage for an out-of-state Client.\n\n## 5. No Reciprocal Protection\nA more balanced clause would typically include:\n- Venue in Client's jurisdiction for claims *against* Vendor, or\n- A neutral third-party forum, or\n- Mutual consent requirements for forum selection\n\nThe absence of any such reciprocity signals a lopsided negotiating outcome, not a mutual accommodation.\n\n## Practical Recommendation\nClient's counsel should push back and propose either:\n- **Neutral venue** (e.g., a third state with no connection to either party)\n- **Mutual venue selection** based on which party initiates the claim\n- **Carve-outs** for injunctive relief or specific claim types where Client's local courts may be necessary (e.g., IP infringement, data breach requiring immediate local relief)\n\n**Bottom line:** This clause is a one-sided risk-shifting provision that favors Vendor's convenience and litigation position at Client's expense \u2014 a common but negotiable point in vendor contracts.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "qwen/qwen3.7-flash",
+          "provider": null,
+          "cost_usd": 0.0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "latency_ms": 345.9195660000205,
+          "text": "",
+          "error": "HTTP 429: {\"error\": {\"message\": \"Provider returned error\", \"code\": 429, \"metadata\": {\"raw\": \"qwen/qwen3.7-flash is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\", \"provider_name\": \"Alibaba\", \"is_byok\": f",
+          "fallback_from": null,
+          "jev_adequate": false,
+          "score": 1
+        },
+        {
+          "router": "always-strongest",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Claude Platform on AWS",
+          "cost_usd": 0.009678,
+          "input_tokens": 104,
+          "output_tokens": 947,
+          "latency_ms": 11521.783652000067,
+          "text": "# Analysis of the Venue Clause\n\n**Yes, this clause meaningfully disadvantages the Client.** Here's why:\n\n## 1. Unilateral Forum Selection\nThe clause locks venue to **Vendor's home jurisdiction** with no reciprocity. This is not a neutral or mutual forum-selection clause\u2014it's a one-sided provision that benefits only the Vendor, who gets \"home field advantage\" in any dispute.\n\n## 2. Practical Litigation Burdens on Client\nIf a dispute arises, the Client must:\n- **Travel** to Vendor's jurisdiction (potentially across state or national lines)\n- **Retain local counsel** familiar with that jurisdiction's courts and procedural rules\n- **Incur higher litigation costs** (travel, lodging, local counsel fees, witness logistics)\n- **Litigate on unfamiliar legal terrain**, where local court tendencies, judges, and juries may be more favorable to a resident business (the Vendor)\n\n## 3. Double Waiver Compounds the Problem\nThe clause doesn't just select venue\u2014it has the Client **waive two separate defenses**:\n- **Personal jurisdiction** \u2013 normally, a party can argue the court lacks authority over them if they lack sufficient contacts with that forum\n- **Venue** \u2013 normally, a party can argue the chosen court is an inconvenient or improper location\n\nBy waiving both, the Client forfeits any future argument that litigating in Vendor's jurisdiction is unfair or improper\u2014**even if the Vendor is the one breaching the contract** or even if the Client has no meaningful connection to that jurisdiction.\n\n## 4. Asymmetric Risk Allocation\nThis structure means:\n- If the **Vendor sues the Client**, Vendor sues on its own turf (convenient for Vendor)\n- If the **Client sues the Vendor**, Client is still forced to sue on Vendor's turf (inconvenient for Client)\n\nThe Client bears the burden **regardless of who initiates the dispute**.\n\n## Suggested Negotiation Points\nA Client's counsel should consider pushing back with:\n- **Mutual/neutral venue** (e.g., a mutually agreed neutral jurisdiction, or Client's jurisdiction)\n- **Reciprocal waiver** language (both parties waive objections, not just Client)\n- **Carve-outs** for injunctive relief or specific claims where Client's local courts may be necessary\n- Alternatively, **removing the waiver language** entirely, preserving Client's right to challenge jurisdiction/venue if circumstances warrant\n\n---\n\n**Bottom line:** This is a classic Vendor-favorable clause that increases Client's cost, inconvenience, and litigation risk while stripping away procedural defenses Client would otherwise have. It should be flagged as a **material risk** in contract review, not a boilerplate term.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "legal-11",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "qwen/qwen3.7-flash",
+        "provider": "Alibaba",
+        "cost_usd": 3.058e-05,
+        "input_tokens": 40,
+        "output_tokens": 226,
+        "latency_ms": 2819.6913680001217,
+        "text": "Per the clause, notices should be sent to **the addresses listed in Exhibit A**.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "legal-12",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "qwen/qwen3.7-flash",
+        "provider": "Alibaba",
+        "cost_usd": 3.31e-05,
+        "input_tokens": 46,
+        "output_tokens": 244,
+        "latency_ms": 3135.0465420000546,
+        "text": "The confidentiality period specified is **five (5) years** following the termination of the agreement.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "legal-13",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "qwen/qwen3.7-flash",
+        "provider": "Alibaba",
+        "cost_usd": 3.633e-05,
+        "input_tokens": 41,
+        "output_tokens": 270,
+        "latency_ms": 3537.3866490001546,
+        "text": "Based on the clause provided, the late payment fee is **1.5% per month** applied to any overdue amount.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "qwen/qwen3.7-flash",
+          "provider": "Alibaba",
+          "cost_usd": 3.815e-05,
+          "input_tokens": 41,
+          "output_tokens": 284,
+          "latency_ms": 3413.5236300000997,
+          "text": "The late payment fee is **1.5% per month** on the overdue amount.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Claude Platform on AWS",
+          "cost_usd": 0.004122,
+          "input_tokens": 51,
+          "output_tokens": 402,
+          "latency_ms": 5760.19674500003,
+          "text": "Based on the clause you provided, the late payment fee is **1.5% per month** on any overdue amount.\n\nAdditional details worth noting:\n\n- **Rate**: 1.5% monthly, which translates to an **annual rate of 18%** (1.5% \u00d7 12 months) if the amount remains unpaid for a full year.\n- **Basis**: The fee applies to the \"overdue amount,\" meaning the outstanding balance that remains unpaid past its due date.\n- **Compounding**: The clause doesn't specify whether this is simple or compound interest. This could matter significantly over time, so it may be worth clarifying if the 1.5% applies to the original overdue amount each month or compounds on the growing balance (original amount + accrued fees).\n\nA few practical questions you may want to consider or clarify in the contract:\n1. **When does the fee start accruing?** (e.g., immediately after the due date, or after a grace period?)\n2. **Is there a cap** on the total late fees that can accrue?\n3. **Does state/local law limit this rate?** Some jurisdictions have usury laws capping interest/late fees, so 18% annually may need to comply with local regulations.\n\nWould you like help reviewing this clause for enforceability or drafting additional protective language?",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "legal-14",
+      "expected": "risk_flagging",
+      "actual_label": "risk_flagging",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Claude Platform on AWS",
+        "cost_usd": 0.010744,
+        "input_tokens": 102,
+        "output_tokens": 1054,
+        "latency_ms": 13592.346832999965,
+        "text": "# Analysis: Liability Cap Appropriateness\n\n**Short answer: No, this cap is highly inappropriate and would likely be rejected in negotiation or found unconscionable/unenforceable in certain jurisdictions.**\n\n## Why This Cap Fails\n\n**1. The dollar amount is nominal, not compensatory**\nA $100 cap isn't a genuine allocation of risk\u2014it's a de facto liability *waiver* dressed up as a limitation. For context, even a minor data breach typically triggers costs in the tens of thousands of dollars (forensic investigation, notification requirements, credit monitoring, regulatory fines). A $100 cap on such claims is illusory.\n\n**2. Standard market practice excludes these exact carve-outs**\nSophisticated commercial contracts almost universally exclude certain categories from liability caps, including:\n\n| Typically Excluded | Why |\n|---|---|\n| Gross negligence / willful misconduct | Public policy in most jurisdictions prohibits capping liability for intentional or reckless harm |\n| Confidentiality breaches | Often tied to competitive harm, trade secrets, or IP\u2014damages can be severe and hard to quantify |\n| Data breaches | Regulatory exposure (GDPR, CCPA, HIPAA) often carries statutory penalties that can't be contractually limited anyway |\n| IP infringement | Similar rationale\u2014third-party exposure |\n\nThis clause does the opposite: it **explicitly pulls these high-risk categories back into the cap**, rather than excluding them.\n\n**3. Legal enforceability concerns**\n- Many jurisdictions void limitation clauses that attempt to cap liability for **gross negligence or willful misconduct** as against public policy (this varies by state/country, but it's a common carve-out for good reason).\n- Data breach liability often involves **statutory damages** (e.g., state breach notification laws) that may not be waivable by contract at all\u2014making the clause partially unenforceable regardless of its terms.\n\n**4. Misalignment of risk and reward**\nIf a vendor handling sensitive data or confidential information can cap its exposure at $100, it has virtually no financial incentive to invest in security, confidentiality controls, or careful data handling. The cap removes the deterrent function that liability provisions are meant to serve.\n\n## What a Reasonable Clause Would Look Like\n\n```\nLiability shall be capped at [12 months' fees paid / a negotiated multiple], \nEXCEPT that this cap shall not apply to:\n(a) breaches of confidentiality obligations,\n(b) data breaches or violations of data protection law,\n(c) gross negligence or willful misconduct,\n(d) indemnification obligations for IP infringement or third-party claims.\n```\n\n## Bottom Line\nThis clause conflates a **limitation of liability** with an **exculpation clause**. By failing to carve out gross negligence, data breaches, and confidentiality violations, it attempts to insulate a party from the very risks that liability clauses are designed to address in commercial dealings. Any reviewing counsel should flag this for renegotiation, and courts in many jurisdictions may refuse to enforce it as written\u2014particularly the gross negligence provision.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "legal-15",
+      "expected": "risk_flagging",
+      "actual_label": "risk_flagging",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Claude Platform on AWS",
+        "cost_usd": 0.011114,
+        "input_tokens": 97,
+        "output_tokens": 1092,
+        "latency_ms": 15161.651195999866,
+        "text": "# Yes \u2014 this clause creates significant, outsized risk for the Client\n\nThis is a red-flag clause that appears in the \"General Terms\" or \"License\" sections of many SaaS/platform agreements, and it should not be accepted without heavy negotiation. Here's why:\n\n## 1. Scope is essentially unlimited (\"for any purpose\")\nThere is no restriction tying Vendor's use of Client's data to the actual service being provided. This means Vendor could:\n- Use Client's proprietary data to train AI/ML models\n- Repurpose content for marketing, research, or resale\n- License it to Vendor's other customers or third parties (via \"sublicense\")\n\n## 2. \"Perpetual, irrevocable\" removes Client's exit leverage\nEven if Client terminates the agreement or stops using the platform:\n- Vendor retains the license forever\n- Client cannot claw back rights even for cause (e.g., Vendor breach, data misuse)\n- This survives termination clauses that would normally end other obligations\n\n## 3. \"Sublicense\" creates loss of control over downstream use\nClient loses visibility and control once Vendor can grant rights to third parties. This raises:\n- **Confidentiality risks** \u2014 client trade secrets or confidential business data could end up with competitors or unrelated third parties\n- **Regulatory/compliance risks** \u2014 if the \"content\" includes personal data, this may violate GDPR, CCPA, or sector-specific rules (HIPAA, GLBA) that require data minimization, purpose limitation, and deletion rights\n- **IP dilution** \u2014 if Client uploads copyrighted materials, patented processes, or proprietary datasets, this clause could undermine Client's ability to enforce exclusivity elsewhere\n\n## 4. No carve-outs or safeguards\nA reasonable version of this clause would typically include:\n- **Purpose limitation** (e.g., \"solely to provide the Services\")\n- **Confidentiality obligations** on Vendor\n- **Anonymization/aggregation requirements** if data is used for analytics or product improvement\n- **Termination-triggered rights reversion** (license ends or narrows when the agreement ends)\n- **Carve-outs for regulated data** (PII, PHI, financial data)\n\n## 5. Practical business risk\n- Client's ability to switch vendors, negotiate exclusivity with competitors, or protect proprietary innovation is compromised\n- Client may face liability to *its own* customers or partners if their data was included in what was uploaded and then repurposed by Vendor\n- If Client operates in a regulated industry, this could constitute a *per se* compliance violation, exposing Client to regulatory penalties independent of any dispute with Vendor\n\n## Recommended negotiation position\nClient should push to replace this with narrower language, such as:\n\n> *\"Client grants Vendor a limited, non-exclusive, non-sublicensable license to use Client's data solely for the purpose of providing and improving the Services during the term of this Agreement. Upon termination, Vendor shall delete or return all Client data within [30] days, except as required by law.\"*\n\n**Bottom line:** This clause effectively transfers broad, permanent ownership-like rights over Client's data/content to Vendor with no corresponding restriction, oversight, or reciprocal benefit \u2014 a lopsided risk allocation that favors Vendor unless heavily revised.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "legal-16",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "qwen/qwen3.7-flash",
+        "provider": "Alibaba",
+        "cost_usd": 6.173e-05,
+        "input_tokens": 34,
+        "output_tokens": 467,
+        "latency_ms": 5928.518295999993,
+        "text": "The payment terms are **Net 30**, meaning payment is due within 30 days from the date of the invoice.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "qwen/qwen3.7-flash",
+          "provider": "Alibaba",
+          "cost_usd": 6.433e-05,
+          "input_tokens": 34,
+          "output_tokens": 487,
+          "latency_ms": 6023.859172999892,
+          "text": "The payment terms are **net 30 from the date of invoice**.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Claude Platform on AWS",
+          "cost_usd": 0.001784,
+          "input_tokens": 42,
+          "output_tokens": 170,
+          "latency_ms": 3637.362850000045,
+          "text": "# Payment Terms\n\nBased on the clause provided:\n\n**Net 30 from the date of invoice**\n\nThis means:\n- Payment is due within **30 calendar days**\n- The 30-day period begins counting from the **invoice date** (not the delivery date, contract date, or any other reference point)\n- Example: If an invoice is dated June 1st, payment would be due by July 1st\n\nIf you need more context (such as late payment penalties, early payment discounts, or accepted payment methods), that information would need to come from additional clauses in the contract.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "legal-17",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "qwen/qwen3.7-flash",
+        "provider": "Alibaba",
+        "cost_usd": 4.222e-05,
+        "input_tokens": 51,
+        "output_tokens": 313,
+        "latency_ms": 3656.6795930000353,
+        "text": "Based on the clause provided, the signatories and their titles are:\n\n* **Jane Doe** \u2013 CEO of Acme Corp\n* **John Smith** \u2013 General Counsel of Beta LLC",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "legal-18",
+      "expected": "risk_flagging",
+      "actual_label": "risk_flagging",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Claude Platform on AWS",
+        "cost_usd": 0.009702,
+        "input_tokens": 91,
+        "output_tokens": 952,
+        "latency_ms": 12546.49802200015,
+        "text": "# Risk Assessment: Unilateral Modification Clause\n\n**Yes, this clause poses meaningful risk to the Client.** Here's why:\n\n## Core Problems\n\n**1. No Notice Requirement**\nThe Client has no mechanism to learn that terms have changed. This means obligations, restrictions, or fee structures could shift without the Client ever being aware until a dispute arises.\n\n**2. Passive Acceptance via \"Continued Use\"**\nThis creates a trap: the Client is deemed to accept new terms simply by using the service\u2014even if they never saw the changes. There's no requirement for affirmative consent, making it nearly impossible to argue \"I never agreed to that.\"\n\n**3. Unbounded Scope**\n\"Modify... at any time\" with no limiting language means Vendor could alter:\n- Pricing or payment terms\n- Liability caps and indemnification obligations\n- Data usage/privacy provisions\n- Dispute resolution mechanisms (e.g., inserting arbitration clauses or venue changes)\n- Service scope or SLAs\n\n**4. Asymmetric Bargaining Power**\nOnly the Vendor has modification rights. The Client is locked into a one-way ratchet where they must accept changes or stop using the service entirely (which may not be practical if the Client has integrated the service into their operations).\n\n**5. Enforceability Is Not Guaranteed\u2014But Litigation Risk Remains**\nCourts in some jurisdictions have struck down \"silent\" modification clauses as illusory or unconscionable (especially without notice). However, relying on judicial intervention is costly, uncertain, and reactive rather than protective.\n\n## Practical Business Impact\n\n- **Budget/Compliance Surprises**: A pricing or compliance-related term could change mid-contract without warning.\n- **Loss of Negotiated Protections**: Carefully negotiated liability caps, IP terms, or termination rights could be quietly diluted.\n- **Difficulty Exiting**: If the Client discovers an unfavorable change late, they may already be operationally dependent on the service, weakening their leverage to object.\n\n## Recommended Redlines\n\nTo mitigate risk, the Client should push for:\n\n1. **Advance written notice** (e.g., 30 days) before changes take effect\n2. **Materiality carve-out**: Material changes (pricing, liability, termination rights) require Client's affirmative consent\n3. **Right to terminate without penalty** if Client rejects new terms\n4. **Grandfathering clause**: Existing terms remain in effect for the current term/renewal period\n5. **Mutual modification rights** or at least a requirement that changes be reasonable and prospective only\n\n---\n\n**Bottom line**: This clause is a *significant* redline item, not boilerplate to wave through. It effectively gives Vendor unchecked authority to rewrite the deal after signature, and Client's only real recourse\u2014stop using the service\u2014is often impractical.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    }
+  ]
+}

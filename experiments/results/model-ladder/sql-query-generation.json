@@ -1,0 +1,587 @@
+{
+  "name": "sql-query-generation",
+  "route_name": "data/sql-query-generation",
+  "policy": "complexity",
+  "roster": [
+    "qwen/qwen3.7-flash",
+    "deepseek/deepseek-v4-pro"
+  ],
+  "accuracy": 0.7222222222222222,
+  "routed_cost_usd": 0.019743387190000003,
+  "models_used": {
+    "qwen/qwen3.7-flash": 12,
+    "deepseek/deepseek-v4-pro": 6
+  },
+  "items": [
+    {
+      "item_id": "sql-01",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.72,
+      "routed": {
+        "router": "deferent",
+        "model": "qwen/qwen3.7-flash",
+        "provider": "Alibaba",
+        "cost_usd": 5.267e-05,
+        "input_tokens": 31,
+        "output_tokens": 398,
+        "latency_ms": 6365.335744000049,
+        "text": "Here's the SQL query:\n\n```sql\nSELECT * FROM users WHERE status = 'active';\n```\n\nThis will return all columns and rows from the `users` table where the `status` column exactly matches `'active'`. Let me know if you need it adapted for a specific SQL dialect or want to filter/select only certain columns!",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "qwen/qwen3.7-flash",
+          "provider": "Alibaba",
+          "cost_usd": 6.385e-05,
+          "input_tokens": 31,
+          "output_tokens": 484,
+          "latency_ms": 6386.424275999843,
+          "text": "Here's the standard SQL query:\n\n```sql\nSELECT * FROM users WHERE status = 'active';\n```\n\nThis will return every column and row from the `users` table where the `status` value exactly matches `'active'`. \n\n*(Note: String comparison behavior like case-sensitivity depends on your database system and collation settings, but this syntax works across all major RDBMS platforms.)*",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "deepseek/deepseek-v4-pro",
+          "provider": "AtlasCloud",
+          "cost_usd": 0.0003124,
+          "input_tokens": 25,
+          "output_tokens": 80,
+          "latency_ms": 13130.718790999936,
+          "text": "```sql\nSELECT *\nFROM users\nWHERE status = 'active';\n```",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "sql-02",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.1399999999999999,
+      "routed": {
+        "router": "deferent",
+        "model": "qwen/qwen3.7-flash",
+        "provider": "Alibaba",
+        "cost_usd": 4.707e-05,
+        "input_tokens": 22,
+        "output_tokens": 357,
+        "latency_ms": 5941.621820999899,
+        "text": "```sql\nSELECT COUNT(*) FROM orders;\n```\n\nThis query returns the total number of rows in the `orders` table. Let me know if you need to apply filters, group by certain columns, or use a specific database dialect!",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "sql-03",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.19999999999999996,
+      "routed": {
+        "router": "deferent",
+        "model": "qwen/qwen3.7-flash",
+        "provider": "Alibaba",
+        "cost_usd": 8.033e-05,
+        "input_tokens": 43,
+        "output_tokens": 608,
+        "latency_ms": 8324.49795399998,
+        "text": "```sql\nSELECT name, email\nFROM customers\nWHERE signup_date > '2025-01-01';\n```",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "sql-04",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.76,
+      "routed": {
+        "router": "deferent",
+        "model": "qwen/qwen3.7-flash",
+        "provider": "Alibaba",
+        "cost_usd": 5.898e-05,
+        "input_tokens": 29,
+        "output_tokens": 447,
+        "latency_ms": 6549.395644000015,
+        "text": "Here's the SQL query:\n\n```sql\nSELECT MAX(price) AS max_price\nFROM products;\n```\n\n**Note:** `MAX()` automatically ignores `NULL` values. If you want to handle cases where all prices are `NULL`, you can wrap it with `COALESCE(MAX(price), 0)` or another default value depending on your needs.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "qwen/qwen3.7-flash",
+          "provider": "Alibaba",
+          "cost_usd": 5.794e-05,
+          "input_tokens": 29,
+          "output_tokens": 439,
+          "latency_ms": 5944.195145000094,
+          "text": "Here's the standard SQL query to find the maximum price:\n\n```sql\nSELECT MAX(price) AS max_price FROM products;\n```\n\n**Notes:**\n- `MAX()` is an aggregate function that automatically ignores `NULL` values.\n- If the table is empty, the query will return `NULL`.\n- The `AS max_price` part is optional but recommended for cleaner result labels.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "deepseek/deepseek-v4-pro",
+          "provider": "Baidu",
+          "cost_usd": 0.00011467495,
+          "input_tokens": 23,
+          "output_tokens": 154,
+          "latency_ms": 4005.183450000004,
+          "text": "```sql\nSELECT MAX(price) AS max_price\nFROM products;\n```",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "sql-05",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.3400000000000001,
+      "routed": {
+        "router": "deferent",
+        "model": "qwen/qwen3.7-flash",
+        "provider": "Alibaba",
+        "cost_usd": 8.018e-05,
+        "input_tokens": 38,
+        "output_tokens": 608,
+        "latency_ms": 8270.659023000007,
+        "text": "Here's the SQL query you're looking for:\n\n```sql\nSELECT * \nFROM events \nWHERE event_type = 'click' \nORDER BY timestamp DESC \nLIMIT 10;\n```\n\n**Note:** If you're using SQL Server, replace `LIMIT 10` with `TOP 10` in the `SELECT` clause. For Oracle 12c+, use `FETCH FIRST 10 ROWS ONLY`. Let me know if you need a dialect-specific version!",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "sql-06",
+      "expected": "strong",
+      "actual_label": "strong",
+      "correct": true,
+      "judge_confidence": 0.17999999999999994,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4-pro",
+        "provider": "DigitalOcean",
+        "cost_usd": 0.008505468,
+        "input_tokens": 147,
+        "output_tokens": 4000,
+        "latency_ms": 80772.35593,
+        "text": "",
+        "error": "empty visible answer",
+        "fallback_from": null,
+        "jev_adequate": false,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "sql-07",
+      "expected": "strong",
+      "actual_label": "strong",
+      "correct": true,
+      "judge_confidence": 0.1200000000000001,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4-pro",
+        "provider": "Baidu",
+        "cost_usd": 0.0011723868,
+        "input_tokens": 60,
+        "output_tokens": 1662,
+        "latency_ms": 25313.285613999826,
+        "text": "```sql\nWITH \n-- Step 1: Aggregate product revenue per category, excluding fully refunded orders\nproduct_revenue AS (\n    SELECT \n        p.category_id,\n        p.id AS product_id,\n        p.name AS product_name,\n        SUM(oi.quantity * oi.unit_price) AS total_revenue\n    FROM order_items oi\n    INNER JOIN products p ON oi.product_id = p.id\n    -- Exclude orders that appear in the refunds table (soft foreign key on order_id)\n    LEFT JOIN refunds r ON oi.order_id = r.order_id\n    WHERE r.order_id IS NULL               -- keeps only orders without any refund record\n    GROUP BY p.category_id, p.id, p.name\n),\n\n-- Step 2: Rank products within each category by revenue (deterministic top\u20113)\nranked AS (\n    SELECT \n        *,\n        ROW_NUMBER() OVER (\n            PARTITION BY category_id \n            ORDER BY total_revenue DESC, product_id   -- product_id breaks tiesarbitrarily but consistently\n        ) AS rn\n    FROM product_revenue\n)\n\n-- Step 3: Keep only top\u20113 per category and enrich with category name\nSELECT \n    c.name AS category_name,\n    r.product_id,\n    r.product_name,\n    r.total_revenue,\n    r.rn\nFROM ranked r\nINNER JOIN categories c ON r.category_id = c.id\nWHERE r.rn <= 3\nORDER BY c.name, r.rn;\n```",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "qwen/qwen3.7-flash",
+          "provider": "Alibaba",
+          "cost_usd": 0.00052195,
+          "input_tokens": 65,
+          "output_tokens": 4000,
+          "latency_ms": 41014.34618999997,
+          "text": "Here\u2019s a clean, standards-compliant SQL query that meets your requirements:\n\n```sql\nWITH ProductRevenue AS (\n    SELECT \n        p.product_id,\n        p.product_name,\n        c.category_id,\n        c.category_name,\n        SUM(oi.quantity * oi.unit_price) AS total_revenue,\n        DENSE_RANK() OVER (\n            PARTITION BY c.category_id \n            ORDER BY SUM(oi.quantity * oi.unit_price) DESC\n        ) AS revenue_rank\n    FROM products p\n    JOIN categories c \n      ON p.category_id = c.category_id\n    JOIN order_items oi \n      ON p.product_id = oi.product_id\n    LEFT JOIN refunds r \n      ON oi.order_id = r.order_id\n    WHERE r.refund_id IS NULL  -- Excludes orders with any refund record\n    GROUP BY \n        p.product_id, \n        p.product_name, \n        c.category_id, \n        c.category_name\n)\nSELECT \n    category_id,\n    category_name,\n    product_id,\n    product_name,\n    total_revenue,\n    revenue_rank\nFROM ProductRevenue\nWHERE revenue_rank <= 3\nORDER BY \n    category_id, \n    revenue_rank, \n    total_revenue DESC;\n```\n\n### \ud83d\udd0d Key Design Choices\n\n| Component | Why It's Used |\n|-----------|---------------|\n| **`DENSE_RANK()`** | Returns consecutive ranks even when ties occur. Unlike `ROW_NUMBER()`, it won't arbitrarily drop tied products from the top 3. Unlike `RANK()`, it won't skip numbers after ties, ensuring you always get up to 3 per category. |\n| **`LEFT JOIN refunds ... WHERE r.refund_id IS NULL`** | Implements an anti-join pattern to efficiently exclude any order linked to a refund. Works reliably regardless of whether the `refunds` table enforces a hard FK constraint. |\n| **CTE (`ProductRevenue`)** | Separates business logic (aggregation + ranking) from presentation logic (`WHERE rank <= 3`). Improves readability and allows database optimizers to materialize intermediate results when beneficial. |\n| **`SUM(oi.quantity * oi.unit_price)`** | Standard e-commerce revenue formula. Adjust to `oi.line_total` if your schema stores pre-calculated line amounts. |\n\n### \ud83d\udee0\ufe0f Customization Notes\n1. **Refund Tracking Level**: This assumes refunds are tracked at the `order_id` level. If your schema tracks refunds at the `order_item_id` level, change the join to:  \n   `LEFT JOIN refunds r ON oi.order_item_id = r.order_item_id`\n2. **Refund Status Filtering**: If the `refunds` table uses a status column (e.g., `'pending'`, `'approved'`, `'cancelled'`), tighten the exclusion:  \n   `AND r.refund_status IN ('approved', 'refunded', 'completed')`\n3. **Window Function Syntax**: If you're on **Snowflake**, **BigQuery**, or **SQL Server 2022+**, you can simplify with `QUALIFY`:\n   ```sql\n   ... GROUP BY p.product_id, c.category_id\n   QUALIFY DENSE_RANK() OVER (PARTITION BY c.category_id ORDER BY SUM(oi.quantity * oi.unit_price) DESC) <= 3\n   ```\n\n### \u26a1 Performance Tips\n- Ensure indexes on: `products(category_id, product_id)`, `order_items(product_id, order_id)`, and `refunds(order_id)`\n- Avoid `COUNT(*)` or `SUM()` inside the `OVER()` clause directly; aggregate first in the CTE, then rank.\n- If categories/products are extremely large, consider adding a `HAVING COUNT(DISTINCT oi.order_id) > 0` or date range filters to reduce early computation.\n\nLet me",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "deepseek/deepseek-v4-pro",
+          "provider": "Baidu",
+          "cost_usd": 0.0019602141,
+          "input_tokens": 60,
+          "output_tokens": 2799,
+          "latency_ms": 40019.94265799999,
+          "text": "Below is a query that finds the **top\u20113 products by revenue within each category**, excludes orders that have been refunded, and uses a ranking window function. The solution assumes a typical e\u2011commerce schema and handles the \u201csoft foreign key\u201d relationship in the `refunds` table via an anti\u2011join.\n\n```sql\nWITH product_revenue AS (\n    SELECT\n        p.id                      AS product_id,\n        p.name                    AS product_name,\n        c.id                      AS category_id,\n        c.name                    AS category_name,\n        SUM(oi.quantity * oi.unit_price) AS total_revenue\n    FROM products p\n    JOIN categories c     ON p.category_id = c.id\n    JOIN order_items oi   ON oi.product_id = p.id\n    WHERE NOT EXISTS (\n        SELECT 1\n        FROM refunds r\n        WHERE r.order_id = oi.order_id   -- soft FK: orders tied to refunds\n    )\n    GROUP BY p.id, p.name, c.id, c.name\n),\nranked_products AS (\n    SELECT\n        category_name,\n        product_name,\n        total_revenue,\n        RANK() OVER (PARTITION BY category_id\n                     ORDER BY total_revenue DESC) AS revenue_rank\n    FROM product_revenue\n)\nSELECT\n    category_name,\n    product_name,\n    total_revenue,\n    revenue_rank\nFROM ranked_products\nWHERE revenue_rank <= 3\nORDER BY category_name, revenue_rank;\n```\n\n### How it works\n\n1. **Join the core tables**  \n   - `products` \u2192 `categories` (to get category info)  \n   - `products` \u2192 `order_items` (to get the line\u2011item details containing quantity and unit price)\n\n2. **Exclude refunded orders**  \n   The `NOT EXISTS` sub\u2011query checks the `refunds` table. Because the relationship between `order_items` and `refunds` is described as a *soft foreign key* (no database\u2011level constraint), we use the `order_id` column that appears in both tables. Any order that has a row in `refunds` is completely excluded from the revenue calculation.  \n   *(If the refunds were tracked at the item level \u2013 e.g., a column `order_item_id` \u2013 you would change the condition to `r.order_item_id = oi.id`.)*\n\n3. **Aggregate revenue per product**  \n   Revenue for a product is `SUM(quantity * unit_price)` across all non\u2011refunded order lines.\n\n4. **Rank products within each category**  \n   The window function `RANK() OVER (PARTITION BY category_id ORDER BY total_revenue DESC)` assigns a rank in each category.  \n   - `RANK()` leaves gaps in case of ties (e.g., if two products tie for rank\u202f1, the next rank will be\u202f3).  \n   - If you need **exactly three products per category regardless of ties**, replace `RANK()` with `ROW_NUMBER()`.  \n5. **Filter top\u202f3**  \n   Keep only rows where the rank is \u2264\u202f3.\n\n6. **Final ordering**  \n   Sorted by category name and then by rank for readability.\n\nThis query returns each category\u2019s three highest\u2011revenue products while properly handling refunded orders and the soft relationship.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "sql-08",
+      "expected": "strong",
+      "actual_label": "strong",
+      "correct": true,
+      "judge_confidence": 0.06000000000000005,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4-pro",
+        "provider": "StreamLake",
+        "cost_usd": 0.00279125,
+        "input_tokens": 63,
+        "output_tokens": 4000,
+        "latency_ms": 133265.59169599978,
+        "text": "",
+        "error": "empty visible answer",
+        "fallback_from": null,
+        "jev_adequate": false,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "sql-09",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.5800000000000001,
+      "routed": {
+        "router": "deferent",
+        "model": "qwen/qwen3.7-flash",
+        "provider": "Alibaba",
+        "cost_usd": 3.591e-05,
+        "input_tokens": 27,
+        "output_tokens": 270,
+        "latency_ms": 3555.821446999971,
+        "text": "```sql\nSELECT * FROM inventory WHERE quantity < 10;\n```",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "sql-10",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.1399999999999999,
+      "routed": {
+        "router": "deferent",
+        "model": "qwen/qwen3.7-flash",
+        "provider": "Alibaba",
+        "cost_usd": 0.00052069,
+        "input_tokens": 23,
+        "output_tokens": 4000,
+        "latency_ms": 45706.71866599991,
+        "text": "",
+        "error": "empty visible answer",
+        "fallback_from": null,
+        "jev_adequate": false,
+        "score": 1
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "qwen/qwen3.7-flash",
+          "provider": "Alibaba",
+          "cost_usd": 0.00016267,
+          "input_tokens": 23,
+          "output_tokens": 1246,
+          "latency_ms": 14436.006456999849,
+          "text": "Here is the standard SQL query to calculate the average rating:\n\n```sql\nSELECT AVG(rating) FROM reviews;\n```\n\nIf you want the result to have a specific column name for easier reading in your application, you can use an alias:\n\n```sql\nSELECT AVG(rating) AS average_rating FROM reviews;\n```",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "deepseek/deepseek-v4-pro",
+          "provider": "StreamLake",
+          "cost_usd": 6.4438e-05,
+          "input_tokens": 18,
+          "output_tokens": 90,
+          "latency_ms": 4811.048984999843,
+          "text": "To get the average rating from the `reviews` table, use:\n\n```sql\nSELECT AVG(rating) AS average_rating\nFROM reviews;\n```",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "sql-11",
+      "expected": "strong",
+      "actual_label": "weak",
+      "correct": false,
+      "judge_confidence": 0.28,
+      "routed": {
+        "router": "deferent",
+        "model": "qwen/qwen3.7-flash",
+        "provider": "Alibaba",
+        "cost_usd": 0.00052192,
+        "input_tokens": 64,
+        "output_tokens": 4000,
+        "latency_ms": 42283.81461999993,
+        "text": "",
+        "error": "empty visible answer",
+        "fallback_from": null,
+        "jev_adequate": false,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "sql-12",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.26,
+      "routed": {
+        "router": "deferent",
+        "model": "qwen/qwen3.7-flash",
+        "provider": "Alibaba",
+        "cost_usd": 7.671e-05,
+        "input_tokens": 35,
+        "output_tokens": 582,
+        "latency_ms": 6878.880669999944,
+        "text": "Here's the SQL statement:\n\n```sql\nUPDATE accounts\nSET status = 'inactive'\nWHERE last_login IS NULL;\n```\n\n**Note:** Always use `IS NULL` (not `= NULL`) when checking for null values in SQL, as `NULL` represents an unknown state and follows three-valued logic. For production environments, consider wrapping this in a transaction or testing on a backup first:\n```sql\nBEGIN TRANSACTION;\nUPDATE accounts SET status = 'inactive' WHERE last_login IS NULL;\n-- COMMIT; or ROLLBACK; after verification\n```",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "sql-13",
+      "expected": "strong",
+      "actual_label": "weak",
+      "correct": false,
+      "judge_confidence": 0.21999999999999997,
+      "routed": {
+        "router": "deferent",
+        "model": "qwen/qwen3.7-flash",
+        "provider": "Alibaba",
+        "cost_usd": 0.00052201,
+        "input_tokens": 67,
+        "output_tokens": 4000,
+        "latency_ms": 41906.537324000055,
+        "text": "",
+        "error": "empty visible answer",
+        "fallback_from": null,
+        "jev_adequate": false,
+        "score": 1
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "qwen/qwen3.7-flash",
+          "provider": "Alibaba",
+          "cost_usd": 0.00052201,
+          "input_tokens": 67,
+          "output_tokens": 4000,
+          "latency_ms": 41383.295140999966,
+          "text": "",
+          "error": "empty visible answer",
+          "fallback_from": null,
+          "jev_adequate": false,
+          "score": 1
+        },
+        {
+          "router": "always-strongest",
+          "model": "deepseek/deepseek-v4-pro",
+          "provider": "Baidu",
+          "cost_usd": 0.00195986765,
+          "input_tokens": 63,
+          "output_tokens": 2797,
+          "latency_ms": 40820.91510700002,
+          "text": "```sql\nWITH conversion_touchpoints AS (\n  -- For each conversion, get all touchpoints that occurred before the conversion\n  SELECT \n    conv.conversion_id,\n    conv.revenue,\n    COALESCE(camp.channel, 'Unknown') AS channel   -- map campaign to channel\n  FROM conversions conv\n  INNER JOIN touchpoints t \n    ON conv.customer_id = t.customer_id \n   AND t.touchpoint_timestamp < conv.conversion_timestamp   -- only touchpoints before the conversion\n  LEFT JOIN campaigns camp \n    ON t.campaign_id = camp.campaign_id\n),\ntouchpoint_counts AS (\n  -- Count how many touchpoints contributed to each conversion\n  SELECT \n    conversion_id,\n    revenue,\n    channel,\n    COUNT(*) OVER (PARTITION BY conversion_id) AS total_touchpoints\n  FROM conversion_touchpoints\n)\n-- Attribute revenue linearly: each touchpoint gets 1 / total_touchpoints of the conversion revenue\nSELECT \n  channel,\n  SUM(revenue * 1.0 / total_touchpoints) AS attributed_revenue\nFROM touchpoint_counts\nGROUP BY channel\nORDER BY attributed_revenue DESC;\n```\n\n**Explanation**  \n\n- **Linear multi\u2011touch attribution model**: Every touchpoint that occurred before a conversion receives an equal share of that conversion\u2019s revenue.  \n- **Conversions with zero touchpoints**: The `INNER JOIN` excludes conversions that have no preceding touchpoints \u2013 they receive no attribution (revenue = 0).  \n- **Conversions with a single touchpoint**: The `COUNT(*) OVER (PARTITION BY conversion_id)` yields `1`, so the full revenue is attributed to that touchpoint\u2019s channel.  \n- **Multiple conversions per customer**: Each conversion is attributed independently based on its own preceding touchpoints.  \n\n**Assumed schema**  \n\n- **touchpoints** (`touchpoint_id`, `customer_id`, `campaign_id`, `touchpoint_timestamp`)  \n- **conversions** (`conversion_id`, `customer_id`, `conversion_timestamp`, `revenue`)  \n- **campaigns** (`campaign_id`, `channel`)  \n\nIf `channel` is NULL (e.g., missing campaign), `COALESCE` groups it under `'Unknown'`. Adjust the join condition between `touchpoints` and `campaigns` if your schema stores the channel directly in `touchpoints`.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 4
+        }
+      ]
+    },
+    {
+      "item_id": "sql-14",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.1399999999999999,
+      "routed": {
+        "router": "deferent",
+        "model": "qwen/qwen3.7-flash",
+        "provider": "Alibaba",
+        "cost_usd": 0.0001766,
+        "input_tokens": 28,
+        "output_tokens": 1352,
+        "latency_ms": 17258.598941999935,
+        "text": "Here is the SQL query to perform that count:\n\n```sql\nSELECT COUNT(*)\nFROM sessions\nWHERE duration_seconds > 300;\n```\n\n**Explanation:**\n*   **`SELECT COUNT(*)`**: Counts every row that meets the criteria.\n*   **`FROM sessions`**: Specifies the table name.\n*   **`WHERE duration_seconds > 300`**: Filters the results to include only rows where the value is strictly greater than 300.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "sql-15",
+      "expected": "weak",
+      "actual_label": "strong",
+      "correct": false,
+      "judge_confidence": 0.06000000000000005,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4-pro",
+        "provider": "StreamLake",
+        "cost_usd": 0.000408552,
+        "input_tokens": 17,
+        "output_tokens": 584,
+        "latency_ms": 18221.99296200006,
+        "text": "To delete all rows from the `logs` table that are older than 30 days, you can use a `DELETE` statement that compares the timestamp column to the current date minus 30 days.\n\nThe exact syntax depends on your database system, but the logic is the same. Here are the most common versions (adjust the column name if your timestamp is stored in a different column like `log_date`, `timestamp`, etc.):\n\n### PostgreSQL / SQLite / Oracle\n```sql\nDELETE FROM logs\nWHERE created_at < NOW() - INTERVAL '30 days';\n```\n\n### MySQL / MariaDB\n```sql\nDELETE FROM logs\nWHERE created_at < NOW() - INTERVAL 30 DAY;\n```\n\n### SQL Server\n```sql\nDELETE FROM logs\nWHERE created_at < DATEADD(DAY, -30, GETDATE());\n```\n\n### Generic (using date subtraction)\n```sql\nDELETE FROM logs\nWHERE created_at < CURRENT_DATE - 30;\n```\n(works in many systems if `created_at` is a `DATE`; for timestamps you may need to cast or use `CURRENT_TIMESTAMP`)\n\n---\n\n**Important notes:**\n- Make sure the column holding the log timestamp is named correctly (e.g., `created_at`, `log_time`, `event_date`). Replace it if yours differs.\n- Always test with a `SELECT` first to see which rows would be deleted:\n  ```sql\n  SELECT * FROM logs\n  WHERE created_at < NOW() - INTERVAL '30 days';\n  ```\n- If the table is very large, consider running the delete in batches or during low-usage hours to avoid locking issues.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "sql-16",
+      "expected": "strong",
+      "actual_label": "weak",
+      "correct": false,
+      "judge_confidence": 0.41999999999999993,
+      "routed": {
+        "router": "deferent",
+        "model": "qwen/qwen3.7-flash",
+        "provider": "Alibaba",
+        "cost_usd": 0.00052204,
+        "input_tokens": 68,
+        "output_tokens": 4000,
+        "latency_ms": 44063.501309,
+        "text": "Here's a production-ready SQL query that meets all your requirements. I've included detailed comments and dialect considerations below.\n\n```sql\nWITH account_totals AS (\n    -- Step 1: Count historical transactions per account\n    SELECT account_id, COUNT(*) AS total_transactions\n    FROM transactions\n    GROUP BY account_id\n),\nvalid_accounts AS (\n    -- Step 2: Filter out accounts with fewer than 10 historical transactions\n    SELECT account_id\n    FROM account_totals\n    WHERE total_transactions >= 10\n),\nwindowed_metrics AS (\n    -- Step 3: Compute 90-day rolling metrics using window functions\n    SELECT \n        t.transaction_id,\n        t.account_id,\n        t.transaction_amount,\n        t.transaction_date,\n        AVG(t.transaction_amount) OVER win AS rolling_avg_90d,\n        STDDEV_S",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": false,
+        "score": 1
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "qwen/qwen3.7-flash",
+          "provider": "Alibaba",
+          "cost_usd": 0.00052204,
+          "input_tokens": 68,
+          "output_tokens": 4000,
+          "latency_ms": 51509.092929999955,
+          "text": "",
+          "error": "empty visible answer",
+          "fallback_from": null,
+          "jev_adequate": false,
+          "score": 1
+        },
+        {
+          "router": "always-strongest",
+          "model": "deepseek/deepseek-v4-pro",
+          "provider": "StreamLake",
+          "cost_usd": 0.00204653,
+          "input_tokens": 59,
+          "output_tokens": 2932,
+          "latency_ms": 87467.37383599998,
+          "text": "Below is a SQL query that detects anomalous transactions according to the requirements. It uses a window function to compute a 90\u2011day rolling average and standard deviation (sample) per account, and flags any transaction whose amount deviates by more than 3 standard deviations. Accounts with fewer than 10 total transactions are automatically excluded from anomaly flagging (their flag is set to `0`).\n\n```sql\nWITH account_total_txns AS (\n    -- Count the total number of transactions per account (entire history)\n    SELECT account_id,\n           COUNT(*) AS total_txns\n    FROM transactions\n    GROUP BY account_id\n),\nrolling_stats AS (\n    -- Compute rolling average and sample standard deviation over a 90-day window\n    SELECT t.account_id,\n           t.transaction_id,\n           t.transaction_date,\n           t.amount,\n           a.total_txns,\n           AVG(t.amount) OVER (\n               PARTITION BY t.account_id\n               ORDER BY t.transaction_date\n               RANGE BETWEEN INTERVAL '90' DAY PRECEDING AND CURRENT ROW\n           ) AS rolling_avg,\n           STDDEV(t.amount) OVER (\n               PARTITION BY t.account_id\n               ORDER BY t.transaction_date\n               RANGE BETWEEN INTERVAL '90' DAY PRECEDING AND CURRENT ROW\n           ) AS rolling_stddev\n    FROM transactions t\n    JOIN account_total_txns a\n      ON t.account_id = a.account_id\n)\nSELECT account_id,\n       transaction_id,\n       transaction_date,\n       amount,\n       -- Flag is 1 only when account has \u226510 transactions AND the amount is an outlier\n       CASE WHEN total_txns >= 10\n             AND rolling_stddev IS NOT NULL        -- ensures enough data in window\n             AND rolling_stddev > 0                -- avoid division-like issues\n             AND ABS(amount - rolling_avg) > 3 * rolling_stddev\n            THEN 1\n            ELSE 0\n       END AS is_anomalous\nFROM rolling_stats\nORDER BY account_id, transaction_date;\n```\n\n**Explanation of key choices:**\n\n- **90\u2011day rolling window:** `RANGE BETWEEN INTERVAL '90' DAY PRECEDING AND CURRENT ROW` includes the current transaction and all those within the preceding 90 days. This is the typical interpretation of a \u201crolling 90\u2011day\u201d calculation. If you prefer to exclude the current row (to compare strictly against history), the window can be adjusted to `... AND INTERVAL '1' DAY PRECEDING` at the cost of slightly more complex syntax (and note that it would also exclude same\u2011day earlier transactions). The provided version is the most common and still flags gross outliers effectively.\n- **Standard deviation:** `STDDEV()` (sample standard deviation) is used. If a population standard deviation is desired, replace with `STDDEV_POP()`.\n- **Minimum transaction count:** The `account_total_txns` CTE counts all transactions per account. The final `CASE` statement enforces that `is_anomalous = 0` for any account with fewer than 10 total transactions, as required (\u201cexcluded from the anomaly calculation entirely\u201d).\n- **Edge cases:** Transactions for an account that has \u226510 overall but whose 90\u2011day window contains fewer than 2 records will yield `NULL` for `STDDEV`. These are not flagged (treated as non\u2011anomalous). Similarly, a zero standard deviation (all identical amounts) produces no anomaly.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "sql-17",
+      "expected": "weak",
+      "actual_label": "strong",
+      "correct": false,
+      "judge_confidence": 0.10000000000000009,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4-pro",
+        "provider": "SiliconFlow",
+        "cost_usd": 0.00162248064,
+        "input_tokens": 22,
+        "output_tokens": 507,
+        "latency_ms": 15198.491813999908,
+        "text": "To combine order details with customer names, you can use an `INNER JOIN` on the common `customer_id` column.  \nHere\u2019s a query that returns each order together with the customer\u2019s name:\n\n```sql\nSELECT \n    o.order_id,        -- or any other order columns you need\n    o.order_date,\n    c.customer_name\nFROM orders o\nINNER JOIN customers c \n    ON o.customer_id = c.customer_id;\n```\n\n**Explanation**  \n- `orders` (aliased as `o`) contains the list of orders and a reference to the customer who placed the order.  \n- `customers` (aliased as `c`) holds customer details, including their name.  \n- The `INNER JOIN` brings together only those orders that have a matching `customer_id` in the `customers` table.  \n- If you need **all orders** even when a customer record is missing, replace `INNER JOIN` with `LEFT JOIN`.  \n\nYou can expand the `SELECT` list to include any other columns from both tables, like `o.total_amount` or `c.email`.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "sql-18",
+      "expected": "strong",
+      "actual_label": "strong",
+      "correct": true,
+      "judge_confidence": 0.020000000000000018,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4-pro",
+        "provider": "Baidu",
+        "cost_usd": 0.00254813975,
+        "input_tokens": 69,
+        "output_tokens": 3643,
+        "latency_ms": 53906.555927,
+        "text": "To compute cohort retention across a product migration, we need to combine two different definitions of \u201cactive\u201d depending on when the activity month falls. The query below assumes:\n\n- **Tables available:**\n  - `customers` \u2014 `id`, `signup_date`\n  - `old_monthly_active` \u2014 `user_id`, `month` (date truncated to first of month), `active` (boolean) \u2014 used for months **before** the migration.\n  - `activity_log` \u2014 `user_id`, `event_time` \u2014 used for months **on or after** the migration.\n  - `config` \u2014 a single-row table holding `migration_date` (a `DATE`). For simplicity, migration is assumed to happen at a month boundary (e.g., `'2022-01-01'`); months are classified by comparing their start date to `migration_date`.\n\n- **Logic:**\n  - For a given customer\u2011month pair, if the month starts before the migration date \u2192 count as active if a row exists in `old_monthly_active` with `active = TRUE`.\n  - Otherwise \u2192 count as active if **any** `activity_log` event falls within that month.\n  - Retention for a cohort (signup month) at month number *n* is the percentage of the cohort\u2019s customers who are active in that calendar month.\n\n```sql\nWITH\n-- All calendar months from the earliest signup to today\ncalendar_months AS (\n    SELECT generate_series(\n        date_trunc('month', MIN(signup_date)),\n        date_trunc('month', CURRENT_DATE),\n        interval '1 month'\n    ) AS month\n    FROM customers\n),\n\n-- Each customer\u2019s signup month (cohort)\ncohorts AS (\n    SELECT\n        id AS customer_id,\n        date_trunc('month', signup_date) AS cohort_month\n    FROM customers\n),\n\n-- Every customer-month combination from signup month onwards\ncustomer_months AS (\n    SELECT\n        c.customer_id,\n        c.cohort_month,\n        cm.month\n    FROM cohorts c\n    JOIN calendar_months cm ON cm.month >= c.cohort_month\n),\n\n-- Determine if the customer was active in that month, using the appropriate definition\nactive_check AS (\n    SELECT\n        cm.customer_id,\n        cm.cohort_month,\n        cm.month,\n        CASE\n            -- Old definition: months before the migration date\n            WHEN cm.month < date_trunc('month', (SELECT migration_date FROM config))\n            THEN CASE WHEN EXISTS (\n                SELECT 1 FROM old_monthly_active o\n                WHERE o.user_id = cm.customer_id\n                  AND o.month = cm.month\n                  AND o.active\n            ) THEN 1 ELSE 0 END\n\n            -- New definition: months from the migration date onward\n            ELSE CASE WHEN EXISTS (\n                SELECT 1 FROM activity_log a\n                WHERE a.user_id = cm.customer_id\n                  AND a.event_time >= cm.month\n                  AND a.event_time <  cm.month + interval '1 month'\n            ) THEN 1 ELSE 0 END\n        END::INTEGER AS is_active\n    FROM customer_months cm\n),\n\n-- Size of each cohort (denominator for retention)\ncohort_sizes AS (\n    SELECT cohort_month, COUNT(*) AS total_customers\n    FROM cohorts\n    GROUP BY cohort_month\n)\n\n-- Final retention output\nSELECT\n    a.cohort_month,\n    (EXTRACT(YEAR FROM a.month)*12 + EXTRACT(MONTH FROM a.month))\n    - (EXTRACT(YEAR FROM a.cohort_month)*12 + EXTRACT(MONTH FROM a.cohort_month))\n        AS month_number,\n    SUM(a.is_active) AS active_customers,\n    cs.total_customers,\n    ROUND(100.0 * SUM(a.is_active) / cs.total_customers, 2) AS retention_pct\nFROM active_check a\nJOIN cohort_sizes cs ON a.cohort_month = cs.cohort_month\nGROUP BY a.cohort_month, month_number, cs.total_customers\nORDER BY a.cohort_month, month_number;\n```\n\n**How it works:**\n1. **Calendar months** are generated from the first signup month to the current month.\n2. **Customer-months** are created for every month from a customer\u2019s signup month forward.\n3. **Active check** uses a `CASE` on the calendar month:\n   - **Before migration:** looks up the old boolean flag in `old_monthly_active`.\n   - **After migration:** checks for any record in `activity_log` during the month.\n4. **Retention** is computed by dividing the number of active customers in a given month\u2011number by the total size of that cohort, then grouping by cohort and month offset.\n\n**Note on boundary months** \u2013 The query assumes `migration_date` is the first day of a month, so no month is split between the two definitions. If the migration happens mid\u2011month, you would need to further split the activity period or use a more granular daily aggregation, which would add complexity but follows the same principles.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    }
+  ]
+}

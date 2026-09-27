@@ -762,6 +762,56 @@ Only the prices in the config changed.
    5, and came back: two switches, and a 17% cache hit rate. It was still cheap ($0.041 for six
    turns), because those models cost almost nothing.
 
+### 13.5 Ten models, ultra-cheap to strong (`experiments/model_ladder.py`)
+
+This part isn't a comparison with anyone. It tests Deferent across a wide spread of models, all
+through OpenRouter, with OpenRouter choosing the host. The 12 policies and datasets are unchanged.
+Each route's tiers come from a ten-model ladder, always cheap to strong within a route:
+
+| Class | Models | $/1M output |
+|---|---|---|
+| Ultra-cheap | gpt-oss-20b, Qwen 3.7 Flash, GLM 5.3 Flash, Ministral 8B, DeepSeek V4.1 Flash | 0.09–0.29 |
+| Cheap | GPT-6 Luna, DeepSeek V4 Pro | 0.50–0.70 |
+| Mid | Gemini 3.8 Flash | 3.75 |
+| Strong | Claude Sonnet 5, GPT-6 Sol | 10 |
+
+All 216 items were routed and answered, for $0.37 of routed spend. Decision accuracy matched the
+two earlier studies:
+* intent: 100% on all six routes
+* escalation: 100% and 89%
+* complexity: 61% (code review), 83% (finance), 72% (SQL)
+
+On every third item (72 prompts), the same prompt also went to two baselines: always the
+route's cheapest tier, and always its strongest. Gemini 3.1 Pro scored all three answers
+side by side. Two Gemini Flash models are in the ladder, so the grader shares a model family
+with them.
+
+| | Cost | Mean score | Easy prompts | Hard prompts |
+|---|---|---|---|---|
+| Always cheapest | $0.034 | 4.42 | 4.60 | 4.17 |
+| **Deferent** | $0.104 | 4.47 | 4.57 | 4.33 |
+| Always strongest | $0.203 | 4.67 | 4.74 | 4.57 |
+
+Here "hard" means the correct route was above the cheapest tier. That was 30 of the 72 prompts.
+
+**What it shows:**
+1. **Cheap models are already good on single-turn tasks like these.** The whole quality spread
+   from cheapest to strongest is 0.25 points, and none of the pairwise differences is
+   statistically significant at n = 72 (every bootstrap interval includes zero). What routing
+   reliably did was **halve the cost** of always using the strongest model.
+2. **When routing helped, it was decisive.** On five hard prompts the cheapest model failed
+   (scores 1–3), and Deferent routed up and scored 4–5: two exec-assistant tasks, a meeting
+   summary, a legal risk clause, and a finance analysis.
+3. **When it hurt, it was the `complexity` policy every time.** Two SQL prompts were sent to the
+   cheap tier and scored 1, where the strong tier scored 4–5. Complexity routes have been the
+   weakest in all three studies:
+   * OpenAI-only (§10)
+   * multi-provider (§13.2)
+   * this run
+
+   Intent routes scored 100% in all three. That makes complexity routing the most valuable
+   thing to fix next (§14).
+
 ## 14. Roadmap
 
 1. **Routing-accuracy validation**: the judge-only eval (predict vs. a ground-truth label from
@@ -794,6 +844,13 @@ Only the prices in the config changed.
    Router was the top tier we chose, not the routing. Re-run the head-to-head with a cheaper top
    tier, and let outcome data rather than intuition decide when a premium model earns its price.
 
+9. **Fix `complexity` routing** (§13.5): across three studies with three different model
+   rosters, it's the one policy that misroutes. Code review is at 56–61%, and SQL at 72%.
+   It under-forecasts long, multi-step technical prompts. Options include recalibrating
+   `base_threshold` per route from outcome data, or asking Jev about named difficulty signals
+   (joins or window functions, concurrency, multi-constraint reasoning) instead of one "can the
+   weak model do it" probability.
+
 ## 15. Sources
 
 Switchyard: repo README, `docs/routing_algorithms/*.md`, `crates/libsy/src/algorithms/util/llm_judge.rs`,
@@ -814,5 +871,5 @@ docs.nvidia.com/dynamo/latest/user-guides/kv-cache-aware-routing; blog.dailydose
 does not imply a cheaper turn"; jfrog.com/blog/why-model-routing-backfires.
 Multi-provider round (§13, checked 2026-09-27): openrouter.ai/api/v1/models and /models/{id}/endpoints
 (per-provider prices), openrouter.ai/docs provider routing (`provider.order`, `allow_fallbacks`),
-OpenRouter `usage.cost` accounting; results in `experiments/results/multiprovider/` and
+OpenRouter `usage.cost` accounting; results in `experiments/results/multiprovider/`, `experiments/results/model-ladder/` and
 `experiments/results/cache-validation-anthropic.json`.

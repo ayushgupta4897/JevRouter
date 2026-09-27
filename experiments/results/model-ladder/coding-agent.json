@@ -1,0 +1,587 @@
+{
+  "name": "coding-agent",
+  "route_name": "eng/coding-agent",
+  "policy": "escalation",
+  "roster": [
+    "deepseek/deepseek-v4.1-flash",
+    "anthropic/claude-sonnet-5"
+  ],
+  "accuracy": 1.0,
+  "routed_cost_usd": 0.0671062,
+  "models_used": {
+    "deepseek/deepseek-v4.1-flash": 10,
+    "anthropic/claude-sonnet-5": 8
+  },
+  "items": [
+    {
+      "item_id": "code-01",
+      "expected": "continue",
+      "actual_label": "continue",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Together",
+        "cost_usd": 0.0008457,
+        "input_tokens": 75,
+        "output_tokens": 686,
+        "latency_ms": 13805.678283000134,
+        "text": "Status: resolved \u2014 the off-by-one bug is fixed, the full test suite passes, and the fix is committed.\n\nSuggested next steps:\n1. Push the commit to the remote branch.\n2. Open a PR with a short summary:\n   - What failed\n   - Root cause: off-by-one\n   - Fix\n   - Test result: all tests passing\n3. Link the relevant issue/ticket if applicable.\n4. Wait for CI/review, then merge.\n\nIf you share the branch name, commit message, or PR template, I can draft the PR description for you.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 4
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Together",
+          "cost_usd": 0.0009321,
+          "input_tokens": 75,
+          "output_tokens": 758,
+          "latency_ms": 3430.957439000167,
+          "text": "Nice \u2014 that\u2019s a clean fix cycle:\n\n- **Turn 1:** Test suite failed with an assertion error.\n- **Turn 2:** Fixed the off-by-one bug; all tests pass.\n- **Turn 3:** Committed the fix.\n\nSuggested next steps: push the commit, open/update the PR, and add a regression test if the edge case wasn\u2019t already covered. Want me to draft a commit message or PR summary?",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 4
+        },
+        {
+          "router": "always-strongest",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Claude Platform on AWS",
+          "cost_usd": 0.004854,
+          "input_tokens": 72,
+          "output_tokens": 471,
+          "latency_ms": 7581.215762000056,
+          "text": "Given that summary, here's a quick recap and some thoughts on next steps:\n\n**What happened:**\n1. Test suite run \u2192 1 failure (assertion error)\n2. Diagnosed and fixed an off-by-one bug \u2192 re-ran \u2192 all tests pass\n3. Committed the fix\n\n**A few things worth considering:**\n\n- **Commit message clarity** \u2014 worth double-checking it clearly states *what* the off-by-one was (e.g., loop bound, array index, date/range calculation) rather than just \"fix bug.\" Future-you (or teammates) will thank you.\n\n- **Regression test** \u2014 did the fix include a new test case that specifically targets the off-by-one scenario, or did it just satisfy the existing failing test? If the original test only caught this by accident, it might be worth adding a targeted edge-case test (e.g., boundary values like empty input, single element, or max index) to prevent recurrence.\n\n- **Root cause scan** \u2014 off-by-one errors often cluster. If this one was in a loop or slicing operation, it might be worth a quick search for similar patterns elsewhere in the codebase (e.g., other uses of the same function/logic that was buggy).\n\n- **CI/push** \u2014 is this fix pushed, or just committed locally? If part of a PR, might want to confirm CI runs green there too, not just locally.\n\nWant help drafting the commit message, writing an additional edge-case test, or scanning for similar off-by-one patterns elsewhere in the code?",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "code-02",
+      "expected": "escalate",
+      "actual_label": "escalate",
+      "correct": true,
+      "judge_confidence": 0.99,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Claude Platform on AWS",
+        "cost_usd": 0.008944,
+        "input_tokens": 97,
+        "output_tokens": 875,
+        "latency_ms": 13003.66398899996,
+        "text": "The fact that the error is byte-for-byte identical across four different fix attempts is the real signal here \u2014 it strongly suggests the code change isn't actually reaching the compiler/bundler, rather than the import path being wrong. If the import itself were the problem, different attempts would likely produce *different* errors (module not found vs. wrong export vs. type mismatch, etc.), not the same one verbatim.\n\nThings I'd check before trying a fifth import variant:\n\n**1. Is the build using a cache?**\n- Stale `node_modules/.cache`, `.next/`, `dist/`, webpack/babel cache, or a Docker layer cache could be serving a pre-edit version of the file.\n- Try a hard clean: delete build output + cache dirs, then rebuild. For most JS toolchains: `rm -rf node_modules/.cache dist .next build && npm run build`.\n\n**2. Are you editing the file the build actually uses?**\n- Check for duplicate files: a compiled `.js` sitting next to a `.ts` source, a symlinked package, monorepo package resolving to a different copy in `node_modules`, or an old artifact checked into version control.\n- Confirm with `git diff` / `git status` that the edit is actually staged and in the file the error references \u2014 check the *exact* path in the stack trace, not just the filename.\n\n**3. Is the file actually saved / committed / synced?**\n- If this is in a container, remote build, or CI, the local edit might not have been pushed, mounted, or synced before the build ran.\n- If using a dev container or remote build agent, verify the timestamp on the file inside the build context.\n\n**4. Is there a second copy of the module being resolved?**\n- Run something like `node -e \"console.log(require.resolve('the-module'))\"` (or the equivalent for your bundler) to see what's actually being resolved at that import.\n- Check for multiple installed versions (`npm ls the-module`) \u2014 sometimes a nested dependency shadows the top-level one.\n\n**5. Grep for the actual failing line**\n- Search the whole repo for the exact error text/line content to make sure you're not editing a copy while a different file (same name, different directory) is what's actually being compiled.\n\n**My suggestion:** paste the exact error message + the current import line + the build command you're running. That'll make it much faster to tell whether this is a caching issue, a path resolution issue, or something else entirely \u2014 rather than continuing to guess at import syntax.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "code-03",
+      "expected": "continue",
+      "actual_label": "continue",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Together",
+        "cost_usd": 0.0007938,
+        "input_tokens": 66,
+        "output_tokens": 645,
+        "latency_ms": 2951.2473499999032,
+        "text": "All three turns are complete: the endpoint is implemented, tests are passing, and the linter is clean after fixing two minor style issues. Nice work!\n\nIf you'd like, I can help with next steps such as:\n- Reviewing the code or tests\n- Writing documentation or a changelog entry\n- Preparing a PR description\n- Planning deployment or monitoring\n\nWhat would you like to do next?",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "code-04",
+      "expected": "escalate",
+      "actual_label": "escalate",
+      "correct": true,
+      "judge_confidence": 0.98,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Claude Platform on AWS",
+        "cost_usd": 0.008302,
+        "input_tokens": 121,
+        "output_tokens": 806,
+        "latency_ms": 12462.995593999949,
+        "text": "The identical failure pattern across turns 1-4 is the key diagnostic clue here \u2014 it means none of those changes were actually touching the root cause. Worth stepping back before trying a \"turn 5\" fix of the same flavor.\n\n**What that pattern rules out:**\n\n- Sleep didn't help \u2192 not a simple race that more wall-clock time papers over\n- Timeout increase didn't help \u2192 the test isn't failing from being too slow overall; something is either hanging, deadlocking, or failing fast in a way timeout doesn't touch\n- Mocking didn't help \u2192 the flakiness likely isn't in that dependency's behavior/latency \u2014 or the mock wasn't actually removing the nondeterminism (e.g., shared state elsewhere still involved)\n- Revert reproducing identical pattern \u2192 the flakiness is **not caused by any recent code change**. It's pre-existing, and probably environmental/structural.\n\n**Where I'd actually look next:**\n\n1. **Shared/global state** \u2014 test order dependency, static/singleton state, leftover state in a DB, cache, or file from a previous test run.\n2. **Concurrency/ordering assumption** \u2014 async operations, thread pool, event loop, or promise resolution order that isn't actually guaranteed the way the test assumes. Sleep/timeout wouldn't fix this if the issue is *ordering*, not *speed*.\n3. **Test isolation** \u2014 is this test run in parallel with others? Random seed not fixed? Port/resource contention?\n4. **External factors** \u2014 network flakiness, DNS, clock skew, filesystem timing, CI runner variability.\n5. **The assertion itself** \u2014 is it asserting on something inherently non-deterministic (map/set ordering, floating point, timestamp equality)?\n\n**Fastest way to actually diagnose instead of guessing:**\n\n- Run the test in a tight loop locally (100-1000x) to get a repro rate and check if it correlates with parallelism/load.\n- Add verbose logging (timestamps, thread/process IDs, actual values on failure) *without* changing behavior, and capture a failing run.\n- Diff the passing vs failing run logs to find the actual divergence point.\n- Check if failures cluster (e.g., only in CI, only first run, only when run with other specific tests) \u2014 that alone often points at shared state or resource contention.\n\nDo you have logs from an actual failure, or know if this test runs in parallel with others / shares any fixtures, DB, or global state? That'd narrow it down fast.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Together",
+          "cost_usd": 0.0020538,
+          "input_tokens": 98,
+          "output_tokens": 1687,
+          "latency_ms": 16852.420633999827,
+          "text": "You\u2019re stuck in a speculative-fix loop. The key signal is:\n\n- Adding sleeps/timeouts didn\u2019t change the failure.\n- Mocking the dependency didn\u2019t change the failure.\n- Reverting everything returned to the same failure pattern.\n\nThat strongly suggests the flake is **not primarily a timing problem and not the external dependency you mocked**. It\u2019s more likely:\n\n- test-order pollution / shared global state\n- async race in the test or code under test\n- resource contention: ports, files, DB rows, connection pools, temp dirs, env vars\n- random/time/locale/timezone/seed nondeterminism\n- parallelism/worker interference\n- the mock not actually intercepting the real call path\n- an assertion that depends on something outside the mocked boundary\n\nThe next move should be **stop changing code and start isolating/measuring**.\n\nWhat I\u2019d do next:\n\n1. **Capture the exact failure**\n   - Full stack trace\n   - Assertion/error message\n   - Test order and seed\n   - Whether it fails alone vs in suite\n   - Parallel workers / shard info\n   - Logs around the failure\n\n2. **Run it in isolation**\n   - Single test, no parallelism, repeated 100\u20131000 times.\n   - If it passes alone but fails in suite \u2192 test pollution/order dependence.\n   - If it fails alone \u2192 internal race/async/global state.\n\n3. **Check order dependence**\n   - Randomize test order.\n   - Run only the suspect test.\n   - Run it after its \u201cneighbor\u201d tests.\n   - Bisect which prior test poisons it.\n\n4. **Audit shared state**\n   - Singletons, static caches, globals\n   - DB state, files, ports, env vars\n   - Timers, mocks not reset, listeners not removed\n   - Cleanup hooks/afterEach/afterAll\n\n5. **Audit async**\n   - Missing `await`\n   - Fire-and-forget promises\n   - Unhandled rejections\n   - Callbacks resolving late\n   - Threads/event loop/locks\n\n6. **Replace sleeps with deterministic waits only after root cause**\n   - Condition-based wait\n   - Fake timers/clock\n   - Explicit barriers/latches\n   - Deterministic seeds\n\n7. **Measure flake rate**\n   - Before/after any fix, run many times.\n   - \u201cStill flakes intermittently\u201d isn\u2019t enough; you need failure rate.\n\nThe likely answer: your changes never touched the root cause. The flake is probably in test isolation, shared state, or async ordering. Don\u2019t try another timeout/sleep/mock patch. First reproduce it deterministically, then bisect.\n\nIf you paste the failing test, stack trace, and how it\u2019s run, I can help pinpoint the actual cause.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Claude Platform on AWS",
+          "cost_usd": 0.011932,
+          "input_tokens": 121,
+          "output_tokens": 1169,
+          "latency_ms": 15628.548262000095,
+          "text": "Interesting pattern \u2014 the fact that your failure signature hasn't changed at all across sleep, timeout, and mocking fixes is actually useful diagnostic information. It's pointing away from timing/latency and toward something more structural. Let me lay out what that convergence tells us.\n\n**What each failed fix rules out:**\n\n- **Sleep didn't help** \u2192 it's probably not a simple race where \"just wait longer\" resolves ordering. If it were pure timing, an adequately large sleep almost always masks the issue (even if it's not the \"real\" fix).\n- **Timeout increase didn't help** \u2192 the test isn't failing because an async operation legitimately needs more time. This also argues against a slow CI runner / resource contention theory.\n- **Mocking the dependency didn't help** \u2192 this is the most telling one. If mocking the suspected dependency doesn't change the failure pattern at all, the dependency you mocked probably isn't the actual source of nondeterminism. Either:\n  - the real flakiness is elsewhere (shared state, ordering, test isolation), or\n  - the mock still shares the underlying nondeterministic behavior (e.g., it wraps a global, a clock, a random seed, or connection pool that's still live).\n\n**Since reverting reproduces turn-1 behavior exactly**, the flakiness is a constant, environment-independent property of the original code \u2014 not something introduced by your fixes. That's good: it means you haven't accidentally papered over one bug while introducing another.\n\n**Higher-probability culprits given this pattern:**\n\n1. **Shared mutable state across tests** (global variables, singletons, class-level fixtures, DB rows not cleaned up) \u2014 causes intermittent failures unrelated to timing.\n2. **Test execution order / parallelism** \u2014 if tests run concurrently or in random order, some interaction only manifests occasionally.\n3. **Nondeterministic input** \u2014 unseeded randomness, `Date.now()`/UUIDs, map/dict iteration order (in languages where it's unordered), or floating point precision.\n4. **Resource leak or stale handle** \u2014 leftover connections, file handles, ports, or caches from a previous test bleeding into this one.\n5. **Assertion timing on eventually-consistent state** \u2014 e.g. asserting on a value before an async callback fully completes, but through a path sleep/timeout didn't touch (e.g., a callback registered on a different event loop tick, or a promise not properly awaited in test setup rather than in the code under test).\n\n**Suggested next steps:**\n\n1. **Run the test in isolation, repeatedly** (e.g., 100\u2013500 iterations) with `--runInBand`/serial mode, no other tests. If it never fails in isolation, it's cross-test pollution, not the test's own logic.\n2. **Log actual timestamps/state at each critical point** rather than guessing \u2014 print what value the assertion sees when it fails vs. passes.\n3. **Check for shared fixtures/state**: database rows, in-memory caches, singleton instances, env vars set by other tests.\n4. **Grep for sources of nondeterminism**: `Date.now`, `Math.random`, `uuid`, unseeded RNGs, `Promise.race`, `setTimeout(0)`, unhandled promise rejections.\n5. **Try running with concurrency = 1** globally for the suite, if not already, to isolate ordering issues from real logic bugs.\n\nCan you share the actual test code and the assertion that fails? Given three unsuccessful attempts already targeted plausible causes, seeing the real code will narrow this down much faster than continuing to guess blind.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "code-05",
+      "expected": "continue",
+      "actual_label": "continue",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Modal",
+        "cost_usd": 0.0008118,
+        "input_tokens": 78,
+        "output_tokens": 657,
+        "latency_ms": 5640.137691999826,
+        "text": "Status: complete.\n\n- Turn 1: refactored the function per the ticket.\n- Turn 2: tests caught two stale callers due to the signature change.\n- Turn 3: updated those callers; all tests pass.\n\nSuggested commit message:\n\n```text\nRefactor [function] and update callers for new signature\n```\n\nBefore merging, I\u2019d recommend:\n- Run the full test suite/CI once more.\n- Grep or use IDE references to confirm no remaining old-signature call sites.\n- Review the diff for unintended behavior changes.\n- Consider adding/updating a test specifically covering the new signature or refactored behavior.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "code-06",
+      "expected": "escalate",
+      "actual_label": "escalate",
+      "correct": true,
+      "judge_confidence": 0.99,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Claude Platform on AWS",
+        "cost_usd": 0.006744,
+        "input_tokens": 112,
+        "output_tokens": 652,
+        "latency_ms": 10194.042724999917,
+        "text": "This pattern is worth pausing on rather than pushing through with another attempt. A few things stand out:\n\n**The \"same exact error message\" across fixes is the key clue.** If you'd actually fixed the config, the error should have changed or disappeared. Getting the identical error message twice, and then the identical *underlying* error via a completely different deployment approach, strongly suggests the problem isn't where you think it is. Likely candidates:\n\n- **Caching** \u2014 old config, build artifacts, or a Docker layer is being reused instead of your edits. Check if the deployment is pulling from a cache (build cache, CDN, package manager cache) rather than reading the current file.\n- **Wrong file being read** \u2014 there may be multiple config files (e.g., environment-specific configs, a `.env` vs `.env.production`, a symlink, or a config baked into an image) and you're editing one while the deployment reads another.\n- **Environment variable overriding the file** \u2014 many tools let env vars override config file values. Your file could be fine while an env var supplies the bad value.\n- **The error message is misleading** \u2014 it might be a generic error that fires for multiple root causes, so \"same message\" doesn't necessarily mean \"same cause.\" Worth checking if this error string maps to more than one failure condition in the tool's source/docs.\n- **Something upstream of config** \u2014 permissions, network access to a registry, DNS, or auth token expiry can sometimes surface as a \"config error\" even though the config itself is fine.\n\n**Suggested next step:** Before trying yet another deployment method, verify what's actually being read/executed at deploy time \u2014 print/log the resolved config right before it's used, check timestamps on the file being loaded, and confirm there's no caching layer in play. That'll tell you whether this is a \"your fix didn't take effect\" problem or a \"the fix targeted the wrong cause\" problem \u2014 they need very different next steps.\n\nWhat tool/platform is this (e.g., Kubernetes, Vercel, Heroku, Terraform)? That'll help narrow down which of these is most likely.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "code-07",
+      "expected": "continue",
+      "actual_label": "continue",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Together",
+        "cost_usd": 0.0007323,
+        "input_tokens": 65,
+        "output_tokens": 594,
+        "latency_ms": 3112.873696999941,
+        "text": "Status looks good: migration added, local run verified, and rollback script added.\n\nBefore calling it fully done, I\u2019d suggest one more check:\n\n1. Apply migration on a clean/prod-like DB copy.\n2. Run rollback.\n3. Re-apply migration.\n4. Verify schema and data state after each step.\n5. Run the test suite/CI against the migration path.\n\nIf you paste the migration and rollback files, I can review them for reversibility, locking risks, and potential data loss. I can also draft a PR summary or test checklist if that would help.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Together",
+          "cost_usd": 0.0010467,
+          "input_tokens": 65,
+          "output_tokens": 856,
+          "latency_ms": 14292.270614000017,
+          "text": "Nice \u2014 that\u2019s most of the work. The one thing I\u2019d flag: \u201cadded a rollback script\u201d isn\u2019t the same as \u201cverified rollback works.\u201d\n\nBefore calling it fully done:\n\n- Run the rollback locally against a database that has the migration applied.\n- Confirm it fully reverts schema/data changes.\n- Re-run the migration afterward to verify `up \u2192 down \u2192 up` works.\n- Test rollback on staging or a prod-like copy, especially if there\u2019s a data backfill or destructive change.\n- Document any irreversible data loss and the backup/restore path.\n\nIf those checks pass, you\u2019re good. If you share the migration and rollback scripts, I can review them for correctness.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Claude Platform on AWS",
+          "cost_usd": 0.000558,
+          "input_tokens": 54,
+          "output_tokens": 45,
+          "latency_ms": 2576.4421540000058,
+          "text": "What's the current status\u2014has this been deployed anywhere beyond local, or is it still sitting at \"tested locally, rollback script ready\"?",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": false,
+          "score": 3
+        }
+      ]
+    },
+    {
+      "item_id": "code-08",
+      "expected": "continue",
+      "actual_label": "continue",
+      "correct": true,
+      "judge_confidence": 0.71,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Together",
+        "cost_usd": 0.000954,
+        "input_tokens": 72,
+        "output_tokens": 777,
+        "latency_ms": 13964.665344999958,
+        "text": "Nice \u2014 classic merge-conflict whack-a-mole. Since the fixes touched multiple unrelated tests, I\u2019d do one final sanity pass before committing:\n\n- Run the full test suite once more from a clean state\n- Check `git diff` for minimal, intentional changes\n- Look for leftover conflict markers or duplicated logic\n- Let CI confirm the same result\n\nA commit message like this could work:\n\n```text\nFix test regressions from merge conflict resolution\n```\n\nIf you share the diff or the three fixes, I can help review them or write a PR summary.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "code-09",
+      "expected": "escalate",
+      "actual_label": "escalate",
+      "correct": true,
+      "judge_confidence": 0.94,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Claude Platform on AWS",
+        "cost_usd": 0.00507,
+        "input_tokens": 100,
+        "output_tokens": 487,
+        "latency_ms": 7933.611465000013,
+        "text": "Three fixes, zero change in growth rate \u2014 that's the real signal here, and it's worth stopping on before trying a fourth thing.\n\nIf the leak rate is truly identical across three structurally different approaches (explicit close, context manager, pooling), the connection handling almost certainly isn't the cause. All three touch the same layer of the code, so a consistent, unchanged signature strongly suggests the leak is somewhere else entirely \u2014 object references being held elsewhere, a cache that never evicts, listeners/callbacks that keep accumulating, circular references if anything's relying on garbage collection, or the profiler measuring something unrelated to the connections at all.\n\nWorth checking before touching connection code again:\n\n- **What exactly is growing?** Confirm it's connection objects specifically, not just general heap growth. If the profiler shows the same objects accumulating regardless of how connections are closed, they may not be connections at all.\n- **Who's holding the reference?** Trace one leaked object back to its retaining reference \u2014 a global dict, a module-level list, a bound callback, something registered once and never removed.\n- **Is it actually the object you think it is?** Sometimes \"connection leak\" is diagnosed from symptom (memory growth, fd count) rather than confirmed by directly inspecting what's retained.\n\nCan you share what the profiler is actually flagging as growing \u2014 the object type and a retention path/traceback if it has one? That'll pin down whether this is connection-related at all, versus something upstream that's just correlated with connection creation.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "code-10",
+      "expected": "continue",
+      "actual_label": "continue",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Together",
+        "cost_usd": 0.0011907,
+        "input_tokens": 65,
+        "output_tokens": 976,
+        "latency_ms": 4169.729145000019,
+        "text": "Got it \u2014 feature flag logic is implemented, tests are green, and the review-requested rename is done.\n\n**Suggested next steps:**\n1. Commit the changes, e.g.  \n   `git commit -am \"feat: add feature flag logic\"`  \n   or if you want to reflect review:  \n   `git commit -am \"feat: add feature flag logic and apply review rename\"`\n2. Push and update the PR.\n3. In the PR description, note:\n   - flag name/default state\n   - tests passing\n   - review feedback addressed\n   - rollout/rollback plan\n4. Merge, deploy with the flag off, smoke test, then enable gradually.\n\nWant me to draft a commit message or PR summary?",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Together",
+          "cost_usd": 0.0008955,
+          "input_tokens": 65,
+          "output_tokens": 730,
+          "latency_ms": 13460.439247000068,
+          "text": "Status: complete \u2014 feature flag logic implemented, tests passing, variable renamed per code review, and the full test suite is green.\n\nSuggested PR/commit summary:\n- Add new feature flag logic\n- Rename variable based on code review feedback\n- Verify all tests pass\n\nNext step: ready to merge.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 4
+        },
+        {
+          "router": "always-strongest",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Claude Platform on AWS",
+          "cost_usd": 0.004454,
+          "input_tokens": 57,
+          "output_tokens": 434,
+          "latency_ms": 7927.8535309999825,
+          "text": "What's the actual state you're checking in on\u2014did the rename introduce a merge conflict, is CI still green after the change, or something else came up since turn 3?\n\nIf it's just \"everything's still fine, right?\", the honest answer is: I have no way to verify that from here. I don't have access to your repo, your CI results, or the current state of the branch. All I have is your summary that three things happened in sequence.\n\nA few things worth flagging rather than assuming are fine:\n\n- **\"Done, all green\" after a rename** \u2014 was that a fresh CI run, or are you inferring it's fine because the rename was \"just\" a rename? Renames can break things that reference the variable by string (config, serialization, logging queries) even when the compiler doesn't complain.\n- **Tests passing in turn 2** were presumably against the pre-rename variable name. If the green checkmark in turn 3 is a new run, good. If it's the same one from turn 2, that's stale.\n- **Feature flag logic specifically** is a common place where \"tests pass\" hides gaps \u2014 flag-off and flag-on paths, plus the default/missing-flag case, are three states that are easy to only partially cover.\n\nWhat do you want to actually do next \u2014 merge it, add more test coverage, or just sanity-check the diff before moving on? Happy to look at the actual code/diff if you paste it rather than the turn-by-turn summary.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 2
+        }
+      ]
+    },
+    {
+      "item_id": "code-11",
+      "expected": "escalate",
+      "actual_label": "escalate",
+      "correct": true,
+      "judge_confidence": 0.86,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Claude Platform on AWS",
+        "cost_usd": 0.006372,
+        "input_tokens": 66,
+        "output_tokens": 624,
+        "latency_ms": 9206.661996000093,
+        "text": "The pattern you're describing\u2014identical failure, identical error message, zero change across four different fixes\u2014is a strong signal that the actual cause hasn't been touched yet. A few things worth considering:\n\n**The fixes may be targeting symptoms, not the mechanism**\n\nIf four different hypotheses all produced *exactly* the same timeout (not a different timeout, not a different failure point, not a partial improvement), that suggests the code paths being changed aren't actually on the critical path for this failure. Identical error signatures across different fixes usually means the fixes are downstream or adjacent to the real issue, not intersecting it.\n\n**Questions worth answering before a fifth attempt:**\n\n1. Has the timeout been reproduced *locally*, or only observed in CI? If it's CI-only, the cause might be environmental (resource contention, network policy, service startup order, container limits) rather than anything in the code being edited.\n\n2. Is there a stack trace or hang point, or just \"test exceeded N seconds\"? A bare timeout with no indication of *where* execution is stuck makes it easy to guess wrong repeatedly. Getting a thread dump, stack trace, or adding intermediate logging at the point of suspected hang is usually more valuable than another speculative fix.\n\n3. Has anyone confirmed the four fixes actually *deployed*/ran in the environment that failed? Occasionally \"the fix didn't change anything\" turns out to be caching, a stale branch, or the test being skipped/not exercising the changed path at all.\n\n4. Is the timeout deterministic (fails every run) or flaky (fails intermittently but you've had bad luck 4/4)? That changes the investigation strategy significantly \u2014 a race condition needs different tooling than a deterministic hang.\n\nIf you can share the actual error/timeout message, what the test does, and what the four attempted fixes changed, I can help narrow down what's actually happening rather than guessing at a fifth fix.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "code-12",
+      "expected": "continue",
+      "actual_label": "continue",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Modal",
+        "cost_usd": 0.0008733,
+        "input_tokens": 71,
+        "output_tokens": 710,
+        "latency_ms": 8422.002238000005,
+        "text": "Nice progression. Current status:\n\n- Pagination implemented.\n- Last-page edge case fixed.\n- Regression test added and passing.\n\nSuggested next steps:\n1. Run the full test suite/CI to catch regressions.\n2. Add/verify boundary cases: empty result set, page beyond last, exact multiple of page size, invalid page/page size.\n3. Update API docs/OpenAPI for pagination params and response fields.\n4. Commit with a clear message, e.g. `fix(api): handle last-page pagination edge case`.\n\nWant me to draft those extra test cases or a commit message?",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "code-13",
+      "expected": "escalate",
+      "actual_label": "escalate",
+      "correct": true,
+      "judge_confidence": 0.52,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Claude Platform on AWS",
+        "cost_usd": 0.007138,
+        "input_tokens": 64,
+        "output_tokens": 701,
+        "latency_ms": 10905.922878999945,
+        "text": "Let's slow down and look at this systematically. Before proposing fix #4, it's worth asking a different question: why would three plausible fixes all fail to change the outcome at all? That pattern itself is informative.\n\nA few possibilities that pattern points to:\n\n**The error isn't caused by what you think it's caused by.** If the actual error message is generic (dependency resolution failure, timeout, permission denied, etc.), three different people/attempts might be independently guessing at the same surface-level symptom without seeing the actual root cause underneath it.\n\n**Caching is masking your changes.** This is extremely common. If the pipeline caches dependencies, Docker layers, or build artifacts, your fixes might genuinely be correct but never actually get executed \u2014 the pipeline is running against a stale cache that recreates the exact same failure state every time. Worth checking:\n- Is cache invalidation keyed on something that isn't changing (e.g., a lockfile hash that your fix didn't touch)?\n- Does forcing a cache bust or a clean run change anything?\n\n**The fix is landing in the wrong place.** E.g., you're editing a config file that gets overwritten by a template, an env var that's being shadowed by one set earlier in the pipeline, or a script that isn't actually the one being invoked (wrong path, wrong branch, wrong job).\n\n**The CI is running an old commit.** Worth confirming the commit SHA in the failing run's logs actually matches your latest commit. Sounds trivial but happens more than you'd expect \u2014 stale webhook triggers, branch protection re-running old checks, etc.\n\n**The failure is environmental/infra, not code.** Same runner image, same external service dependency, same flaky network call \u2014 something outside your diffs entirely.\n\nA few things that would help me actually help you:\n\n1. What's the exact error message/log output at the failing step?\n2. What were the three fixes, briefly?\n3. Does the timestamp/duration of the failing step change at all between runs, or is it byte-for-byte identical output?\n4. Is this step running in a container/cached environment?\n\nIf you can paste the error and the step's config, I can help pinpoint which of these it likely is rather than guessing further.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 4
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Together",
+          "cost_usd": 0.0024975,
+          "input_tokens": 69,
+          "output_tokens": 2064,
+          "latency_ms": 18959.071017000042,
+          "text": "Stop making fixes until you can prove CI is running the fixes. Three plausible changes with zero change in symptom usually means you\u2019re debugging the wrong layer: the failing step either isn\u2019t executing your changed code, is using a cached/old artifact, or the visible error is downstream of the real failure.\n\nDo this before commit #4:\n\n1. **Verify the CI checkout SHA**\n   - Add `git rev-parse HEAD` before the failing step.\n   - Compare it to the commit you think CI is running.\n   - Check PR merge refs, branch filters, workflow `ref`, merge queue, or a pinned SHA.\n\n2. **Add a canary immediately before the failing command**\n   ```bash\n   set -x\n   pwd\n   git rev-parse HEAD\n   git status --short\n   ls -la\n   cat path/to/file/you/changed\n   command-that-fails --version\n   env | sort | grep -v -i secret\n   ```\n   If the canary doesn\u2019t show your change, the problem is CI plumbing/caching/branching. If it does, your three fixes are not on the path that produces the error.\n\n3. **Check caches and artifacts**\n   - Dependency cache\n   - Docker layer cache\n   - Compiled/generated output\n   - Test discovery\n   - Lockfiles\n   - Stale build directories\n   \n   Bust the cache and rerun from clean.\n\n4. **Confirm the failing step is actually the cause**\n   Read the raw log from the top, not just the red section. The \u201csame error\u201d may be a wrapper around an earlier failure in setup/install/auth.\n\n5. **Reproduce the exact command locally**\n   Use the same CI image/container, same env vars, same working directory, same command. If it passes locally and fails in CI, the difference is environment, permissions, secrets, or cache.\n\n6. **Reduce the delta**\n   If the canary shows your code is loaded and the error persists, strip it down to one file/test/command in the same CI image.\n\nThe smallest next experiment: insert the canary. If CI still fails at the exact same step with the exact same error and the canary doesn\u2019t appear, fix the pipeline first. If the canary appears, the error is independent of those three commits.\n\nSend the failing CI step, the CI config, and the 10 lines before/after the error if you want help narrowing it.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Claude Platform on AWS",
+          "cost_usd": 0.006958,
+          "input_tokens": 64,
+          "output_tokens": 683,
+          "latency_ms": 9901.385836999907,
+          "text": "Given that pattern\u2014same failure point, same error, three plausible fixes that didn't work\u2014the most likely explanation is that the fixes are addressing a *symptom* that's downstream of the real cause, or the fix isn't actually reaching the environment where the failure happens.\n\nA few concrete possibilities worth checking, roughly in order of how often I've seen them bite people:\n\n**Caching is serving stale state.** If the CI system caches dependencies, Docker layers, or build artifacts, your fixes might not actually be taking effect. Try a run with all caching forcibly disabled or bumped cache keys, and see if the error changes at all.\n\n**The failure is happening before your fix is even loaded.** If the error is at \"step X,\" check whether step X is actually using the file/config/code you changed, or whether it's using something generated/copied earlier in the pipeline (e.g., a lockfile, a compiled artifact, an env file) that isn't being regenerated.\n\n**Environment mismatch, not code.** If this passes locally but not in CI, the three fixes might all be reasonable code-level guesses when the actual issue is CI-specific: a missing env var, a different OS/architecture, a version pin that resolves differently, network/DNS restrictions in the runner, secrets not being available on this branch/PR type, etc.\n\n**The error message is misleading.** Some tools surface a generic error (e.g., \"exit code 1,\" a timeout, a generic assertion) that masks the real underlying issue. Worth pulling the *full* raw log output around that step, not just the summary, and checking for a truncated stack trace or an earlier warning that's actually the root cause.\n\n**Non-determinism disguised as determinism.** \"Exact same error every run\" sounds deterministic, but if it's something like a race condition that resolves the same way every time due to consistent resource allocation on the runner, it can look identical run-to-run while the real cause is timing-related.\n\nTo help narrow it down, can you share:\n\n1. The actual error message/log snippet from that step.\n2. What each of the three fixes attempted to change.\n3. Whether this reproduces locally or only in CI.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 4
+        }
+      ]
+    },
+    {
+      "item_id": "code-14",
+      "expected": "continue",
+      "actual_label": "continue",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Together",
+        "cost_usd": 0.000522,
+        "input_tokens": 68,
+        "output_tokens": 418,
+        "latency_ms": 11717.465488000016,
+        "text": "Great \u2014 the rename is complete, all references are updated, and the full test suite passes. If you want, I can help draft a commit message or PR summary.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "code-15",
+      "expected": "continue",
+      "actual_label": "continue",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Together",
+        "cost_usd": 0.0011739,
+        "input_tokens": 65,
+        "output_tokens": 962,
+        "latency_ms": 4557.5516480000715,
+        "text": "Nice \u2014 that\u2019s a clean progression.\n\nSuggested Turn 4: confirm CI is green, request review, and monitor for feedback. If you share the PR/diff, I can help with:\n\n- drafting the PR description,\n- verifying the boundary-condition fix,\n- adding a regression test for that exact case,\n- or reviewing the changes.\n\nPR description starter:\n\n```md\n## Summary\n- Added input validation\n- Fixed boundary condition found by failing test\n\n## Testing\n- All tests passing locally\n- CI: green/pending\n```\n\nWhat would you like to do next?",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "code-16",
+      "expected": "escalate",
+      "actual_label": "escalate",
+      "correct": true,
+      "judge_confidence": 0.96,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Claude Platform on AWS",
+        "cost_usd": 0.006172,
+        "input_tokens": 111,
+        "output_tokens": 595,
+        "latency_ms": 9647.108927999852,
+        "text": "Four rounds in with the identical symptom persisting through two different locking strategies is a strong signal: this probably isn't a locking problem at all. If it were purely a race condition around shared state, different lock scopes or mechanisms would typically change the failure mode somewhat \u2014 different timing windows, maybe different symptoms, possibly reduced frequency even if not fixed. Getting the exact same symptom regardless of locking approach suggests the lock isn't actually guarding the thing that's causing the bug.\n\nA few possibilities worth checking before adding more locks:\n\n1. **The lock isn't covering the actual critical section.** Easy to lock around the code you assume is the problem while the real shared mutable state gets touched elsewhere \u2014 a callback, a different thread pool, a static/global, a cached reference \u2014 outside the locked region.\n\n2. **It's not a race at all.** Some intermittent-under-load bugs look like races but are actually deterministic bugs triggered by load-dependent conditions: resource exhaustion, a queue overflow, a timeout firing, an ordering assumption that breaks past a certain throughput, retry logic double-firing. Locking would do nothing here, which fits what you're seeing.\n\n3. **The logging itself may be masking timing.** Adding extensive logging often shifts or hides races because of the overhead/output flushing \u2014 but you said the failure mode was identical, which is actually informative: if logging changed nothing, that also leans away from a pure timing-sensitive race (those are usually at least somewhat sensitive to added instrumentation).\n\nGiven that, what does the actual symptom look like \u2014 is it a stale/incorrect value, a crash, a duplicate operation, a missing update? And do you have the logs from turn 4 showing the sequence of events leading into the failure? That sequence is probably more useful right now than trying a third locking strategy.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 4
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Modal",
+          "cost_usd": 0.0030639,
+          "input_tokens": 97,
+          "output_tokens": 2529,
+          "latency_ms": 39201.159608999886,
+          "text": "The key clue is: **adding locks and logging didn\u2019t change the symptom at all**. That strongly suggests you\u2019re not fixing the actual root cause, and it may not even be the race condition you think it is.\n\nMost likely explanations:\n\n1. **The lock is not actually protecting the real shared state**\n   - Different instances/processes/pods each have their own lock.\n   - Lock object is per-request/per-object instead of shared.\n   - Some code paths mutate the state without taking the lock.\n   - Async/await: lock released before the awaited work completes.\n   - Read-modify-write partially outside the critical section.\n\n2. **The race is outside your process**\n   - Database transaction isolation issue.\n   - Cache stampede / stale cache.\n   - Message queue duplicate delivery / reordering.\n   - External service not idempotent.\n   - Distributed lock without fencing token, so stale holders still write.\n\n3. **It is not actually a race condition**\n   - Load exposes a deterministic bug: timeout/retry storm, connection pool exhaustion, queue buildup, resource limit, DNS, thread starvation.\n   - Retries make the same failure repeat with the same symptom.\n   - A lock can make this worse by serializing work, increasing latency, causing timeouts/retries, producing the same symptom.\n\n4. **Logging didn\u2019t perturb timing enough, or logs are not on the failing path**\n   - Async/buffered logging.\n   - Logging added after the corruption already happened.\n   - The failure occurs in another component/host.\n\nTurn 5 should not be \u201ctry another locking strategy.\u201d It should be diagnostic:\n\n- Reproduce with **concurrency = 1**. If it still fails, it is not a race.\n- Capture full correlation IDs, thread/process IDs, lock acquire/release, and state transitions around the failure.\n- List every shared mutable state and every access path. Verify the same lock covers all reads/writes, same scope, same lifetime.\n- Use race detectors: ThreadSanitizer, Go race detector, Helgrind, rr, deterministic schedulers.\n- Check DB isolation, retries, idempotency keys, timeouts, connection pools, queues, and external services.\n- Add invariants/assertions that fail immediately when the state becomes invalid.\n- Try disabling components/bisecting: DB, cache, queue, retries, async workers, etc.\n\nIf it is a true race, the fix is usually **one correctly scoped concurrency primitive around the entire invariant**, or atomic/CAS/DB constraints/optimistic concurrency. If it is distributed, local locks are useless; you need DB row locks, leases with fencing tokens, or idempotent operations.\n\nBottom line: four identical failures after four locking/logging attempts means you have not yet localized the bug. The next useful turn is to prove whether it is concurrency at all and find the exact invariant being violated.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "anthropic/claude-sonnet-5",
+          "provider": "Claude Platform on AWS",
+          "cost_usd": 0.006922,
+          "input_tokens": 111,
+          "output_tokens": 670,
+          "latency_ms": 10973.594161999927,
+          "text": "Four rounds of \"fix\" without a single round of \"understand\" \u2014 that's the pattern worth stopping on.\n\nThe tell here is \"same symptom exactly\" repeated three times. If this were actually a race condition between two threads/processes contending for a resource, changing the locking strategy should have changed *something* \u2014 the timing, the frequency, maybe shifted the failure to a different point in the sequence \u2014 even if it didn't fully fix it. Identical symptom across two different locking approaches strongly suggests the lock isn't touching the actual mechanism causing the bug. That points toward a few real possibilities:\n\n1. **It's not a race condition at all.** Something deterministic (a logic error, an off-by-one, a bad assumption about ordering, stale state) is being misdiagnosed as a race because it only shows up \"under load\" \u2014 but load could be triggering a threshold, a queue overflow, a timeout, or a retry path rather than actual concurrent access to shared state.\n\n2. **The lock is protecting the wrong critical section.** You may be locking around code that looks like the contention point but isn't where the actual shared-state mutation happens \u2014 e.g., a check-then-act split elsewhere, a callback/async boundary the lock doesn't cover, or a resource (cache, connection pool, file handle) that's shared in a way you haven't locked at all.\n\n3. **The logging changed timing without changing the bug** \u2014 which is actually informative. If logging didn't perturb the failure at all, that's more evidence this isn't sensitive to timing in the way a classic race is, or the logging itself isn't capturing the moment where things go wrong.\n\nBefore trying another fix, it'd be worth confirming the actual failure mechanism directly: capture the state (values, thread IDs, timestamps) right at the point of failure, not just around it, and check whether two threads are genuinely touching the same mutable state at the same time, or whether one thread alone is producing the bad output. What does the logging from turn 4 actually show at the moment the symptom appears \u2014 is there evidence of two threads interleaving, or does it look like a single execution path going wrong?",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 4
+        }
+      ]
+    },
+    {
+      "item_id": "code-17",
+      "expected": "continue",
+      "actual_label": "continue",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Together",
+        "cost_usd": 0.0011787,
+        "input_tokens": 73,
+        "output_tokens": 964,
+        "latency_ms": 13855.985256000167,
+        "text": "Nice progress \u2014 caching layer in, TTL added, load test passing.\n\nOne important caveat: **TTL is not a true fix for cache invalidation**. It only bounds how long stale data can live. If correctness requires immediate freshness after writes, you still need explicit invalidation (e.g., delete/update on write, versioned keys, or pub/sub invalidation). A load test mainly proves throughput/latency under load; it may not catch stale-read or race-condition bugs.\n\nSuggested next steps:\n- Add correctness tests for write \u2192 read consistency and invalidation paths.\n- Monitor cache hit rate, miss rate, evictions, and stale-read incidents.\n- Tune TTL per key type based on acceptable staleness.\n- Document the TTL as a mitigation, not a full invalidation guarantee.\n\nIf you want, I can help draft a short status update or a \u201cTurn 4\u201d plan for hardening this.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "code-18",
+      "expected": "escalate",
+      "actual_label": "escalate",
+      "correct": true,
+      "judge_confidence": 0.91,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-sonnet-5",
+        "provider": "Claude Platform on AWS",
+        "cost_usd": 0.009288,
+        "input_tokens": 79,
+        "output_tokens": 913,
+        "latency_ms": 14454.14797400008,
+        "text": "Three failures with three different approaches is a strong signal\u2014when a strict parser, a lenient parser, and a regex workaround all die with the *identical* stack trace, the common variable isn't the parsing strategy, it's something upstream or environmental that all three share. Worth checking, roughly in order of likelihood:\n\n**1. The crash isn't actually happening in the parsing logic**\nIf the stack trace is truly identical across three different code paths, look closely at where it *bottoms out*. Is the top of the stack in your parsing code, or does it point to something shared underneath \u2014 file I/O, encoding/decoding, a shared HTTP client fetching the payload, a logging call, string interning? A regex approach and a SAX/DOM parser have almost nothing in common code-wise, so if the trace matches exactly, the fault is probably in whatever hands data *to* those approaches, not in them.\n\n**2. Encoding mismatch**\nMalformed XML from a vendor is often a red herring for what's actually a mis-declared or mixed encoding (UTF-8 declared, Latin-1 or Windows-1252 actually used, or a stray BOM). This can crash a strict parser, confuse a lenient parser's internal state machine, and break regex matching on multi-byte sequences \u2014 all in the same way if you're reading the bytes with a consistent (wrong) decode step before any parser sees the string.\n\n**3. The input itself is corrupted or truncated identically each time**\nIf the \"vendor XML\" is being fetched fresh each attempt, is it actually fresh? Caching, a stuck retry, or a proxy could be feeding you the same broken byte stream every time, meaning you're debugging the same static corruption rather than three independent tests.\n\n**4. Non-printable or control characters**\nVendor XML with embedded control characters (0x00-0x1F excluding tab/LF/CR) will make strict parsers throw, lenient parsers sometimes choke anyway depending on implementation, and can break regexes that assume line-oriented input (e.g., `.` not matching newlines, or greedy matches running away).\n\n**5. Stack overflow vs. exception**\nIs this a StackOverflowError/RecursionError type of crash, or an unhandled parse exception? Those point in very different directions \u2014 the former suggests something recursive (deeply nested elements, or a regex with catastrophic backtracking that all three \"attempts\" inadvertently share if they funnel through a common validation regex first).\n\nTo help further, could you share:\n- The actual stack trace (or at least the last few frames and the exception type)?\n- A sample snippet of the malformed XML (or the specific malformation, e.g., unescaped ampersands, invalid entity refs, mismatched tags)?\n- Language/runtime you're working in?\n\nThat'll narrow this down fast rather than guessing.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    }
+  ]
+}

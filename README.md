@@ -370,7 +370,9 @@ under `vendor/switchyard/` at a pinned commit — no `cargo install --git`, noth
 
 ## Status
 
-Validated against the real TypeSafe API and real OpenAI models (not just mocks) — see
+Validated against the real TypeSafe API, real OpenAI models, and ten models from seven labs
+through OpenRouter, from ultra-cheap ($0.09 per million output tokens) up to Claude Sonnet 5 and
+GPT-6 Sol. Across those ten, routing cost half as much as always using the strongest model. See
 [`docs/DECISION.md`](docs/DECISION.md) for the full record, including every real bug found along
 the way and how each was caught. In short: routing decisions are real and tested; two production
 gaps (an unenforced context window on `escalation`, and a judge outage that used to be fatal

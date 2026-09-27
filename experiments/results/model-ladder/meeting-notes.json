@@ -1,0 +1,587 @@
+{
+  "name": "meeting-notes",
+  "route_name": "ops/meeting-notes",
+  "policy": "intent",
+  "roster": [
+    "z-ai/glm-5.3-flash",
+    "openai/gpt-6-luna"
+  ],
+  "accuracy": 1.0,
+  "routed_cost_usd": 0.0022791700000000005,
+  "models_used": {
+    "z-ai/glm-5.3-flash": 9,
+    "openai/gpt-6-luna": 9
+  },
+  "items": [
+    {
+      "item_id": "meet-01",
+      "expected": "action_items",
+      "actual_label": "action_items",
+      "correct": true,
+      "judge_confidence": 0.98,
+      "routed": {
+        "router": "deferent",
+        "model": "z-ai/glm-5.3-flash",
+        "provider": "Modal",
+        "cost_usd": 0.0001757,
+        "input_tokens": 48,
+        "output_tokens": 337,
+        "latency_ms": 3894.890495000027,
+        "text": "| Action Item | Owner | Deadline |\n|---|---|---|\n| Send the updated deck | Sarah | Friday |\n| Follow up with legal on the contract | Tom | Wednesday |",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "z-ai/glm-5.3-flash",
+          "provider": "Modal",
+          "cost_usd": 0.0001662,
+          "input_tokens": 48,
+          "output_tokens": 318,
+          "latency_ms": 2822.092540999847,
+          "text": "| Owner | Action Item | Deadline |\n|-------|-------------|----------|\n| Sarah | Send the updated deck | Friday |\n| Tom | Follow up with legal on the contract | Wednesday |",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "openai/gpt-6-luna",
+          "provider": "OpenAI",
+          "cost_usd": 2.95e-05,
+          "input_tokens": 40,
+          "output_tokens": 51,
+          "latency_ms": 1745.4145760000301,
+          "text": "- **Sarah:** Send the updated deck by Friday.\n- **Tom:** Follow up with Legal on the contract by Wednesday.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "meet-02",
+      "expected": "action_items",
+      "actual_label": "action_items",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "z-ai/glm-5.3-flash",
+        "provider": "Modal",
+        "cost_usd": 0.00015695,
+        "input_tokens": 53,
+        "output_tokens": 298,
+        "latency_ms": 2726.807780999934,
+        "text": "- **Priya** \u2014 owns the migration plan, due end of month.\n- **Alex** \u2014 delivers the budget numbers to finance by next Tuesday.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "meet-03",
+      "expected": "action_items",
+      "actual_label": "action_items",
+      "correct": true,
+      "judge_confidence": 0.98,
+      "routed": {
+        "router": "deferent",
+        "model": "z-ai/glm-5.3-flash",
+        "provider": "Modal",
+        "cost_usd": 0.0001412,
+        "input_tokens": 48,
+        "output_tokens": 268,
+        "latency_ms": 3670.1071659999798,
+        "text": "**Action Items**\n\n| Owner | Task | Deadline |\n|-------|------|----------|\n| John | Follow up on the vendor quote | Tomorrow |\n| Maria | Deliver design mockups | Thursday |\n\nNote: \"Tomorrow\" is relative to the date of the conversation, so you may want to convert it to an absolute date when logging these items.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "meet-04",
+      "expected": "action_items",
+      "actual_label": "action_items",
+      "correct": true,
+      "judge_confidence": 0.99,
+      "routed": {
+        "router": "deferent",
+        "model": "z-ai/glm-5.3-flash",
+        "provider": "Parasail",
+        "cost_usd": 0.0001621,
+        "input_tokens": 44,
+        "output_tokens": 311,
+        "latency_ms": 3710.2934649999497,
+        "text": "Based on the transcript:\n\n- **Dana** \u2014 owns the onboarding docs, due next sprint.\n- **Raj** \u2014 will schedule the customer call, this week.\n\nNote: the transcript is fragmentary, so these are the only commitments captured.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "z-ai/glm-5.3-flash",
+          "provider": "Wafer",
+          "cost_usd": 9.942e-05,
+          "input_tokens": 44,
+          "output_tokens": 161,
+          "latency_ms": 9377.481047999936,
+          "text": "- **Dana** committed to owning the **onboarding docs**, due **next sprint**.\n- **Raj** committed to scheduling the **customer call** **this week**.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "openai/gpt-6-luna",
+          "provider": "OpenAI",
+          "cost_usd": 3.06e-05,
+          "input_tokens": 36,
+          "output_tokens": 54,
+          "latency_ms": 1519.7619430000486,
+          "text": "Dana committed to owning the onboarding docs, due next sprint. Raj committed to scheduling the customer call this week.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "meet-05",
+      "expected": "summary",
+      "actual_label": "summary",
+      "correct": true,
+      "judge_confidence": 0.99,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-6-luna",
+        "provider": "OpenAI",
+        "cost_usd": 5.25e-05,
+        "input_tokens": 65,
+        "output_tokens": 92,
+        "latency_ms": 2613.8502009998774,
+        "text": "Engineering and product discussed whether to delay the launch. Engineering argued that the API was not stable enough; product opposed delaying because a launch date had been committed to a customer. They reached no resolution and escalated the decision to the VP. The disagreement remains unresolved.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "meet-06",
+      "expected": "summary",
+      "actual_label": "summary",
+      "correct": true,
+      "judge_confidence": 0.99,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-6-luna",
+        "provider": "OpenAI",
+        "cost_usd": 5.04e-05,
+        "input_tokens": 64,
+        "output_tokens": 88,
+        "latency_ms": 2930.7023600001685,
+        "text": "The team debated a flat price increase versus usage-based tiers, with strong opinions on both approaches. They ultimately leaned toward piloting the tiered model with 10% of customers before making a broader decision.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "meet-07",
+      "expected": "summary",
+      "actual_label": "summary",
+      "correct": true,
+      "judge_confidence": 0.99,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-6-luna",
+        "provider": "OpenAI",
+        "cost_usd": 5.72e-05,
+        "input_tokens": 57,
+        "output_tokens": 103,
+        "latency_ms": 2524.412142000074,
+        "text": "The retrospective identified several factors that made the last sprint difficult. Requirements were unclear, and a dependency surfaced late, disrupting the team\u2019s plans. Communication gaps between two subteams made coordination harder and contributed to the problems. Participants also raised concerns about morale, suggesting that the sprint\u2019s challenges affected how people were feeling as well as the work itself.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 4
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "z-ai/glm-5.3-flash",
+          "provider": "Modal",
+          "cost_usd": 0.0012296,
+          "input_tokens": 64,
+          "output_tokens": 2440,
+          "latency_ms": 36435.10878699999,
+          "text": "**Sprint Retrospective \u2014 Narrative Summary**\n\nThe retrospective focused on a candid accounting of what went wrong in the last sprint, with the discussion converging on three operational issues and one human one: unclear requirements, a late-discovered dependency, communication gaps between two subteams, and growing concern about team morale.\n\nUnclear requirements emerged as the most persistent frustration. The team described entering the sprint without a shared, concrete understanding of the work, which led to diverging interpretations, rework, and effort spent on the wrong things. Several people noted that the ambiguity wasn't surfaced until well into the sprint, by which point correcting course was costly.\n\nClosely related was the dependency that came to light too late. Because it wasn't identified during planning, it disrupted work already in progress and forced last-minute re-prioritization. The discussion suggested this problem and the requirements problem reinforced each other: when the scope and shape of the work aren't clear, cross-workstream dependencies are easy to miss until they become blockers.\n\nCommunication gaps between the two subteams drew significant attention as well. Work proceeded in parallel without adequate coordination, producing mismatched assumptions and friction at handoff points. The absence of regular shared touchpoints and clear ownership of integration points came up as likely contributing factors.\n\nFinally, several people raised morale directly. The combination of churn, rework, and firefighting has taken a visible toll, and there was concern that if the underlying issues go unaddressed, frustration and disengagement will deepen. Importantly, morale wasn't framed as a separate problem but as a downstream effect of the sprint's operational failures \u2014 a signal that the other themes carry real human cost.\n\nTaken together, the discussion pointed to a sprint that struggled less because of individual effort than because of structural gaps: how requirements get clarified, how dependencies get discovered, and how the subteams stay connected.\n\nIf you can share the full transcript, I can weave in specific examples, attributed points or quotes, and any action items or follow-ups that came up.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 2
+        },
+        {
+          "router": "always-strongest",
+          "model": "openai/gpt-6-luna",
+          "provider": "OpenAI",
+          "cost_usd": 7.92e-05,
+          "input_tokens": 57,
+          "output_tokens": 147,
+          "latency_ms": 2581.1030380000375,
+          "text": "The retrospective highlighted several issues that contributed to difficulties during the last sprint. Requirements were unclear, making it harder for the team to align on what needed to be delivered. A dependency surfaced late, adding an unexpected complication, while communication gaps between two subteams made coordination more difficult. Alongside these process concerns, several people expressed concern about team morale. Overall, the discussion pointed to a need for clearer expectations, earlier visibility into dependencies, and stronger communication across the subteams.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "meet-08",
+      "expected": "summary",
+      "actual_label": "summary",
+      "correct": true,
+      "judge_confidence": 0.99,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-6-luna",
+        "provider": "OpenAI",
+        "cost_usd": 6.58e-05,
+        "input_tokens": 58,
+        "output_tokens": 120,
+        "latency_ms": 2552.2083969999585,
+        "text": "The kickoff covered the feature timeline and risks related to the third-party integration. The team also debated whether to build the analytics component in-house or buy an existing solution. The transcript doesn\u2019t specify the timeline, the particular integration risks, arguments for either option, or any decisions, so those remain open.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "meet-09",
+      "expected": "action_items",
+      "actual_label": "action_items",
+      "correct": true,
+      "judge_confidence": 0.98,
+      "routed": {
+        "router": "deferent",
+        "model": "z-ai/glm-5.3-flash",
+        "provider": "Wafer",
+        "cost_usd": 3.592e-05,
+        "input_tokens": 44,
+        "output_tokens": 34,
+        "latency_ms": 2923.3245599998554,
+        "text": "Today's commitments from the standup:\n\n- **Ben** will fix the flaky test.\n- **Lena** will deploy the hotfix after review.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "meet-10",
+      "expected": "action_items",
+      "actual_label": "action_items",
+      "correct": true,
+      "judge_confidence": 0.98,
+      "routed": {
+        "router": "deferent",
+        "model": "z-ai/glm-5.3-flash",
+        "provider": "Modal",
+        "cost_usd": 0.0002425,
+        "input_tokens": 50,
+        "output_tokens": 470,
+        "latency_ms": 5227.12559799993,
+        "text": "**Next steps from the sales sync:**\n\n1. **Send renewal proposal** \u2014 Owner: Carlos \u2014 Due: Monday\n2. **Loop in the CSM before the next client call** \u2014 Owner: Team (unassigned; someone should be named to own this)\n\nOne gap worth flagging: the CSM handoff was agreed collectively but no specific owner or date was set. Worth assigning a name in the follow-up to make sure it happens before the client call.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "z-ai/glm-5.3-flash",
+          "provider": "Wafer",
+          "cost_usd": 6.3e-05,
+          "input_tokens": 50,
+          "output_tokens": 83,
+          "latency_ms": 5854.007218000106,
+          "text": "# Next Steps & Owners\n\n| Action | Owner | Deadline |\n|---|---|---|\n| Send the renewal proposal | Carlos | Monday |\n| Loop in the CSM | Team (no single owner assigned) | Before the next client call |\n\n**Note:** The transcript doesn't specify who owns \"looping in the CSM\" or when the next client call is \u2014 worth confirming both.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "openai/gpt-6-luna",
+          "provider": "OpenAI",
+          "cost_usd": 4.73e-05,
+          "input_tokens": 43,
+          "output_tokens": 86,
+          "latency_ms": 2942.766152999866,
+          "text": "- **Carlos:** Send the renewal proposal by Monday.\n- **Team:** Loop in the CSM before the next client call. No individual owner was specified for this action.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "meet-11",
+      "expected": "summary",
+      "actual_label": "summary",
+      "correct": true,
+      "judge_confidence": 0.99,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-6-luna",
+        "provider": "OpenAI",
+        "cost_usd": 0.000115,
+        "input_tokens": 60,
+        "output_tokens": 218,
+        "latency_ms": 4432.08764200017,
+        "text": "The tone was **tense and uneasy**, with repeated back-and-forth suggesting employees wanted clearer, more direct answers.\n\nTheir main concerns were **whether layoffs were coming**, how the **reorganization would affect roles and teams**, and how the **new performance review process would work**\u2014including whether it would be clear and fair. Overall, employees seemed to be seeking reassurance and concrete information amid uncertainty.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "meet-12",
+      "expected": "summary",
+      "actual_label": "summary",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-6-luna",
+        "provider": "OpenAI",
+        "cost_usd": 6.25e-05,
+        "input_tokens": 45,
+        "output_tokens": 116,
+        "latency_ms": 2665.835356999878,
+        "text": "The team discussed three navigation patterns but did not settle on a final choice. They agreed to prototype two of the options and test them with users before deciding. The transcript summary doesn\u2019t specify which patterns were discussed or why those two were chosen.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "meet-13",
+      "expected": "action_items",
+      "actual_label": "action_items",
+      "correct": true,
+      "judge_confidence": 0.98,
+      "routed": {
+        "router": "deferent",
+        "model": "z-ai/glm-5.3-flash",
+        "provider": "Modal",
+        "cost_usd": 0.0001199,
+        "input_tokens": 46,
+        "output_tokens": 226,
+        "latency_ms": 4413.6043460000565,
+        "text": "This week's action items:\n\n- **Nina** \u2013 Update the runbook (due by Friday)\n- **Omar** \u2013 Investigate the latency spike from Tuesday (no deadline stated)",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "z-ai/glm-5.3-flash",
+          "provider": "Modal",
+          "cost_usd": 9.79e-05,
+          "input_tokens": 46,
+          "output_tokens": 182,
+          "latency_ms": 1850.4613570000856,
+          "text": "**This week's action items:**\n\n1. **Nina** \u2014 Update the runbook (due by Friday)\n2. **Omar** \u2014 Investigate the latency spike from Tuesday",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "openai/gpt-6-luna",
+          "provider": "OpenAI",
+          "cost_usd": 3.58e-05,
+          "input_tokens": 38,
+          "output_tokens": 64,
+          "latency_ms": 2808.1787689998237,
+          "text": "- Nina: Update the runbook by Friday.\n- Omar: Investigate Tuesday\u2019s latency spike.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "meet-14",
+      "expected": "action_items",
+      "actual_label": "action_items",
+      "correct": true,
+      "judge_confidence": 0.97,
+      "routed": {
+        "router": "deferent",
+        "model": "z-ai/glm-5.3-flash",
+        "provider": "Modal",
+        "cost_usd": 0.0002823,
+        "input_tokens": 52,
+        "output_tokens": 549,
+        "latency_ms": 4324.790570999994,
+        "text": "| Owner | Commitment | Deadline |\n|-------|------------|----------|\n| Devon | Own the migration runbook | In two weeks (no specific date given) |\n| Priya | Coordinate with the infra team on the cutover window | None stated |\n\nNote: The cutover window itself has no date \u2014 that's presumably what Priya's coordination will determine.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "meet-15",
+      "expected": "summary",
+      "actual_label": "summary",
+      "correct": true,
+      "judge_confidence": 0.99,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-6-luna",
+        "provider": "OpenAI",
+        "cost_usd": 7.67e-05,
+        "input_tokens": 52,
+        "output_tokens": 143,
+        "latency_ms": 2678.5420389999217,
+        "text": "Finance is concerned that the feature\u2019s projected costs may not be justified by its expected returns, and says key questions about the unit economics remain unresolved. The product team is focused on the proposed timeline, but the description doesn\u2019t specify its detailed response. No resolution or final decision is indicated; the disagreement is still open.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "meet-16",
+      "expected": "summary",
+      "actual_label": "summary",
+      "correct": true,
+      "judge_confidence": 0.99,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-6-luna",
+        "provider": "OpenAI",
+        "cost_usd": 8.2e-05,
+        "input_tokens": 55,
+        "output_tokens": 153,
+        "latency_ms": 2560.448494999946,
+        "text": "The call covered three topics:\n\n- Review of the metrics deck.\n- How to frame the increase in churn.\n- Whether to disclose the competitor\u2019s recent move.\n\nThe transcript doesn\u2019t record a decision on how to present the churn increase or whether to disclose the competitor\u2019s move. Both remain open questions for the board meeting.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "z-ai/glm-5.3-flash",
+          "provider": "Modal",
+          "cost_usd": 0.0004763,
+          "input_tokens": 62,
+          "output_tokens": 934,
+          "latency_ms": 11808.146049000015,
+          "text": "**What was discussed**\n- Reviewed the metrics deck (presumably the one being prepared for the board).\n- Discussed how to frame the recent churn increase \u2014 i.e., the messaging/presentation angle for the board.\n- Debated at length whether to disclose a competitor's recent move (nature of the move isn't specified).\n\n**Unresolved questions going into the board meeting**\n1. **Competitor disclosure** \u2014 The extended debate suggests no decision was reached on whether (or how) to disclose the competitor's move. This appears to be the biggest open item.\n2. **Churn framing** \u2014 Framing was discussed, but the transcript doesn't indicate consensus was reached on the final narrative.\n3. **Deck readiness** \u2014 Unclear whether the metrics deck is final or whether the review surfaced changes needed before the meeting.\n\nOne caveat: what you've shared reads as a high-level recap rather than a verbatim transcript, so I can only flag what's explicitly undecided. If you can share the full transcript or notes, I can pinpoint exactly which items were resolved versus left open, and capture any specific numbers or owner assignments.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "openai/gpt-6-luna",
+          "provider": "OpenAI",
+          "cost_usd": 9.15e-05,
+          "input_tokens": 55,
+          "output_tokens": 172,
+          "latency_ms": 2873.4007130001373,
+          "text": "The call covered three main points:\n\n- The team reviewed the metrics deck.\n- They discussed how to frame the increase in churn.\n- They debated whether to disclose a competitor\u2019s recent move.\n\n**Still unresolved for the board meeting:** how to explain the churn increase and whether to mention the competitor\u2019s move. The transcript doesn\u2019t specify the reasons for the churn increase, the competitor\u2019s move, or a final decision on disclosure.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "meet-17",
+      "expected": "action_items",
+      "actual_label": "action_items",
+      "correct": true,
+      "judge_confidence": 0.98,
+      "routed": {
+        "router": "deferent",
+        "model": "z-ai/glm-5.3-flash",
+        "provider": "Parasail",
+        "cost_usd": 0.0003592,
+        "input_tokens": 48,
+        "output_tokens": 704,
+        "latency_ms": 55951.509587000146,
+        "text": "**Action items from today's triage:**\n- **Wei** \u2014 Fix the checkout crash (due today)\n- **Amara** \u2014 Write the postmortem (due end of week)\n\nNote: Only Wei's item is due today; Amara's deadline is end of week.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "meet-18",
+      "expected": "summary",
+      "actual_label": "summary",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-6-luna",
+        "provider": "OpenAI",
+        "cost_usd": 4.13e-05,
+        "input_tokens": 48,
+        "output_tokens": 73,
+        "latency_ms": 1825.3604449998875,
+        "text": "Leadership discussed whether to enter the new market this year. They weighed the risk of facing competitors against the cost of delaying entry, but reached no clear consensus. The unresolved question is whether to enter now or wait.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    }
+  ]
+}
