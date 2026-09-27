@@ -1,0 +1,337 @@
+{
+  "run_date": "2026-09-27",
+  "prices": {
+    "anthropic/claude-opus-5.5": {
+      "input": 4.0,
+      "cached_input": 0.2,
+      "output": 20.0,
+      "cache_write": 5.0,
+      "cache_ttl_seconds": 300,
+      "min_cacheable_tokens": 512
+    },
+    "anthropic/claude-sonnet-5": {
+      "input": 2.0,
+      "cached_input": 0.2,
+      "output": 10.0,
+      "cache_write": 2.5,
+      "cache_ttl_seconds": 300,
+      "min_cacheable_tokens": 1024
+    },
+    "anthropic/claude-haiku-4.5": {
+      "input": 1.0,
+      "cached_input": 0.1,
+      "output": 5.0,
+      "cache_write": 1.25,
+      "cache_ttl_seconds": 300,
+      "min_cacheable_tokens": 4096
+    }
+  },
+  "premise": [
+    {
+      "call": 1,
+      "model": "anthropic/claude-sonnet-5",
+      "prompt_tokens": 11356,
+      "cached_tokens": 0,
+      "cache_write_tokens": 11354,
+      "cost_usd": 0.028749
+    },
+    {
+      "call": 2,
+      "model": "anthropic/claude-sonnet-5",
+      "prompt_tokens": 11415,
+      "cached_tokens": 11334,
+      "cache_write_tokens": 79,
+      "cost_usd": 0.0174683
+    },
+    {
+      "call": 3,
+      "model": "anthropic/claude-haiku-4.5",
+      "prompt_tokens": 8572,
+      "cached_tokens": 0,
+      "cache_write_tokens": 8569,
+      "cost_usd": 0.01078425
+    },
+    {
+      "call": 4,
+      "model": "anthropic/claude-sonnet-5",
+      "prompt_tokens": 11349,
+      "cached_tokens": 11334,
+      "cache_write_tokens": 13,
+      "cost_usd": 0.0028033
+    }
+  ],
+  "long_context": [
+    {
+      "arm": "30K opus/sonnet ungated",
+      "turns": 6,
+      "switches": 1,
+      "cost_usd": 0.42576,
+      "cache_hit_rate": 0.665,
+      "models": [
+        "anthropic/claude-opus-5.5",
+        "anthropic/claude-opus-5.5",
+        "anthropic/claude-sonnet-5",
+        "anthropic/claude-sonnet-5",
+        "anthropic/claude-sonnet-5",
+        "anthropic/claude-sonnet-5"
+      ],
+      "turns_detail": [
+        {
+          "turn": 1,
+          "policy_pick": "anthropic/claude-opus-5.5",
+          "served_by": "anthropic/claude-opus-5.5",
+          "switched": false,
+          "prompt_tokens": 45372,
+          "cached_tokens": 0,
+          "cache_write_tokens": 45368,
+          "completion_tokens": 48,
+          "cost_usd": 0.227816,
+          "gate_reason": null
+        },
+        {
+          "turn": 2,
+          "policy_pick": "anthropic/claude-opus-5.5",
+          "served_by": "anthropic/claude-opus-5.5",
+          "switched": false,
+          "prompt_tokens": 45484,
+          "cached_tokens": 45368,
+          "cache_write_tokens": 112,
+          "completion_tokens": 1500,
+          "cost_usd": 0.0396496,
+          "gate_reason": null
+        },
+        {
+          "turn": 3,
+          "policy_pick": "anthropic/claude-sonnet-5",
+          "served_by": "anthropic/claude-sonnet-5",
+          "switched": true,
+          "prompt_tokens": 46348,
+          "cached_tokens": 0,
+          "cache_write_tokens": 46346,
+          "completion_tokens": 21,
+          "cost_usd": 0.116079,
+          "gate_reason": null
+        },
+        {
+          "turn": 4,
+          "policy_pick": "anthropic/claude-sonnet-5",
+          "served_by": "anthropic/claude-sonnet-5",
+          "switched": false,
+          "prompt_tokens": 46382,
+          "cached_tokens": 46346,
+          "cache_write_tokens": 34,
+          "completion_tokens": 53,
+          "cost_usd": 0.0098882,
+          "gate_reason": null
+        },
+        {
+          "turn": 5,
+          "policy_pick": "anthropic/claude-sonnet-5",
+          "served_by": "anthropic/claude-sonnet-5",
+          "switched": false,
+          "prompt_tokens": 46503,
+          "cached_tokens": 46380,
+          "cache_write_tokens": 121,
+          "completion_tokens": 1043,
+          "cost_usd": 0.0200125,
+          "gate_reason": null
+        },
+        {
+          "turn": 6,
+          "policy_pick": "anthropic/claude-sonnet-5",
+          "served_by": "anthropic/claude-sonnet-5",
+          "switched": false,
+          "prompt_tokens": 47551,
+          "cached_tokens": 46501,
+          "cache_write_tokens": 1048,
+          "completion_tokens": 39,
+          "cost_usd": 0.0123142,
+          "gate_reason": null
+        }
+      ]
+    },
+    {
+      "arm": "30K opus/sonnet gated",
+      "turns": 6,
+      "switches": 0,
+      "cost_usd": 0.35416,
+      "cache_hit_rate": 0.829,
+      "models": [
+        "anthropic/claude-opus-5.5",
+        "anthropic/claude-opus-5.5",
+        "anthropic/claude-opus-5.5",
+        "anthropic/claude-opus-5.5",
+        "anthropic/claude-opus-5.5",
+        "anthropic/claude-opus-5.5"
+      ],
+      "turns_detail": [
+        {
+          "turn": 1,
+          "policy_pick": "anthropic/claude-opus-5.5",
+          "served_by": "anthropic/claude-opus-5.5",
+          "switched": false,
+          "prompt_tokens": 45376,
+          "cached_tokens": 0,
+          "cache_write_tokens": 45372,
+          "completion_tokens": 65,
+          "cost_usd": 0.228176,
+          "gate_reason": "no_session"
+        },
+        {
+          "turn": 2,
+          "policy_pick": "anthropic/claude-opus-5.5",
+          "served_by": "anthropic/claude-opus-5.5",
+          "switched": false,
+          "prompt_tokens": 45487,
+          "cached_tokens": 45372,
+          "cache_write_tokens": 111,
+          "completion_tokens": 1500,
+          "cost_usd": 0.0396454,
+          "gate_reason": "same_model"
+        },
+        {
+          "turn": 3,
+          "policy_pick": "anthropic/claude-sonnet-5",
+          "served_by": "anthropic/claude-opus-5.5",
+          "switched": false,
+          "prompt_tokens": 46237,
+          "cached_tokens": 45483,
+          "cache_write_tokens": 750,
+          "completion_tokens": 161,
+          "cost_usd": 0.0160826,
+          "gate_reason": "downgrade_not_worth_losing_cache"
+        },
+        {
+          "turn": 4,
+          "policy_pick": "anthropic/claude-sonnet-5",
+          "served_by": "anthropic/claude-opus-5.5",
+          "switched": false,
+          "prompt_tokens": 46323,
+          "cached_tokens": 46233,
+          "cache_write_tokens": 86,
+          "completion_tokens": 122,
+          "cost_usd": 0.0121326,
+          "gate_reason": "downgrade_not_worth_losing_cache"
+        },
+        {
+          "turn": 5,
+          "policy_pick": "anthropic/claude-sonnet-5",
+          "served_by": "anthropic/claude-opus-5.5",
+          "switched": false,
+          "prompt_tokens": 46441,
+          "cached_tokens": 46319,
+          "cache_write_tokens": 118,
+          "completion_tokens": 1500,
+          "cost_usd": 0.0398698,
+          "gate_reason": "downgrade_not_worth_losing_cache"
+        },
+        {
+          "turn": 6,
+          "policy_pick": "anthropic/claude-sonnet-5",
+          "served_by": "anthropic/claude-opus-5.5",
+          "switched": false,
+          "prompt_tokens": 47436,
+          "cached_tokens": 46437,
+          "cache_write_tokens": 995,
+          "completion_tokens": 199,
+          "cost_usd": 0.0182584,
+          "gate_reason": "downgrade_not_worth_losing_cache"
+        }
+      ]
+    }
+  ],
+  "auto_router": {
+    "arm": "30K openrouter/auto (session_id)",
+    "turns": 6,
+    "switches": 2,
+    "cost_usd": 0.04118,
+    "cache_hit_rate": 0.166,
+    "models": [
+      "deepseek/deepseek-v4-flash-0731",
+      "deepseek/deepseek-v4-flash-0731",
+      "deepseek/deepseek-v4-flash-0731",
+      "deepseek/deepseek-v4-flash-0731",
+      "google/gemini-2.5-flash",
+      "deepseek/deepseek-v4-flash-0731"
+    ],
+    "turns_detail": [
+      {
+        "turn": 1,
+        "policy_pick": "openrouter/auto",
+        "served_by": "deepseek/deepseek-v4-flash-0731",
+        "switched": false,
+        "prompt_tokens": 31958,
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "completion_tokens": 55,
+        "cost_usd": 0.00448952,
+        "gate_reason": null
+      },
+      {
+        "turn": 2,
+        "policy_pick": "openrouter/auto",
+        "served_by": "deepseek/deepseek-v4-flash-0731",
+        "switched": false,
+        "prompt_tokens": 32017,
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "completion_tokens": 1041,
+        "cost_usd": 0.00477386,
+        "gate_reason": null
+      },
+      {
+        "turn": 3,
+        "policy_pick": "openrouter/auto",
+        "served_by": "deepseek/deepseek-v4-flash-0731",
+        "switched": false,
+        "prompt_tokens": 32520,
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "completion_tokens": 56,
+        "cost_usd": 0.00456848,
+        "gate_reason": null
+      },
+      {
+        "turn": 4,
+        "policy_pick": "openrouter/auto",
+        "served_by": "deepseek/deepseek-v4-flash-0731",
+        "switched": false,
+        "prompt_tokens": 32536,
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "completion_tokens": 79,
+        "cost_usd": 0.00457716,
+        "gate_reason": null
+      },
+      {
+        "turn": 5,
+        "policy_pick": "openrouter/auto",
+        "served_by": "google/gemini-2.5-flash",
+        "switched": true,
+        "prompt_tokens": 80881,
+        "cached_tokens": 40441,
+        "cache_write_tokens": 40441,
+        "completion_tokens": 556,
+        "cost_usd": 0.018105313333333335,
+        "gate_reason": null
+      },
+      {
+        "turn": 6,
+        "policy_pick": "openrouter/auto",
+        "served_by": "deepseek/deepseek-v4-flash-0731",
+        "switched": true,
+        "prompt_tokens": 33145,
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "completion_tokens": 84,
+        "cost_usd": 0.00466382,
+        "gate_reason": null
+      }
+    ]
+  },
+  "spend_by_run": {
+    "phase1": 0.0598,
+    "phase2_3": 0.8211
+  },
+  "total_spend_usd": 0.8809
+}

@@ -1,0 +1,633 @@
+{
+  "name": "legal-contract-review",
+  "route_name": "legal/contract-review",
+  "policy": "intent",
+  "roster": [
+    "deepseek/deepseek-v4.1-flash",
+    "anthropic/claude-opus-5.5"
+  ],
+  "accuracy": 1.0,
+  "real_cost_usd": 0.30470972,
+  "frontier_equivalent_usd": 0.323752,
+  "savings_pct": 5.8817489930564015,
+  "items": [
+    {
+      "item_id": "legal-01",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 6.402e-05,
+        "input_tokens": 69,
+        "output_tokens": 74,
+        "latency_ms": 6298.729711999954,
+        "text": "Effective date: March 1, 2027. Initial term length: 24 months.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4-flash-0731",
+          "provider": "Baidu",
+          "cost_usd": 3.29692e-05,
+          "input_tokens": 122,
+          "output_tokens": 44,
+          "latency_ms": 2172.6039950000313,
+          "text": "The effective date is **March 1, 2027**, and the initial term length is **24 months**.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 194,
+          "output_tokens": 23,
+          "latency_ms": 2265.709113000014,
+          "text": "The effective date is **March 1, 2027**, and the initial term is **24 months**.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.006988,
+          "input_tokens": 62,
+          "output_tokens": 337,
+          "latency_ms": 4917.182604000004,
+          "text": "- **Effective (commencement) date:** March 1, 2027\n- **Initial term length:** 24 months (two years)\n\nThe initial term would typically run through **February 28, 2029**, though the exact end date depends on how the agreement counts periods.\n\n**Note:** Some contracts distinguish the \"Effective Date\" (often the signing date) from the \"Commencement Date\" (when performance begins). This clause sets the commencement date, so check the rest of the agreement for a separately defined Effective Date.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "legal-02",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 9.196e-05,
+        "input_tokens": 70,
+        "output_tokens": 116,
+        "latency_ms": 3057.467874999986,
+        "text": "The named parties are:\n\n- **Acme Corp** \u2014 a **Delaware corporation**\n- **Beta LLC** \u2014 a **California limited liability company**",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "legal-03",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 4.884e-05,
+        "input_tokens": 57,
+        "output_tokens": 55,
+        "latency_ms": 2577.3233639999944,
+        "text": "The governing law is the **laws of the State of New York**.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "legal-04",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 8.866e-05,
+        "input_tokens": 64,
+        "output_tokens": 113,
+        "latency_ms": 7211.981500000036,
+        "text": "The total contract value is **$480,000**.\n\nPayment schedule: **four equal quarterly installments** of **$120,000 each** (calculated as $480,000 \u00f7 4).",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4-flash-0731",
+          "provider": "Baidu",
+          "cost_usd": 4.32234e-05,
+          "input_tokens": 117,
+          "output_tokens": 72,
+          "latency_ms": 1703.5883710000235,
+          "text": "The total contract value is **$480,000**.\n\nPayment schedule: **4 equal quarterly installments of $120,000 each**.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 188,
+          "output_tokens": 28,
+          "latency_ms": 1990.8386319999636,
+          "text": "The total contract value is **$480,000**, payable in **four equal quarterly installments** of **$120,000 each**.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.002584,
+          "input_tokens": 56,
+          "output_tokens": 118,
+          "latency_ms": 3122.280009999997,
+          "text": "**Total contract value:** $480,000\n\n**Payment schedule:** Four equal quarterly installments of **$120,000** each ($480,000 \u00f7 4).\n\nThe clause does not say when the first installment is due or give specific payment dates. Those details may appear elsewhere in the contract.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "legal-05",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 0.99,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 0.00012034,
+        "input_tokens": 82,
+        "output_tokens": 155,
+        "latency_ms": 4240.702970000029,
+        "text": "The Agreement automatically renews for successive **one-year terms**.  \nEither party must give **written notice of non-renewal at least 90 days before the end of the then-current term**.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "legal-06",
+      "expected": "risk_flagging",
+      "actual_label": "risk_flagging",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-opus-5.5",
+        "provider": "Anthropic",
+        "cost_usd": 0.037168,
+        "input_tokens": 117,
+        "output_tokens": 1835,
+        "latency_ms": 21111.418892000016,
+        "text": "# Short Answer\n\n**No, this cap is not unusual.** A 12-month fees cap with carve-outs for gross negligence and willful misconduct is one of the most common structures in commercial vendor, SaaS, and services agreements. It's close to \"market standard.\"\n\nHowever, **\"standard\" doesn't mean \"risk-free.\"** Several details can matter a lot depending on which side you're on and what the vendor is doing for you.\n\n---\n\n## Why It's Considered Standard\n\n- **Proportionality:** Tying exposure to fees keeps the vendor's risk in line with what it earns from the deal.\n- **Insurability:** Vendors price and insure against predictable exposure.\n- **Carve-outs present:** Excluding gross negligence and willful misconduct is expected. Many jurisdictions won't enforce caps on that conduct anyway.\n\n---\n\n## Potential Risks and Gaps (Mainly for the Customer)\n\n### 1. The cap may be very small in practice\n- **\"Fees paid\" vs. \"fees payable\":** \"Paid\" means only money actually received. Early in the contract, or if you pay annually in arrears, the cap could be near zero.\n- **Look-back timing:** \"Preceding twelve months\" is usually measured from the incident or claim. A breach in month 2 might be capped at two months of fees.\n- **Low-fee, high-risk services:** A $10K/year vendor handling sensitive data could cause losses far exceeding $10K.\n\n### 2. The carve-outs are narrow\nGross negligence and willful misconduct are **hard to prove**. The standard is well above ordinary negligence, and definitions vary by jurisdiction. Many negotiated agreements also carve out, or apply a higher \"super cap\" to:\n- **Data breaches / privacy violations** (often the biggest real-world exposure)\n- **Breach of confidentiality**\n- **IP infringement indemnification obligations**\n- **Indemnification obligations generally**\n- **Bodily injury, death, or property damage**\n- **Customer's payment obligations** (a vendor-side carve-out)\n\nWithout these, a vendor's data breach caused by ordinary negligence could leave you capped at a fraction of your actual losses.\n\n### 3. It appears one-sided\nAs written, only the **vendor's** liability is capped. That's favorable to the customer on its face. But check whether the contract elsewhere caps the customer's liability or makes the cap mutual. Vendors usually push for mutuality.\n\n### 4. It interacts with other clauses\n- **Consequential damages waiver:** Most agreements also exclude lost profits and indirect damages. Combined with this cap, recoverable damages may be very limited.\n- **Indemnities:** If indemnification obligations fall under the cap, they may be nearly worthless.\n- **Exclusive remedies:** Service credits or \"re-performance\" clauses may further restrict recovery.\n\n### 5. Enforceability varies\nSome jurisdictions scrutinize caps in consumer contracts, contracts of adhesion, or cases involving fraud or statutory violations. Fraud is typically uncappable even when not expressly listed.\n\n---\n\n## From the Vendor's Perspective\n\nThis clause is **favorable but has gaps**:\n- It lacks an express exclusion of consequential damages (possibly handled elsewhere).\n- It doesn't state that the cap is aggregate rather than per-claim. Adding \"in the aggregate\" helps the vendor.\n- It doesn't include fraud explicitly. That's less a risk than a clarity issue.\n\n---\n\n## Common Negotiation Points\n\n| Issue | Customer-Friendly Ask | Vendor-Friendly Position |\n|---|---|---|\n| Cap amount | Greater of 12 months' fees or a fixed dollar floor (e.g., $1M), or 2\u20133x fees | 12 months' fees paid |\n| Measurement | \"Paid or payable\" | \"Paid\" |\n| Data breach | Super cap (e.g., 3\u20135x fees) or uncapped | Within general cap |\n| Indemnities | Uncapped or super cap | Within cap |\n| Mutuality | Vendor-only cap | Mutual cap |\n| Aggregation | Per-claim | Aggregate |\n\n---\n\n## Bottom Line\n\nThe clause is **typical and not a red flag by itself**. Whether it's *risky* depends on:\n1. **What the vendor touches.** Sensitive data, critical systems, and regulated activities raise the stakes.\n2. **The contract value.** Low fees mean a low cap.\n3. **The rest of the contract.** Look at indemnities, consequential damages waivers, and data protection terms.\n\nIf the vendor handles personal data, confidential information, or business-critical operations, the missing carve-outs (especially for **data breaches, confidentiality, and indemnification**) are the main things to negotiate.\n\n*This is general information, not legal advice. For a specific contract, have counsel review it in context of the full agreement and governing law.*",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "legal-07",
+      "expected": "risk_flagging",
+      "actual_label": "risk_flagging",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-opus-5.5",
+        "provider": "Anthropic",
+        "cost_usd": 0.032,
+        "input_tokens": 115,
+        "output_tokens": 1577,
+        "latency_ms": 17789.556001999983,
+        "text": "# Yes, this clause poses significant and unusual risk to Client\n\nThis is a **\"broad-form\" indemnity**, the most aggressive type. It goes well beyond market-standard terms in several ways.\n\n## Key Risk Factors\n\n### 1. It covers Vendor's own negligence\nThis is the most unusual feature. Standard indemnities allocate risk by fault: each party covers losses it causes. Here, Client pays even when **Vendor is at fault**. For example, if Vendor's faulty security exposes data during Client's use of the Services, Client could owe Vendor for the resulting claims. This removes Vendor's incentive to perform carefully and shifts the cost of Vendor's mistakes to Client.\n\n### 2. It is unlimited in amount and scope\n- **\"Any and all claims, damages, and expenses of any kind\"** includes third-party claims, regulatory fines, attorneys' fees, and potentially consequential damages.\n- **\"Without limitation\"** signals there is no cap. Client's exposure could far exceed the contract's value.\n- It is **one-sided**. Nothing indicates Vendor owes Client a reciprocal indemnity.\n\n### 3. The trigger is very broad\n**\"Arising from Client's use of the Services\"** requires only a loose causal connection. Courts often read \"arising from\" expansively (\"but for\" causation). Nearly any claim connected to the Services could qualify, since the Services exist to be used by Client.\n\n### 4. It includes a duty to defend\n\"Defend\" is separate from \"indemnify\" and is typically **broader and triggered earlier**. Client may have to fund Vendor's legal defense as soon as a claim is *alleged*, regardless of merit, and before liability is determined.\n\n### 5. There are no standard carve-outs\nThe clause lacks common protections:\n- No exclusion for Vendor's **gross negligence, willful misconduct, or fraud**\n- No exclusion for Vendor's **breach of contract** or violation of law\n- No exclusion for **IP infringement** by the Services themselves\n- No **notice, cooperation, or control-of-defense** procedures\n- No **mitigation** obligation on Vendor\n\n## Legal Considerations\n\n- **Enforceability varies by jurisdiction.** Many courts disfavor indemnity for a party's own negligence and apply the **express negligence doctrine** or a clear-and-unequivocal test. This clause *does* expressly mention Vendor's negligence, which increases the chance it will be enforced.\n- **Anti-indemnity statutes** in some states void such clauses in certain contexts (e.g., construction, transportation, some service contracts), especially for sole negligence or gross negligence.\n- **Public policy** generally bars indemnification for intentional misconduct or gross negligence, even if the contract purports to cover it.\n- **Insurance gaps** are a practical concern. Client's liability policy may not cover contractually assumed liability for another party's negligence, leaving Client self-insured for this exposure.\n\n## Suggested Revisions\n\n1. **Delete the negligence clause.** Limit indemnity to claims caused by *Client's* negligence, misconduct, or breach.\n2. **Make it mutual.** Vendor should indemnify Client for Vendor-caused claims, especially IP infringement, data breaches, and Vendor negligence.\n3. **Narrow the trigger.** Replace \"arising from\" with \"to the extent caused by\" (comparative-fault language).\n4. **Add a cap**, such as fees paid over 12 months or a fixed amount, with any agreed exceptions.\n5. **Limit to third-party claims** rather than Vendor's direct losses.\n6. **Add express carve-outs** for Vendor's gross negligence, willful misconduct, and breach.\n7. **Add procedural terms:** prompt notice, Client control of the defense, and no settlement without consent.\n\n## Bottom Line\nThis clause makes Client effectively an **insurer of Vendor**, including for Vendor's own mistakes, with unlimited exposure. It departs sharply from market norms, and Client should not accept it without substantial revision.\n\n*This is general analysis, not legal advice. Enforceability depends on governing law and context, so Client should have counsel in the relevant jurisdiction review it.*",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Together",
+          "cost_usd": 0.0020544,
+          "input_tokens": 96,
+          "output_tokens": 1688,
+          "latency_ms": 10612.160264000011,
+          "text": "Yes. This indemnification clause poses unusual\u2014and likely significant\u2014risk to the Client. It is extremely one-sided and broader than what is typically seen in vendor contracts.\n\n### Why it is unusually risky\n\n1. **It shifts the Vendor\u2019s own negligence to the Client.**  \n   The clause expressly says the Client must indemnify the Vendor for claims \u201carising from Client\u2019s use of the Services, including claims arising from Vendor\u2019s own negligence.\u201d That means if the Vendor is negligent, but the claim is somehow connected to the Client\u2019s use of the services, the Client may have to pay for the Vendor\u2019s fault. That is a major reversal of normal risk allocation.\n\n2. **The trigger is very broad: \u201carising from Client\u2019s use.\u201d**  \n   \u201cArising from\u201d is often interpreted broadly\u2014sometimes as broad as \u201cin connection with\u201d or \u201cincident to.\u201d It does not require the claim to be caused by the Client\u2019s fault. So even a remote connection to the Client\u2019s use of the services could trigger the indemnity.\n\n3. **It covers \u201cany and all claims, damages, and expenses of any kind, without limitation.\u201d**  \n   There is no cap, no exclusion for consequential or punitive damages, and no limitation to third-party claims. The Client could be responsible for unlimited damages, fees, and costs.\n\n4. **It includes the duty to \u201cdefend.\u201d**  \n   The duty to defend is often broader than the duty to indemnify. The Client may have to pay the Vendor\u2019s attorneys\u2019 fees and litigation costs as soon as a claim is alleged, even if the claim later turns out to be meritless or the Vendor is ultimately found negligent.\n\n5. **It is one-way.**  \n   The Vendor does not indemnify the Client for the Vendor\u2019s negligence, data breach, IP infringement, or other vendor-caused harms. The risk flows only from Client to Vendor.\n\n6. **It may cover direct claims, not just third-party claims.**  \n   Many indemnities only cover third-party claims. This clause says \u201cany and all claims,\u201d which could arguably include claims the Vendor itself brings against the Client, creating a circular or unfair liability shift.\n\n### Why this is unusual compared with typical contracts\n\nA more balanced indemnity would usually:\n- Limit the Client\u2019s indemnity to claims caused by the Client\u2019s negligence, breach, or misconduct.\n- Exclude claims caused by the Vendor\u2019s own negligence or willful misconduct.\n- Be mutual, so the Vendor indemnifies the Client for vendor-caused issues.\n- Be limited to third-party claims.\n- Be capped at fees paid or another liability cap.\n- Exclude consequential, punitive, and indirect damages.\n- Avoid making the Client defend the Vendor for the Vendor\u2019s own fault.\n\nThis clause does none of those things.\n\n### Jurisdictional caveat\n\nEnforceability depends on the governing law. Some jurisdictions:\n- Require clear and unequivocal language before one party can indemnify another for the other\u2019s negligence. This clause is explicit, so it may satisfy that requirement.\n- Prohibit indemnification for the indemnitee\u2019s sole negligence, especially in construction or certain public contracts.\n- Refuse to enforce indemnities for gross negligence, recklessness, or willful misconduct.\n\nBut even where enforceable, the clause is unusually risky.\n\n### Bottom line\n\nYes\u2014this is an unusually risky clause for the Client. It makes the Client the insurer of the Vendor\u2019s own negligence, with no cap, broad trigger, duty to defend, and no reciprocal protection. The Client should strongly resist it or, at minimum, narrow it to claims caused by the Client\u2019s own negligence, exclude Vendor negligence, cap exposure, and make the indemnity mutual.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 219,
+          "output_tokens": 285,
+          "latency_ms": 6983.614997000018,
+          "text": "Yes. The clause places unusually broad, one-way risk on Client because it:\n\n- Requires Client to indemnify **and defend** Vendor, potentially requiring Client to pay defense costs from the outset.\n- Covers \u201cany and all\u201d claims, damages, and expenses, with **no monetary cap**.\n- Applies to losses \u201carising from\u201d Client\u2019s use of the Services\u2014a broad and potentially disputed standard.\n- Expressly includes claims caused by **Vendor\u2019s own negligence**, shifting responsibility for the vendor\u2019s misconduct to Client.\n- Contains no exception for Client\u2019s own misconduct or for Vendor\u2019s gross negligence, willful misconduct, or bad faith.\n- Provides no reciprocal protection for Client.\n\nThe clause may be unenforceable as to Vendor\u2019s gross negligence or willful misconduct in some jurisdictions, and statutory or public-policy limits may apply. Otherwise, it could expose Client to substantial liability even when Vendor caused or contributed to the underlying loss. Client should consider a cap, exclusion of Vendor\u2019s negligence and misconduct, limitations to losses caused by Client\u2019s breach or unlawful conduct, and reasonable defense/settlement procedures.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 4
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.03566,
+          "input_tokens": 115,
+          "output_tokens": 1760,
+          "latency_ms": 19625.579589999972,
+          "text": "# Yes, this clause poses significant and unusual risk to Client\n\nThis is a **broad-form, one-way indemnity**, the most Client-unfavorable version of an indemnification provision. Most commercial agreements do not go this far.\n\n## Key Risk Factors\n\n### 1. Client indemnifies Vendor for Vendor's own negligence\nThis is the most unusual feature. Standard indemnities allocate risk by fault: each party covers losses it causes. Here, Client pays even when **Vendor is the party at fault**. Examples:\n- Vendor's poor security practices cause a data breach, and third parties sue Vendor. Client pays.\n- Vendor's defective service causes a customer injury. Client pays.\n\nThis removes Vendor's incentive to perform carefully and shifts Vendor's operational risk onto Client.\n\n### 2. No cap on liability\n\"Any and all claims... of any kind, without limitation\" means Client's exposure is **potentially unlimited** and could far exceed the contract's value. Many vendor agreements cap liability at fees paid (e.g., 12 months). Check whether any cap elsewhere in the agreement applies to indemnities. Indemnities are often expressly carved out of caps, which would make this worse.\n\n### 3. Very broad trigger: \"arising from Client's use of the Services\"\n- **\"Arising from\"** is generally read broadly, requiring only a loose causal connection rather than direct causation.\n- Almost any claim involving the Services can be framed as connected to Client's \"use,\" since Client uses the Services constantly.\n\n### 4. Duty to defend\n\"Defend\" is separate from and broader than the duty to indemnify. Client may have to **pay Vendor's legal costs from the outset**, even for claims that are meritless or ultimately not covered. The clause also doesn't say who controls the defense or settlement.\n\n### 5. Entirely one-sided\nThere is no reciprocal obligation. Vendor gives Client no protection, even for things typically within Vendor's control, such as:\n- Intellectual property infringement by the Services\n- Vendor's breach of confidentiality or data protection obligations\n- Vendor's violations of law\n\n### 6. Missing standard carve-outs and procedures\nThe clause lacks:\n- Exclusions for Vendor's gross negligence, willful misconduct, or fraud\n- Exclusions for Vendor's breach of contract\n- Notice requirements (prompt notice of claims)\n- Client's right to control or approve settlements\n- A mitigation obligation on Vendor\n\n### 7. Insurance gap\nClient's commercial general liability policy may not cover contractually assumed liability for another party's negligence, or may cover it only partially. Client could be **self-insuring Vendor's risks** without realizing it.\n\n## Enforceability Considerations\n\nSome protections may exist, but Client should not rely on them:\n- **Express negligence doctrine:** Many U.S. jurisdictions (e.g., Texas, New York) require indemnity for a party's own negligence to be stated clearly and conspicuously. This clause does state it explicitly, so it would likely **satisfy** that test.\n- **Anti-indemnity statutes:** Many states void such provisions in specific contexts (construction, transportation, some service contracts), but these rarely apply to general services or SaaS agreements.\n- **Public policy:** Courts generally refuse to enforce indemnity for **gross negligence, willful misconduct, or intentional wrongdoing**, but ordinary negligence is often enforceable.\n- **Unconscionability:** This is possible in consumer or adhesion contexts but hard to establish between sophisticated commercial parties.\n\n## Suggested Negotiation Points for Client\n\n1. **Delete the negligence language** and add: \"except to the extent caused by Vendor's negligence, willful misconduct, or breach of this Agreement.\"\n2. **Narrow the trigger** to third-party claims arising from Client's breach of the Agreement, violation of law, or misuse of the Services.\n3. **Make it mutual.** Vendor should indemnify Client for IP infringement, data breaches, and Vendor's negligence or misconduct.\n4. **Add a liability cap** that applies to indemnities, or at least a reasonable super-cap.\n5. **Limit to third-party claims**, not Vendor's own direct losses.\n6. **Add procedural protections:** prompt notice, the indemnifying party's control of the defense, and no settlement admitting fault without consent.\n7. **Consider comparative fault allocation** so that each party bears losses proportionate to its fault.\n\n## Bottom Line\n\nThe clause makes Client effectively an insurer of Vendor's entire business risk related to the Services, with unlimited exposure and no reciprocal protection. It is well outside market norms. Client should push back firmly, and should have counsel in the governing jurisdiction review it, since enforceability rules vary significantly by state and country.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "legal-08",
+      "expected": "risk_flagging",
+      "actual_label": "risk_flagging",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-opus-5.5",
+        "provider": "Anthropic",
+        "cost_usd": 0.026868,
+        "input_tokens": 97,
+        "output_tokens": 1324,
+        "latency_ms": 15341.117247,
+        "text": "## Short Answer\n\n**Yes. This clause is heavily one-sided and poses significant risk to the Client.** It gives the Vendor near-total freedom to walk away while leaving the Client with no protection and no financial recourse.\n\n## Why It's One-Sided\n\n**1. Termination for convenience runs only one way**\n\"For any reason or no reason\" lets the Vendor exit without cause, justification, or breach by the Client. Unless another clause gives the Client the same right, only the Vendor has this flexibility.\n\n**2. The notice period is extremely short**\nTwenty-four hours is not enough time to:\n- Find and onboard a replacement vendor\n- Migrate data, systems, or workflows\n- Notify your own customers or stakeholders\n- Avoid business disruption or downtime\n\nCommercial contracts more commonly use 30, 60, or 90 days' notice for convenience terminations.\n\n**3. No refund of prepaid fees (the most serious problem)**\nIf the Client prepays for a year and the Vendor terminates on day 30, the Vendor keeps 11 months of payment for services never delivered. This:\n- Creates a potential **financial incentive** for the Vendor to terminate after collecting payment\n- Amounts to a **forfeiture** unconnected to any fault by the Client\n- Leaves the Client paying twice: once for the lost prepayment and again for a replacement vendor\n\n## Key Risks to the Client\n\n| Risk | Impact |\n|------|--------|\n| **Operational disruption** | Sudden loss of a critical service with almost no warning |\n| **Financial loss** | Forfeiture of all unused prepaid fees |\n| **Data loss** | No stated right to retrieve data or receive transition help |\n| **No leverage** | The Vendor can use the threat of termination to force price increases or new terms |\n| **Replacement costs** | Emergency procurement is usually more expensive |\n\n## Possible Enforceability Issues\n\nDepending on jurisdiction and context, a court might scrutinize this clause under:\n- **Unconscionability**, especially if bargaining power was unequal or the contract was non-negotiable\n- **The implied covenant of good faith and fair dealing**, particularly if the Vendor terminated just after receiving payment\n- **Unjust enrichment** principles regarding the retained prepayment\n- **Consumer protection laws**, if the Client is a consumer or small business\n\nDon't count on these doctrines to rescue a bad clause, though. It's far better to negotiate fair terms up front.\n\n## Suggested Revisions\n\nA more balanced version might read:\n\n> *\"Either party may terminate this Agreement for convenience upon sixty (60) days' prior written notice. If Vendor terminates for convenience, Vendor shall refund, on a pro-rata basis, any prepaid fees attributable to the period following the effective date of termination, and shall provide reasonable transition assistance, including return of all Client data in a commercially usable format.\"*\n\n**Key negotiation points:**\n1. **Mutuality**: give both parties the same termination rights.\n2. **Longer notice**: at least 30\u201390 days, depending on how critical the service is.\n3. **Pro-rata refund**: return fees for services not delivered.\n4. **Transition assistance**: data export, cooperation with the successor vendor, and continued service during wind-down.\n5. **Limits on convenience termination**: e.g., no termination for convenience during an initial minimum term.\n6. **Distinguish cause from convenience**: forfeiture of fees might be reasonable if the *Client* materially breaches, but not when the Vendor simply chooses to leave.\n\n---\n\n*This is general information rather than legal advice. For a contract with significant value or operational importance, have a qualified attorney in your jurisdiction review it.*",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "legal-09",
+      "expected": "risk_flagging",
+      "actual_label": "risk_flagging",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-opus-5.5",
+        "provider": "Anthropic",
+        "cost_usd": 0.039576,
+        "input_tokens": 89,
+        "output_tokens": 1961,
+        "latency_ms": 23698.290688999976,
+        "text": "# Assignment Clause Risk Analysis\n\n**Short answer:** Yes, the clause creates meaningful risk. The wording is mutual, but the risk usually isn't. It falls hardest on whichever party cares more about *who* its counterparty is.\n\n## What the Clause Does\n\nIt lets either party transfer the contract to an acquirer or successor without asking permission. This matters because without it, many contracts (especially IP licenses) would be non-assignable by default, or assignment would require consent.\n\n## Who Benefits\n\n- **The party more likely to be acquired**, typically a startup, growth-stage company, or a business planning an exit. Anti-assignment provisions are a common drag on M&A. Buyers dislike needing counterparty consent, since it gives the counterparty leverage to renegotiate. This clause keeps the contract a transferable asset.\n\n## Who Bears the Risk\n\nThe **non-assigning party** loses control over its counterparty's identity. The exposure is most acute for:\n\n1. **Parties sharing sensitive information.** If your counterparty is acquired by your competitor, that competitor may inherit your confidential information, pricing, roadmap, or customer data, and the contractual relationship with you.\n\n2. **IP licensors.** A license granted to a small company can suddenly benefit a much larger acquirer. Unless scope is tightly defined, the licensee may claim usage rights across the acquirer's entire enterprise. In the U.S., courts generally presume nonexclusive patent and copyright licenses are *not* assignable without consent. This clause waives that protection.\n\n3. **Customers relying on a specific vendor.** Service quality, support, product roadmap, and pricing philosophy can change after acquisition. A private-equity buyer, for example, may cut service investment.\n\n4. **Parties exposed to credit risk.** A successor may be less creditworthy, such as a highly leveraged buyer.\n\n5. **Relationships built on personal expertise or key individuals.**\n\n## Drafting Gaps and Ambiguities\n\n- **No assumption requirement.** Nothing says the successor must assume the obligations in writing.\n- **No continuing liability.** It's unclear whether the assignor remains liable after assignment.\n- **No notice requirement.** You may not learn of the assignment until after the fact.\n- **\"Substantially all assets\": of what?** The whole company, or the business unit that performs the agreement? Divestitures of a single division may fall outside the clause, which could hurt the party trying to sell.\n- **Change of control isn't addressed.** In a stock purchase or reverse triangular merger, the contracting entity often stays the same, so no \"assignment\" technically occurs. The clause gives no protection in the scenario where your counterparty gets acquired but the contract never moves.\n- **No competitor carve-out.**\n\n## Common Mitigations\n\nIf you're the party bearing the risk, consider negotiating:\n\n| Protection | Purpose |\n|---|---|\n| **Competitor exclusion** or termination right if assigned to a competitor | Prevents your contract from landing with a rival |\n| **Termination right on change of control** (with a notice window) | Lets you exit even if no formal assignment occurs |\n| **Written notice** within X days of assignment | Visibility |\n| **Written assumption** of all obligations by the successor | Enforceability against the new party |\n| **Assignor remains jointly liable** (or a guaranty) | Credit protection |\n| **License scope freeze**, limiting use to the original licensee's business as it existed pre-transaction | Prevents enterprise-wide expansion |\n| **Confidentiality firewall** obligations post-transaction | Protects sensitive information |\n| **Financial capacity condition** on the successor | Addresses credit risk |\n\n## Bottom Line\n\nThe clause favors the party with exit plans and burdens the party whose value depends on the counterparty's identity, information security, or license scope. Whether it's acceptable depends on which side you're on, how competitive the market is, and how sensitive the exchanged information or IP is.\n\nThis is general analysis, not legal advice. The right approach depends on governing law and the full agreement.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "legal-10",
+      "expected": "risk_flagging",
+      "actual_label": "risk_flagging",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-opus-5.5",
+        "provider": "Anthropic",
+        "cost_usd": 0.038664,
+        "input_tokens": 106,
+        "output_tokens": 1912,
+        "latency_ms": 22214.010012000017,
+        "text": "# Yes, this clause meaningfully disadvantages the Client\n\nThe clause is one-sided in several ways, though how much it matters depends on the Client's size, location, and the likely value of disputes.\n\n## Why it disadvantages the Client\n\n**1. Cost and logistics fall entirely on the Client**\n- The Client must litigate far from home, which usually means hiring local counsel (often in addition to its regular counsel), paying travel costs for witnesses and executives, and losing time to out-of-state proceedings.\n- For smaller disputes, these costs can exceed the amount at stake. This effectively deters the Client from suing at all, which gives the Vendor leverage in any disagreement.\n\n**2. Home-court advantage for the Vendor**\n- The Vendor's lawyers know the local judges, procedures, and customs.\n- If the case reaches a jury, jurors may be more sympathetic to a local business.\n- The Vendor's witnesses and documents are nearby.\n\n**3. \"Vendor's home jurisdiction\" is undefined and may move**\n- The clause doesn't specify a state or county, so it's unclear whether it means the place of incorporation, headquarters, or principal place of business.\n- If the Vendor relocates, is acquired, or reincorporates, the venue may shift with it, possibly somewhere even less convenient. The Client can't know at signing where it might end up litigating.\n\n**4. The waiver removes the Client's usual defenses**\n- By waiving objections to personal jurisdiction and venue, the Client gives up its ability to argue it has no meaningful contacts with that state.\n- It also likely forfeits a *forum non conveniens* argument, meaning it can't ask a court to move the case because another location is more practical.\n- In federal court, *Atlantic Marine Construction Co. v. U.S. District Court* (2013) makes valid forum-selection clauses very hard to escape. The Client's own inconvenience is essentially disregarded.\n\n**5. Exclusivity cuts both ways, but mostly against the Client**\n- \"Exclusive\" means the Client can't file in its own courts, even for urgent matters like a temporary restraining order to protect its data or confidential information.\n- The Vendor, by contrast, is already at home.\n\n**6. Strategic imbalance**\n- The Vendor can sue the Client at home at minimal cost, while the Client faces significant barriers to suing the Vendor. This asymmetry shapes settlement negotiations before any lawsuit is filed.\n\n## Will it be enforced?\n\nUsually yes, in business-to-business contracts. U.S. courts generally enforce forum-selection clauses (*The Bremen v. Zapata*, *Carnival Cruise Lines v. Shute*) unless the clause is:\n- The product of fraud or overreaching,\n- So inconvenient that it effectively denies the party its day in court, or\n- Contrary to a strong public policy of the forum.\n\nSome exceptions exist. Certain states restrict out-of-state forum clauses in construction contracts, franchise agreements, employment agreements, or consumer contracts. Outside the U.S., for example in the EU for consumers, protections can be stronger. The Client shouldn't assume it can get out of the clause later.\n\n## How the Client could negotiate it\n\n1. **Neutral venue:** a mutually agreed location or a jurisdiction named specifically.\n2. **Defendant's-home rule:** whichever party is sued gets its home forum. This discourages litigation by both sides equally.\n3. **Fix the location:** name a specific state and county so it doesn't change if the Vendor moves.\n4. **Carve-outs:** allow either party to seek injunctive or equitable relief in any competent court, especially for IP, confidentiality, or data breaches.\n5. **Make it non-exclusive:** permit suit in the named venue without requiring it.\n6. **Arbitration alternative:** arbitration with remote or virtual hearings, or a neutral seat, can reduce travel burden.\n7. **Small-claims exception:** allow low-value disputes to be brought locally.\n8. **Strike or narrow the waiver:** at minimum, preserve objections if the venue changes from what was contemplated at signing.\n\n## Bottom line\n\nThe clause shifts litigation cost, convenience, and strategic leverage to the Vendor, and the undefined \"home jurisdiction\" adds uncertainty. It's a common provision and often enforceable, but it's worth negotiating. This matters most if the Client is geographically distant, smaller than the Vendor, or likely to be the party bringing claims, for example over non-performance or data issues.\n\n*This is general analysis, not legal advice. Enforceability depends on governing law and the specific facts, so a lawyer in the relevant jurisdiction should review the full contract.*",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "provider": "Together",
+          "cost_usd": 0.0039915,
+          "input_tokens": 85,
+          "output_tokens": 3305,
+          "latency_ms": 21405.68847299994,
+          "text": "Yes\u2014this clause is generally meaningfully disadvantageous to the Client.\n\nIt is a mandatory, exclusive forum-selection clause combined with a waiver of personal-jurisdiction and venue objections. In practice, it forces the Client to litigate every dispute in the Vendor\u2019s home jurisdiction and strips the Client of procedural arguments it might otherwise raise.\n\nWhy it disadvantages the Client:\n\n1. **Forces litigation away from home**  \n   The Client cannot sue or defend in its own home jurisdiction or another convenient forum. It must go to the Vendor\u2019s home courts.\n\n2. **Raises litigation costs and burdens**  \n   The Client may need out-of-state/local counsel, travel, lodging, remote depositions, and document logistics. Those costs can be substantial and may exceed the amount in dispute.\n\n3. **Gives the Vendor a home-court advantage**  \n   The Vendor will likely have familiar local counsel, knowledge of local judges and rules, and a jury pool drawn from its own community. Its witnesses and documents are also more likely to be nearby.\n\n4. **Creates discovery and trial disadvantages**  \n   The Vendor\u2019s witnesses may be within subpoena range. The Client\u2019s witnesses may not be, making it harder or more expensive to compel testimony and evidence.\n\n5. **Waives key procedural defenses**  \n   The Client waives objections to personal jurisdiction and venue. It cannot argue lack of minimum contacts, improper venue, or, depending on wording and law, inconvenient forum/transfer. Subject-matter jurisdiction generally cannot be waived, but many practical defenses are.\n\n6. **It is asymmetrical**  \n   If the Vendor sues the Client, the Vendor sues at home. If the Client sues the Vendor, the Client must also sue in the Vendor\u2019s home. The Vendor is always in its preferred forum; the Client is not.\n\n7. **It can deter valid claims**  \n   For small or moderate claims, the cost and inconvenience of litigating in the Vendor\u2019s home may make pursuing or defending a claim economically irrational, effectively shielding the Vendor.\n\nThat said, the disadvantage depends on the facts. If the Client is a sophisticated party, if the Vendor\u2019s home is also the Client\u2019s home or a convenient forum, or if the clause was specifically negotiated, the disadvantage is less severe. Courts often enforce forum-selection clauses, especially in business-to-business contracts, unless the clause is unreasonable, procured by fraud or overreaching, violates public policy, or is unconscionable\u2014common arguments in consumer or employment contexts.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 4
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 209,
+          "output_tokens": 384,
+          "latency_ms": 7834.130784999957,
+          "text": "Potentially, yes\u2014but it is not automatically an unfair or unenforceable term.\n\nThe clause may meaningfully disadvantage the Client if the Vendor is located in a different state or country, because it may force the Client to:\n\n- Travel or retain local counsel at greater expense;\n- Face a less convenient forum and less familiarity with local law;\n- Lose negotiating leverage or access to courts near the Client;\n- Litigate in a jurisdiction where the Vendor has greater familiarity and power; and\n- Potentially bear costs associated with enforcing and defending a judgment in the Vendor\u2019s home jurisdiction.\n\nThe Client\u2019s waiver of objections to personal jurisdiction and venue reinforces this concern, although those objections are often waivable in a commercial agreement.\n\nThe practical impact depends on the circumstances. If the Client is located in or near the Vendor\u2019s home jurisdiction, has substantial business there, and is a sophisticated party represented by counsel, the burden may be modest and the clause may be enforceable. If the Client is a smaller or less sophisticated party located far away, the clause could impose a significant one-sided burden.\n\nThus, the clause warrants scrutiny where the Vendor\u2019s home jurisdiction is remote from the Client, especially if the Client lacks a meaningful commercial connection there. Courts may consider convenience, cost, fairness, the parties\u2019 bargaining positions, and whether the Vendor has a substantial relationship with the chosen forum when deciding whether to enforce the provision.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 3
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.050164,
+          "input_tokens": 106,
+          "output_tokens": 2487,
+          "latency_ms": 28502.453643999957,
+          "text": "# Short Answer\n\n**Yes, usually meaningfully, though how much depends on context.** The clause is facially \"mutual\" because both parties must litigate in the same place, but that place is the Vendor's home turf, and the Client gives up the procedural tools it would otherwise use to push back.\n\n# Why It Disadvantages the Client\n\n**1. Cost and logistics fall on the Client**\n- The Client must hire counsel in (or admitted to) the Vendor's jurisdiction, often in addition to its regular counsel.\n- Witnesses, executives, and documents must travel. Remote appearances help but don't eliminate this, especially for trial and depositions.\n- The Vendor litigates with its usual lawyers, near its own offices and employees.\n\n**2. It shifts settlement leverage**\n- For small or mid-sized claims (e.g., a $40k refund dispute), the cost of litigating far away can exceed the claim's value. The Client may effectively be unable to sue at all.\n- Conversely, if the Vendor sues the Client (e.g., for unpaid fees), the Client faces the expense of defending remotely, which pressures it to pay or settle.\n\n**3. Home-court familiarity**\n- The Vendor's counsel knows the local judges, rules, and practices. Juries may be drawn from a community where the Vendor is a known employer. The effect is hard to quantify but is widely perceived as real.\n\n**4. The waiver removes the Client's escape hatches**\n- Without the clause, a Client sued far away could move to dismiss for lack of personal jurisdiction, or seek transfer for improper venue or *forum non conveniens*.\n- By waiving objections, the Client concedes all of that in advance. In U.S. federal court, *Atlantic Marine Construction Co. v. U.S. District Court* (2013) already gives valid forum-selection clauses near-controlling weight, so the waiver cements an already strong position for the Vendor.\n\n**5. \"Exclusive\" cuts off local options**\n- If the Client needs urgent relief (e.g., an injunction to recover its data or stop a misuse of confidential information), it must go to the Vendor's forum, which may be slower and unfamiliar. The clause has no carve-out for emergency or injunctive relief.\n- If the Client wins, it may need to domesticate the judgment elsewhere, adding cost.\n\n**6. Drafting ambiguity adds risk**\n- **\"Vendor's home jurisdiction\" is undefined.** It could mean state of incorporation (often Delaware), principal place of business, or headquarters city.\n- **It may be \"floating.\"** If the Vendor relocates, merges, or is acquired, the forum may move with it, possibly to a place neither party contemplated at signing.\n- **It lacks geographic precision.** \"State and federal courts located in\" a whole state could mean a courthouse hundreds of miles from the Vendor's office.\n\n# Factors That Reduce or Increase the Impact\n\n| Less concerning if... | More concerning if... |\n|---|---|\n| Vendor is nearby or in the same state | Vendor is across the country or abroad |\n| Contract value is high enough to justify litigation anywhere | Likely claims are small relative to litigation cost |\n| Vendor is more likely to be the plaintiff (e.g., collections) and the Client doesn't care where it defends | Client is more likely to need to sue (performance failures, data issues, refunds) |\n| An arbitration clause governs most disputes | Litigation is the only dispute mechanism |\n| Client has national counsel with a presence there | Client is a smaller business with local-only counsel |\n\n# Enforceability Note\n\nIn business-to-business contracts, U.S. courts generally enforce such clauses (*M/S Bremen v. Zapata*, 1972) unless they are the product of fraud or overreaching, violate a strong public policy of the forum, or would be so gravely inconvenient that the party is effectively denied its day in court. Some statutes override them in specific contexts, for example certain state construction, franchise, and consumer protection laws, and California Labor Code \u00a7 925 for employees. A Client shouldn't count on a court voiding the clause. It should negotiate it.\n\n# Negotiation Options for the Client\n\n1. **Neutral or Client-side forum**: specify a named city/county agreed at signing.\n2. **\"Defendant's home forum\" clause**: whoever sues must go to the other party's jurisdiction. This discourages filing lawsuits and balances leverage.\n3. **Fix the location**: replace \"home jurisdiction\" with a specific county and state so it doesn't float with relocations or acquisitions.\n4. **Make it non-exclusive**, or strike the waiver of venue objections.\n5. **Carve-outs**: allow either party to seek injunctive or emergency relief, or enforce a judgment, in any court of competent jurisdiction.\n6. **Remote participation**: require consent to remote depositions and hearings where permitted.\n7. **Alternative dispute resolution**: use arbitration in a neutral location or virtually, possibly with small-claims carve-outs.\n8. **Check the related clauses**: choice of law, jury waiver, and fee-shifting interact with venue. A Vendor-favorable venue combined with Vendor-state law and a jury waiver compounds the imbalance.\n\n**Bottom line:** The clause looks neutral but systematically favors the Vendor through cost, convenience, leverage, and waived defenses. Its real impact scales with distance, claim size, and which party is likelier to sue. It is standard enough to be enforceable but worth negotiating, at minimum to fix the location and add an injunctive-relief carve-out.\n\n*This is general analysis, not legal advice for a specific contract or jurisdiction.*",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "legal-11",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 4.84e-05,
+        "input_tokens": 61,
+        "output_tokens": 53,
+        "latency_ms": 2553.914550000002,
+        "text": "Notices should be sent to the addresses listed in **Exhibit A**.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "legal-12",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 5.5e-05,
+        "input_tokens": 67,
+        "output_tokens": 61,
+        "latency_ms": 3410.390806999999,
+        "text": "The confidentiality period specified is **five (5) years following termination of the Agreement**.",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "legal-13",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 5.786e-05,
+        "input_tokens": 62,
+        "output_tokens": 67,
+        "latency_ms": 2753.506161999951,
+        "text": "The late payment fee is **1.5% per month** on any overdue amount.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4-flash-0731",
+          "provider": "Baidu",
+          "cost_usd": 6.24338e-05,
+          "input_tokens": 115,
+          "output_tokens": 122,
+          "latency_ms": 2297.6452909999807,
+          "text": "The late fee is **1.5% per month** on any overdue amount.\n\nThat means for each month an amount is overdue, the client owes an additional **1.5% of the unpaid balance**. For example, on a $1,000 overdue invoice, the late fee would be **$15 per month** until paid.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 187,
+          "output_tokens": 18,
+          "latency_ms": 1906.1974389999818,
+          "text": "The late payment fee is **1.5% of the overdue amount per month**.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.008612,
+          "input_tokens": 53,
+          "output_tokens": 420,
+          "latency_ms": 5437.538420999999,
+          "text": "The late payment fee is **1.5% per month** on any overdue amount.\n\n**Key points:**\n- **Basis:** It applies only to the overdue amount, not the full invoice or contract value (unless the entire amount is overdue).\n- **Frequency:** It accrues monthly, which equals about **18% per year** as simple interest.\n- **Example:** On a $10,000 overdue balance, the fee would be $150 per month.\n\n**Details the clause doesn't address:**\n- **Compounding:** It doesn't say whether the fee applies to previously accrued late fees. If compounded monthly, the effective annual rate would be about 19.56%.\n- **Start date:** It doesn't define when an amount becomes \"overdue\" or whether there's a grace period. This may be covered elsewhere in the contract.\n- **Partial months:** It doesn't say whether the fee is prorated for partial months.\n- **Legal limits:** Some jurisdictions cap late fees or interest rates under usury or consumer protection laws, which could limit enforceability.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "legal-14",
+      "expected": "risk_flagging",
+      "actual_label": "risk_flagging",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-opus-5.5",
+        "provider": "Anthropic",
+        "cost_usd": 0.053416,
+        "input_tokens": 104,
+        "output_tokens": 2650,
+        "latency_ms": 28594.80485399996,
+        "text": "# Is This Liability Cap Appropriate?\n\n**Short answer: No, in almost any commercial context.** The clause combines a nominal cap ($100) with the explicit *inclusion* of liability categories that are customarily excluded from caps. This creates serious enforceability risk and a poor allocation of risk. It may also be counterproductive for the party who drafted it.\n\n## 1. The $100 Figure Makes the Remedy Close to Illusory\n\n- **Failure of essential purpose / illusory remedy.** Courts may disregard a limitation that leaves the non-breaching party with no meaningful remedy. In U.S. sales of goods, UCC \u00a7 2-719(2) addresses this directly. Common-law courts apply similar reasoning to services contracts.\n- **Unconscionability and reasonableness review.** A $100 cap on a contract involving sensitive data invites scrutiny. This is especially true in consumer contracts, contracts of adhesion, or deals with unequal bargaining power. In the UK, UCTA 1977 subjects such clauses to a reasonableness test. The EU and many other jurisdictions apply consumer-protection overlays.\n- **Consideration and mutuality optics.** Nominally the cap is mutual (\"either party\"). In practice it almost always benefits the party handling data or providing the service. The customer typically bears the downside risk.\n\n## 2. The Specific Carve-Outs It Fails to Exclude\n\n### Gross Negligence (and, by extension, willful misconduct)\n- Many jurisdictions refuse, on public-policy grounds, to enforce limitations on liability for gross negligence or intentional wrongdoing. Examples:\n  - **New York:** *Kalisch-Jarcho v. City of New York*; *Sommer v. Federal Signal*\n  - **California:** Civil Code \u00a7 1668; *City of Santa Barbara v. Superior Court*\n- **Consequence:** The clause is unlikely to protect against gross negligence claims at all. It also risks a court viewing the whole limitation clause skeptically. Whether courts will sever the offending portion or strike the clause entirely varies by jurisdiction.\n\n### Data Breach\n- **Statutory and regulatory liability cannot be contracted away.** GDPR fines, CCPA/CPRA statutory damages, HIPAA penalties, state breach-notification obligations, and regulator enforcement are not bound by a private contract cap.\n- **Third-party claims are unaffected.** Data subjects, class-action plaintiffs, and card networks under PCI-related assessments are not parties to the contract.\n- **The practical effect is misallocation.** The customer, often the data controller, bears regulatory exposure caused by the vendor's failure but cannot recover more than $100. That is commercially unreasonable. Most sophisticated counterparties will refuse it.\n- Market practice is typically either:\n  - an **uncapped** carve-out, or\n  - a **\"super-cap\"**: a separate, higher limit for data-protection breaches, e.g., 2\u20135\u00d7 annual fees or a fixed dollar amount tied to insurance.\n\n### Breach of Confidentiality\n- Damages from confidentiality breaches (trade secrets, business plans, customer lists) are often large and hard to quantify. Capping them at $100 guts the confidentiality obligation. The covenant becomes effectively unenforceable except through injunctive relief.\n- Trade-secret statutes (DTSA, UTSA) provide independent remedies that may sit outside the contract cap, depending on how courts characterize the claim.\n- **Standard practice** is to exclude confidentiality breaches from the cap, or at minimum give them a super-cap.\n\n## 3. Other Standard Carve-Outs Also Missing\n\nBeyond the three it expressly sweeps in, the clause also fails to exclude:\n- **Fraud or fraudulent misrepresentation.** This generally cannot be limited as a matter of law.\n- **Death or personal injury caused by negligence.** It cannot be limited in the UK under UCTA s. 2(1), and courts elsewhere are frequently hostile to such limits.\n- **Indemnification obligations**, especially IP infringement indemnities. A $100 cap would render the indemnity meaningless.\n- **Payment obligations.** Without an exclusion, a customer could argue that its obligation to pay fees is capped at $100.\n\n## 4. Why It Can Backfire on the Drafter\n\n- **Enforceability risk.** An overreaching clause may be struck or narrowly construed. The drafter could end up with *less* protection than a reasonable cap would have provided.\n- **Contra proferentem.** Ambiguities will be read against the drafter.\n- **Deal friction.** Sophisticated counterparties will flag this immediately, which undermines credibility in negotiation.\n- **Insurance mismatch.** A $100 cap bears no relation to cyber or E&O coverage limits. Well-drafted caps are usually calibrated to insurance.\n\n## 5. When Might a Very Low Cap Be Defensible?\n\nA very low cap may be defensible in narrow cases, such as a free or very low-cost consumer service with no sensitive data. Even then, gross negligence, fraud, personal injury, and statutory consumer and data-protection rights would typically remain outside the cap by operation of law.\n\n## 6. A More Appropriate Structure\n\n> **General Cap.** Except as set forth below, each party's aggregate liability arising out of or related to this Agreement shall not exceed the fees paid or payable by Customer in the twelve (12) months preceding the event giving rise to the claim.\n>\n> **Super-Cap.** Each party's aggregate liability for breach of its data-protection or security obligations shall not exceed [2\u20133\u00d7] the General Cap [or $X].\n>\n> **Exclusions.** The foregoing limitations shall not apply to: (a) a party's gross negligence, willful misconduct, or fraud; (b) breach of confidentiality obligations [other than data-protection breaches subject to the Super-Cap]; (c) a party's indemnification obligations; (d) death or bodily injury caused by negligence; (e) Customer's payment obligations; or (f) any liability that cannot be limited under applicable law.\n\n## Bottom Line\n\nThe clause is inappropriate for three reasons:\n1. It sets a nominal cap that likely fails reasonableness and essential-purpose scrutiny.\n2. It purports to cap gross negligence, which is unenforceable in many jurisdictions.\n3. It caps data-breach and confidentiality liability at a level wholly disconnected from the actual risk, while leaving regulatory and third-party exposure untouched.\n\nA market-standard approach uses a fee-based general cap, a super-cap for data risks, and express carve-outs for gross negligence, willful misconduct, fraud, confidentiality, and indemnities.\n\n*This is general analysis, not legal advice. Enforceability depends heavily on governing law, the nature of the parties, and the transaction. Consult counsel in the relevant jurisdiction.*",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "legal-15",
+      "expected": "risk_flagging",
+      "actual_label": "risk_flagging",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-opus-5.5",
+        "provider": "Anthropic",
+        "cost_usd": 0.029056,
+        "input_tokens": 99,
+        "output_tokens": 1433,
+        "latency_ms": 18149.350554000022,
+        "text": "# Yes. This clause creates significant, outsized risk for the Client\n\nEach term in the clause expands the Vendor's rights, and together they amount to something close to an ownership transfer, far beyond what the Vendor needs to provide the service.\n\n## Term-by-term breakdown\n\n| Term | What it means | Why it's risky |\n|---|---|---|\n| **Perpetual** | The license never expires | Survives termination. The Vendor keeps rights to your data after you stop paying or leave. |\n| **Irrevocable** | Client can't withdraw it | No exit, even if the Vendor breaches, is acquired, or misuses data. |\n| **Worldwide** | No geographic limits | Data may be processed in jurisdictions with weak privacy or IP protections, complicating GDPR and data-residency compliance. |\n| **Use, modify** | Vendor can alter the content | Enables derivative works, including AI/ML model training on your data. |\n| **Sublicense** | Vendor can grant rights to third parties | Your data could reach partners, data brokers, or competitors with no privity between you and them. |\n| **Any data or content** | No carve-outs | Covers trade secrets, customer PII, financials, and confidential material. |\n| **For any purpose** | No purpose limitation | The most dangerous phrase. It isn't tied to delivering the service and permits commercial exploitation. |\n\n## Key risk categories\n\n1. **Confidentiality and trade secrets.** Sharing trade secrets under a broad license can undermine their legal protection, because trade-secret status depends on reasonable efforts to maintain secrecy.\n2. **Regulatory exposure.** If the Client uploads personal data, this clause likely conflicts with:\n   - **GDPR/UK GDPR** (purpose limitation, data minimization, processor restrictions under Art. 28)\n   - **CCPA/CPRA** (a Vendor using data \"for any purpose\" may count as a \"third party\" rather than a \"service provider,\" turning disclosure into a \"sale\" or \"share\")\n   - **HIPAA, GLBA, FERPA**, and similar sector rules\n\n   The Client, as controller, typically bears liability for this.\n3. **Breach of the Client's own contracts.** The Client may be contractually barred from granting these rights over customer or partner data it holds, creating downstream breach claims.\n4. **Loss of competitive advantage.** The Vendor could aggregate, analyze, or sell insights from your data, or train products that benefit competitors.\n5. **No exit strategy.** Because the license is perpetual and irrevocable, even deleting your account doesn't end the Vendor's rights.\n6. **Asymmetry.** The Vendor needs only a limited license to host, process, and display data to perform the service. Everything beyond that is pure risk transfer with no corresponding benefit to the Client.\n\n## Suggested redline\n\n> *\"Client grants Vendor a limited, non-exclusive, non-transferable, revocable license to host, store, process, and display Client Data **solely to the extent necessary to provide the Services to Client** during the Term. Client retains all right, title, and interest in Client Data. Vendor shall not sublicense Client Data except to approved subprocessors bound by written obligations no less protective than this Agreement. Upon termination, Vendor shall return or delete Client Data within [30] days and certify deletion.\"*\n\n**Additional protections to consider:**\n- An explicit prohibition on using Client Data to train AI/ML models, unless the Client opts in\n- If aggregated or anonymized data use is allowed, a narrow definition requiring true de-identification\n- A Data Processing Agreement (DPA) if personal data is involved\n- Confidentiality obligations covering Client Data\n- Audit rights and breach-notification requirements\n\n## Bottom line\n\nThis clause gives the Vendor rights resembling ownership without paying for it. Standard market practice is a **limited, purpose-bound, term-limited license**. A Client should treat this as a high-priority negotiation point, and in regulated industries possibly a deal-breaker.\n\n*This is general analysis, not legal advice. Have counsel review it in the context of the full agreement and applicable law.*",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "legal-16",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 5.94e-05,
+        "input_tokens": 54,
+        "output_tokens": 72,
+        "latency_ms": 2795.2260700000124,
+        "text": "The payment terms are **net 30**, meaning payment is due **30 days from the date of invoice**.",
+        "error": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "openrouter/auto",
+          "model": "deepseek/deepseek-v4-flash-0731",
+          "provider": "Baidu",
+          "cost_usd": 3.41374e-05,
+          "input_tokens": 107,
+          "output_tokens": 52,
+          "latency_ms": 1459.957017000022,
+          "text": "Net 30 \u2014 payment is due within 30 days from the invoice date.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "typesafe/jev-router",
+          "model": "stealth/space-bunny-alpha",
+          "provider": "Stealth",
+          "cost_usd": 0.0,
+          "input_tokens": 179,
+          "output_tokens": 16,
+          "latency_ms": 1676.255966000042,
+          "text": "The payment terms are **net 30 from the date of the invoice**.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-top-tier",
+          "model": "anthropic/claude-opus-5.5",
+          "provider": "Anthropic",
+          "cost_usd": 0.004096,
+          "input_tokens": 44,
+          "output_tokens": 196,
+          "latency_ms": 2967.1824819999983,
+          "text": "The payment terms are **net 30 from the date of invoice**.\n\nThis means the full invoiced amount is due within **30 days of the invoice date**. For example, an invoice dated March 1 would be due by March 31.\n\nTwo points to note:\n- **The clock starts on the invoice date**, not the date the invoice is received or the date goods or services are delivered.\n- **\"Net\" means the full amount is due.** The clause offers no early-payment discount, such as the \"2/10 net 30\" arrangement, where paying within 10 days earns a 2% discount.",
+          "error": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "legal-17",
+      "expected": "extraction",
+      "actual_label": "extraction",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "Fireworks",
+        "cost_usd": 7.524e-05,
+        "input_tokens": 72,
+        "output_tokens": 90,
+        "latency_ms": 3512.5376440000196,
+        "text": "The signatories are:\n\n- **Jane Doe** \u2014 CEO of Acme Corp  \n- **John Smith** \u2014 General Counsel of Beta LLC",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "legal-18",
+      "expected": "risk_flagging",
+      "actual_label": "risk_flagging",
+      "correct": true,
+      "judge_confidence": 1.0,
+      "routed": {
+        "router": "deferent",
+        "model": "anthropic/claude-opus-5.5",
+        "provider": "Anthropic",
+        "cost_usd": 0.047252,
+        "input_tokens": 93,
+        "output_tokens": 2344,
+        "latency_ms": 32176.162804,
+        "text": "# Yes, this clause poses meaningful risk to the Client\n\nIt is one of the more client-unfavorable provisions commonly found in vendor terms. Its **combination** of features makes it especially problematic:\n\n| Feature | Effect |\n|---|---|\n| \"At any time\" | No limits on timing, frequency, or scope of changes |\n| \"Without notice\" | Client may not know the terms have changed |\n| \"Continued use constitutes acceptance\" | Silence and ordinary operation become \"consent\" |\n\nTogether, these let the Vendor rewrite the deal while the Client keeps performing, possibly unaware.\n\n## Why the Risk Is Meaningful\n\n### 1. Any term can change, including the ones that matter most\nNothing restricts the Vendor to minor or administrative updates. It could purport to change:\n- **Pricing, fees, or payment terms**\n- **Liability caps, indemnities, and warranty disclaimers**\n- **Service levels or feature availability**\n- **Data rights**, such as permission to use Client data for AI training or analytics, or new sharing with third parties\n- **Dispute resolution**, such as adding mandatory arbitration, class-action waivers, or a new governing law or venue\n- **Termination rights, auto-renewal, and IP ownership**\n\n### 2. \"Continued use\" is not a real choice\nIf the Services are embedded in the Client's operations, stopping use to avoid new terms may be impractical. Switching costs, data migration, and business disruption make \"acceptance by use\" effectively coerced.\n\n### 3. Lack of notice defeats even informal protection\nWithout notice, the Client cannot object, renegotiate, budget for changes, or plan an exit. Its compliance obligations (privacy, security, regulatory) may also be silently affected. A regulated Client could fall out of compliance because of a vendor change it never saw.\n\n### 4. Retroactivity risk\nThe clause does not say changes apply only going forward. A Vendor might argue that new terms, such as a new arbitration clause or liability limit, govern disputes over past conduct.\n\n### 5. Uncertainty in the overall bargain\nThe Client cannot reliably price risk or rely on negotiated concessions if they can be unilaterally undone.\n\n## Enforceability: Helpful to the Client, But Not a Safe Harbor\n\nCourts and regulators are often skeptical of such clauses, but relying on unenforceability is risky and costly.\n\n**United States**\n- **Notice is often required.** In *Douglas v. U.S. District Court* (9th Cir. 2007), the court declined to bind a customer to revised terms merely posted on a website without notice.\n- **Illusory contract doctrine.** Unrestricted modification rights have led courts to find arbitration agreements illusory and unenforceable, as in *Harris v. Blockbuster* (N.D. Tex. 2009) and *In re Zappos.com* (D. Nev. 2012).\n- **Implied covenant of good faith and fair dealing.** This may limit how modification rights are exercised. In *Badie v. Bank of America* (Cal. Ct. App. 1998), the court held that changes must fall within what the parties reasonably contemplated.\n- Results vary by state and context. B2B parties receive less protection than consumers.\n\n**EU / UK**\n- The **Unfair Contract Terms Directive** (Annex, point 1(j)) and the **UK Consumer Rights Act 2015** (Sch. 2, para. 11) flag unilateral alteration without a valid, specified reason as potentially unfair. These protections apply mainly to **consumer** contracts, so a business Client largely cannot rely on them.\n\n**The takeaway:** the clause might not be enforced as written, but the Client would bear the burden and cost of litigating that. Meanwhile, the Vendor may act as if the new terms apply.\n\n## A Nuance\n\nIf the clause makes the contract illusory, that can cut against the Client too. It may undermine the Vendor's commitments the Client relies on, creating uncertainty for both sides. A clear, balanced modification mechanism is better for the Client than an unenforceable one-sided one.\n\n## Recommended Negotiation Points\n\n1. **Advance written notice** of changes, typically 30 to 90 days, sent directly by email, not just posted online.\n2. **Materiality carve-out.** Material adverse changes require the Client's written consent, or give the Client a right to **terminate without penalty and receive a pro-rata refund** of prepaid fees.\n3. **Protected terms.** Pricing during the committed term, liability and indemnity provisions, data protection terms, SLAs, and dispute resolution cannot be changed unilaterally.\n4. **No retroactivity.** Changes apply only prospectively and do not govern pre-existing disputes or claims.\n5. **Order of precedence.** A signed master agreement or order form prevails over online terms, and online terms cannot amend it without a signed writing.\n6. **Limit permitted changes** to those required by law, security needs, or genuinely non-material operational updates.\n7. **Version control.** The Vendor maintains an archive of prior versions and a changelog.\n\n## Bottom Line\n\nThe clause lets the Vendor unilaterally rewrite core economic, legal, and data-related terms, with no notice and no meaningful way for the Client to refuse. Courts may limit it, particularly where notice is lacking, but that protection is uncertain, jurisdiction-dependent, and weaker for business clients. The Client should treat it as a priority negotiation item rather than rely on after-the-fact unenforceability arguments.\n\n*This is general analysis, not legal advice. The actual risk depends on the governing law, the rest of the agreement, and the Client's reliance on the Services.*",
+        "error": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    }
+  ]
+}

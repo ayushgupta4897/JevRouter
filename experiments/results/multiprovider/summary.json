@@ -1,0 +1,72 @@
+{
+  "blended_savings_pct": 5.8817489930564015,
+  "real_cost_usd": 0.30470972,
+  "frontier_equivalent_usd": 0.323752,
+  "head_to_head": {
+    "deferent": {
+      "prompts": 6,
+      "cost_usd": 0.07093394,
+      "failed_or_empty": 0,
+      "jev_adequate": [
+        6,
+        6
+      ],
+      "mean_score": 5.0,
+      "scored": 6,
+      "score_ge_4": 6
+    },
+    "openrouter/auto": {
+      "prompts": 6,
+      "cost_usd": 0.0062186638,
+      "failed_or_empty": 0,
+      "jev_adequate": [
+        6,
+        6
+      ],
+      "mean_score": 4.833333333333333,
+      "scored": 6,
+      "score_ge_4": 6
+    },
+    "typesafe/jev-router": {
+      "prompts": 6,
+      "cost_usd": 0.0,
+      "failed_or_empty": 0,
+      "jev_adequate": [
+        6,
+        6
+      ],
+      "mean_score": 4.5,
+      "scored": 6,
+      "score_ge_4": 5
+    },
+    "always-top-tier": {
+      "prompts": 6,
+      "cost_usd": 0.10810399999999999,
+      "failed_or_empty": 0,
+      "jev_adequate": [
+        6,
+        6
+      ],
+      "mean_score": 5.0,
+      "scored": 6,
+      "score_ge_4": 6
+    }
+  },
+  "head_to_head_models": {
+    "deferent": {
+      "deepseek/deepseek-v4.1-flash": 4,
+      "anthropic/claude-opus-5.5": 2
+    },
+    "openrouter/auto": {
+      "deepseek/deepseek-v4-flash-0731": 4,
+      "deepseek/deepseek-v4.1-flash": 2
+    },
+    "typesafe/jev-router": {
+      "stealth/space-bunny-alpha": 6
+    },
+    "always-top-tier": {
+      "anthropic/claude-opus-5.5": 6
+    }
+  },
+  "total_spend_usd": 0.4529363838
+}
