@@ -1,0 +1,587 @@
+{
+  "name": "code-review",
+  "route_name": "eng/code-review",
+  "policy": "complexity",
+  "roster": [
+    "openai/gpt-oss-20b",
+    "deepseek/deepseek-v4-pro"
+  ],
+  "accuracy": 0.6666666666666666,
+  "routed_cost_usd": 0.014670358759999998,
+  "models_used": {
+    "openai/gpt-oss-20b": 14,
+    "deepseek/deepseek-v4-pro": 4
+  },
+  "items": [
+    {
+      "item_id": "rev-01",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.76,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-20b",
+        "provider": "DekaLLM",
+        "cost_usd": 0.000145772,
+        "input_tokens": 88,
+        "output_tokens": 1023,
+        "latency_ms": 44329.681262000006,
+        "text": "### Quick style\u2011check for the function signature\n\n```python\ndef get_user( id ):\n```\n\n| # | Problem | Why it matters | PEP8 / best\u2011practice fix |\n|---|---------|----------------|---------------------------|\n| 1 | **Space before the opening parenthesis** (`get_user( id )`) | PEP\u202f8 recommends no spaces around the left parenthesis of a function definition. It can make the code harder to spot when the signature is wrapped or split over lines. | `def get_user(id):` |\n| 2 | **Space before the closing parenthesis** (` id )`) | Same reason as above; keep the parameter list tightly coupled to the function name. | `def get_user(id):` |\n| 3 | **Parameter name `id` shadows the built\u2011in `id()` function** | Shadowing built\u2011ins can lead to subtle bugs or confusion. It also makes it harder to read and maintain the code. | Use a more descriptive name such as `user_id`: `def get_user(user_id):` |\n| 4 | **Missing type hint for the parameter** | Python\u2019s type\u2011checkers (mypy, pyright, etc.) and IDEs rely on hints to catch errors early. It also documents intent. | `def get_user(user_id: int):` |\n| 5 | **Missing return type hint** *(optional but helpful)* | Declares what the function returns, making the API self\u2011documenting and aiding static analysis. | `def get_user(user_id: int) -> User:` (assuming a `User` model/class). |\n| 6 | **Missing docstring** *(style guideline)* | Every public function should have a concise docstring describing its purpose, parameters, and return value. | `def get_user(user_id: int) -> User:`<br>\u2003`\"\"\"Retrieve a user by ID.\\n\\n :param user_id: The unique identifier of the user.\\n :return: User object matching the ID.\\n\"\"\"` |\n| 7 | **Parameter order / grouping** (not an issue here, but for many parameters) | If you later add more arguments, use keyword\u2011only or defaults to improve clarity. | Not applicable now. |\n| 8 | **Leading underscore** (not needed) | Only use a leading underscore for private/internal functions. `get_user` is a public API name, so keep it as is. | No change. |\n\n---\n\n#### The cleaned\u2011up, PEP\u202f8\u2011compliant signature\n\n```python\ndef get_user(user_id: int) -> User:\n    \"\"\"Retrieve a user by ID.\n\n    Args:\n        user_id: The unique identifier of the user.\n\n    Returns:\n        A User instance corresponding to the provided ID.\n    \"\"\"\n    ...\n```\n\n> **Why it matters**  \n> * Removes accidental built\u2011in shadowing \u2192 fewer bugs.  \n> * No whitespace errors \u2192 better readability in code diff tools.  \n> * Type hints and docstrings \u2192 improved IDE support, static checking, and documentation generation.  \n\nFeel free to adjust the return type hint to whatever your actual return type is (`User`, `Optional[User]`, etc.) or omit it if you\u2019re fine with dynamic typing.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 3
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "openai/gpt-oss-20b",
+          "provider": "Google",
+          "cost_usd": 0.00022316,
+          "input_tokens": 88,
+          "output_tokens": 868,
+          "latency_ms": 3039.9775590000218,
+          "text": "Here\u2019s a quick PEP\u202f8 / style audit of the one\u2011liner function header you posted:\n\n```python\ndef get_user( id ):\n```\n\n| Issue | What it means | Suggested fix |\n|-------|---------------|---------------|\n| **Whitespace before and after the parentheses** | PEP\u202f8 dictates that the opening and closing parentheses in a function definition should have **no** space around them (`def foo():`). | `def get_user(id):` |\n| **Parameter name `id` shadows a built\u2011in** | Using `id` as a variable name hides Python\u2019s built\u2011in `id()` function, making debugging or comprehension harder. | Use a more descriptive name, e.g. `user_id`, `uid`, or `user_slug`. |\n| **No type hint** | Modern Python code often annotates parameter types (and return types) to improve readability and tooling support. | `def get_user(user_id: int) -> User:` (replace `User` with your model type). |\n| **No docstring** | Even a minimal docstring (`\"\"\"Retrieve a user by ID.\"\"\"`) gives anyone reading the file a quick understanding of the call contract. | Add a one\u2011liner or full docstring. |\n| **No argument name conventions checked** | While `get_user` follows snake_case correctly, the parameter `id` could be judged too terse. | Prefer a longer suffix like `user_id` or `user_id_str`, especially if you\u2019re dealing with strings. |\n\n### TL;DR\n\nA clean, idiomatic signature would look like:\n\n```python\ndef get_user(user_id: int) -> User:\n    \"\"\"Return the User instance with the given ID.\"\"\"\n    ...\n```\n\n> *Why bother?* PEP\u202f8\u2011style consistency, avoiding built\u2011in shadowing, and type hints all contribute to code that\u2019s easier to read, maintain, and inspect by tools such as IDEs, linters, and static type checkers.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 4
+        },
+        {
+          "router": "always-strongest",
+          "model": "deepseek/deepseek-v4-pro",
+          "provider": "StreamLake",
+          "cost_usd": 0.000426445,
+          "input_tokens": 25,
+          "output_tokens": 608,
+          "latency_ms": 15213.453514999968,
+          "text": "The function signature `def get_user( id ):` has a few style issues based on Python's PEP 8 style guide:\n\n1. **Whitespace before the opening parenthesis**  \n   There should be no space between the function name and the opening parenthesis.  \n   \u274c `def get_user( id ):`  \n   \u2705 `def get_user(id):`\n\n2. **Whitespace inside the parentheses**  \n   Spaces immediately inside the parentheses (around the parameter `id`) are superfluous and should be removed.  \n   \u274c `( id )`  \n   \u2705 `(id)`\n\n3. **Shadowing a built-in name** *(mild concern)*  \n   `id` is the name of a built-in function (`id(obj)`). Using it as a parameter name shadows the built-in and can cause confusion or errors. It\u2019s better to rename it to something more descriptive, like `user_id`.\n\n**Corrected signature (minimal fix):**\n```python\ndef get_user(id):\n```\n\n**Recommended improvement (avoids shadowing and adds clarity):**\n```python\ndef get_user(user_id):\n```\n\nIf your codebase uses type annotations, consider adding them:\n```python\ndef get_user(user_id: int) -> User | None:\n    ...\n```",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 4
+        }
+      ]
+    },
+    {
+      "item_id": "rev-02",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.8799999999999999,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-20b",
+        "provider": "Darkbloom",
+        "cost_usd": 7.1334e-05,
+        "input_tokens": 93,
+        "output_tokens": 774,
+        "latency_ms": 12968.12613499992,
+        "text": "**Short answer:**  \nRename `x` to **`accountBalance`** (or `userAccountBalance` if you want to emphasize the user).\n\n---\n\n### Why this matters\n\n| Problem with `x` | Why it hurts | Better alternative |\n|------------------|--------------|--------------------|\n| **Non\u2011descriptive** | Anyone reading the code has to guess what `x` represents. | `accountBalance` tells you immediately that the value is the balance of an account. |\n| **Single\u2011letter name** | Single letters are reserved for trivial, short\u2011lived values (e.g., loop counters). | A full word makes the intent clear. |\n| **Potential ambiguity** | If the function deals with multiple balances (e.g., `x` for checking, `y` for savings), the names can clash. | `checkingBalance`, `savingsBalance`, etc. |\n| **Future maintenance** | New developers or even you in a few months will spend time figuring out what `x` is. | A descriptive name saves time and reduces bugs. |\n\n---\n\n### Suggested names\n\n| Context | Suggested name | When to use it |\n|---------|----------------|----------------|\n| General account balance | `accountBalance` | Most common, clear, and concise. |\n| Explicitly tied to a user | `userAccountBalance` | If the function handles multiple users or you want to emphasize the user. |\n| Current balance at a point in time | `currentBalance` | Good if the function updates the balance and you want to emphasize \u201cnow\u201d. |\n| Balance for a specific account type | `checkingBalance`, `savingsBalance`, `investmentBalance` | When the function deals with multiple account types. |\n| Balance in a financial transaction | `transactionBalance` | If the variable represents the balance after a transaction. |\n\n---\n\n### Quick refactor example\n\n```python\n# Before\ndef process_transaction(x, amount):\n    # ... some logic ...\n    x += amount\n    # ... more logic ...\n\n# After\ndef process_transaction(account_balance, amount):\n    # ... some logic ...\n    account_balance += amount\n    # ... more logic ...\n```\n\n---\n\n### Takeaway\n\n- **Use a full, descriptive name** that reflects the variable\u2019s purpose.\n- **Avoid single\u2011letter names** unless they\u2019re truly trivial (e.g., `i` in a `for` loop).\n- **Keep the name consistent** with the rest of your codebase (e.g., if you already use `balance`, stick with that).\n\nChoosing `accountBalance` (or a variant that fits your domain) will make the function self\u2011documenting and easier to maintain.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "rev-03",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.8600000000000001,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-20b",
+        "provider": "AkashML",
+        "cost_usd": 0.00014338,
+        "input_tokens": 84,
+        "output_tokens": 1417,
+        "latency_ms": 34464.554808999994,
+        "text": "**Short answer:**  \nNo \u2013 if you never reference `os` (directly or indirectly) anywhere in the file, the `import os` statement is unnecessary and can safely be removed.\n\n---\n\n## Why you can drop it\n\n| Reason | Explanation |\n|--------|-------------|\n| **No side\u2011effects** | The `os` module does not modify global state just by being imported. Importing it only loads the module and sets its namespace; there is no runtime penalty you\u2019ll hide. |\n| **No functionality used** | Code that actually needs OS\u2011level services (e.g. `os.path.join`, `os.getenv`, `os.makedirs`, etc.) must call those attributes; if none of those calls appear in the file, the module isn\u2019t needed. |\n| **Cleaner, more readable code** | Unused imports clutter the top of a file, making it harder to see which modules are truly required. Removing them clarifies intent. |\n| **Linting tools will flag it** | Popular linters (flake8, pyflakes, pylint, etc.) will emit \u201cunused import\u201d warnings if you keep it. Removing it keeps the code lint\u2011clean. |\n| **Package size / startup time** | In a production environment, every imported module is loaded into memory. Though the difference is typically negligible for one module, a well\u2011written codebase avoids unnecessary imports, especially inside performance\u2011critical paths. |\n\n---\n\n## When you *might* still want to keep it\n\n| Situation | Why keep `import os`? |\n|-----------|-----------------------|\n| **Future use** | If you anticipate adding OS\u2011related code soon, keeping the import can be a quick placeholder.  That said, it\u2019s often more professional to add the import at the moment you first need it. |\n| **Type hints** | If you use a type such as `os.PathLike`, the `os` name must be in scope for the type annotation to resolve. Example:<br>`def load_file(path: os.PathLike) -> str:` |\n| **Indirect side\u2011effects** | Rarely, a third\u2011party library might implicitly import `os` only for its side effects (e.g., setting up a custom environment variable). In that case you\u2019d want to import it *explicitly* to document the side\u2011effect rather than rely on a hidden dependency. |\n| **Documentation or consistency** | Some codebases adopt a stylistic rule to always import common standard modules (`os`, `sys`, etc.) at the top of every file, even if unused. This is purely a convention; it adds tiny overhead but can make it easier for new developers to skim which modules are available. |\n\n---\n\n## Practical steps to clean up\n\n1. **Check the whole file** \u2013 Verify that `os` is not used in any string (e.g., `f\"Some {os.mode}\"`) or via something like `getattr(os, 'xy')`.\n2. **Run a linter** \u2013 Tools like `flake8` or `pylint` will give you a \u201cunused import: os\u201d warning. Fixing it is usually just deleting the line.\n3. **Check type annotations** \u2013 If a type hint uses `os`, either import the module or refactor the hint to use a built\u2011in type (e.g., `str` for paths).\n4. **Run tests** \u2013 If you delete the import, run your test suite to ensure nothing breaks unexpectedly. It should pass if the import was indeed unused.\n\n---\n\n## Bottom line\n\n- **Remove the `import os` if you never touch the `os` namespace** (directly or via type hints).  \n- Keep it only if you have a legitimate functional or documentation need.  \n\nDoing this keeps your code clean, easier to read, and compliant with most style guidelines.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "rev-04",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.8999999999999999,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-20b",
+        "provider": "AkashML",
+        "cost_usd": 9.76e-05,
+        "input_tokens": 90,
+        "output_tokens": 958,
+        "latency_ms": 13695.46294999998,
+        "text": "**Use `is None`**\n\n```python\nif x is None:\n    ...\n```\n\n### Why `is` is preferred\n\n|  | `x == None` | `x is None` |\n|---|---|---|\n| **What it checks** | Calls `x.__eq__(None)` \u2013 the equality operator. | Checks identity: whether `x` *is* the `None` singleton. |\n| **Can be overridden** | Yes \u2013 user\u2011defined types can customize `__eq__`. | No \u2013 identity cannot be changed. |\n| **Typical use case** | Comparing values that might be equal (e.g., `x == 5`). | Checking for the *exact* `None` sentinel. |\n| **Performance** | Slightly slower due to method dispatch. | Fast, simple pointer comparison. |\n| **Clarity** | Implicit, can be misleading when `__eq__` is overridden. | Explicit; the intent is unmistakable. |\n\n`None` is a *singleton*. The only valid instance representing \u201cno value\u201d is the object that everybody sees as `None`. If you need to know whether a variable points to that particular object, you have to use identity (`is`). `==` would happily consider any object that defines an equality method returning `True` with `None`.\n\n### PEP\u202f8\n\nPEP\u202f8, the Python style guide, recommends:\n\n> **Use `is` and `is not` for tests against `None`.**  \n> For all other comparisons, use `==` or `!=`.\n\nThat rule is mirrored in the official Python documentation and in the vast majority of well\u2011maintained codebases.\n\n### Common gotcha\n\n```python\nif not x:          # true for None, 0, '', [], {}, etc.\n    ...\n```\n\nIf you add a test like `if not x == None:` you\u2019ll get the same result as `if x is None`, but it is unnecessarily convoluted and hides the intent. Keep it simple: `if x is None:` or `if x is not None:`.\n\n---\n\n**Bottom line:**  \nUse `is None` (and `is not None`) when you want to assert that a variable is exactly `None`. It is the idiomatic, clear, and future\u2011proof way to write that test.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "openai/gpt-oss-20b",
+          "provider": "Groq",
+          "cost_usd": 0.00028335,
+          "input_tokens": 94,
+          "output_tokens": 921,
+          "latency_ms": 1424.75626800001,
+          "text": "**Short answer:**  \n\nUse\n\n```python\nif x is None:\n    \u2026\n```\n\nPEP\u202f8 (the official Python style guide) recommends `is` for comparisons with `None` (and, by the same logic, for the singletons `True` and `False`).  \n`==` is technically legal, but it calls the `__eq__` method, which can be overridden and may produce surprising results.\n\n---\n\n## Why `is None` is the right choice\n\n| Comparison | What it does | Why it matters |\n|------------|--------------|----------------|\n| `x == None` | Calls `x.__eq__(None)` (or, if not defined, falls back to `x.__cmp__` or object identity). | The equality operator can be overridden. Two objects that *behave* equal to `None` might not be the actual `None` singleton. |\n| `x is None` | Checks identity: `x` is the exact same object as the singleton `None`. | `None` is a singleton in CPython. Identity comparison is both faster and unambiguous. |\n\n### Example where `== None` fails\n\n```python\nclass MyNumber:\n    def __eq__(self, other):\n        return other is None  # pretend we\u2019re \u201cequal\u201d to None\n\nn = MyNumber()\nprint(n == None)  # True (because __eq__ says so)\nprint(n is None)  # False (n is a different object)\n```\n\nIf you really want to test for *identity* with `None`, use `is None`.\n\n---\n\n## PEP\u202f8 & other style references\n\n* **PEP\u202f8** \u2013 *\u201cUse `is` or `is not` when testing for `None`.\u201d*  \n  (Section\u202f3.8.1 \u201cIdentity\u201d and 6.5 \u201cComparison\u201d)\n* **Google Python Style Guide** \u2013 \u201cCompare to `None` with `is`/`is not`.\u201d  \n* **The Zen of Python** (PEP\u202f20) \u2013 \u201cReadability counts.\u201d  \n  Using `is` makes the intent crystal\u2011clear.\n\n---\n\n## Quick cheat\u2011sheet\n\n| Condition | Write this | Why |\n|-----------|------------|-----|\n| Value is `None` | `if x is None:` | Identity, fastest, unambiguous |\n| Value is *not* `None` | `if x is not None:` | Same logic |\n| Check truthiness | `if not x:` | For any falsey value (`None`, `False`, `0`, `\"\"`, `[]`, `{}`) |\n| Compare to other values | `if x == 5:` | Use equality (`==`) when you want logical equivalence, not identity |\n\n---\n\n## When you *might* see `== None`\n\n* Legacy code that predates PEP\u202f8.\n* Code that intentionally relies on `__eq__` being overridden (rare, but possible in custom numeric types, wrappers, etc.).\n* Code that is auto\u2011generated or heavily uses frameworks that may override `__eq__`.\n\nIn almost all everyday Python code you write yourself, stick with `is None`.\n\n---\n\n### Bottom line\n\n```python\n# \u2705 Recommended\nif x is None:\n    ...\n\n# \u274c Preferable to avoid\nif x == None:\n    ...\n```\n\nUsing `is None` is the idiomatic, fastest, and safest way to test for the absence of a value in Python.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "deepseek/deepseek-v4-pro",
+          "provider": "StreamLake",
+          "cost_usd": 0.000400751,
+          "input_tokens": 27,
+          "output_tokens": 571,
+          "latency_ms": 14462.439648999974,
+          "text": "You should use `if x is None:`.\n\nHere\u2019s why it\u2019s the correct choice, both in terms of correctness and Python style:\n\n## 1. **None is a singleton**\n`None` is the sole instance of the `NoneType` class. There is exactly one `None` object in a Python process. Identity (`is`) checks whether two names refer to the *exact same object*, while equality (`==`) checks whether objects are *equivalent* based on their `__eq__` method. Since there\u2019s only one `None`, identity is the most direct and reliable test.\n\n## 2. **PEP 8 recommends `is None`**\nThe official Python style guide explicitly states:\n\n> Comparisons to singletons like `None` should always be done with `is` or `is not`, never the equality operators.  \n> \u2014 [PEP 8](https://peps.python.org/pep-0008/#programming-recommendations)\n\n## 3. **`==` can be fooled by custom `__eq__`**\nAn object\u2019s class can define `__eq__` to return `True` when compared to `None`, even though the object is *not* `None`. That makes `x == None` unpredictable when `x` is an instance of such a class. For example:\n\n```python\nclass Weird:\n    def __eq__(self, other):\n        return True\n\nobj = Weird()\nprint(obj == None)  # True\nprint(obj is None)  # False\n```\n\nUsing `is` completely sidesteps this, because `is` cannot be overridden.\n\n## 4. **Performance**\n`is` is a direct pointer comparison, while `==` involves a method lookup and call to `__eq__`. Although the difference is negligible in most cases, `is` is technically faster.\n\n## 5. **Readability**\n`if x is None` reads as plain English and immediately communicates that you\u2019re checking for the `None` singleton, not just something \u201cequal\u201d to `None`.\n\n---\n\n**TL;DR** \u2013 Always write `if x is None:` (or `if x is not None:`). It\u2019s the idiomatic, safe, and correct way to test for `None` in Python.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "rev-05",
+      "expected": "weak",
+      "actual_label": "strong",
+      "correct": false,
+      "judge_confidence": 0.020000000000000018,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4-pro",
+        "provider": "StreamLake",
+        "cost_usd": 0.000168113,
+        "input_tokens": 19,
+        "output_tokens": 238,
+        "latency_ms": 7684.3918529999655,
+        "text": "I need to see the function's code to check its indentation. Please provide the code snippet, and I\u2019ll flag any inconsistent use of tabs and spaces.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "rev-06",
+      "expected": "strong",
+      "actual_label": "strong",
+      "correct": true,
+      "judge_confidence": 0.32000000000000006,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4-pro",
+        "provider": "StreamLake",
+        "cost_usd": 0.00055738,
+        "input_tokens": 43,
+        "output_tokens": 794,
+        "latency_ms": 22453.47959900005,
+        "text": "The scenario you described\u2014two asynchronous tasks performing a read-modify-write on a shared counter without synchronization\u2014has a classic **race condition** that can and will cause ID collisions.\n\n### What goes wrong\nSince the increment is not atomic, the sequence of operations can interleave:\n\n1. **Task A** reads the current value (e.g., `counter = 5`).\n2. **Task B** reads the current value (`counter = 5`).\n3. **Task A** computes `new_id = 5 + 1 = 6`, writes `6` back.\n4. **Task B** computes `new_id = 5 + 1 = 6`, writes `6` back.\n\nBoth tasks receive ID `6` and the counter ends up at `6` instead of `7`. The uniqueness guarantee is violated.\n\n### Why this is broken by design\n- The \u201cread-modify-write\u201d (e.g., `id = counter; counter += 1`) is not a single uninterruptible operation in typical runtimes.\n- With async tasks that can yield at any `await` point, the race window is even larger\u2014the tasks can be suspended between the read and the write, practically guaranteeing eventual collisions under any meaningful concurrency.\n\n### How to fix it\nUse a synchronization mechanism that makes the counter update **atomic**:\n\n#### 1. **Lock / Mutex** (safe, explicit)\n```python\n# Python async example\nlock = asyncio.Lock()\n\nasync def allocate_id():\n    async with lock:\n        nonlocal counter\n        counter += 1\n        return counter\n```\n\n#### 2. **Atomic increment primitive** (if available)\nMany languages/libraries offer atomic integer types.\n```python\n# Python 3.9+ (though not truly async-safe, it's thread-safe)\nimport threading\ncounter = threading.AtomicInt()   # hypothetical; use `multiprocessing.Value` or a dedicated library\n```\n**For purely async code in a single-threaded event loop**, an `asyncio.Lock` is the standard and correct solution.\n\n#### 3. **Compare-and-swap (CAS) loop**\n```python\n# Pseudocode\nasync def allocate_id():\n    while True:\n        old = counter\n        new = old + 1\n        if atomic_compare_exchange(counter, old, new):\n            return new\n```\nReliably ensures uniqueness even without locks.\n\n#### 4. **Dedicated ID generator service** (architecture fix)\nMove the counter to a single task that owns it, and let other tasks request an ID via a queue or message. That eliminates the shared mutable state entirely.\n\n### Summary\nThe described code is unsafe. Without synchronization, overlapping read-modify-write cycles will produce duplicate IDs. Always guard a shared counter with a lock, use an atomic increment, or isolate the state to a single producer.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "rev-07",
+      "expected": "strong",
+      "actual_label": "weak",
+      "correct": false,
+      "judge_confidence": 0.3799999999999999,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-20b",
+        "provider": "CoreWeave",
+        "cost_usd": 0.00028677,
+        "input_tokens": 108,
+        "output_tokens": 2181,
+        "latency_ms": 761986.164261,
+        "text": "**Short answer**\n\nYes \u2013 it\u2019s a real bug.  \nThe recursion never knows *when* to stop for negative inputs, so it walks \u201ctoward \u2013\u221e\u201d until the call stack runs out.  \nThe cure is to add a **real base case (or a guard) for negative values**.  \nIn practice you\u2019ll almost always want to reject a negative argument (or handle it in a mathematically\u2011meaningful way) before you start the recursive descent.\n\n---\n\n## Why it\u2019s a bug\n\nA recursive function must eventually hit a base case that does **not** call itself again.  \nIf the only base case is something like `if (n == 0)` and you can reach that only by\nincreasing `n`, then passing a negative number will never make the condition true:\n\n```\nfoo(-3) \u2192 foo(-2) \u2192 foo(-1) \u2192 foo(0)   <-- this never happens\n```\n\nThe recursion keeps adding one (or subtracting one) forever, so the Java/V8/Python/etc. runtime must keep allocating stack frames until it exhausts its stack space. A stack\u2011overflow exception (or a crash in some environments) is the symptom of the underlying **infinite recursion**.\n\nIf the function\u2019s intent is mathematically undefined for negatives (e.g. factorial, sqrt, etc.), then the fact that the code *does* run just shows that the pre\u2011condition (non\u2011negative argument) is violated.\n\n---\n\n## Fix patterns\n\n### 1. Add a guard that rejects negatives\n\n```java\nint factorial(int n) {\n    if (n < 0) {\n        throw new IllegalArgumentException(\"factorial is undefined for negative n\");\n    }\n    if (n == 0) return 1;            // base case\n    return n * factorial(n - 1);     // recursive step\n}\n```\n\nOr in Python:\n\n```python\ndef factorial(n):\n    if n < 0:\n        raise ValueError(\"n must be non\u2011negative\")\n    if n == 0:\n        return 1\n    return n * factorial(n - 1)\n```\n\n### 2. Handle negatives in a mathematically\u2011meaningful way\n\nSome algorithms are defined for both positive and negative indices (e.g. the Fibonacci sequence, `F(-n) = (-1)^{n+1} F(n)` ). In those cases you write the negative\u2011case into the base\u2011case logic.\n\n```java\nint fib(int n) {\n    if (n == 0) return 0;\n    if (n == 1 || n == -1) return 1;\n    if (n > 1)  return fib(n - 1) + fib(n - 2);\n    // n < 0: use the identity F(-n) = (-1)^{n+1} * F(n)\n    return (n % 2 == 0) ? -fib(-n) : fib(-n);\n}\n```\n\n### 3. Convert to iteration when possible\n\nStack overflows are the classic symptom of \u201cdeep recursion\u201d; often recursion is an unnecessary abstraction.\n\n```java\nint factorialIterative(int n) {\n    if (n < 0) throw new IllegalArgumentException(...);\n    long product = 1;\n    for (int i = 2; i <= n; i++) {\n        product *= i;\n    }\n    return (int) product;\n}\n```\n\n### 4. Use tail recursion (where the language/runtime supports it)\n\nTail recursion eliminates the per\u2011call stack frame \u2013 but you still need the base case:\n\n```java\nint factorialHelper(int n, int acc) {\n    if (n == 0) return acc;\n    return factorialHelper(n - 1, n * acc);\n}\nint factorial(int n) {\n    if (n < 0) throw new IllegalArgumentException(...);\n    return factorialHelper(n, 1);\n}\n```\n\n---\n\n## What the *bug* looks like in practice\n\n| Language       | Example error   | How it shows up |\n|----------------|-----------------|-----------------|\n| Java           | `java.lang.StackOverflowError` | Crash or backtrace overflow |\n| Python         | `RecursionError: maximum recursion depth exceeded` | Exception propagates |\n| Scheme/Racket  | `Stack too deep` | Program aborts |\n| C++ (if recursion is used) | `std::runtime_error: stack exhausted` (rare) | Segmentation fault |\n\nIf you see any of these, the program is likely recursing without a proper base for that particular argument range.\n\n---\n\n## Checklist before deploying a recursive routine\n\n1. **Identify all input ranges** the function is meant to handle.  \n2. **Write a base case that covers every \u201cedge\u201d** (including zero, negative, and maybe very small or very large values).  \n3. **Validate arguments (precondition checks)** if the function\u2019s mathematical spec excludes a range.  \n4. **Consider an iterative version** if the recursion depth could be large.  \n5. **Unit\u2011test** with boundary values: `-1`, `0`, `1`, `INT_MAX`, etc. \u2013 and track the call depth.\n\n---\n\n### TL;DR\n\n- Yes, ignoring negatives is a bug that leads to infinite recursion and stack\u2011overflow.  \n- The fix: **add a guard or a proper base case for negative inputs** (or reject the input).  \n- Optionally convert to iteration or use tail recursion to avoid deep call stacks.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 2
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "openai/gpt-oss-20b",
+          "provider": "Darkbloom",
+          "cost_usd": 0.00011232,
+          "input_tokens": 110,
+          "output_tokens": 1226,
+          "latency_ms": 20330.431008999993,
+          "text": "### Short answer\n\nYes \u2013 it\u2019s a real bug.  \nA recursive routine that never reaches a base case will keep calling itself until the call stack runs out of space, producing a **stack\u2011overflow**.  \nThe fix is to **add a base case that handles negative inputs** (or reject them outright) and, if you want to keep the recursion, make sure the recursive step moves toward that base case.\n\n---\n\n## Why it\u2019s a bug\n\nA recursive function is essentially a loop written in a \u201ccall\u2011stack\u201d form.  \nFor it to terminate you need:\n\n1. **A base case** that returns a value without making another recursive call.\n2. **A step** that moves the argument closer to that base case.\n\nIf the argument can become negative and you never handle that case, the step will keep producing a smaller negative number:\n\n```\nf(-1) \u2192 f(-2) \u2192 f(-3) \u2192 \u2026 \u2192 f(-\u221e)\n```\n\nThe call stack grows forever until the runtime throws a stack\u2011overflow exception.\n\n---\n\n## Typical ways to fix it\n\n| What you want to do | How to fix it |\n|---------------------|---------------|\n| **Reject negative inputs** (e.g., factorial, Fibonacci for positive indices) | Add a guard clause that throws an exception or returns an error value. |\n| **Define a meaningful result for negative inputs** (e.g., extend the recurrence to negative indices) | Add a separate base case that returns the desired value for negative numbers. |\n| **Avoid recursion altogether** (if the recursion depth can be huge) | Rewrite the algorithm iteratively or use a tail\u2011recursive form that the compiler can optimize. |\n\n---\n\n## Concrete examples\n\n### 1. Rejecting negative inputs\n\n```python\ndef factorial(n: int) -> int:\n    if n < 0:\n        raise ValueError(\"factorial is undefined for negative numbers\")\n    if n == 0 or n == 1:\n        return 1\n    return n * factorial(n - 1)\n```\n\n### 2. Defining a result for negative inputs\n\nSuppose you want a \u201cnegative Fibonacci\u201d where `fib(-n) = (-1)^(n+1) * fib(n)`:\n\n```python\ndef fib(n: int) -> int:\n    if n == 0:\n        return 0\n    if n == 1:\n        return 1\n    if n < 0:\n        # use the identity fib(-n) = (-1)^(n+1) * fib(n)\n        return (-1) ** (n + 1) * fib(-n)\n    return fib(n - 1) + fib(n - 2)\n```\n\n### 3. Iterative version (no recursion)\n\n```python\ndef factorial_iter(n: int) -> int:\n    if n < 0:\n        raise ValueError(\"factorial is undefined for negative numbers\")\n    result = 1\n    for i in range(2, n + 1):\n        result *= i\n    return result\n```\n\n---\n\n## Things to keep in mind\n\n| Issue | What to watch for |\n|-------|-------------------|\n| **Stack depth** | Even with a correct base case, very large positive inputs can still overflow the stack. Use an iterative approach or tail recursion if the language supports it. |\n| **Tail\u2011recursion optimization** | Languages like Scala, Kotlin, and some Scheme implementations can optimize tail calls. In C/C++/Java, you usually need to rewrite the algorithm iteratively. |\n| **Error handling** | Throwing an exception is often clearer than returning a sentinel value (e.g., `None` or `-1`) because it forces the caller to handle the error. |\n| **Testing** | Add unit tests for negative inputs to ensure the guard clause or special case is exercised. |\n\n---\n\n## Bottom line\n\n- **Yes, it\u2019s a bug** if the function can be called with a negative number that never hits a base case.\n- **Fix it** by adding a guard clause or a separate base case for negative inputs, or by redesigning the algorithm to avoid deep recursion.\n\nOnce you have that guard in place, the function will terminate correctly for all inputs, and you\u2019ll avoid the dreaded stack\u2011overflow.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "deepseek/deepseek-v4-pro",
+          "provider": "StreamLake",
+          "cost_usd": 0.000898188,
+          "input_tokens": 48,
+          "output_tokens": 1283,
+          "latency_ms": 33748.026684000026,
+          "text": "Yes, that\u2019s absolutely a real bug. A recursive function that expects non\u2011negative inputs but has no guard for negative numbers can easily be called with a negative argument, leading to infinite recursion and ultimately a **stack overflow** (in Python, `RecursionError: maximum recursion depth exceeded`).\n\n### Why it\u2019s a real bug\n\nEven if you, as the developer, always call the function with valid values, the function is still exposed to external callers or internal logic that might pass a negative number inadvertently. An infinite recursion will crash the entire program\u2014this isn\u2019t just a logic error, it\u2019s a crash-causing defect that can be triggered by untrusted input or even a simple programming mistake elsewhere.\n\nFor example, this classic factorial implementation has no protection for negative inputs:\n\n```python\ndef factorial(n):\n    if n == 0:\n        return 1\n    return n * factorial(n - 1)\n```\n\n- Calling `factorial(5)` works fine.\n- Calling `factorial(-1)` checks `n == 0` \u2192 false, then calls `factorial(-2)`, then `factorial(-3)`, \u2026 forever, never reaching the base case. Stack overflow.\n\n### The fix\n\nThe solution is to **add a termination condition that handles negative (or invalid) inputs**. Depending on the contract of the function, you have two main choices:\n\n1. **Reject invalid inputs immediately** (defensive programming). Raise an exception, return an error value, or handle it as a documented precondition violation.\n2. **Adjust the base case** to stop recursion for all non\u2011positive numbers, if mathematically appropriate (e.g., for a countdown function, stopping when `n <= 0`).\n\nFor the factorial example, factorials of negative integers are undefined. The correct fix is to raise an exception at the start:\n\n```python\ndef factorial(n):\n    if n < 0:\n        raise ValueError(\"factorial() not defined for negative values\")\n    if n == 0:\n        return 1\n    return n * factorial(n - 1)\n```\n\nThis stops recursion immediately, gives a clear error message, and makes the function\u2019s domain explicit.\n\nIf your function is something like a countdown that should simply do nothing for negative numbers, you might use:\n\n```python\ndef countdown(n):\n    if n <= 0:\n        return\n    print(n)\n    countdown(n - 1)\n```\n\nHere the base `n <= 0` covers all unexpected negative inputs without crashing.\n\n### Summary\n- **Real bug?** Yes \u2013 it leads to a guaranteed crash when a negative input is supplied.\n- **Fix:** Validate the input at the top of the function. Either raise an exception for out-of-domain values or generalise the base case to `n <= 0` where appropriate, so the recursion always terminates.\n\nAlways treat recursive functions the same way you treat loops: make sure the termination condition is reachable for *every* possible input value.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "rev-08",
+      "expected": "strong",
+      "actual_label": "weak",
+      "correct": false,
+      "judge_confidence": 0.6399999999999999,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-20b",
+        "provider": "Novita",
+        "cost_usd": 0.00019336,
+        "input_tokens": 109,
+        "output_tokens": 1260,
+        "latency_ms": 5411.788855000054,
+        "text": "**Short answer:**  \nYes \u2013 it will happily give you the wrong answer when you call the function with the same first argument but a *different* second argument. Any time the second argument actually influences the output (or has a side\u2011effect that changes a global state that the function uses), the cached value will be stale or incorrect.\n\n---\n\n## Why it happens\n\nA typical na\u00efve cache decorator looks something like this:\n\n```python\ncache = {}\ndef cached(func):\n    def wrapper(arg):\n        if arg in cache:\n            return cache[arg]\n        result = func(arg, second_arg)   # second_arg is *not* part of the key\n        cache[arg] = result\n        return result\n    return wrapper\n```\n\nNotice that the key used for the cache (`arg`) is only the first positional argument.  \nIf `func` actually needs `second_arg` to produce a unique result, we lose that dependency.\n\n**Scenario**\n\n```python\n@cached\ndef get_price(item_id, currency):\n    # expensive DB query, format output for given currency\n```\n\n1. `get_price(42, 'USD')` \u2192 cache stores result under key `42`.\n2. `get_price(42, 'EUR')` \u2192 cache hits key `42` and returns the USD\u2011formatted price, even though the caller asked for EUR.\n\nIf the caller expects EUR, they'll see USD output \u2013 a bug.\n\n---\n\n## When will this matter?\n\n| Situation | Effect | Example |\n|------------|--------|---------|\n| **Second argument changes the returned value** | Stale data or wrong value | `get_price(42, 'USD')` \u2192 `get_price(42, 'EUR')` returns wrong currency |\n| **Second argument modulates a side\u2011effect** | Side\u2011effect performed only once or incorrectly | `process_file(file, mode='fast')` vs. `mode='slow'` \u2013 you might only run the *fast* pipeline |\n| **Second argument influences caching policy internally** | Poor performance or memory usage | A function that caches an internal mapping only once per first argument will never recompute for the other second argument |\n\nThe problem surfaces **whenever the function\u2019s contract depends on any argument that is not used as part of the cache key**. Even if the second argument changes rarely, the bug surfaces exactly on the next call that uses the same first argument but a different second.\n\n---\n\n## What you can do to fix it\n\n1. **Include all relevant arguments in the key**.  \n   ```python\n   from functools import lru_cache\n\n   @lru_cache(maxsize=None)\n   def get_price(item_id, currency):\n       \u2026\n   ```\n\n2. **Serialize arguments into a hashable key** (if you\u2019re writing a manual decorator).  \n   ```python\n   def cached(func):\n       cache = {}\n       def wrapper(*args, **kwargs):\n           key = (args, tuple(sorted(kwargs.items())))\n           if key in cache:\n               return cache[key]\n           result = func(*args, **kwargs)\n           cache[key] = result\n           return result\n       return wrapper\n   ```\n\n3. **Explicitly specify which arguments are relevant** (in case you want partial caching).  \n   ```python\n   def cached_by_first_argument(func):\n       cache = {}\n       def wrapper(first_arg, *_, **__):\n           if first_arg in cache:\n               return cache[first_arg]\n           result = func(first_arg, *_ , **__)\n           cache[first_arg] = result\n           return result\n       return wrapper\n   ```\n   *Only use this if you know the second argument never influences the output.*\n\n4. **Consider using `functools.cache` / `lru_cache` which automatically handles this**.\n\n---\n\n### Bottom line\n\nIf the function signature contains multiple arguments that affect the result, caching by *only* the first argument will create a trap: future calls that vary the other arguments will silently receive the wrong cached value. The simplest and most robust solution is to include all arguments (positional and keyword) that the function relies on in the cache key.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "rev-09",
+      "expected": "strong",
+      "actual_label": "weak",
+      "correct": false,
+      "judge_confidence": 0.8400000000000001,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-20b",
+        "provider": "AkashML",
+        "cost_usd": 0.0001409,
+        "input_tokens": 105,
+        "output_tokens": 1388,
+        "latency_ms": 22805.444772999977,
+        "text": "### Short answer\n\n*Yes \u2013 it\u2019s a classic **SQL\u2011Injection** vulnerability.*  The user input is being concatenated straight into the SQL text, so an attacker can inject arbitrary SQL (e.g., `'; DROP TABLE \u2026;--`).  \n\n**The correct fix** is to remove the string concatenation and use a **prepared statement / parameterized query** (or a safe wrapper/ORM that does it for you).  When you bind the value as a parameter, the database treats it as data only, never as part of the SQL command.\n\n---\n\n## Why it\u2019s dangerous\n\n| Problem | What can happen |\n|---|---|\n| *Unescaped user data in SQL* | An attacker can manipulate the query \u2013 e.g. inject `'; DROP TABLE users;--`. |\n| *SQL injection can escape authentication* | `SELECT * FROM accounts WHERE username='admin' AND password='anything'` |\n| *Data leakage / modification* | Arbitrary read/write of your tables. |\n| *Cross\u2011application damage* | If the query is run under a privileged account, the attacker can do wide damage. |\n\nEven if the data is *supposed* to be numeric, an attacker can send `0 OR 1=1` or `1 UNION SELECT \u2026`, and the server will execute it.\n\n---\n\n## The proper fix \u2013 Parameterised queries\n\n### 1. Use placeholders in the SQL\n\n```sql\nSELECT * FROM users WHERE user_id = :uid\n```\n\nor the positional `?` style:\n\n```sql\nSELECT * FROM users WHERE user_id = ?\n```\n\n### 2. Bind the user value *as data*, not as text\n\n#### PHP + PDO (recommended)\n\n```php\n$pdo = new PDO('mysql:host=localhost;dbname=mydb;charset=utf8', $user, $pass);\n$sql = 'SELECT * FROM users WHERE user_id = :uid';\n\n$stmt = $pdo->prepare($sql);\n$stmt->execute(['uid' => $_GET['user_id']]);   // <-- safe\n\n$user = $stmt->fetch(PDO::FETCH_ASSOC);\n```\n\n#### PHP + mysqli\n\n```php\n$mysqli = new mysqli('localhost', 'usr', 'pwd', 'mydb');\n\n$stmt = $mysqli->prepare('SELECT * FROM users WHERE user_id = ?');\n$stmt->bind_param('i', $_GET['user_id']);   // i = integer\n$stmt->execute();\n\n$result = $stmt->get_result();\n$user = $result->fetch_assoc();\n```\n\n#### Java + JDBC\n\n```java\nPreparedStatement ps = conn.prepareStatement(\n    \"SELECT * FROM users WHERE user_id = ?\");\nps.setInt(1, Integer.parseInt(request.getParameter(\"user_id\")));\nResultSet rs = ps.executeQuery();\n```\n\n### 3. Optional: add input validation\n\n* If the ID must be numeric \u2192 cast/validate before binding.\n* If the value is a string with limited options \u2192 use a whitelist (`inArray`/`switch`).\n\nValidation is a **layer\u2011of\u2011defence** that catches unexpected values early.  \n**It does not replace** parameterised queries, but it can make your code easier to reason about and sometimes improve performance by allowing the database to cache the query plan.\n\n---\n\n## Quick checklist\n\n| \u2705 | \u2705 |\n|---|---|\n| Use prepared statements / placeholders | \u2714 |\n| Bind values with the correct type (`i`, `s`, `d`, `b`) | \u2714 |\n| Do not concatenate any user input into SQL | \u2714 |\n| Sanitize/validate where appropriate | \u2714 |\n| Don't rely on ad\u2011hoc escaping (e.g., `mysqli_real_escape_string`). | \u274c |\n| Use a reputable database abstraction or ORM that handles binding for you | \u2714 |\n\n---\n\n## When you *can* use a simple escape, and why it\u2019s not enough\n\n- `mysqli_real_escape_string()` or similar will escape quotes, but **won\u2019t** enforce type or length.\n- It assumes the query context is a string literal; embedding a value in a numeric context (`WHERE id = 42`) can still cause injection if the value contains `OR 1=1`.\n- Performance-wise, prepared statements allow the database server to cache the query plan; escaping forces a fresh parse every time.\n\nSo, while escaping can help, **parameterised queries are the gold standard.**\n\n---\n\n### Bottom line\n\n> **The code is vulnerable.**  \n> Replace string concatenation with a parameterised query (prepared statement), and optionally add validation/whitelist checks.\n\nThat single change closes the door that lets attackers hijack your database.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "rev-10",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.6200000000000001,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-20b",
+        "provider": "DeepInfra",
+        "cost_usd": 7.518e-05,
+        "input_tokens": 70,
+        "output_tokens": 522,
+        "latency_ms": 4379.284734000066,
+        "text": "Here\u2019s a minimal example of a property getter that returns `self._name` with an appropriate docstring:\n\n```python\nclass Person:\n    def __init__(self, name: str):\n        self._name = name\n\n    @property\n    def name(self) -> str:\n        \"\"\"Return the value stored in `self._name`.\"\"\"\n        return self._name\n```\n\nThe docstring simply states that the getter returns the underlying `_name` attribute. You can adapt the wording to fit your coding style or add more detail if needed.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "openai/gpt-oss-20b",
+          "provider": "SiliconFlow",
+          "cost_usd": 9.206e-05,
+          "input_tokens": 83,
+          "output_tokens": 493,
+          "latency_ms": 6164.224627000067,
+          "text": "Here\u2019s a concise example of a getter that simply returns `self._name` with a clear docstring:\n\n```python\nclass Person:\n    def __init__(self, name):\n        self._name = name\n\n    def get_name(self):\n        \"\"\"Return the person's name.\"\"\"\n        return self._name\n```\n\nIf you prefer using a property instead:\n\n```python\nclass Person:\n    def __init__(self, name):\n        self._name = name\n\n    @property\n    def name(self):\n        \"\"\"Return the person's name.\"\"\"\n        return self._name\n```\n\nBoth snippets now include a descriptive docstring that explains the method\u2019s purpose.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "deepseek/deepseek-v4-pro",
+          "provider": "StreamLake",
+          "cost_usd": 0.000341098,
+          "input_tokens": 21,
+          "output_tokens": 486,
+          "latency_ms": 12296.152949999963,
+          "text": "Below is a Python docstring (Google style) suitable for a getter that returns `self._name`. Adapt it to your exact method name and class context.\n\n```python\n@property\ndef name(self):\n    \"\"\"The name attribute of the object.\n\n    Returns:\n        str: The value stored in `self._name`.\n    \"\"\"\n    return self._name\n```\n\nIf it\u2019s a regular method instead of a property, the return description stays the same:\n\n```python\ndef get_name(self):\n    \"\"\"Retrieve the object's name.\n\n    Returns:\n        str: The current value of `self._name`.\n    \"\"\"\n    return self._name\n```\n\nYou can also use a one\u2011line docstring when the method is trivial:\n\n```python\ndef get_name(self):\n    \"\"\"Return the value of `self._name`.\"\"\"\n    return self._name\n```",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "rev-11",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.6599999999999999,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-20b",
+        "provider": "SiliconFlow",
+        "cost_usd": 5.222e-05,
+        "input_tokens": 86,
+        "output_tokens": 271,
+        "latency_ms": 4614.772310999911,
+        "text": "Yes\u2014`MAX_RETRIES = 3` is styled correctly. In most modern coding standards (Python\u2019s PEP\u202f8, Java\u2019s naming conventions, C/C++ style guides, etc.) constants that are intended to be immutable values are written in all\u2013caps with underscores between words. The line you provided conforms to that convention.  \n\n*Only if the value were to change during runtime or is meant to be a \u201cprivate\u201d constant would you consider a lowercase or camelCase name.*",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "rev-12",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.78,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-20b",
+        "provider": "Amazon Bedrock",
+        "cost_usd": 0.00016292,
+        "input_tokens": 86,
+        "output_tokens": 1046,
+        "latency_ms": 2896.702170000026,
+        "text": "Below is a quick \u201ccode\u2011review\u201d style reminder of why catching every `Exception` and then doing nothing is almost always a mistake, and a handful of real\u2011world patterns you can adopt instead.\n\n---\n\n## Why it\u2019s a problem\n\n| \u2705 Good | \ud83d\udeab Bad |\n|---------|--------|\n| Catches only the exception you expect (like `FileNotFoundError` or `ValueError`) | Catches *every* subclass of `Exception` |\n| Logs or propagates the error | Swallows the exception silently |\n| Keeps the stack trace for debugging | Removes traceability |\n| Prevents \u201csilently failing\u201d code | Makes bugs hard to notice and reproduce |\n| Keeps you aware of unexpected edge\u2011cases (e.g., `AttributeError` from a None pointer) | Hides bugs that could later trigger more serious problems |\n\n### What can be caught?\n\n- **Programmatic**  \n  ```python\n  except FileNotFoundError:\n  except ValueError:\n  except KeyError:\n  ```\n\n- **Context\u2011specific**  \n  ```python\n  except (socket.timeout, json.JSONDecodeError):\n  ```\n\n- **System\u2011critical** (not caught)  \n  ```python\n  except KeyboardInterrupt:\n      # Let the user quit\n      raise\n  except SystemExit:\n      raise\n  ```\n\n### Why silent `pass` is dangerous\n\n1. **Lost information** \u2013 The original exception type, message, and stack trace disappear.\n2. **Hidden bugs** \u2013 Code continues running with a corrupted state.\n3. **Security risk** \u2013 Unhandled errors could expose internal data if they\u2019re never logged.\n4. **Hard maintenance** \u2013 Future developers have no clue why the block behaved the way it did.\n\n---\n\n## What to do instead\n\n### 1. Catch only what you expect\n\n```python\ntry:\n    do_something()\nexcept ValueError as e:\n    logger.error(\"Invalid data: %s\", e)   # or re\u2011raise after logging\n    raise\n```\n\n### 2. Log the exception while re\u2011raising\n\nIf you *really* need to swallow but also want a record:\n\n```python\ntry:\n    risky_call()\nexcept SomeError as e:\n    logger.exception(\"The operation failed: %s\", e)\n```\n\n> `logger.exception` automatically includes the traceback.\n\n### 3. Use a custom exception wrapper\n\n```python\nclass DataProcessingError(Exception):\n    \"\"\"Raised when data conversion fails.\"\"\"\n    pass\n\ndef convert(data):\n    try:\n        int(data)\n    except ValueError as e:\n        raise DataProcessingError(\"Could not parse integer\") from e\n```\n\n### 4. Use `else` for the success path\n\n```python\ntry:\n    result = risky_operation()\nexcept OSError as e:\n    logger.warning(\"Skipping due to OS error: %s\", e)\nelse:\n    # Normal path \u2013 the result is safe to use\n    use(result)\n```\n\n---\n\n## Example refactor\n\nOriginal:\n\n```python\ndef process(items):\n    for item in items:\n        try:\n            parse(item)\n        except Exception:\n            pass   # <-- ignored\n```\n\nRefactored:\n\n```python\ndef process(items):\n    for item in items:\n        try:\n            parse(item)\n        except ValueError as e:\n            logger.warning(\"Skipping malformed item %s: %s\", item, e)\n        # If parse fails in a way you truly want to ignore,\n        # log it so you can audit later.\n```\n\n---\n\n### Quick checklist\n\n| Item | \u2705 Done? |\n|------|----------|\n| Catch only specific exceptions? | |\n| Log or re\u2011raise instead of silent `pass`? | |\n| Preserve the traceback? | |\n| Avoid swallowing critical signals (`KeyboardInterrupt`, `SystemExit`)? | |\n| Use contextual logging (`logger.exception`) where appropriate? | |\n\nIf you can paste the problematic function, I can give a concrete rewrite tailored to your code. Otherwise, use the patterns above to tighten up your error handling.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "rev-13",
+      "expected": "strong",
+      "actual_label": "strong",
+      "correct": true,
+      "judge_confidence": 0.06000000000000005,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4-pro",
+        "provider": "Venice",
+        "cost_usd": 0.004799628,
+        "input_tokens": 52,
+        "output_tokens": 1428,
+        "latency_ms": 47251.570410999986,
+        "text": "Yes, this is a **real and critical correctness bug**. It violates the fundamental contract of a connection pool: to provide isolated, \u201cclean\u201d connections to each client.\n\n### Why it\u2019s a bug\n\n1. **Transaction context is shared unexpectedly**  \n   If a connection is returned to the pool while an in-flight transaction (not yet committed or rolled back) is still active, the next borrower inherits that open transaction. All subsequent reads see uncommitted data from the previous client\u2019s logical unit of work\u2014breaking **atomicity** and **isolation** (the \u201cA\u201d and \u201cI\u201d of ACID).\n\n2. **Data integrity is compromised**  \n   - The new borrower can inadvertently read stale/dirty data, make decisions based on it, and even modify it, leading to lost updates, phantom reads, or corruption that violates business rules.  \n   - Locks held by the original transaction remain in effect, potentially causing deadlocks or blocking other clients that expect the transaction to have ended.\n\n3. **Rollback becomes impossible or incorrect**  \n   If the original client later calls `rollback` or `commit` on a connection it no longer holds (or if the pool silently discards the transaction when the connection is returned), the system\u2019s notion of the transaction lifecycle is broken. This can leave the database in an inconsistent state.\n\n### How a correct pool must behave\n\nA connection pool must guarantee that every borrowed connection is in a **pristine, transaction-free state** before it is handed to a new client. Common safe patterns include:\n\n- **Forcing end-of-transaction on return** \u2013 either automatically rolling back any active transaction (to ensure no dirty state escapes) or raising an error if a connection is returned with an open transaction.\n- **Using `connection.close()` to trigger pooling logic** \u2013 where `close()` performs a rollback (if auto-commit is off) and resets session state before placing the connection back in the idle pool.\n- **Separating physical close from pool-return** \u2013 the pool\u2019s `release()` method must always demand a clean connection.\n\nWithout such measures, the pool design is unsafe by default, and the described scenario will manifest under any concurrency where transaction boundaries do not align perfectly with borrow/return calls. This is not just a theoretical edge case; it\u2019s a recipe for data corruption in production.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "openai/gpt-oss-20b",
+          "provider": "Darkbloom",
+          "cost_usd": 0.000362052,
+          "input_tokens": 114,
+          "output_tokens": 4000,
+          "latency_ms": 72337.49918099999,
+          "text": "",
+          "error": "empty visible answer",
+          "fallback_from": null,
+          "jev_adequate": false,
+          "score": 1
+        },
+        {
+          "router": "always-strongest",
+          "model": "deepseek/deepseek-v4-pro",
+          "provider": "Cloudflare",
+          "cost_usd": 0.0,
+          "input_tokens": 0,
+          "output_tokens": 1,
+          "latency_ms": 43573.14637999991,
+          "text": "",
+          "error": "empty visible answer",
+          "fallback_from": null,
+          "jev_adequate": false,
+          "score": 1
+        }
+      ]
+    },
+    {
+      "item_id": "rev-14",
+      "expected": "strong",
+      "actual_label": "strong",
+      "correct": true,
+      "judge_confidence": 0.020000000000000018,
+      "routed": {
+        "router": "deferent",
+        "model": "deepseek/deepseek-v4-pro",
+        "provider": "SiliconFlow",
+        "cost_usd": 0.00733587276,
+        "input_tokens": 48,
+        "output_tokens": 2317,
+        "latency_ms": 66386.53465900006,
+        "text": "Let\u2019s walk through the exact sequence of events and consequences when a distributed lock is implemented as a database row with **no expiry**, and the process holding that lock crashes without releasing it.\n\n---\n\n### 1. The Lock Model\n- A single database table (e.g., `distributed_locks`) stores rows representing locks.  \n- Each row has a unique `lock_name` column.  \n- To acquire the lock, a process executes an atomic operation like:  \n  ```sql\n  INSERT INTO distributed_locks (lock_name, owner_id, created_at)\n  VALUES ('resource-A', 'process-1', NOW())\n  ON CONFLICT (lock_name) DO NOTHING;\n  ```\n  A successful insert means the process now owns the lock.  \n- There is **no** expiration column (`expires_at`), and no background job that scans and removes stale locks. The lock lives forever until explicitly deleted by its owner (`DELETE FROM distributed_locks WHERE lock_name = 'resource-A' AND owner_id = 'process-1'`).\n\n### 2. Process Acquires the Lock and Crashes\n1. **Process P1** successfully inserts the row for `resource-A`, becoming the lock holder.  \n2. It begins its critical section work\u2014e.g., updating shared data, sending emails, coordinating a task.  \n3. **Before completing the work and executing the release DELETE**, P1 crashes.  \n   - The crash could be a `SIGKILL`, out-of-memory error, hardware failure, or even a network partition that permanently separates P1 from the database.  \n4. P1\u2019s database connection is torn down by the database server or by the network layer, but **the committed lock row remains** in the table.  \n   - The INSERT was committed (either because P1 committed the transaction immediately or the insert itself was autocommit). The lock row persists regardless of the client\u2019s liveness.\n\n### 3. What Happens to the System\nNow the lock table permanently contains:\n\n| lock_name  | owner_id   | created_at          |\n|------------|------------|---------------------|\n| resource-A | process-1  | 2025-03-12 10:23:45 |\n\n- **Other processes (P2, P3, \u2026)** that need the same resource attempt to acquire the lock.  \n  - They run the same `INSERT \u2026 ON CONFLICT DO NOTHING` (or a `SELECT` then `INSERT` with a unique constraint).  \n  - The row for `resource-A` already exists, so the insert **silently fails** (or a conditional update finds the `owner_id` is not `NULL`).  \n  - The acquisition attempt fails in all cases.  \n\n- **If the lock-acquisition strategy is non\u2011blocking (try-lock):**  \n  - The callers get a \u201clock already held\u201d error and typically retry after a backoff. They will **never succeed** because the row is never freed. They retry forever, consuming resources and possibly filling logs.  \n  - The resource remains guarded indefinitely; any operation that requires the lock is stuck.\n\n- **If the strategy is blocking (polling loop / blocking call):**  \n  - The processes wait in a loop, checking the lock repeatedly (e.g., every second). They block forever. No progress is made.\n\n- **Broad system impact:**  \n  - Any workflow, scheduled job, or user request that depends on acquiring `resource-A` becomes **deadlocked**.  \n  - If the lock is used for **leader election**, no new leader can be elected\u2014 the service becomes unavailable.  \n  - If it protects a shared file, batch processing, or a database migration, that processing halts entirely.  \n  - Because the lock never expires, this situation persists until **manual intervention**.\n\n### 4. No Automatic Recovery\n- There is **no timeout or heartbeat** on the lock row, so the database cannot distinguish a crashed owner from an owner that is simply taking a long time.  \n- Even if the database or a monitoring tool detects that the client connection has been closed for a long time, there is no built-in rule to delete the row.  \n- A human operator must:  \n  1. Notice the system is stuck (alerts, dead\u2011lock detection, custom monitoring on lock age).  \n  2. Log into the database and manually delete or overwrite the stale lock row, e.g.:  \n     ```sql\n     DELETE FROM distributed_locks WHERE lock_name = 'resource-A';\n     ```\n  3. Optionally, they must verify that any partially completed work from the crashed process has been cleaned up.  \n\nUntil then, the system is effectively **down** for that resource.\n\n### 5. Why This Design Is Dangerous\nThe absence of an expiry creates a **liveness failure**: a single crash permanently stops all progress. This violates the safety and liveness guarantees expected from a distributed lock.\n\nMitigations that are often added to avoid this exact scenario:\n- **Lease / TTL on the lock row** \u2013 an `expires_at` timestamp. The holder must periodically extend the lease. If the holder crashes, the lease expires, and other processes can acquire the lock by seeing an expired row (or using a conditional update that also clears expired locks).\n- **Heartbeat from the holder** \u2013 a separate thread updates a `last_heartbeat` column. A reaper job can remove rows with an expired heartbeat.\n- **Using a database with built\u2011in lock expiry** (e.g., Redis with `SET lock_key value NX EX 30`).\n\nWithout any of these, the database-row lock is purely a **manual** coordination primitive\u2014simple, but completely intolerant to process crashes.\n\n---\n\n**Summary:** In a database-row distributed lock with no expiry, a crashed process leaves an eternal lock row. All competing processes are indefinitely blocked, the guarded resource becomes permanently unavailable, and the only way out is a manual database intervention. This liveness fault is the primary reason production-grade distributed locks always include an expiration mechanism.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "rev-15",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.24,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-20b",
+        "provider": "Darkbloom",
+        "cost_usd": 1.8306e-05,
+        "input_tokens": 77,
+        "output_tokens": 188,
+        "latency_ms": 2425.8010030000605,
+        "text": "I can spot the trailing whitespace on line\u202f42, but I\u2019ll need the snippet or file to point it out precisely. Could you paste the relevant portion (or the whole file) so I can highlight the exact location and suggest a clean\u2011up?",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": false,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "rev-16",
+      "expected": "strong",
+      "actual_label": "weak",
+      "correct": false,
+      "judge_confidence": 0.48,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-20b",
+        "provider": "AkashML",
+        "cost_usd": 0.00022482,
+        "input_tokens": 111,
+        "output_tokens": 2226,
+        "latency_ms": 27471.37022300001,
+        "text": "**Short answer**  \nYes \u2013 if your retry\u2011with\u2011backoff logic blindly retries *any* exception, including the one that tells you \u201cthe payment already succeeded but I couldn\u2019t return the response,\u201d you can end up charging the customer twice. The most common reason is that the second call is treated as a brand\u2011new transaction by the payment gateway because the request is effectively \u201cnew\u201d to it.\n\n---\n\n## Why a double charge can happen\n\n| Step | What happens | Why it matters |\n|------|--------------|----------------|\n| **1. The original request is sent** | The client calls the payment API (e.g., POST `/charge`) with the payment details. | The server processes the payment and wires the card, but the network drops the reply. |\n| **2. The response is lost** | The client receives a timeout, connection reset, or a \u201cpayment already succeeded\u201d exception. | The server *did* succeed. All we don't know is whether the client got the success\u2011payload back. |\n| **3. Retry logic fires** | Because the code is \u201cretry on any exception\u201d, the *same* request (often with the exact same body) is sent again after a back\u2011off interval. | This looks like a completely different request to the gateway. |\n| **4. The gateway sees a new request** | If the client doesn\u2019t send an **idempotency key** (or it sends a fresh one each retry), the gateway treats it as a brand\u2011new charge. | It processes a second transaction, wire\u2011moves money again, and the customer is double charged. |\n\n### What is an idempotency key?\n\nAn idempotency key is a client\u2011generated string that you attach to a request (often in an HTTP header like `Idempotency-Key`). The payment provider stores that key along with the first successful transaction.  Subsequent requests that carry the *exact same* key are recognized as duplicates and the provider simply returns the original result instead of creating a new charge.\n\nIf you **do not** use an idempotency key (or you change it on every retry), the provider has no clue that the second request is a retry of a previous success \u2013 it just processes it as a separate order.\n\n---\n\n## When you *can* be safe\n\n1. **Idempotent endpoint** \u2013 The payment API is documented to be idempotent *if* you use an idempotency key.  \n2. **Same key on every retry** \u2013 The client stores the key in memory (or a retry queue) and uses exactly the same string for each resend.  \n3. **Stateful client** \u2013 The client records that the first request returned that key, and if a \u201cpayment succeeded but no response\u201d exception occurs, it treats the situation as \u201cwe already did it; do not retry.\u201d\n\nOnly under those constraints will you guarantee that a retry cannot double\u2011charge.\n\n---\n\n## In practice (the \u201cmistake\u201d in the code snippet)\n\n```python\nasync def process_payment(...):\n    try:\n        await payment_api.charge(...)\n    except Exception as e:          # <-- catches *any* exception\n        await backoff_and_retry()   # <-- resends the same request\n```\n\n- **Case** \u2013 The first call succeeded but the network lost the reply.  \n- **Error raised** \u2013 The API throws a \u201cpayment already succeeded\u201d exception (or a timeout).  \n- **Retry** \u2013 The logic re\u2011fires the call *without using the same idempotency key* and *without marking that the first transaction succeeded*.  \n- **Result** \u2013 The payment gateway charges for a second transaction.\n\n---\n\n## How to fix it\n\n1. **Add idempotency**  \n   ```python\n   idempotency_key = str(uuid4())      # generate once per logical transaction\n   await payment_api.charge(..., idempotency_key=idempotency_key)\n   ```\n   *On every retry, keep the same `idempotency_key`.*\n\n2. **Change the retry policy**  \n   *Only retry on network\u2011level or server\u2011error (5xx) exceptions, *not* on an \u201calready succeeded\u201d business\u2011logic exception.*  \n   ```python\n   if isinstance(e, AlreadySucceededException):\n       # Log the event but DO NOT retry\n       return  # treat as success\n   ```\n\n3. **Persist state**  \n   Store the temporary result (success flag, idempotency key, transaction ID) before the call, and consult it before any retry.  \n\n4. **Consult the provider**  \n   Some APIs (e.g., Stripe, Adyen) have explicit idempotency docs. Follow those patterns or ask their support if you are unsure.\n\n---\n\n## Bottom line\n\nRetry\u2011with\u2011backoff is a great pattern for transient failures, **but it must be coupled with idempotency** for financial transactions. If your \u201cany\u2011exception\u201d retry treats an \u201calready succeeded\u201d signal as a failure, you send a duplicate payment request, and the provider processes it as a new charge, leading to a double charge.  \n\nBy adding a stable idempotency key, distinguishing exception types, and not re\u2011initiating the transaction when you already know it succeeded, you can safely retry without risking double billing.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 3
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "openai/gpt-oss-20b",
+          "provider": "Darkbloom",
+          "cost_usd": 0.000115848,
+          "input_tokens": 111,
+          "output_tokens": 1265,
+          "latency_ms": 27302.605288999985,
+          "text": "**Short answer:**  \nYes \u2013 if you blindly retry on *any* exception, you can end up charging the customer twice. The \u201cpayment\u2011already\u2011succeeded\u2011but\u2011response\u2011lost\u201d exception is a classic case where the payment has already been processed, but the client didn\u2019t get the confirmation. Retrying the same request will usually cause the payment gateway to process the transaction again, unless the gateway is explicitly idempotent (e.g., you\u2019re sending an idempotency key that the gateway recognises).\n\n---\n\n## Why a double charge can happen\n\n| Step | What happens | Why it matters |\n|------|--------------|----------------|\n| 1. Client sends a payment request | The request reaches the payment gateway. | The gateway processes the payment and debits the card. |\n| 2. Gateway sends a response | The gateway returns a success response (e.g., \u201cpayment captured\u201d). | The client receives the response and records the transaction. |\n| 3. Response is lost | The client never receives the success message (network glitch, timeout, etc.). | The client thinks the payment failed or is still pending. |\n| 4. Client retries the same request | The client re\u2011sends the exact same request (same amount, card, etc.). | The gateway sees a *new* request and processes it again, debiting the card a second time. |\n\nIf the gateway **does not** support idempotency (or you don\u2019t supply an idempotency key), it has no way to know that the second request is a duplicate of the first. It will treat it as a brand\u2011new payment and charge the card again.\n\n---\n\n## When it\u2019s safe\n\n1. **Idempotent APIs** \u2013 Many modern payment providers (Stripe, PayPal, Braintree, etc.) support idempotency keys. If you include the same idempotency key on every retry, the gateway will recognise the duplicate request and return the original result instead of re\u2011charging.\n2. **Explicit \u201calready succeeded\u201d handling** \u2013 Some APIs throw a specific exception (e.g., `PaymentAlreadySucceededException`) that you can catch and treat as a success instead of retrying.\n3. **Stateful client logic** \u2013 Keep a local record of the transaction ID or status. If you see the same transaction ID again, skip the retry.\n\n---\n\n## Why retry\u2011on\u2011any\u2011exception is dangerous\n\n- **Business\u2011logic exceptions** (like \u201cpayment already succeeded\u201d) are *not* transient network errors. Retrying them is semantically wrong.\n- **Back\u2011off logic** may delay the retry, but it doesn\u2019t change the fact that the second request is a duplicate.\n- **Idempotency keys** are often optional. If you forget to set one, the gateway will treat each retry as a new payment.\n\n---\n\n## Practical recommendations\n\n| Action | Why it helps |\n|--------|--------------|\n| **Catch the specific \u201calready succeeded\u201d exception** and treat it as a success. | Prevents unnecessary retries that could double\u2011charge. |\n| **Use an idempotency key** on every payment request. | Guarantees that retries won\u2019t create duplicate charges. |\n| **Only retry on transient network errors** (timeouts, 5xx server errors, DNS failures). | Keeps retries limited to situations where the request may not have reached the gateway. |\n| **Log the exception type** and the retry count. | Makes it easier to audit and spot problematic retries. |\n| **Implement a \u201cpayment status\u201d check** before retrying. | If the status is \u201csucceeded\u201d, skip the retry. |\n\n---\n\n### Bottom line\n\nRetrying on *any* exception\u2014including the one that signals a lost success response\u2014can indeed double\u2011charge a customer if the payment gateway is not idempotent or you haven\u2019t supplied an idempotency key. The safe approach is to treat that specific exception as a success, or to rely on idempotency keys and only retry on genuine transient failures.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 3
+        },
+        {
+          "router": "always-strongest",
+          "model": "deepseek/deepseek-v4-pro",
+          "provider": "Baidu",
+          "cost_usd": 0.0008404877,
+          "input_tokens": 50,
+          "output_tokens": 1188,
+          "latency_ms": 18133.085770000092,
+          "text": "Yes, it could absolutely result in a double charge. Here's why:\n\n### The core issue: lack of idempotency handling\n  \nPayment APIs are generally not safe to retry without an **idempotency key** \u2013 a unique token that tells the processor, \u201cif you\u2019ve already processed a request with this key, just return the existing result instead of creating a new charge.\u201d The retry logic described retries on **any** exception, with no mention of idempotency keys or explicit duplicate detection. That means:\n\n- When the payment succeeds but the response is lost (e.g., a network timeout after the server processed the payment), the API raises a specific exception indicating \u201cpayment already succeeded but response was lost.\u201d\n- The generic retry-with-backoff mechanism catches that exception and blindly resends the **same payment request** (same amount, same card, no idempotency key).\n- Because the processor has no way to know this resend is a retry of a previously successful operation, it treats the new request as a **separate, independent payment**. The result is a second charge to the customer.\n\n### Why the specific exception is a trap\n\nThat exception is a signal that the payment *did* succeed \u2013 the money was already captured. A safe retry handler would **not** re-attempt the charge; instead it would:\n- Use an idempotency key from the start (so the retry is harmless) **or**\n- Catch that specific exception and verify the payment status via a lookup/GET call before deciding to retry.\n\nBy retrying on **any** exception, including the one that explicitly tells you the operation succeeded, the logic transforms a temporarily lost response into a duplicate financial transaction. No backoff or jitter can fix that \u2013 the problem is semantic, not timing.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 4
+        }
+      ]
+    },
+    {
+      "item_id": "rev-17",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.8799999999999999,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-20b",
+        "provider": "DekaLLM",
+        "cost_usd": 3.3463e-05,
+        "input_tokens": 87,
+        "output_tokens": 221,
+        "latency_ms": 7238.170379999929,
+        "text": "**Rename suggestion**\n\n| Current name | Suggested snake_case name | Why this matches the convention |\n|--------------|---------------------------|---------------------------------|\n| `calcTax` | **`calculate_tax`** | The name is a clear, descriptive verb\u2011noun pair in lower\u2011case with underscores. |\n| Alternative | `compute_tax` | Slightly shorter, but `calculate_tax` is the most conventional choice for a function that returns a tax amount. |\n\n**Proposed change**\n\n```diff\n- def calcTax(amount, rate):\n+ def calculate_tax(amount, rate):\n```\n\n*Linting / style tools (e.g., flake8, black) will immediately catch the mismatch once you make the change.*",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "rev-18",
+      "expected": "strong",
+      "actual_label": "weak",
+      "correct": false,
+      "judge_confidence": 0.43999999999999995,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-oss-20b",
+        "provider": "AkashML",
+        "cost_usd": 0.00016334,
+        "input_tokens": 122,
+        "output_tokens": 1609,
+        "latency_ms": 19864.97109900006,
+        "text": "**Short\u2011answer:**  \nBecause the \u201cdedup key\u201d contains the *arrival timestamp* rather than a guaranteed\u2011unique event ID, the system can\u2019t reliably recognize the same logical event when it arrives twice with a negligible delay.  In production this means that duplicate events are treated as brand\u2011new records, leading to *duplicate writes, double processing, and cascading state inconsistencies*\u2014for example, two identical purchase orders generating two charges, two badge scans counting as two separate check\u2011ins, or duplicate analytics events inflating metrics.\n\n---\n\n## How the failure manifests\n\n| What was intended | What actually happens | Typical fallout in prod |\n|-------------------|-----------------------|-------------------------|\n| **Single business\u2011logic execution** per logical event | Two executions (one per duplicate) | Double side\u2011effects (double billing, double inventory decrement, etc.) |\n| **Unique record per event** in ETL pipeline | Two records with slightly different timestamps | Increased storage costs, duplicate rows in downstream tables |\n| **Accurate event counting** (metrics, dashboards) | Inflated counts (counts of X \u2192 X+1) | Mis\u2011alerting, KPI inaccuracies |\n| **Idempotent \u201cupsert\u201d into a key\u2011value store** | Two separate upserts that may race or override each other | Unpredictable final state (last write wins incorrectly) |\n| **Order\u2011preserving processing** | Duplicate ordering can confuse downstream services that expect a single event | Duplicate refunds, duplicated shipments, or duplicate user notifications |\n\n---\n\n### Why the timestamp key fails\n\n* **Arrival jitter** \u2013 Even in a well\u2011timed system, network, load\u2011balancer, and micro\u2011task scheduling introduce micro\u2011second to millisecond delays.  \n* **Distinct timestamps** \u2013 The incoming event gets stamped *upon reception*. Two identical events delivered one millisecond apart will have two different timestamps, so the key `\"<topic>:<hash>:<timestamp>\"` is different for each.  \n* **No correlation** \u2013 Deduplication logic never sees any stable, externally\u2011generated identifier (like a UUID or transaction number), so it cannot link the two receptions back to the same logical event.\n\n---\n\n## Concrete production consequences\n\n| Scenario | System impact |\n|----------|---------------|\n| **E\u2011commerce order** | Duplicate charge attempts \u2192 over\u2011billing, payment failed attempts, CS unhappy. |\n| **IoT sensor** | Duplicate datapoints are stored \u2192 over\u2011calculated energy consumption or false alarms. |\n| **Analytics pipeline** | Duplicate click events inflate conversion rates \u2192 wrong ad spend decisions. |\n| **Data lake** | Duplicate rows = higher storage, longer queries, potentially duplicated downstream ML training. |\n| **Scheduling** | Two identical jobs run \u2192 resource contention, possible race conditions on shared locks. |\n\n---\n\n### How developers and ops usually notice\n\n1. **Service errors** \u2013 Two payment attempts in a row trigger \u201cduplicate transaction\u201d errors from the payment gateway.  \n2. **Dashboards** \u2013 Suddenly fast\u2011spiking metrics that cannot be explained by real traffic.  \n3. **Logs** \u2013 Duplicate lines with the same payload but different timestamps.  \n4. **Storage alerts** \u2013 Ingestion metrics offline show steadily higher write rates than expected.  \n5. **Customer complaints** \u2013 Users receive duplicate notifications or are billed twice.  \n\n---\n\n## Root cause in the code\n\n```ts\n// Incorrect dedupe key\nconst dedupeKey = `${topic}:${hash}:${Date.now()}`;\n\n// Correct dedupe key (example)\nconst dedupeKey = `${topic}:${eventId}`;  // eventId is a unique identifier supplied by the producer\n```\n\nThe `Date.now()` clause mutates the key every millisecond, and because it\u2019s only used in the ingestion layer the downstream pipelines never see the same key for the same event.  Once the event is processed, the early \u201cseen\u201d cache never blocks the second arrival.\n\n---\n\n## Summary\n\n- **Missing deduplication** \u2192 two logical events \u2192 two physical writes.  \n- **Duplicate writes** \u2192 doubled side\u2011effects, inflated metrics, inconsistent final state.  \n- **Production pain points**: billing errors, resource waste, alarm fatigue, brand reputation damage.\n\nIn short, using the arrival timestamp as part of the deduplication key only guarantees uniqueness *per millisecond per broker* but gives no protection against the same event being duplicated. The production failure mode is simply that the system behaves as if there were *two* distinct events when there was only one, which breaks any assumption of idempotency or uniqueness downstream.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    }
+  ]
+}

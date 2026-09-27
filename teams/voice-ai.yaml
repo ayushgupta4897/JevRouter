@@ -36,3 +36,7 @@ routes:
       strong: { id: gpt-6-astra, client: openai }
     base_threshold: 0.55   # slightly conservative: QA summaries feed a compliance record
     threshold_step: 0.1
+    # Optional, plain English: what this team's traffic looks like on each side. They sharpen
+    # the judge's forecast the way an intent bucket's description does (docs/DECISION.md s14).
+    weak_when: "A short call with one clear outcome to record: a booking, a cancellation, or an address or date confirmed."
+    strong_when: "A long or tense call, a complaint or dispute, conflicting statements, or anything that could be a compliance issue."
