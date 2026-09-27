@@ -1,72 +1,80 @@
 {
-  "blended_savings_pct": 5.8817489930564015,
-  "real_cost_usd": 0.30470972,
-  "frontier_equivalent_usd": 0.323752,
+  "blended_savings_pct": 47.828335901142275,
+  "real_cost_usd": 1.6522425600000001,
+  "frontier_equivalent_usd": 3.1669347500000007,
   "head_to_head": {
     "deferent": {
-      "prompts": 6,
-      "cost_usd": 0.07093394,
-      "failed_or_empty": 0,
+      "prompts": 72,
+      "cost_usd": 0.53771915,
+      "failed_or_empty": 2,
       "jev_adequate": [
-        6,
-        6
+        69,
+        72
       ],
-      "mean_score": 5.0,
-      "scored": 6,
-      "score_ge_4": 6
+      "mean_score": 4.583333333333333,
+      "scored": 72,
+      "score_ge_4": 65
     },
     "openrouter/auto": {
-      "prompts": 6,
-      "cost_usd": 0.0062186638,
-      "failed_or_empty": 0,
+      "prompts": 72,
+      "cost_usd": 0.08096595159999999,
+      "failed_or_empty": 1,
       "jev_adequate": [
-        6,
-        6
+        70,
+        72
       ],
-      "mean_score": 4.833333333333333,
-      "scored": 6,
-      "score_ge_4": 6
+      "mean_score": 4.402777777777778,
+      "scored": 72,
+      "score_ge_4": 63
     },
     "typesafe/jev-router": {
-      "prompts": 6,
-      "cost_usd": 0.0,
-      "failed_or_empty": 0,
+      "prompts": 72,
+      "cost_usd": 0.062234599999999994,
+      "failed_or_empty": 2,
       "jev_adequate": [
-        6,
-        6
+        70,
+        72
       ],
-      "mean_score": 4.5,
-      "scored": 6,
-      "score_ge_4": 5
+      "mean_score": 4.138888888888889,
+      "scored": 72,
+      "score_ge_4": 54
     },
     "always-top-tier": {
-      "prompts": 6,
-      "cost_usd": 0.10810399999999999,
-      "failed_or_empty": 0,
+      "prompts": 72,
+      "cost_usd": 0.8975724999999999,
+      "failed_or_empty": 1,
       "jev_adequate": [
-        6,
-        6
+        70,
+        72
       ],
-      "mean_score": 5.0,
-      "scored": 6,
-      "score_ge_4": 6
+      "mean_score": 4.819444444444445,
+      "scored": 72,
+      "score_ge_4": 69
     }
   },
   "head_to_head_models": {
     "deferent": {
-      "deepseek/deepseek-v4.1-flash": 4,
-      "anthropic/claude-opus-5.5": 2
+      "deepseek/deepseek-v4.1-flash": 30,
+      "google/gemini-3.8-flash": 18,
+      "anthropic/claude-sonnet-5": 12,
+      "anthropic/claude-opus-5.5": 12
     },
     "openrouter/auto": {
-      "deepseek/deepseek-v4-flash-0731": 4,
-      "deepseek/deepseek-v4.1-flash": 2
+      "google/gemini-2.5-flash": 14,
+      "deepseek/deepseek-v4.1-flash": 27,
+      "deepseek/deepseek-v4-flash-0731": 21,
+      "z-ai/glm-5.3-flash": 10
     },
     "typesafe/jev-router": {
-      "stealth/space-bunny-alpha": 6
+      "stealth/space-bunny-alpha": 63,
+      "deepseek/deepseek-v4.1-flash": 6,
+      "openai/gpt-6-sol": 3
     },
     "always-top-tier": {
-      "anthropic/claude-opus-5.5": 6
+      "anthropic/claude-opus-5.5": 42,
+      "anthropic/claude-sonnet-5": 18,
+      "google/gemini-3.8-flash": 12
     }
   },
-  "total_spend_usd": 0.4529363838
+  "total_spend_usd": 3.2118083115999987
 }

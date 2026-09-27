@@ -277,7 +277,9 @@ with two hard questions on `gpt-5.6-sol`. Then come follow-ups the policy consid
 region is this log from?". It says "use the cheaper `gpt-5.6-terra`". But terra has never seen the
 31K-token log, and sending it costs $0.079 just to get started. Sol already has it cached. Deferent
 stays on sol. Measured on real calls, the four follow-ups cost **$0.065 instead of $0.103 (37%
-less)**, and they were answered by the *stronger* model.
+less)**, and they were answered by the *stronger* model. The same test on Claude (Opus 5.5 →
+Sonnet 5, about 45K tokens) came out **45% less**. Anthropic's caching works differently (explicit
+breakpoints, a 5-minute TTL), and the only config change was the prices.
 
 **2. …unless the cheaper model is cheap enough anyway: switch.** Same situation, but the cheaper
 option is `gpt-5.6-luna`. Luna re-reading the whole conversation from scratch still costs less
@@ -335,13 +337,51 @@ platform's `clients.yaml` under `pricing:`. All fields:
 [`docs/TEAM_CONFIG.md`](docs/TEAM_CONFIG.md#cache-aware-switching). Design, ecosystem survey
 and every measurement: [`docs/DECISION.md` §12](docs/DECISION.md#12-cache-aware-switching-2026-09-27).
 
+## Head-to-head with OpenRouter's routers
+
+We ran the same 72 prompts four ways:
+* **Deferent**, with its tiers spread across Fireworks, Google and Anthropic
+* **OpenRouter's Auto Router**
+* **OpenRouter's Jev Router**
+* **Always the most expensive model**, with no routing
+
+Gemini 3.1 Pro scored all four answers 1–5 side by side, in shuffled order. None of the
+contestants used that model.
+
+| | Cost | Mean score |
+|---|---|---|
+| Always the top model | $0.90 | 4.82 |
+| **Deferent** | $0.54 | 4.58 |
+| OpenRouter Auto | $0.08 | 4.40 |
+| Jev Router | $0.06 | 4.14 |
+
+What the numbers support:
+
+* **Deferent vs the top model:** we cut cost by 40%, and quality dropped by 0.24.
+* **Deferent vs Jev Router:** our answers were measurably better, winning on 28 prompts and losing
+  on 5. Jev Router sent most prompts to an undisclosed "stealth" model that currently costs $0.
+* **Deferent vs Auto:** on one-off prompts, Auto is much cheaper, and at this sample size its
+  quality can't be told apart from ours.
+
+Most of that cost gap comes from which models we put in the route (Claude Opus as the top tier),
+not from routing mistakes. Owning the router means we can put the same cheap, strong models in
+our routes.
+
+This test doesn't measure the reasons we're building our own router:
+* choosing our own providers, AI gateway and agent harness
+* routing at every step of an agent run
+* cache-aware sessions
+* learning from our own outcome data
+
+Full method and caveats: [`docs/DECISION.md` §13](docs/DECISION.md#13-multiple-providers-and-a-head-to-head-with-openrouter-2026-09-27).
+
 ## Quickstart
 
 ```bash
 scripts/build.sh                  # builds switchyard-server + bindings + jevjudge + routerctl, ~3 min
 source .venv/bin/activate
 
-pytest jevjudge routerctl -q      # 136 tests: compilers, live-reload, fail-open, cache gate, every policy
+pytest jevjudge routerctl -q      # 138 tests: compilers, live-reload, fail-open, cache gate, every policy
 routerctl validate teams/          # schema check + a real switchyard-server --dry-run
 
 scripts/e2e_routerctl_decide.sh   # proves decision-only end to end (target genuinely never dialed)

@@ -590,6 +590,9 @@ document are slightly high.
   unordered tool lists, tool definitions changing mid-session. The gate can't see them. When the
   gateway reports real `cached_prefix_tokens`, a busted prefix shows up as a low count and the
   gate stops protecting it.
+* **Token counts differ by tokenizer.** The same ops log came to 11,356 tokens on Claude Sonnet 5
+  and 8,572 on Claude Haiku 4.5 (§13.3). The gate prices both sides of a switch with one count,
+  so across model families its dollar estimates can be off by roughly that much.
 * **Caches aren't shared across providers.** `current_client` distinguishes the same model on
   two clients. Provider stickiness below that level (OpenRouter's) belongs to the gateway.
 
@@ -622,7 +625,144 @@ the verdict is (|p − 0.5| × 2), not how far p sits from the route's threshold
 threshold of 0.5 these are the same thing. With a different threshold, `upgrade_min_confidence`
 only approximates "borderline".
 
-## 13. Roadmap
+## 13. Multiple providers, and a head-to-head with OpenRouter (2026-09-27)
+
+Every earlier result ran against OpenAI only. This round used an OpenRouter key to ask two
+questions about building our own router. Does routing still pay when tiers span inference
+providers? And how does it compare with the routers OpenRouter itself offers? Total spend was
+$7.85 of the key's $50.
+
+### 13.1 A real gap found first: `extra_body` never reached the gateway
+
+A route can attach per-model settings (`extra_body`: reasoning effort, or OpenRouter provider
+pinning such as `{provider: {order: [fireworks]}}`). In decision mode the decision named the
+model and client but carried none of those settings, so they were silently lost. Decisions now
+carry `selected_extra_body` and `fallback_extra_bodies`. A cache-gate hold swaps them along with
+the model. Tests pin both behaviours.
+
+### 13.2 Same twelve policies, four providers (`experiments/multiprovider.py`)
+
+The routes, datasets, thresholds and real Jev judge are the same as §10's 12-experiment study.
+Only the tiers changed. Each tier is pinned to its providers through `extra_body`:
+
+| Was | Now | Providers (in order) | $/1M in/out |
+|---|---|---|---|
+| gpt-5.6-luna | DeepSeek V4.1 Flash | Fireworks, then Together | 0.22 / 0.66 |
+| gpt-5.6-terra | Gemini 3.8 Flash | Google AI Studio, then Vertex | 0.75 / 3.75 |
+| gpt-5.6-sol | Claude Sonnet 5 | Anthropic | 2 / 10 |
+| gpt-6-astra | Claude Opus 5.5 | Anthropic | 4 / 20 |
+
+The script plays the gateway. It calls exactly what the decision says, `extra_body` included.
+If a provider errors, it moves down the decision's fallbacks. Cost is OpenRouter's billed
+`usage.cost`.
+
+**Routing held up across providers.**
+* Decision accuracy matched the OpenAI study. All six intent routes scored 100%, and the weak
+  spots were the same complexity routes: code review 61%, SQL 72%.
+* Blended savings against "everything on the route's top tier" came to **47.8%**. This uses
+  §10's extrapolated baseline: real tokens priced at the top tier's rate.
+
+That baseline understates savings wherever the top model writes much longer answers. On legal
+review, Opus wrote about 2,000-token answers where DeepSeek wrote about 100, so legal shows only
+5.8%. The head-to-head below measures the baseline for real instead.
+
+**A superseded first run is kept for the record** in
+`experiments/results/multiprovider-run1-superseded/`. Don't quote its numbers. It had two flaws:
+* Its mid tier (gpt-oss-120b on Together, $0.60/1M output) was cheaper than its "cheap" tier,
+  which inverted two routes.
+* Its harness never tried a decision's fallbacks. So a temporary Together outage (23 × HTTP 503
+  with fallbacks disabled) showed up as routing failures.
+
+Both are fixed. The outage is itself a small argument for the design: a decision already lists
+ranked fallbacks with their settings, so a gateway can fail over across providers on its own terms.
+
+### 13.3 Head-to-head on the same 72 prompts
+
+Every third prompt of each dataset went four ways:
+* **Deferent**
+* **`openrouter/auto`**
+* **`typesafe/jev-router`**
+* **Always the route's top tier:** no routing, a measured baseline
+
+Grading had two parts:
+* **Jev adequacy.** Jev gave every answer an adequate-or-not verdict.
+* **Side-by-side scores.** All four answers to a prompt were scored 1–5 side by side, in shuffled
+  order, by Gemini 3.1 Pro. None of the contestants used that model. A neutral grader matters
+  here: Jev and the Jev Router come from the same company, and our strong tiers are Claude models.
+
+| | Cost (72 prompts) | Mean score | Scored ≥ 4 | Models used |
+|---|---|---|---|---|
+| Always top tier | $0.898 | **4.82** | 69/72 | Opus 5.5, Sonnet 5, Gemini Flash |
+| **Deferent** | $0.538 | 4.58 | 65/72 | DeepSeek 30, Gemini 18, Sonnet 12, Opus 12 |
+| OpenRouter Auto | **$0.081** | 4.40 | 63/72 | DeepSeek Flash ×2, Gemini 2.5 Flash, GLM 5.3 Flash |
+| Jev Router | $0.062 | 4.14 | 54/72 | `stealth/space-bunny-alpha` 63, DeepSeek 6, gpt-6-sol 3 |
+
+Paired on the same prompts (bootstrap 95% intervals):
+
+| Comparison | Mean score difference | 95% interval | Prompts better / worse | Real gap? |
+|---|---|---|---|---|
+| Always-top − Deferent | +0.24 | [+0.10, +0.42] | 12 / 1 | Yes, and Deferent is 40% cheaper |
+| Deferent − Jev Router | +0.44 | [+0.17, +0.71] | 28 / 5 | Yes |
+| Deferent − OpenRouter Auto | +0.18 | [−0.08, +0.44] | 16 / 8 | **No, within noise.** Auto cost 6.6× less |
+
+**Reading it honestly.** On single-turn prompts, OpenRouter's Auto Router is very cost-effective.
+It picks from hundreds of models and the cheapest hosts, and at this sample size its quality
+can't be told apart from ours. Most of our extra cost comes from the roster, not the routing:
+Opus was the top tier on half of these routes. On the "hard" prompts, Auto spent $0.054 for a
+mean of 4.37, while we spent $0.48 for 4.56.
+
+The lesson is about rosters. A router we control lets us put models like DeepSeek V4.1 Flash and
+Gemini Flash in the tiers, and those models carry most of Auto's advantage. Our outcome data is
+what should decide when Opus is worth paying for.
+
+The Jev Router served 63 of 72 prompts with an undisclosed stealth model that currently costs
+$0. Its cost here says nothing about steady-state pricing. Its quality was measurably the lowest
+of the four.
+
+**What this does not measure.**
+* Multi-turn sessions and caching. See §13.4.
+* Per-step escalation inside agent runs.
+* Choosing our own providers, gateway and harness.
+* Outcome data.
+
+Those are the reasons we're building our own router, and none of them show up in a single-turn
+benchmark. The honest claim is independence plus cost control, not "cheaper than OpenRouter on
+one-off prompts".
+
+### 13.4 Cache-aware switching on Anthropic (`experiments/cache_validation_anthropic.py`)
+
+Anthropic differs from OpenAI on every caching parameter that matters:
+* The gateway must send `cache_control` breakpoints to get any caching at all.
+* The cache lasts 5 minutes, not 30.
+* Opus 5.5 reads cached tokens at 0.05× input.
+
+Only the prices in the config changed.
+
+1. **Premise.** Per-model caches, and switching back is warm, exactly as on OpenAI.
+
+   | Call | Cached tokens | Written tokens |
+   |---|---|---|
+   | Sonnet 5, cold | 0 | 11,354 |
+   | Sonnet 5 again | 11,334 | 79 |
+   | Haiku 4.5 (a switch) | 0 | 8,569 |
+   | Back to Sonnet 5 | 11,334 | 13 |
+
+   The same text was 8,572 tokens on Haiku (the tokenizer caveat in §12.5).
+
+2. **Long context, about 45K Claude tokens.** Two hard turns on Opus 5.5, then four easy
+   follow-ups the policy sends to Sonnet 5. Ungated, the switch pays a $0.116 cold write. Gated,
+   the session holds Opus (`downgrade_not_worth_losing_cache`).
+   * Session: **$0.354 vs. $0.426 (−17%)**.
+   * The four follow-ups: **$0.086 vs. $0.158 (−45%)**, all on the stronger model.
+
+   On OpenAI the same test gave −14% and −37% (§12.4).
+
+3. **OpenRouter's Auto Router, same kind of session**, with a `session_id` as OpenRouter
+   documents for sticky routing. It used DeepSeek V4 Flash, jumped to Gemini 2.5 Flash on turn
+   5, and came back: two switches, and a 17% cache hit rate. It was still cheap ($0.041 for six
+   turns), because those models cost almost nothing.
+
+## 14. Roadmap
 
 1. **Routing-accuracy validation**: the judge-only eval (predict vs. a ground-truth label from
    running both tiers) and Switchyard's `benchmark/` TB2.1 subset with the Jev judge vs. the LLM
@@ -650,7 +790,11 @@ only approximates "borderline".
    plus a compact description of the context, instead of the whole request, and measure the
    effect on routing accuracy with the existing eval harness.
 
-## 14. Sources
+8. **Roster tuning from outcomes** (found in §13.3): most of our cost gap with OpenRouter's Auto
+   Router was the top tier we chose, not the routing. Re-run the head-to-head with a cheaper top
+   tier, and let outcome data rather than intuition decide when a premium model earns its price.
+
+## 15. Sources
 
 Switchyard: repo README, `docs/routing_algorithms/*.md`, `crates/libsy/src/algorithms/util/llm_judge.rs`,
 `crates/libsy/src/prompts/*`, `benchmark/routing-profiles/*`; NVIDIA blog "Route AI Agent Workloads
@@ -668,3 +812,7 @@ x.com/OpenRouter/status/2103610898690855161 (Jev Router); vllm.ai/blog/2026-06-0
 docs.litellm.ai/docs/auto_router/prompt_caching; lmsys.org/blog/2024-12-04-sglang-v0-4;
 docs.nvidia.com/dynamo/latest/user-guides/kv-cache-aware-routing; blog.dailydoseofds.com "A cheaper model
 does not imply a cheaper turn"; jfrog.com/blog/why-model-routing-backfires.
+Multi-provider round (§13, checked 2026-09-27): openrouter.ai/api/v1/models and /models/{id}/endpoints
+(per-provider prices), openrouter.ai/docs provider routing (`provider.order`, `allow_fallbacks`),
+OpenRouter `usage.cost` accounting; results in `experiments/results/multiprovider/` and
+`experiments/results/cache-validation-anthropic.json`.
