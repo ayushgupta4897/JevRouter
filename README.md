@@ -337,44 +337,6 @@ platform's `clients.yaml` under `pricing:`. All fields:
 [`docs/TEAM_CONFIG.md`](docs/TEAM_CONFIG.md#cache-aware-switching). Design, ecosystem survey
 and every measurement: [`docs/DECISION.md` §12](docs/DECISION.md#12-cache-aware-switching-2026-09-27).
 
-## Head-to-head with OpenRouter's routers
-
-We ran the same 72 prompts four ways:
-* **Deferent**, with its tiers spread across Fireworks, Google and Anthropic
-* **OpenRouter's Auto Router**
-* **OpenRouter's Jev Router**
-* **Always the most expensive model**, with no routing
-
-Gemini 3.1 Pro scored all four answers 1–5 side by side, in shuffled order. None of the
-contestants used that model.
-
-| | Cost | Mean score |
-|---|---|---|
-| Always the top model | $0.90 | 4.82 |
-| **Deferent** | $0.54 | 4.58 |
-| OpenRouter Auto | $0.08 | 4.40 |
-| Jev Router | $0.06 | 4.14 |
-
-What the numbers support:
-
-* **Deferent vs the top model:** we cut cost by 40%, and quality dropped by 0.24.
-* **Deferent vs Jev Router:** our answers were measurably better, winning on 28 prompts and losing
-  on 5. Jev Router sent most prompts to an undisclosed "stealth" model that currently costs $0.
-* **Deferent vs Auto:** on one-off prompts, Auto is much cheaper, and at this sample size its
-  quality can't be told apart from ours.
-
-Most of that cost gap comes from which models we put in the route (Claude Opus as the top tier),
-not from routing mistakes. Owning the router means we can put the same cheap, strong models in
-our routes.
-
-This test doesn't measure the reasons we're building our own router:
-* choosing our own providers, AI gateway and agent harness
-* routing at every step of an agent run
-* cache-aware sessions
-* learning from our own outcome data
-
-Full method and caveats: [`docs/DECISION.md` §13](docs/DECISION.md#13-multiple-providers-and-a-head-to-head-with-openrouter-2026-09-27).
-
 ## Quickstart
 
 ```bash
