@@ -7,13 +7,14 @@ Two questions, both about why build our own router rather than use someone else'
    a model on a *different* inference provider, each pinned to that provider through the route's
    own `extra_body` -- which decision-only mode now hands to the gateway with every decision:
 
-       gpt-5.6-luna  -> deepseek/deepseek-v4.1-flash  pinned to Fireworks
-       gpt-5.6-terra -> openai/gpt-oss-120b            pinned to Together
-       gpt-5.6-sol   -> anthropic/claude-sonnet-5      pinned to Anthropic
-       gpt-6-astra   -> anthropic/claude-opus-5.5      pinned to Anthropic
+       gpt-5.6-luna  -> deepseek/deepseek-v4.1-flash  Fireworks, then Together
+       gpt-5.6-terra -> google/gemini-3.8-flash       Google AI Studio, then Vertex
+       gpt-5.6-sol   -> anthropic/claude-sonnet-5      Anthropic
+       gpt-6-astra   -> anthropic/claude-opus-5.5      Anthropic
 
-   Deferent decides (real Jev); this script plays the gateway and calls OpenRouter with the
-   decision's model and extra_body. Cost is OpenRouter's own billed `usage.cost`, not an estimate.
+   Deferent decides (real Jev); this script plays the gateway: it calls the decision's model with
+   its extra_body and, like a real gateway, moves down the decision's fallbacks if a provider
+   errors. Cost is OpenRouter's own billed `usage.cost`, not an estimate.
 
 2. **Head-to-head.** A fixed subset of the same prompts (every third item: 6 per experiment, 72
    total) sent four ways: Deferent, `openrouter/auto`, `typesafe/jev-router`, and "always the
@@ -57,18 +58,22 @@ MAX_TOKENS = 4000  # several of these are reasoning models; 1200 left some hard 
 OUT = ROOT / "results" / "multiprovider"
 
 
-def pinned(model: str, provider: str) -> dict:
-    return {"id": model, "client": "openrouter", "extra_body": {"provider": {"order": [provider], "allow_fallbacks": False}}}
+def pinned(model: str, providers: list[str]) -> dict:
+    # Restrict OpenRouter to these providers, in this order: provider failover *we* chose, not
+    # whichever host OpenRouter would pick.
+    return {"id": model, "client": "openrouter", "extra_body": {"provider": {"order": providers, "allow_fallbacks": False}}}
 
 
-# Old tier -> new (model, provider). Prices are that provider's own OpenRouter endpoint price
-# (USD per 1M tokens, input/output, checked 2026-09-27) -- used only for the "everything on the
-# frontier tier" baseline; every routed call's cost is OpenRouter's billed usage.cost.
+# Old tier -> new (model, providers, input $/1M, output $/1M). Prices are the first provider's own
+# OpenRouter endpoint price, checked 2026-09-27 -- used only for tier ordering and the
+# extrapolated baseline; every routed call's cost is OpenRouter's billed usage.cost.
+# (A first run used gpt-oss-120b@Together as the mid tier: it is cheaper than the "cheap" tier,
+# which inverted two routes' ordering. See docs/DECISION.md section 13.)
 TIERS = {
-    "gpt-5.6-luna": ("deepseek/deepseek-v4.1-flash", "fireworks", 0.22, 0.66),
-    "gpt-5.6-terra": ("openai/gpt-oss-120b", "together", 0.15, 0.60),
-    "gpt-5.6-sol": ("anthropic/claude-sonnet-5", "anthropic", 2.00, 10.00),
-    "gpt-6-astra": ("anthropic/claude-opus-5.5", "anthropic", 4.00, 20.00),
+    "gpt-5.6-luna": ("deepseek/deepseek-v4.1-flash", ["fireworks", "together"], 0.22, 0.66),
+    "gpt-5.6-terra": ("google/gemini-3.8-flash", ["google-ai-studio", "google-vertex"], 0.75, 3.75),
+    "gpt-5.6-sol": ("anthropic/claude-sonnet-5", ["anthropic"], 2.00, 10.00),
+    "gpt-6-astra": ("anthropic/claude-opus-5.5", ["anthropic"], 4.00, 20.00),
 }
 PRICE = {model: (inp, out) for model, _, inp, out in TIERS.values()}
 GRADER = "google/gemini-3.1-pro-preview"  # a contestant in nothing
@@ -79,8 +84,8 @@ def remapped_team(name: str) -> TeamFile:
     raw = yaml.safe_load((ROOT / "teams" / f"{name}.yaml").read_text())
     for route in raw["routes"]:
         for ref in route["models"].values():
-            model, provider, _, _ = TIERS[ref["id"]]
-            ref.update(copy.deepcopy(pinned(model, provider)))
+            model, providers, _, _ = TIERS[ref["id"]]
+            ref.update(copy.deepcopy(pinned(model, providers)))
     return TeamFile.model_validate(raw)
 
 
@@ -103,6 +108,7 @@ class Answer:
     latency_ms: float
     text: str
     error: str | None = None
+    fallback_from: str | None = None  # set when the gateway had to fall back from this model
     jev_adequate: bool | None = None
     score: int | None = None  # 1-5 from the side-by-side grader (head-to-head prompts only)
 
@@ -200,6 +206,12 @@ async def run_experiment(name: str, route_name: str, judge, http: httpx.AsyncCli
             item = Item(entry["id"], entry["expected"], label, label == entry["expected"], decision.judge_confidence)
             # The gateway's side: call exactly what the decision says, extra_body included.
             item.routed = await openrouter(http, budget, "deferent", decision.selected_model, prompt, decision.selected_extra_body)
+            for model, extra in zip(decision.fallback_model_ids, decision.fallback_extra_bodies):
+                if item.routed.error in (None, "empty visible answer", "budget exhausted"):
+                    break  # answered, or the model itself came back empty -- not a provider failure
+                failed = item.routed.model
+                item.routed = await openrouter(http, budget, "deferent", model, prompt, extra)
+                item.routed.fallback_from = failed
             await jev_grade(judge, prompt, item.routed)
             if idx % 3 == 0:  # head-to-head subset: 6 prompts per experiment, spread across the dataset
                 rivals = [openrouter(http, budget, router, router, prompt) for router in H2H_ROUTERS]
