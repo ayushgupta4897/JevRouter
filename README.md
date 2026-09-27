@@ -108,6 +108,10 @@ A finance route with terra and astra, threshold 0.6 (financial answers feed real
 It isn't perfect. Jev gave terra 74% on a cap-table modelling question, and terra got it wrong.
 [`experiments/REPORT.md`](experiments/REPORT.md) walks through every miss like that one.
 
+Teams can sharpen the forecast in plain English with `weak_when:` and `strong_when:`. On prompts
+the rubric had never seen, complexity routing picked the right tier 98% of the time with them and
+96% without; the rubric Switchyard ships managed 90% ([`docs/DECISION.md` §14](docs/DECISION.md#14-fixing-complexity-routing-2026-09-27)).
+
 ### `intent`: route by what the request is
 
 You name the buckets and describe them in plain English. Those descriptions become the judge's

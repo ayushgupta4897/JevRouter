@@ -14,3 +14,6 @@ routes:
       strong: { id: gpt-5.6-terra, client: openai }
     base_threshold: 0.5
     threshold_step: 0.1
+    # Plain-English criteria (docs/DECISION.md s14): measured in experiments/complexity_eval.py.
+    weak_when: "A single-table select, filter, sort, count, sum, insert, update, delete, or rename."
+    strong_when: "The query needs window functions, several joins with deduplication or double-counting risk, recursive CTEs, time-window or funnel logic, gaps-and-islands, or careful NULL and edge-case handling."

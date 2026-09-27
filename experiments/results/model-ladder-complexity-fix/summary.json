@@ -1,0 +1,49 @@
+{
+  "head_to_head": {
+    "always-cheapest": {
+      "prompts": 18,
+      "cost_usd": 0.005732829999999999,
+      "mean_score": 4.111111111111111,
+      "score_ge_4": 14,
+      "scored": 18,
+      "jev_adequate": [
+        15,
+        18
+      ],
+      "failed_or_empty": 3
+    },
+    "deferent": {
+      "prompts": 18,
+      "cost_usd": 0.040764030949999995,
+      "mean_score": 4.611111111111111,
+      "score_ge_4": 15,
+      "scored": 18,
+      "jev_adequate": [
+        18,
+        18
+      ],
+      "failed_or_empty": 0
+    },
+    "always-strongest": {
+      "prompts": 18,
+      "cost_usd": 0.0361505893,
+      "mean_score": 4.444444444444445,
+      "score_ge_4": 16,
+      "scored": 18,
+      "jev_adequate": [
+        15,
+        18
+      ],
+      "failed_or_empty": 2
+    }
+  },
+  "models_used": {
+    "openai/gpt-oss-20b": 14,
+    "deepseek/deepseek-v4-pro": 11,
+    "openai/gpt-6-luna": 11,
+    "openai/gpt-6-sol": 7,
+    "qwen/qwen3.7-flash": 11
+  },
+  "routed_cost_usd": 0.10542689171,
+  "total_spend_usd": 0.26985031100999995
+}

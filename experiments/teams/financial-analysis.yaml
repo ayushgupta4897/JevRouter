@@ -12,3 +12,6 @@ routes:
       strong: { id: gpt-6-astra,   client: openai }
     base_threshold: 0.6   # slightly conservative: financial answers feed real decisions
     threshold_step: 0.1
+    # Plain-English criteria (docs/DECISION.md s14): measured in experiments/complexity_eval.py.
+    weak_when: "A single arithmetic step: a percentage, growth rate, conversion, runway, interest, average, or total."
+    strong_when: "Multi-period or multi-scenario modelling, reconciling metrics that move in different directions, dilution or cap-table maths, hedging, or cohort and unit-economics analysis."

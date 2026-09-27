@@ -128,7 +128,7 @@ All costs are real billed amounts. "§" refers to `docs/DECISION.md`.
 | 6 | Cache-aware switching, Anthropic | `experiments/cache_validation_anthropic.py` → `results/cache-validation-anthropic.json` | Same mechanics as OpenAI. 45K-token session **−17%**, easy tail **−45%** | $0.88 | Tokenizers differ ~30% across Claude models |
 | 7 | Ten-model ladder, ultra-cheap to strong | `experiments/model_ladder.py` → `results/model-ladder/` | Routing halves the cost of always-strongest. The cheap-to-strong quality spread is only 0.25, so no gap is significant at n=72. Misses were all in `complexity` | $0.99 | Single-turn prompts only |
 | 8 | Complexity fix, decision accuracy | `experiments/complexity_eval.py` → `results/complexity-eval.json` | Held-out **90% → 96% (general) → 98% (with team criteria)**. Seen set 69% → 91%. Misroutes 22 → 6. Judge gave the same decision on 100/102 re-runs | pennies | Held-out prompts are more clear-cut than the originals |
-| 9 | Complexity fix, answer quality | `experiments/model_ladder.py --out results/model-ladder-complexity-fix` | See §14.3 of DECISION.md | ~$0.2 | 3 routes, 18 prompts each |
+| 9 | Complexity fix, answer quality | `experiments/model_ladder.py --out results/model-ladder-complexity-fix` | On the 3 complexity routes, decision accuracy went from 72% to 89%. Routed answers scored 4.61 vs always-cheapest's 4.11 (before the fix, routing scored no better than always-cheapest). Spend rose from $0.069 to $0.105 as hard prompts reached the strong tier | $0.27 | n=18 shared prompts. The same arm varied 4.78 to 4.44 between runs, so compare within a run only |
 
 ## 7. Bugs found and fixed, and where the tests pin them
 
@@ -173,7 +173,7 @@ Found by running against real APIs, not mocks. Details are in the § cited.
   | Account | Spent | Of |
   |---|---|---|
   | OpenAI | ~$4.8 | the $10 we set ourselves |
-  | OpenRouter | ~$9.2 | the key's $50 |
+  | OpenRouter | ~$9.2 | the key's $50 (check the live figure with `curl https://openrouter.ai/api/v1/key`) |
   | TypeSafe (Jev) | cents | — |
 
 ## 9. What we learned

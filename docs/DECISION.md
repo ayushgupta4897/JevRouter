@@ -889,7 +889,27 @@ errors.
   ladder model scored 4–5 on several of these exact prompts (§13.5), so some of those "strong"
   labels are probably too strict. They're left as labelled, not relabelled to flatter the result.
 
-ANSWER_QUALITY_PLACEHOLDER
+### 14.4 Effect on answers (`model_ladder.py --out results/model-ladder-complexity-fix`)
+
+The three complexity routes were re-run on the §13.5 ten-model ladder with the new default rubric
+and no team criteria. Everything else was the same: models, prompts, grader. It cost $0.27.
+
+| | Before the fix (§13.5) | After |
+|---|---|---|
+| Decision accuracy, 54 items | 39/54 (72%) | **48/54 (89%)**; finance and SQL 18/18 |
+| Mean score of routed answers (18 shared prompts) | 4.17, the same as always-cheapest's 4.17 | **4.61**, vs. always-cheapest 4.11 in the same run |
+| Routed spend, all 54 items | $0.069 | $0.105 |
+
+Hard prompts now reach the strong tier. So quality rises, and so does spend a little: those
+prompts had been answered wrongly and cheaply before.
+
+**Two cautions:**
+* The "always strongest" arm scored 4.78 in the earlier run and 4.44 in this one, on identical
+  prompts and models. Only within-run comparisons are meaningful at n = 18.
+* These routes' strong tiers are themselves cheap (DeepSeek V4 Pro at $0.70/1M output). On this
+  subset the fixed router cost about the same as always-strongest, so the fix pays off in
+  quality rather than savings here. On routes with an expensive strong tier, the same accuracy
+  gain moves money in both directions: fewer wasted strong calls, fewer failed cheap ones.
 
 ## 15. Roadmap
 
@@ -946,5 +966,5 @@ docs.nvidia.com/dynamo/latest/user-guides/kv-cache-aware-routing; blog.dailydose
 does not imply a cheaper turn"; jfrog.com/blog/why-model-routing-backfires.
 Multi-provider round (§13, checked 2026-09-27): openrouter.ai/api/v1/models and /models/{id}/endpoints
 (per-provider prices), openrouter.ai/docs provider routing (`provider.order`, `allow_fallbacks`),
-OpenRouter `usage.cost` accounting; results in `experiments/results/multiprovider/`, `experiments/results/model-ladder/` and
+OpenRouter `usage.cost` accounting; results in `experiments/results/multiprovider/`, `experiments/results/model-ladder/`, `experiments/results/model-ladder-complexity-fix/`, `experiments/results/complexity-eval.json` and
 `experiments/results/cache-validation-anthropic.json`.

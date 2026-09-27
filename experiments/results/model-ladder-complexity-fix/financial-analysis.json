@@ -1,0 +1,587 @@
+{
+  "name": "financial-analysis",
+  "route_name": "finance/analysis",
+  "policy": "complexity",
+  "roster": [
+    "openai/gpt-6-luna",
+    "openai/gpt-6-sol"
+  ],
+  "accuracy": 1.0,
+  "routed_cost_usd": 0.0636144,
+  "models_used": {
+    "openai/gpt-6-luna": 11,
+    "openai/gpt-6-sol": 7
+  },
+  "items": [
+    {
+      "item_id": "fin-01",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.94,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-6-luna",
+        "provider": "OpenAI",
+        "cost_usd": 2.91e-05,
+        "input_tokens": 31,
+        "output_tokens": 52,
+        "latency_ms": 2217.1927320000577,
+        "text": "Q2 revenue was **$2.415 million** ($2.1 million \u00d7 1.15).",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "openai/gpt-6-luna",
+          "provider": "OpenAI",
+          "cost_usd": 3.26e-05,
+          "input_tokens": 31,
+          "output_tokens": 59,
+          "latency_ms": 2015.6757119998474,
+          "text": "Q2 revenue was **$2.415 million** ($2.1M \u00d7 1.15).",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "openai/gpt-6-sol",
+          "provider": "OpenAI",
+          "cost_usd": 0.000462,
+          "input_tokens": 31,
+          "output_tokens": 40,
+          "latency_ms": 8412.834768000039,
+          "text": "Q2 revenue was **$2.415 million**.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "fin-02",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.96,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-6-luna",
+        "provider": "OpenAI",
+        "cost_usd": 2.17e-05,
+        "input_tokens": 27,
+        "output_tokens": 38,
+        "latency_ms": 1898.8490990000173,
+        "text": "Gross profit is **$300,000** ($500,000 \u00d7 60%).",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "fin-03",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.72,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-6-luna",
+        "provider": "OpenAI",
+        "cost_usd": 4.95e-05,
+        "input_tokens": 20,
+        "output_tokens": 95,
+        "latency_ms": 2700.1861090000148,
+        "text": "An 8% effective annual growth rate is about **0.64% per month**, compounded. (Simply dividing 8% by 12 gives about 0.67% per month.)",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "fin-04",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.94,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-6-luna",
+        "provider": "OpenAI",
+        "cost_usd": 2.56e-05,
+        "input_tokens": 26,
+        "output_tokens": 46,
+        "latency_ms": 3260.9269520000908,
+        "text": "Your customer acquisition cost is **$300 per customer** ($120,000 \u00f7 400).",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "openai/gpt-6-luna",
+          "provider": "OpenAI",
+          "cost_usd": 2.61e-05,
+          "input_tokens": 26,
+          "output_tokens": 47,
+          "latency_ms": 1921.7243200000667,
+          "text": "Your customer acquisition cost is **$300 per customer** ($120,000 \u00f7 400).",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "openai/gpt-6-sol",
+          "provider": "OpenAI",
+          "cost_usd": 0.000452,
+          "input_tokens": 26,
+          "output_tokens": 40,
+          "latency_ms": 2440.6030869999995,
+          "text": "Your customer acquisition cost is **$300 per customer** ($120,000 \u00f7 400).",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "fin-05",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.96,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-6-luna",
+        "provider": "OpenAI",
+        "cost_usd": 2.42e-05,
+        "input_tokens": 17,
+        "output_tokens": 45,
+        "latency_ms": 2118.1051339999613,
+        "text": "15% of $340,000 is **$51,000**.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "fin-06",
+      "expected": "strong",
+      "actual_label": "strong",
+      "correct": true,
+      "judge_confidence": 0.020000000000000018,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-6-sol",
+        "provider": "OpenAI",
+        "cost_usd": 0.007528,
+        "input_tokens": 89,
+        "output_tokens": 735,
+        "latency_ms": 10829.777478000096,
+        "text": "Assuming the most recent **30% ARR growth rate** is the starting point for next year, growth then slows by **5 percentage points per year**. The 8% price increase is applied once next year and remains in the revenue base; it is not repeated annually.\n\n| Year | Underlying growth | Forecast ARR | Growth vs. prior year |\n|---|---:|---:|---:|\n| Current | \u2014 | $4.200M | \u2014 |\n| Year 1 | 30%, plus 8% price increase | **$5.897M** | 40.4% |\n| Year 2 | 25% | **$7.371M** | 25.0% |\n| Year 3 | 20% | **$8.845M** | 20.0% |\n\nThe Year 1 calculation is **$4.2M \u00d7 1.30 \u00d7 1.08 = $5.897M**. Applying 25% and then 20% growth gives the subsequent years.\n\n**Price and net revenue retention (NRR):** If all existing customers receive the increase and their behavior does not change, the price change multiplies next year's existing-customer revenue\u2014and thus its NRR contribution\u2014by **1.08**. For example, a 100% NRR baseline would become 108%; a 90% baseline would become 97.2%. The higher revenue base then compounds with future growth: compared with an otherwise identical forecast without the price increase, projected ARR is higher by **$0.437M in Year 1, $0.546M in Year 2, and $0.655M in Year 3**.\n\nActual NRR cannot be calculated from the supplied ARR growth rates: total ARR growth also includes new customers. The NRR effect will depend on which existing customers receive the increase, when it takes effect, and whether it changes churn or expansion.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "fin-07",
+      "expected": "strong",
+      "actual_label": "strong",
+      "correct": true,
+      "judge_confidence": 0.06000000000000005,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-6-sol",
+        "provider": "OpenAI",
+        "cost_usd": 0.005152,
+        "input_tokens": 111,
+        "output_tokens": 493,
+        "latency_ms": 8179.0006819999235,
+        "text": "Assuming balances stay outstanding until maturity, interest is calculated on the stated principal, the convertible note does **not** convert, and the line of credit stays fully drawn for all three years:\n\n| Interest expense | Year 1 | Year 2 | Year 3 | 3-year total |\n|---|---:|---:|---:|---:|\n| **Flat rates** | $225,000 | $225,000 | $165,000 | **$615,000** |\n| **Rates rise 1 percentage point per year** | $225,000 | $230,000 | $175,000 | **$630,000** |\n\nThe $2M loan contributes $120,000 per year for three years; the $1.5M note contributes $60,000 per year for two years. The line of credit contributes $45,000 annually at a flat 9%, versus $45,000, $50,000, and $55,000 if its rate moves from 9% to 10% to 11%.\n\n**The line of credit drives all $15,000 of the modeled rate sensitivity**, because the other two rates are fixed. A conversion of the note at the $50M valuation trigger could change its interest expense; that depends on when conversion occurs and the note\u2019s terms.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "openai/gpt-6-luna",
+          "provider": "OpenAI",
+          "cost_usd": 0.0006376,
+          "input_tokens": 111,
+          "output_tokens": 1253,
+          "latency_ms": 10317.318358999955,
+          "text": "Assuming the loan and note are fixed-rate, the $500K line stays fully drawn for all three years, and interest is simple annual interest on outstanding principal. I also assume the note does **not** convert; no timing or valuation path was provided to determine whether its $50M trigger is reached.\n\n**Total interest expense ($000s):**\n\n| Scenario | Year 1 | Year 2 | Year 3 | 3-year total |\n|---|---:|---:|---:|---:|\n| Flat rates | 225 | 225 | 165 | **615** |\n| Rates rise 1 percentage point per year | 225 | 230 | 175 | **630** |\n\nIn the rising-rate case, the line of credit is modeled at **9%, 10%, and 11%** across the three years. The fixed-rate loan contributes $360K over its three-year term, and the note contributes $120K over its two-year term in either scenario.\n\n**The line of credit dominates rate sensitivity:** it accounts for the entire **$15K** increase versus flat rates. If the note converts before maturity, its interest expense would depend on when conversion occurs and on the note\u2019s conversion terms.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "openai/gpt-6-sol",
+          "provider": "OpenAI",
+          "cost_usd": 0.004972,
+          "input_tokens": 111,
+          "output_tokens": 475,
+          "latency_ms": 7035.377001000143,
+          "text": "Assuming the loan and note have fixed rates, interest is paid annually on unchanged principal, the $500K line of credit stays fully drawn, and the convertible note does **not** convert before its two-year maturity:\n\n| Interest expense | Year 1 | Year 2 | Year 3 | 3-year total |\n|---|---:|---:|---:|---:|\n| **Flat rates** (LOC at 9%) | $225K | $225K | $165K | **$615K** |\n| **Rising rates** (LOC at 9%, 10%, 11%) | $225K | $230K | $175K | **$630K** |\n\nThe **line of credit dominates rate sensitivity**: it is the only variable-rate instrument under these assumptions. The annual 1-percentage-point increases add **$15K** of interest over three years relative to flat rates. The $2M loan contributes the most *total* interest ($360K), but none of the modeled rate sensitivity.\n\nThe $50M conversion trigger cannot be modeled without a valuation path and the note\u2019s conversion terms. If conversion occurs before maturity, the note\u2019s interest expense could differ from the $120K included above.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": false,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "fin-08",
+      "expected": "strong",
+      "actual_label": "strong",
+      "correct": true,
+      "judge_confidence": 0.33999999999999997,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-6-sol",
+        "provider": "OpenAI",
+        "cost_usd": 0.004928,
+        "input_tokens": 59,
+        "output_tokens": 481,
+        "latency_ms": 8947.994333999986,
+        "text": "The two measures can move in opposite directions because **EBITDA reflects earnings, while operating cash flow also reflects when customers pay and when expenses are paid**.\n\n- **EBITDA grew 20%** as reported, but that does not mean the additional earnings were collected in cash.\n- **Working capital absorbed cash.** Moving the largest segment\u2019s customers from net-30 to net-60 can leave more sales in accounts receivable at period-end. Those sales may support EBITDA now while their cash arrives later.\n- **The litigation settlement may have reduced operating cash flow**, if it was paid during the year and classified as an operating cash outflow. If the charge was excluded from adjusted EBITDA, its cash payment would create a particularly visible difference between the two measures. The effect depends on whether the settlement was paid or received, when it was recognized, and which EBITDA measure is being cited.\n\nA dollar reconciliation would start with this year\u2019s EBITDA, then account for the **increase in receivables and other working-capital changes**, the **settlement cash flow**, cash taxes and interest, and other differences between EBITDA and operating cash flow. The 20% and 5% changes alone cannot be combined into a dollar bridge because they use different starting amounts.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "fin-09",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.94,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-6-luna",
+        "provider": "OpenAI",
+        "cost_usd": 4.32e-05,
+        "input_tokens": 42,
+        "output_tokens": 78,
+        "latency_ms": 2580.3289230000246,
+        "text": "The simple average is **$1.2625M** (or **$1,262,500**).",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "fin-10",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.94,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-6-luna",
+        "provider": "OpenAI",
+        "cost_usd": 4.33e-05,
+        "input_tokens": 28,
+        "output_tokens": 81,
+        "latency_ms": 1955.1285229999849,
+        "text": "EPS is **$40 per share** ($2,000,000 \u00f7 50,000 shares), assuming the share count is the applicable diluted weighted-average share count.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "openai/gpt-6-luna",
+          "provider": "OpenAI",
+          "cost_usd": 3.58e-05,
+          "input_tokens": 28,
+          "output_tokens": 66,
+          "latency_ms": 1906.661467999811,
+          "text": "EPS = $2,000,000 \u00f7 50,000 = **$40 per fully diluted share**.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "openai/gpt-6-sol",
+          "provider": "OpenAI",
+          "cost_usd": 0.000326,
+          "input_tokens": 28,
+          "output_tokens": 27,
+          "latency_ms": 1297.8275569998914,
+          "text": "EPS = $2,000,000 \u00f7 50,000 = **$40 per diluted share**.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "fin-11",
+      "expected": "strong",
+      "actual_label": "strong",
+      "correct": true,
+      "judge_confidence": 0.45999999999999996,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-6-sol",
+        "provider": "OpenAI",
+        "cost_usd": 0.01057,
+        "input_tokens": 60,
+        "output_tokens": 1045,
+        "latency_ms": 16767.294629999924,
+        "text": "Revenue and gross margin can grow while **each dollar of revenue becomes less profitable**. A shift toward the lower-margin product reduces gross profit per dollar; rising acquisition cost and other operating expenses can then consume more of what remains. Growing gross-margin *dollars* alone would not rule this out\u2014and even a growing gross-margin *percentage* can mask a mix-related drag offset by improvements elsewhere.\n\nThe three contributions **can\u2019t be quantified from the information given**. To measure them without double-counting CAC, use this bridge, with all figures expressed as a percentage of revenue:\n\n\\[\n\\Delta\\text{contribution margin}\n=\n\\text{product-mix effect}\n+\\text{other gross-margin changes}\n-\\Delta\\text{acquisition spend ratio}\n-\\Delta\\text{other opex ratio}.\n\\]\n\nCAC-related spend must be separated from other opex if it is already included in the reported opex ratio. The change in acquisition spend as a share of revenue also cannot be inferred from the change in **CAC per customer** alone; it depends on how many customers were acquired and how much revenue they generated.\n\n**Illustration, not an estimate for your business:** Suppose gross margin rises from 50% to 52%, but a mix shift costs 2 percentage points and other gross-margin improvements add 4 points. Meanwhile, acquisition spend rises from 5% to 7% of revenue and other opex from 20% to 23%. Contribution margin falls from **25% to 22%**, despite higher gross margin. Of the **7 points of adverse pressure before offsets**, mix accounts for **2/7 (29%)**, acquisition spend **2/7 (29%)**, and other opex **3/7 (43%)**; the 4-point improvement elsewhere in gross margin offsets part of that pressure.\n\nFor a true customer-level unit-economics answer, run the same bridge by acquisition cohort, comparing contribution profit or lifetime value with CAC. That distinguishes a genuine deterioration per customer from an opex ratio rising because of growth investment or timing.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "fin-12",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.94,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-6-luna",
+        "provider": "OpenAI",
+        "cost_usd": 3.2e-05,
+        "input_tokens": 30,
+        "output_tokens": 58,
+        "latency_ms": 1952.4073330001102,
+        "text": "Your runway is **12 months**, assuming the burn rate stays at $250,000 per month.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "fin-13",
+      "expected": "strong",
+      "actual_label": "strong",
+      "correct": true,
+      "judge_confidence": 0.74,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-6-sol",
+        "provider": "OpenAI",
+        "cost_usd": 0.02151,
+        "input_tokens": 70,
+        "output_tokens": 2137,
+        "latency_ms": 33579.59184300012,
+        "text": "## Bridge now vs. wait six months\n\n**Illustrative assumptions\u2014not company forecasts:** $3.6M cash, $450k monthly net burn, a $3M bridge at a **$40M pre-money conversion cap** with a 20% discount, and an $8M priced round. The bridge converts at the more favorable of the cap or discount. The dilution estimates exclude interest, option-pool increases, fees, and other securities.\n\n| | Raise bridge now | Wait for priced round |\n|---|---:|---:|\n| Runway at current burn | ~14.7 months after bridge | 8 months today |\n| Cash remaining in six months | ~$3.9M | ~$0.9M |\n| Runway remaining in six months | ~8.7 months | ~2 months |\n| Illustrative existing-holder ownership after an $8M round at $60M pre-money | ~82.1% | ~88.2% |\n| Illustrative existing-holder ownership if that round instead prices at $30M pre-money | ~70.2% | ~78.9% |\n\nThe **cost of the bridge is roughly 6.1 percentage points of ownership** in the $60M priced-round case. Its benefit is time: waiting leaves only two months of cash at the proposed fundraising date, so a delayed close could force a weak deal or require emergency cuts. Actual bridge dilution depends on the conversion documents and capitalization.\n\n### Put a price on missing the window\n\nFor the wait path, suppose there is a **30% probability** that the current window closes and the achievable pre-money valuation falls from $60M to $30M. Dilution from the $8M priced round rises from **11.8% to 21.1%**\u2014a **9.3-point** penalty in that outcome, or about **2.8 points probability-weighted**. That excludes the potentially larger cost of failing to close before cash runs out.\n\nA decision model should separate three outcomes for *each* path: (1) round closes at the target valuation, (2) round closes later or at a lower valuation, and (3) financing fails or requires a recapitalization. Assign probabilities and post-financing ownership to each, then calculate:\n\n**Probability-weighted ownership = \u03a3(outcome probability \u00d7 existing-holder ownership).**\n\nDo not treat that number alone as the decision rule: a low-probability financing failure can be more consequential than several points of dilution.\n\n### Account for the down-round signal\n\nA **$40M cap is not automatically a $40M valuation or a down round**. But if the last priced round was above $40M, investors may read it as a signal that insiders could not support the prior price. That can make new investors more cautious, increase demands for traction or protective terms, and anchor the subsequent priced round lower. If the last price was below $40M\u2014or the bridge is credibly tied to a near-term milestone\u2014the signal may be much weaker.\n\nModel that effect by changing the bridge path\u2019s **probability of achieving the target priced-round valuation**, not by adding an arbitrary \u201csentiment discount\u201d on top of a lower valuation; that would double-count it.\n\n**Decision:** With the illustrative cash and burn, waiting six months is a high-execution-risk strategy unless a priced-round close is already highly credible or burn can fall materially. The bridge is worth considering if $3M funds a specific milestone that improves pricing odds. Before deciding, replace the illustrative figures with the actual cash balance, burn plan, last-round valuation, bridge terms, time-to-close, and investor feedback; those inputs determine whether the added runway outweighs its dilution and signaling cost.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "openai/gpt-6-luna",
+          "provider": "OpenAI",
+          "cost_usd": 0.0018985,
+          "input_tokens": 70,
+          "output_tokens": 3783,
+          "latency_ms": 28345.90381399994,
+          "text": "## Illustrative scenario analysis\n\nBecause the actual burn, cash balance, bridge size, and likely priced-round terms aren\u2019t specified, the numbers below are a **worked example**, not a forecast. The key variable is runway: waiting six months is very different if you have 15 months of cash than if you have six.\n\n### Assumptions\n\n| Input | Illustrative assumption |\n|---|---:|\n| Cash today | $3M |\n| Net burn | $0.5M/month |\n| Current runway | 6 months |\n| Bridge now | $5M at a **$40M post-money SAFE cap** |\n| Priced round in six months, if successful | $10M at $60M pre-money |\n| Wait-path outcomes | 70% base round; 20% down round; 10% no financing |\n| Down-round terms | $10M at $30M pre-money |\n\nA $5M bridge adds about 10 months of runway at the assumed burn rate. Combined with current cash, that is about 16 months from today, before fees or changes in burn.\n\n### Dilution and risk by path\n\n| Path / outcome | Existing shareholders\u2019 ownership after financing(s) |\n|---|---:|\n| **Bridge now**, then $10M priced round at $60M pre | **75.0%** |\n| **Wait**, $10M priced round at $60M pre | **85.7%** |\n| **Wait**, $10M priced round at $30M pre | **75.0%** |\n| **Wait**, no financing | Potentially **0%** in a shutdown or distressed outcome |\n\nFor the bridge path, the $5M post-money SAFE at a $40M cap represents 12.5% before the priced round. The later round dilutes all pre-round holders by 14.3%, leaving existing shareholders with about 75.0% in total. This assumes a clean post-money SAFE and excludes option-pool expansion, pro-rata rights, discounts, warrants, and other terms.\n\nFor the wait path, the probability-weighted ownership is:\n\n**70% \u00d7 85.7% + 20% \u00d7 75.0% + 10% \u00d7 0% = 74.0%**\n\nThat figure treats the no-financing case as a total loss. It is useful for illustrating risk, but it is not a complete valuation: a failed financing could still lead to a sale or other recovery, and ownership percentages don\u2019t capture company value or timing.\n\n### What the comparison says\n\n- **Waiting is less dilutive if the base round happens.** In this example, a $60M priced round gives existing holders 85.7%, versus 75.0% after the bridge plus that same round.\n- **The bridge buys protection, not free capital.** It costs about 10.7 percentage points of existing-holder ownership versus the successful wait path, but can provide time to reach milestones and avoid a forced raise.\n- **The risk-adjusted comparison is much closer.** Under the illustrative probabilities, expected existing ownership when waiting is 74.0%, slightly below the bridge path\u2019s 75.0%\u2014assuming the bridge closes and the later $60M round occurs.\n- **The result is highly sensitive to the no-financing probability.** If the chance of failing to raise at all is small, waiting can be attractive. If it is material, the bridge\u2019s insurance value rises quickly.\n\n### Probability-weighted \u201cmissed window\u201d stress\n\nA missed fundraising window can affect more than valuation: investors may become less willing to lead, diligence can lengthen, and the company may lose negotiating leverage as runway shrinks. For a simple stress test, suppose market deterioration shifts the wait-path probabilities to:\n\n- 50% base round at $60M pre-money  \n- 35% down round at $30M pre-money  \n- 15% no financing  \n\nExpected existing ownership would then be:\n\n**50% \u00d7 85.7% + 35% \u00d7 75.0% + 15% \u00d7 0% = 69.6%**\n\nThis is not a claim that those probabilities are correct; it shows how quickly the wait case worsens if missing the current window raises the odds of a down round or failure.\n\n### How down-round sentiment changes the decision\n\nA down round can be interpreted as a negative signal about traction, forecast credibility, or fundraising leverage. That can make the next financing harder through lower pricing, tougher preferences or governance terms, a larger option-pool request, or reduced investor participation. It can also affect recruiting and employee morale.\n\nBut the signal is **not automatically fatal**. A well-explained reset tied to market conditions, a clear use of proceeds, and improving operating metrics may be viewed differently from a down round caused by missed milestones. In the model, represent sentiment effects by changing the probability of a down round or failed financing\u2014and by modeling any worse terms\u2014not by applying an extra arbitrary \u201csentiment penalty\u201d on top of those same effects.\n\n### Practical decision rule\n\nWith **six months of runway and a six-month fundraising timeline**, waiting leaves little or no buffer for a delayed process. On these assumptions, I would lean toward raising the bridge\u2014or starting the priced round immediately\u2014if:\n\n1. The bridge is likely to close on acceptable terms.\n2. The proceeds fund a specific milestone that improves the next round.\n3. The company needs the bridge to avoid a financing process that ends at zero runway.\n4. The $40M cap is acceptable after including all SAFE terms and likely option-pool dilution.\n\nWaiting looks more compelling if the company has ample runway beyond six months, has a credible near-term catalyst likely to improve pricing, and can tolerate a slower or weaker market without needing an emergency raise.\n\nBefore deciding, replace the assumptions with the company\u2019s actual cash, monthly net burn, minimum runway buffer, bridge amount, and realistic round terms. Also confirm whether the $40M cap is **pre-money or post-money**: that distinction can materially change dilution.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        },
+        {
+          "router": "always-strongest",
+          "model": "openai/gpt-6-sol",
+          "provider": "OpenAI",
+          "cost_usd": 0.01819,
+          "input_tokens": 70,
+          "output_tokens": 1805,
+          "latency_ms": 29971.12430900006,
+          "text": "## Bridge now vs. wait six months\n\n**The decision turns less on the $40M cap alone than on runway and the chance that a priced round will still be available when you need it.** A bridge buys time, but it adds dilution before the priced round and may create an unfavorable valuation signal.\n\nThe table below is an *illustrative model*, not a forecast. It assumes $5M cash today, $700k monthly net burn, a $3M bridge on a **$40M post-money SAFE cap**, and a $10M priced round in six months. The priced round is assumed to be at a $60M pre-money valuation if the window is open, or $25M if it is missed. It excludes option-pool increases, discounts, and other terms.\n\n| Six-month outcome | Wait for priced round | Take bridge now, then priced round |\n|---|---:|---:|\n| Cash at six months, before priced round | $0.8M | $3.8M |\n| Runway remaining at current burn | ~1.1 months | ~5.4 months |\n| Existing holders\u2019 dilution if priced at $60M pre-money | 14.3% | 20.7% |\n| Existing holders\u2019 dilution if priced at $25M pre-money | 28.6% | 33.9% |\n\nThe bridge\u2019s 7.5% SAFE ownership comes first; the later priced round dilutes the remaining ownership. Thus, **a favorable priced round is materially cheaper if you can reach and close it without the bridge**. But with only about a month of cash left at the six-month mark in this example, \u201cwait six months and then raise\u201d is not a credible plan unless the process starts earlier or burn falls.\n\n### Probability-weighted window risk\n\nSuppose the probability of missing the favorable priced-round window is **35% if you wait**, versus **10% with bridge-funded runway**. Under the valuations above:\n\n- **Wait:** expected dilution is about **19.3%**.\n- **Bridge:** expected dilution is about **22.0%**.\n\nOn dilution alone, waiting wins in this example. That calculation understates its risk: it treats a missed window as a fundable $25M pre-money round. If the real alternative is an emergency financing, severe cuts, or no financing, the bridge can be worth its extra dilution. Conversely, if a priced round is already likely to close well before cash gets tight, the bridge may be unnecessary.\n\n### Sentiment and the $40M signal\n\nA SAFE cap is **not** a priced valuation, but investors will use it as a reference point. If $40M is below the last priced valuation\u2014or well below what the company has recently marketed\u2014some investors may read it as a down-round signal. That can anchor later negotiations lower and prompt closer scrutiny of growth, burn, insider support, and the need for an option-pool refresh. A small, clearly labeled runway bridge tied to specific milestones is generally easier to explain than a bridge that appears necessary because a priced round could not be secured.\n\n**Practical decision rule:** Start the priced-round process now rather than waiting six months to begin it. Take the bridge if the credible priced-round *closing* date leaves too little cash buffer, and if its $40M cap and other terms are acceptable even in a weaker follow-on round. Otherwise, pursue the priced round directly and preserve the bridge as a backstop.\n\nTo make the call with real numbers, replace the illustrative inputs with cash on hand, monthly burn and planned cuts, bridge amount and SAFE terms, last-round valuation, expected priced-round size/valuation, and the probability and severity of a missed window.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "fin-14",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.96,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-6-luna",
+        "provider": "OpenAI",
+        "cost_usd": 3.37e-05,
+        "input_tokens": 42,
+        "output_tokens": 59,
+        "latency_ms": 1955.870933999904,
+        "text": "The total is **$45,450**.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "fin-15",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.94,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-6-luna",
+        "provider": "OpenAI",
+        "cost_usd": 3.79e-05,
+        "input_tokens": 29,
+        "output_tokens": 70,
+        "latency_ms": 2090.781727999911,
+        "text": "At a 5% discount rate, the present value is \\( \\$1{,}000 \\div 1.05 \\approx \\boxed{\\$952.38} \\).",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "fin-16",
+      "expected": "strong",
+      "actual_label": "strong",
+      "correct": true,
+      "judge_confidence": 0.8,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-6-sol",
+        "provider": "OpenAI",
+        "cost_usd": 0.003104,
+        "input_tokens": 57,
+        "output_tokens": 299,
+        "latency_ms": 5498.870711999871,
+        "text": "I can\u2019t determine whether pricing has been value-based in practice\u2014or name the quarter when price and delivery cost clearly diverged\u2014without the three-year pricing and cost history. A stated value-based pricing policy is not enough to establish how prices were actually set.\n\nFor each quarter, I\u2019d compare **realized price per comparable unit of service** with **delivery cost per the same unit**, controlling for changes in customer mix, scope, volume, and discounts. The key question is whether price changes track changes in customer value and willingness to pay, or instead follow cost changes at a relatively stable markup.\n\nThe first quarter with a material, sustained gap between the two trends would be the divergence point. **Why it matters:** the next review should not automatically repeat that quarter\u2019s pricing logic. If costs rose while prices did not, margins may need attention; if prices rose without corresponding cost growth, the review needs evidence of increased customer value or pricing power rather than a cost-based justification.\n\nPlease provide quarterly realized prices, delivery costs, and major scope or mix changes for the past three years. With those, I can identify the quarter and give a defensible conclusion.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": 5
+      },
+      "head_to_head": [
+        {
+          "router": "always-cheapest",
+          "model": "openai/gpt-6-luna",
+          "provider": "OpenAI",
+          "cost_usd": 0.0001727,
+          "input_tokens": 57,
+          "output_tokens": 334,
+          "latency_ms": 4490.7491800001935,
+          "text": "I can assess this, but I don\u2019t see the pricing or delivery-cost data in the conversation. Please share the three-year history\u2014ideally by quarter\u2014with:\n\n- **Realized price** or price change (including discounts and mix effects, if available)\n- **Underlying delivery cost** on the same basis, such as cost per unit or cost-to-serve\n- The **baseline and units**, plus any major product or customer mix changes\n\nI\u2019ll compare cumulative and quarter-by-quarter price changes with cost changes, identify the quarter with the clearest divergence, and explain what it implies for the next review.\n\nOne caveat: price tracking closely with cost would suggest **cost-plus behavior**, while divergence would show pricing is not simply following costs. But price-versus-cost data alone cannot establish that pricing is genuinely **value-based**; that also requires evidence about customer outcomes, willingness to pay, and competitive alternatives.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 4
+        },
+        {
+          "router": "always-strongest",
+          "model": "openai/gpt-6-sol",
+          "provider": "OpenAI",
+          "cost_usd": 0.003004,
+          "input_tokens": 57,
+          "output_tokens": 289,
+          "latency_ms": 6399.3218600001,
+          "text": "I can assess this, but I don\u2019t have the three years of pricing and delivery-cost data. I can\u2019t responsibly identify a divergence quarter without it.\n\nPlease share quarterly data for the same products or customer cohorts: realized price (after discounts), units or usage, and underlying delivery cost per unit. If available, include dates and reasons for price changes and any measures of customer value, such as outcomes or willingness to pay.\n\nI\u2019ll compare **price changes with cost changes on a like-for-like basis**, adjusting for product and customer mix. Pricing that consistently tracks cost increases suggests cost-plus behavior; pricing tied to demonstrated customer value despite different cost movements supports a value-based assessment. A widening price\u2013cost gap alone does **not** prove value-based pricing.\n\nThe first quarter with a clear, sustained break between those trends is the one to examine for the next review: it will show whether the current price needs a stronger value rationale, or whether cost changes have been driving decisions that should instead reflect customer value.",
+          "error": null,
+          "fallback_from": null,
+          "jev_adequate": true,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "item_id": "fin-17",
+      "expected": "weak",
+      "actual_label": "weak",
+      "correct": true,
+      "judge_confidence": 0.74,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-6-luna",
+        "provider": "OpenAI",
+        "cost_usd": 5.62e-05,
+        "input_tokens": 22,
+        "output_tokens": 108,
+        "latency_ms": 3026.483791999908,
+        "text": "With 2% churn each month, annual churn is about **21.5%**, accounting for compounding: \\(1 - 0.98^{12}\\). A simple, non-compounded estimate would be 24%.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": true,
+        "score": null
+      },
+      "head_to_head": []
+    },
+    {
+      "item_id": "fin-18",
+      "expected": "strong",
+      "actual_label": "strong",
+      "correct": true,
+      "judge_confidence": 0.17999999999999994,
+      "routed": {
+        "router": "deferent",
+        "model": "openai/gpt-6-sol",
+        "provider": "OpenAI",
+        "cost_usd": 0.010426,
+        "input_tokens": 63,
+        "output_tokens": 1030,
+        "latency_ms": 16671.924386999992,
+        "text": "Assuming the **10% option pool means 10% of the fully diluted cap table immediately after the financing**, and the top-up is created **before** the Series A is priced:\n\n| Holder | After Series A, with pool top-up | After Series A, without top-up |\n|---|---:|---:|\n| Existing common shareholders | **70%** | 80% |\n| Employee option pool | **10%** | \u2014 |\n| Series A investors | **20%** | 20% |\n\nThis illustration assumes the current fully diluted cap table consists entirely of existing common shares and has no option pool. The $8M investment buys 20% of the post-money company ($8M \u00f7 $40M). Creating the pool pre-money leaves existing common shareholders with **70% rather than 80%**\u2014an additional **10 percentage points of dilution** borne by the pre-money holders.\n\nFor an exact cap table using your current share counts, let **S** be current fully diluted shares, including any existing option pool; **P** be shares already in that pool; and **C** be existing common shares. If a top-up is needed, the shares added to the pool are **(S \u2212 8P) \u00f7 7**. Series A shares then equal **25% of the fully diluted pre-money shares after that top-up**. Existing common ownership after closing is **C \u00f7 [1.25 \u00d7 (S + top-up shares)]**.",
+        "error": null,
+        "fallback_from": null,
+        "jev_adequate": false,
+        "score": null
+      },
+      "head_to_head": []
+    }
+  ]
+}
