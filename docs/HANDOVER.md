@@ -1,6 +1,6 @@
 # Handover: Deferent, state of the project
 
-**Written 2026-09-27** for whoever picks this up next, human or agent. Read this first. It says
+**Written 2026-09-27, last updated 2026-09-29,** for whoever picks this up next, human or agent. Read this first. It says
 what exists, what has been measured, what broke and how it was fixed, what we learned, and what
 to do next.
 
@@ -39,14 +39,9 @@ public name is Deferent. The internal Python packages are still named `routerctl
 | Outcome feedback loop | **Not built.** Every decision already carries an `outcome_id` to join against later | roadmap §15 |
 | Production deployment | Not deployed anywhere. Nothing runs outside dev containers | — |
 
-Branches and PRs:
-* `main` has everything up to PR #3.
-* Work after PR #3 is on `claude/jev-ai-router-exploration-m99f1j`, not yet merged:
-  - multi-provider experiments
-  - the ten-model ladder
-  - the `extra_body` fix
-  - the complexity fix
-  - this document
+Branches:
+* **`main` has everything,** including all the work in this document, pushed on 2026-09-29.
+* `claude/jev-ai-router-exploration-m99f1j` was the working branch. It is identical to `main`.
 
 ## 3. Repository map
 
@@ -220,7 +215,7 @@ Found by running against real APIs, not mocks. Details are in the § cited.
 
 ## 11. What to do next, in priority order
 
-1. **Merge the open branch** once reviewed (CI: `pytest` and `routerctl validate`).
+1. **Set up CI** on `main`: `pytest` and `routerctl validate` on every push.
 2. **Outcome loop.** Add an endpoint to report an outcome against `outcome_id`, and a report of
    outcome rate by route, model and policy. Use it to set `base_threshold` and rosters from data.
    Start with one business outcome that's fast and clear, for example voice-call resolution.
@@ -231,6 +226,20 @@ Found by running against real APIs, not mocks. Details are in the § cited.
 5. **Per-provider pricing** keyed by `(client, model)`, for pinned providers.
 6. **Production hardening:** deployment manifest, metrics (decision latency, judge errors, cache
    holds), and `/v1/decide` timeouts documented for gateway integrators.
+7. **A Cars24 eval bench** has been proposed to leadership (2026-09-28). It would be one owner on
+   the team, building an internal benchmark from our own work, split into segments:
+   * coding agents: tasks mined from our 1,000+ internal repos, with real issues and merged PRs,
+     where our own test suites decide pass or fail
+   * voice bots and chatbots: from Langfuse traces, with personal data scrubbed
+   * post-call transcript analysis
+   * financial documents and legal documents
+   * general queries and personal agents
+
+   Every new model gets a scorecard for quality, cost and latency before it reaches production.
+   This is the natural home for `experiments/` datasets and harnesses, and it would replace the
+   hand-labelled single-turn sets these studies relied on (§10). Why: public benchmarks are
+   generic and increasingly trained on, and our own tests already contradicted them twice
+   (§13.5, §14).
 
 ## 12. Working conventions
 

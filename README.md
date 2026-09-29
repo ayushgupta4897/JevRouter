@@ -347,7 +347,7 @@ and every measurement: [`docs/DECISION.md` §12](docs/DECISION.md#12-cache-aware
 scripts/build.sh                  # builds switchyard-server + bindings + jevjudge + routerctl, ~3 min
 source .venv/bin/activate
 
-pytest jevjudge routerctl -q      # 138 tests: compilers, live-reload, fail-open, cache gate, every policy
+pytest jevjudge routerctl -q      # 146 tests: compilers, live-reload, fail-open, cache gate, every policy
 routerctl validate teams/          # schema check + a real switchyard-server --dry-run
 
 scripts/e2e_routerctl_decide.sh   # proves decision-only end to end (target genuinely never dialed)
@@ -365,20 +365,32 @@ under `vendor/switchyard/` at a pinned commit — no `cargo install --git`, noth
 | `routerctl/` | The router. `--mode decide` (default): embeds Switchyard's routing algorithms directly and returns a decision, never a completion. `--mode proxy`: compiles to a real Switchyard deployment with live reload, for teams without a gateway yet |
 | `jevjudge/` | Compiles a route's schema into Jev questions and Jev's answers back into a verdict; the confidence gate and fallback cascade |
 | `vendor/switchyard/` | Vendored Switchyard source, pinned commit, unmodified (`vendor/NOTICE.md`) |
-| `teams/*.yaml`, `experiments/teams/*.yaml` | 14 real route configs across both this repo's shipped examples and a 12-use-case study |
+| `teams/*.yaml`, `experiments/teams/*.yaml` | 16 real route configs: this repo's shipped examples and a 12-use-case study |
 | `evals/` | A concise real-model comparison harness — accuracy, cost, latency per model |
+| `docs/HANDOVER.md` | **Start here if you're taking this over:** current state, every experiment and result, every bug fixed, performance, what we learned, next steps |
+| `CLAUDE.md` | Commands and working rules for agents working in this repo |
 | `docs/DECISION.md` | The full design record: why Switchyard, why Jev, every real bug found and how, the decision-only pivot, economics |
 | `docs/TEAM_CONFIG.md` | The complete YAML schema |
 | `docs/EVALS.md` | How to decide which model is actually better, at what, for how much |
-| `experiments/REPORT.md` | 216 real routing decisions across 12 business use cases: real cost savings, every disagreement individually investigated |
+| `experiments/` | Every experiment: scripts, datasets and results. Includes 12 business use cases on OpenAI, multiple providers, a ten-model ladder, cache validation on OpenAI and Anthropic, and the complexity fix. Indexed in `experiments/README.md`, with the headline study in `experiments/REPORT.md` |
 
 ## Status
 
 Validated against the real TypeSafe API, real OpenAI models, and ten models from seven labs
 through OpenRouter, from ultra-cheap ($0.09 per million output tokens) up to Claude Sonnet 5 and
-GPT-6 Sol. Across those ten, routing cost half as much as always using the strongest model. See
-[`docs/DECISION.md`](docs/DECISION.md) for the full record, including every real bug found along
-the way and how each was caught. In short: routing decisions are real and tested; two production
-gaps (an unenforced context window on `escalation`, and a judge outage that used to be fatal
-instead of degrading gracefully) were found and fixed, with tests pinning both. Switchyard is
-pre-1.0, vendored at a pinned commit; `scripts/update_vendor.sh` re-vendors when you want to move.
+GPT-6 Sol. Highlights:
+
+* **Cost:** routing cost about half as much as always using the strongest model.
+* **Caching:** cache-aware switching cut long sessions by 14–17% and their easy follow-ups by
+  37–45%, on OpenAI and on Anthropic.
+* **Accuracy by policy:**
+  * `intent` picked the right bucket 100% of the time in every study.
+  * `complexity` was the weak policy until it was fixed on 2026-09-27. It now picks the right
+    tier 96–98% of the time on held-out prompts.
+
+Every real bug found along the way, and how each was caught, is in
+[`docs/DECISION.md`](docs/DECISION.md). The current state and next steps are in
+[`docs/HANDOVER.md`](docs/HANDOVER.md).
+
+Switchyard is pre-1.0 and vendored at a pinned commit. `scripts/update_vendor.sh` re-vendors when
+you want to move.
