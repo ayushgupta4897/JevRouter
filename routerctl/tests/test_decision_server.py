@@ -219,3 +219,22 @@ def test_pricing_reloads_with_clients_yaml(teams_dir):
     (teams_dir.parent / "clients.yaml").write_text(PRICED_CLIENTS_YAML)
     assert table.maybe_reload() is True
     assert set(table.pricing) == {"m-weak", "m-strong"}
+
+
+def test_server_warms_the_judge_connection_pool_on_startup(teams_dir, monkeypatch):
+    # A decision on a fresh TLS connection is ~3x slower than on a warm one (DECISION.md s16)
+    monkeypatch.setenv("JEVJUDGE_WARM_CONNECTIONS", "3")
+    monkeypatch.setenv("JEVJUDGE_PING_S", "0")
+    judge = mock_judge()
+    calls: list[int] = []
+    real_warm = judge.jev.warm
+
+    async def spy(connections: int = 4) -> int:
+        calls.append(connections)
+        return await real_warm(connections)
+
+    judge.jev.warm = spy
+    app = build_app(teams_dir, judge=judge)
+    with TestClient(app) as client:
+        assert client.get("/_routerctl/health").status_code == 200
+    assert calls == [3]

@@ -41,6 +41,11 @@ class JevClientConfig:
     model: str = "jev-latest"
     timeout_s: float = 10.0
     max_retries: int = 2
+    # Connection reuse is most of Jev's latency story: a warm call is ~190 ms from our test
+    # container, a call that has to open a new TLS connection is ~570 ms. httpx's default drops
+    # idle connections after 5 s, so bursty traffic paid the handshake on nearly every decision.
+    keepalive_s: float = 300.0
+    pool_size: int = 32
 
     @classmethod
     def from_env(cls) -> "JevClientConfig":
@@ -60,6 +65,8 @@ class JevClientConfig:
             model=model,
             timeout_s=float(os.environ.get("JEVJUDGE_TIMEOUT_S", "10")),
             max_retries=int(os.environ.get("JEVJUDGE_MAX_RETRIES", "2")),
+            keepalive_s=float(os.environ.get("JEVJUDGE_KEEPALIVE_S", "300")),
+            pool_size=int(os.environ.get("JEVJUDGE_POOL_SIZE", "32")),
         )
 
     @property
@@ -72,8 +79,30 @@ class JevClientConfig:
 class JevClient:
     def __init__(self, config: JevClientConfig, http: httpx.AsyncClient | None = None) -> None:
         self.config = config
-        self._http = http or httpx.AsyncClient(timeout=config.timeout_s)
+        limits = httpx.Limits(max_connections=config.pool_size * 2, max_keepalive_connections=config.pool_size,
+                              keepalive_expiry=config.keepalive_s)
+        self._http = http or httpx.AsyncClient(timeout=config.timeout_s, limits=limits)
         self._owned = http is None
+
+    async def warm(self, connections: int = 4) -> int:
+        """Open `connections` pooled TLS connections before traffic arrives, so the first real
+        decisions don't each pay the handshake. Cheap (a request to the base URL, no Jev call,
+        no billing) and never fatal: returns how many connections came up."""
+        async def one() -> bool:
+            try:
+                await self._http.get(self.config.base_url + "/", timeout=self.config.timeout_s)
+                return True
+            except httpx.HTTPError:
+                return False
+        results = await asyncio.gather(*(one() for _ in range(max(0, connections))))
+        return sum(results)
+
+    async def keepalive(self, interval_s: float = 45.0, connections: int = 4) -> None:
+        """Run forever, re-warming the pool every `interval_s`, for servers whose own idle
+        timeout is shorter than ours. Cancel the task to stop it."""
+        while True:
+            await asyncio.sleep(interval_s)
+            await self.warm(connections)
 
     async def aclose(self) -> None:
         if self._owned:

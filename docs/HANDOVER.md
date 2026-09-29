@@ -36,7 +36,7 @@ public name is Deferent. The internal Python packages are still named `routerctl
 | `complexity` policy | **Fixed on 2026-09-27** (§14). Held-out accuracy went from 90% to 98%, and misroutes fell from 22 to 6 | `experiments/complexity_eval.py` |
 | Cache-aware switching | Built and validated on OpenAI and Anthropic | DECISION §12, §13.4 |
 | Provider settings (`extra_body`) in decisions | Fixed 2026-09-27; previously dropped silently | `test_decide.py` |
-| Outcome feedback loop | **Not built.** Every decision already carries an `outcome_id` to join against later | roadmap §16 |
+| Outcome feedback loop | **Not built.** Every decision already carries an `outcome_id` to join against later | roadmap §17 |
 | Production deployment | Not deployed anywhere. Nothing runs outside dev containers | — |
 
 Branches:
@@ -80,6 +80,12 @@ or chat.** Check `git diff --cached` before every commit.
 * `TYPESAFE_API_KEY`: Jev
 * `OPENAI_API_KEY`
 * `OPENROUTER_API_KEY`: temporary, **expires 2026-10-04**
+
+Judge connection tuning, set by environment variable (defaults are fine):
+* `JEVJUDGE_KEEPALIVE_S` (300): how long idle connections stay open
+* `JEVJUDGE_POOL_SIZE` (32): how many connections the pool keeps
+* `JEVJUDGE_WARM_CONNECTIONS` (4): connections opened at startup
+* `JEVJUDGE_PING_S` (45): background keep-alive interval; 0 turns it off
 
 Load them with `set -a; . ./.env; set +a`. Every experiment script takes a `--max-budget-usd`
 cap and stops before crossing it.
@@ -125,6 +131,7 @@ All costs are real billed amounts. "§" refers to `docs/DECISION.md`.
 | 8 | Complexity fix, decision accuracy | `experiments/complexity_eval.py` → `results/complexity-eval.json` | Held-out **90% → 96% (general) → 98% (with team criteria)**. Seen set 69% → 91%. Misroutes 22 → 6. Judge gave the same decision on 100/102 re-runs | pennies | Held-out prompts are more clear-cut than the originals |
 | 9 | Complexity fix, answer quality | `experiments/model_ladder.py --out results/model-ladder-complexity-fix` | On the 3 complexity routes, decision accuracy went from 72% to 89%. Routed answers scored 4.61 vs always-cheapest's 4.11 (before the fix, routing scored no better than always-cheapest). Spend rose from $0.069 to $0.105 as hard prompts reached the strong tier | $0.27 | n=18 shared prompts. The same arm varied 4.78 to 4.44 between runs, so compare within a run only |
 | 10 | `auto` vs `escalation` on real transcripts | `experiments/auto_vs_escalation.py` → `results/auto-vs-escalation.json` | Found the escalation blind spot (§15). After the fix: both catch a stuck coding agent. Only escalation catches a chatbot repeating a broken promise. Neither over-escalates after a single fixed failure | cents | Six hand-built transcripts, a demo not a benchmark |
+| 11 | Judge latency breakdown | `experiments/judge_latency.py` → `results/judge-latency.json` | Warm decision ~180–230 ms, of which ~140 ms is network and ~2–4 ms our code. Found and fixed the 5 s keep-alive bug: decisions after an idle gap went from ~590 ms to ~180 ms | cents | Measured from our cloud container through an egress proxy. Re-run from the production region |
 
 ## 7. Bugs found and fixed, and where the tests pin them
 
@@ -145,20 +152,24 @@ Found by running against real APIs, not mocks. Details are in the § cited.
 | `complexity` used a coding-agent rubric for business prompts | ~⅓ misroutes in both directions | General rubric, plus `weak_when`/`strong_when` | §14 |
 | Stale Sol price ($5/$30, now $4/$20) | Earlier Sol costs slightly overstated | `evals/models.py` | §12.4 |
 | Escalation judge saw only the opening task | **`escalation` was blind to real agent transcripts** (tool calls and results were dropped before Jev) | Pass `recent_turn_window` to Switchyard's classifier | §15 |
+| Jev connections closed after 5 s idle (httpx default) | A decision after any pause was ~3× slower (~590 ms instead of ~180 ms) | 300 s keep-alive, pool warmed at startup, background keep-alive | §16 |
 
 ## 8. Performance
 
-* **Decision latency** (real Jev, 216 decisions):
+* **Decision latency** (measured 2026-09-29 from our cloud container; `experiments/judge_latency.py`, §16):
 
-  | Policy | p50 | p90 |
-  |---|---|---|
-  | `complexity` | 216 ms | 707 ms |
-  | `intent` | 253 ms | 719 ms |
-  | `escalation` | 573 ms | 663 ms |
-  | `auto` | ~1 ms | — |
+  | Case | Time |
+  |---|---|
+  | Warm connection, any judge policy | **~175–230 ms**, made up of ~2–4 ms our code, ~140 ms network to Jev's host, and ~40–90 ms Jev itself |
+  | First call on a new TLS connection | ~560–700 ms. The server now pre-opens and keeps connections, so this only happens at cold start |
+  | `auto` | ~1 ms (no judge call) |
 
-  `auto` makes no judge call. One intent outlier took 16 s, a Jev-side slow response. A gateway
-  should put a timeout on `/v1/decide` and use the route default on timeout.
+  Transcript length barely matters (181 ms for 7 messages, 191 ms for 29), and concurrency is
+  fine once connections are open. The larger p50s in older sections (216–573 ms) mostly
+  measured connection setup.
+
+  Deploy near Jev's region to cut the ~140 ms network share. Gateways should still put a
+  timeout on `/v1/decide`: one Jev-side response took 16 s during the experiments.
 * **Judge cost** is negligible next to model spend: Jev is $0.042 per 1M input tokens.
 * **Cost savings** depend on the traffic mix and the roster:
   * 36.8% (OpenAI, 12 routers)

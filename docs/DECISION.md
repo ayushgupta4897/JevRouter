@@ -948,12 +948,57 @@ it fails without the fix.
   can't see failures that aren't in tool results (E), and it doesn't recognise tools outside its
   coding vocabulary (C).
 * `escalation` reads the transcript's meaning. It works with or without tools, costs one judge
-  call (~0.5 s), and is configurable (`confirmations`, `recent_turn_window`).
+  call (~0.2 s on a warm connection, §16), and is configurable (`confirmations`, `recent_turn_window`).
 
 Neither judges difficulty up front: a hard question with no history stays cheap under both (D).
 That's `complexity`'s job.
 
-## 16. Roadmap
+## 16. Decision latency: where the time goes (2026-09-29)
+
+Earlier sections reported Jev decisions at a p50 of 216–573 ms (§10 experiments). That figure
+was misleading: most of it was **opening TLS connections**, not Jev. The breakdown was measured
+from our cloud test container, whose traffic leaves through an egress proxy
+(`experiments/judge_latency.py` → `results/judge-latency.json`):
+
+| Component | Time |
+|---|---|
+| Our code: Switchyard algorithm, jevjudge compile and decode, cache gate | ~2–4 ms |
+| Network round trip to Jev's host, doing no Jev work | ~135–145 ms |
+| Jev itself (the remainder) | ~40–90 ms |
+| **Whole decision on a warm connection** | **~175–230 ms** |
+| Whole decision that must open a new TLS connection | ~560–700 ms |
+
+Transcript length barely matters: 181 ms for 7 messages, 191 ms for 29. Concurrency is fine once
+connections exist. Eight parallel decisions took ~600 ms each on a cold pool, then ~200 ms each
+on every later batch.
+
+**The bug.** `JevClient` used httpx's default pool, which closes idle connections after
+**5 seconds**. Under bursty production traffic, most decisions after a pause paid the handshake
+again:
+
+| | httpx default (5 s keep-alive) | Pool fix (300 s keep-alive, warmed at startup) |
+|---|---|---|
+| First decision after the server starts | ~560–600 ms | **174 ms** |
+| Decision after 10 s idle | 590–696 ms | **179 ms** |
+| Decision after 30 s idle | 537–590 ms | **179–193 ms** |
+
+**The fix:**
+* `JevClientConfig` gains `keepalive_s` (default 300, env `JEVJUDGE_KEEPALIVE_S`) and `pool_size`
+  (default 32, env `JEVJUDGE_POOL_SIZE`).
+* `JevClient.warm(n)` opens n connections with a request to the base URL. That isn't a Jev call
+  and isn't billed.
+* `JevClient.keepalive()` re-warms the pool on an interval.
+* `routerctl serve` warms 4 connections at startup (`JEVJUDGE_WARM_CONNECTIONS`) and pings every
+  45 s (`JEVJUDGE_PING_S`, 0 to disable).
+
+Tests are in `jevjudge/tests/test_client_pool.py` and `test_decision_server.py`.
+
+**What's left is mostly distance.** The ~140 ms network round trip is the largest remaining
+component, and it depends on where the router runs. Deploy the decision server close to Jev's
+region and re-run `experiments/judge_latency.py` from there. The ~40–90 ms Jev itself takes is
+the floor.
+
+## 17. Roadmap
 
 1. **Routing-accuracy validation**: the judge-only eval (predict vs. a ground-truth label from
    running both tiers) and Switchyard's `benchmark/` TB2.1 subset with the Jev judge vs. the LLM
@@ -988,7 +1033,7 @@ That's `complexity`'s job.
 9. ~~**Fix `complexity` routing**~~: **done**, see §14. What's still open is long-context judging
    (item 7) and code-review prompts that name their own bug (§14.3).
 
-## 17. Sources
+## 18. Sources
 
 Switchyard: repo README, `docs/routing_algorithms/*.md`, `crates/libsy/src/algorithms/util/llm_judge.rs`,
 `crates/libsy/src/prompts/*`, `benchmark/routing-profiles/*`; NVIDIA blog "Route AI Agent Workloads

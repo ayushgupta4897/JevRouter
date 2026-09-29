@@ -1,0 +1,20 @@
+{
+  "run_date": "2026-09-29",
+  "measured_from": "Claude Code cloud container (via egress proxy)",
+  "network_round_trip_ms_p50": 143,
+  "decision_cold_ms": 599,
+  "decision_warm_ms_p50": 231,
+  "concurrent_8_batches_p50_ms": [
+    591,
+    202,
+    205
+  ],
+  "httpx_default_5s": {
+    "after_10s_idle_ms": 696,
+    "after_30s_idle_ms": 537
+  },
+  "pool_300s": {
+    "after_10s_idle_ms": 179,
+    "after_30s_idle_ms": 179
+  }
+}

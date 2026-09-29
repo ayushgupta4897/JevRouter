@@ -67,7 +67,9 @@ Switchyard benchmark](https://www.langchain.com/blog/switchyard-agent-routing-be
 judge alone eats **21% of routed spend** and adds **~700ms per turn**. Jev is a "System One"
 model: it doesn't generate text, it answers typed questions (yes/no, multiple-choice, a score) in
 one parallel pass, cheaply. A router's verdict *is* a set of typed questions, so this project
-puts Jev where the LLM judge used to be. Full economics: [`docs/DECISION.md`](docs/DECISION.md) §7.
+puts Jev where the LLM judge used to be. A Jev decision measured end to end takes about 180–230 ms
+on a warm connection, and most of that is network ([`docs/DECISION.md`](docs/DECISION.md) §16).
+Full economics: [`docs/DECISION.md`](docs/DECISION.md) §7.
 
 ## The four routing policies
 
@@ -347,7 +349,7 @@ and every measurement: [`docs/DECISION.md` §12](docs/DECISION.md#12-cache-aware
 scripts/build.sh                  # builds switchyard-server + bindings + jevjudge + routerctl, ~3 min
 source .venv/bin/activate
 
-pytest jevjudge routerctl -q      # 146 tests: compilers, live-reload, fail-open, cache gate, every policy
+pytest jevjudge routerctl -q      # 152 tests: compilers, live-reload, fail-open, cache gate, every policy
 routerctl validate teams/          # schema check + a real switchyard-server --dry-run
 
 scripts/e2e_routerctl_decide.sh   # proves decision-only end to end (target genuinely never dialed)

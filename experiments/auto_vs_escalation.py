@@ -5,7 +5,7 @@ Both start cheap and move up when a run is going badly, but they read the run di
 * `auto` pattern-matches the *tool traffic*: error severity in tool results, spinning,
   exploring vs. producing. No judge call (~1 ms). Blind to anything that isn't a tool call.
 * `escalation` asks Jev to read the *transcript* for a repeated-failure pattern. One judge call
-  (~0.5 s). Works on any conversation, tools or not.
+  (~0.2 s on a warm connection). Works on any conversation, tools or not.
 
 Six transcripts, each routed by both. Writing this is what exposed the bug in DECISION.md
 section 15: the escalation judge had been seeing only the opening task on real agent transcripts.

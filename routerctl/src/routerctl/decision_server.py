@@ -15,6 +15,7 @@ from __future__ import annotations
 import asyncio
 import hashlib
 import logging
+import os
 from contextlib import asynccontextmanager
 from dataclasses import asdict
 from pathlib import Path
@@ -104,10 +105,24 @@ def build_app(teams_dir: Path, clients_path: Path | None = None, poll_seconds: f
                 table.maybe_reload()
 
         watcher = asyncio.create_task(watch_loop())
+        # Jev latency is mostly connection setup: ~190 ms warm vs ~570 ms on a fresh TLS
+        # connection (docs/DECISION.md section 16). Open the pool before traffic arrives and keep
+        # it open through quiet periods, so a decision after an idle gap isn't 3x slower.
+        jev = getattr(judge, "jev", None)
+        pinger = None
+        if jev is not None and hasattr(jev, "warm"):
+            warm_n = int(os.environ.get("JEVJUDGE_WARM_CONNECTIONS", "4"))
+            ping_s = float(os.environ.get("JEVJUDGE_PING_S", "45"))
+            opened = await jev.warm(warm_n)
+            logger.info("judge connection pool warmed: %d/%d connections", opened, warm_n)
+            if ping_s > 0:
+                pinger = asyncio.create_task(jev.keepalive(ping_s, warm_n))
         try:
             yield
         finally:
             watcher.cancel()
+            if pinger is not None:
+                pinger.cancel()
             await judge.aclose()
 
     app = FastAPI(title="routerctl decision service", lifespan=lifespan)

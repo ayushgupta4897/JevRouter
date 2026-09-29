@@ -142,7 +142,7 @@ differently. Here are real decisions on the same transcripts (`experiments/auto_
   makes no judge call and takes about 1 ms. It's built for coding agents: it can't see trouble
   that isn't in a tool result, and it doesn't know tools outside its coding vocabulary.
 * **`escalation`** asks the judge whether the transcript shows a repeated-failure pattern. It
-  costs one judge call (about 0.5 s). It works for any conversation, and `confirmations` and
+  costs one judge call (about 0.2 s). It works for any conversation, and `confirmations` and
   `recent_turn_window` tune it.
 
 Neither judges how hard a request is before anything has happened. For that, use `complexity`.
