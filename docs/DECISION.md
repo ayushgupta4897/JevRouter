@@ -911,7 +911,49 @@ prompts had been answered wrongly and cheaply before.
   quality rather than savings here. On routes with an expensive strong tier, the same accuracy
   gain moves money in both directions: fewer wasted strong calls, fewer failed cheap ones.
 
-## 15. Roadmap
+## 15. The escalation judge couldn't see real transcripts (2026-09-29)
+
+**Found by** comparing `auto` and `escalation` on the same real transcripts
+(`experiments/auto_vs_escalation.py`). Given a coding agent that hit the same traceback three
+times, `auto` escalated and `escalation` said "continue" with full confidence.
+
+**Cause.** Switchyard's custom classifier, which `escalation` (and `intent`) compile to, shows the
+judge only the opening task and the latest *user* message unless `recent_turn_window` is set on
+the classifier itself. The route's `recent_turn_window` (default 28) was only applied to
+`decide()`'s own message slicing (§11) and never passed to Switchyard. On a real agent
+transcript, where the failures live in assistant tool calls and tool results, the judge saw just
+"Fix the failing build."
+
+The §10 experiments didn't catch it: their transcripts were prose ("Turn 1: … Turn 2: …") inside
+one user message, which is exactly the part that survived. So **escalation's earlier accuracy
+numbers were real, but only for transcripts shaped like that.**
+
+**Fix.** `algorithms._compile_custom` now passes `recent_turn_window` to
+`CustomClassifierConfig`. `test_decide.py` pins that the judge sees every tool call and result;
+it fails without the fix.
+
+**After the fix, on real transcripts** (`results/auto-vs-escalation.json`):
+
+| Transcript | `auto` | `escalation` |
+|---|---|---|
+| A. Coding agent, same traceback 3× | strong | strong |
+| B. Coding agent, edits land, tests pass | cheap | cheap |
+| C. Security agent, custom tool returns "0 events matched" 3× | cheap | cheap (confidence 0.56, borderline) |
+| D. Plain chat, a hard question | cheap | cheap |
+| E. Support chatbot breaks the same promise 3×, no tools | cheap | **strong** (0.96) |
+| F. One failure, then fixed | cheap | cheap |
+
+**How the two differ:**
+* `auto` pattern-matches coding-agent tool traffic. It needs no judge call and takes ~1 ms. It
+  can't see failures that aren't in tool results (E), and it doesn't recognise tools outside its
+  coding vocabulary (C).
+* `escalation` reads the transcript's meaning. It works with or without tools, costs one judge
+  call (~0.5 s), and is configurable (`confirmations`, `recent_turn_window`).
+
+Neither judges difficulty up front: a hard question with no history stays cheap under both (D).
+That's `complexity`'s job.
+
+## 16. Roadmap
 
 1. **Routing-accuracy validation**: the judge-only eval (predict vs. a ground-truth label from
    running both tiers) and Switchyard's `benchmark/` TB2.1 subset with the Jev judge vs. the LLM
@@ -946,7 +988,7 @@ prompts had been answered wrongly and cheaply before.
 9. ~~**Fix `complexity` routing**~~: **done**, see §14. What's still open is long-context judging
    (item 7) and code-review prompts that name their own bug (§14.3).
 
-## 16. Sources
+## 17. Sources
 
 Switchyard: repo README, `docs/routing_algorithms/*.md`, `crates/libsy/src/algorithms/util/llm_judge.rs`,
 `crates/libsy/src/prompts/*`, `benchmark/routing-profiles/*`; NVIDIA blog "Route AI Agent Workloads

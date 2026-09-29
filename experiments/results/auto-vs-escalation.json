@@ -1,0 +1,56 @@
+[
+  {
+    "case": "A. coding agent, same traceback 3x",
+    "auto": "strong",
+    "auto_latency_ms": 1.6,
+    "escalation": "strong",
+    "escalation_confidence": 1.0,
+    "escalation_latency_ms": 722.0,
+    "judge_error": null
+  },
+  {
+    "case": "B. coding agent, edits land, tests pass",
+    "auto": "cheap",
+    "auto_latency_ms": 0.8,
+    "escalation": "cheap",
+    "escalation_confidence": 1.0,
+    "escalation_latency_ms": 232.4,
+    "judge_error": null
+  },
+  {
+    "case": "C. security agent, custom tool, inconclusive 3x",
+    "auto": "cheap",
+    "auto_latency_ms": 2.2,
+    "escalation": "cheap",
+    "escalation_confidence": 0.56,
+    "escalation_latency_ms": 253.3,
+    "judge_error": null
+  },
+  {
+    "case": "D. plain chat, hard question",
+    "auto": "cheap",
+    "auto_latency_ms": 0.6,
+    "escalation": "cheap",
+    "escalation_confidence": 0.98,
+    "escalation_latency_ms": 236.4,
+    "judge_error": null
+  },
+  {
+    "case": "E. support chatbot, same broken promise 3x, no tools",
+    "auto": "cheap",
+    "auto_latency_ms": 0.6,
+    "escalation": "strong",
+    "escalation_confidence": 0.96,
+    "escalation_latency_ms": 169.3,
+    "judge_error": null
+  },
+  {
+    "case": "F. coding agent, one failure then fixed",
+    "auto": "cheap",
+    "auto_latency_ms": 0.6,
+    "escalation": "cheap",
+    "escalation_confidence": 1.0,
+    "escalation_latency_ms": 204.2,
+    "judge_error": null
+  }
+]

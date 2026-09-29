@@ -62,7 +62,13 @@ def _compile_custom(
     route: Route, judge_id: str, default_bucket: str, buckets: dict[str, ModelRef], prompt: str, *, recent_turn_window: int | None = None
 ) -> CompiledRoute:
     bucket_names = list(buckets)
-    config = CustomClassifierConfig(prompt, _target_selector_schema(bucket_names), "/decision/target")
+    # recent_turn_window must reach Switchyard's classifier itself, not only decide()'s slicing:
+    # left unset, Switchyard shows the judge just the opening task and the latest *user* message,
+    # so on a real agent transcript the escalation judge never saw a single tool call or failure
+    # (found 2026-09-29, docs/DECISION.md section 15).
+    config = CustomClassifierConfig(
+        prompt, _target_selector_schema(bucket_names), "/decision/target", recent_turn_window=recent_turn_window,
+    )
     algorithm = algorithms.llm_classifier(LlmClassifierConfig.custom(default_target=default_bucket, config=config))
     any_ids = [ref.id for ref in buckets.values()]
     models = {"judge": [judge_id], "any": any_ids, **{name: [ref.id] for name, ref in buckets.items()}}

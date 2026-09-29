@@ -31,12 +31,12 @@ public name is Deferent. The internal Python packages are still named `routerctl
 | Decision-only server (`routerctl serve`, `POST /v1/decide`) | Working, tested | 146 unit tests; `scripts/e2e_routerctl_decide.sh` 7/7 |
 | Proxy mode (`--mode proxy`, real Switchyard server) | Working, tested | `scripts/e2e_routerctl.sh` 6/6; `routerctl validate` dry-runs |
 | `intent` policy | Strongest policy: 100% decision accuracy in every study | DECISION §10, §13.2, §13.5 |
-| `escalation` policy | Good: 89–100% | same |
+| `escalation` policy | 89–100% on prose transcripts. **Before 2026-09-29 it couldn't see real tool-call transcripts at all**: the judge only got the opening task (§15). Fixed; re-validated on real transcripts in `experiments/auto_vs_escalation.py`. Needs a larger real-transcript eval | §10, §15 |
 | `auto` policy | Works **since the tool-call adapter fix** (§12.6). Before that it was blind in decision mode | `routerctl/tests/test_messages.py` |
 | `complexity` policy | **Fixed on 2026-09-27** (§14). Held-out accuracy went from 90% to 98%, and misroutes fell from 22 to 6 | `experiments/complexity_eval.py` |
 | Cache-aware switching | Built and validated on OpenAI and Anthropic | DECISION §12, §13.4 |
 | Provider settings (`extra_body`) in decisions | Fixed 2026-09-27; previously dropped silently | `test_decide.py` |
-| Outcome feedback loop | **Not built.** Every decision already carries an `outcome_id` to join against later | roadmap §15 |
+| Outcome feedback loop | **Not built.** Every decision already carries an `outcome_id` to join against later | roadmap §16 |
 | Production deployment | Not deployed anywhere. Nothing runs outside dev containers | — |
 
 Branches:
@@ -124,6 +124,7 @@ All costs are real billed amounts. "§" refers to `docs/DECISION.md`.
 | 7 | Ten-model ladder, ultra-cheap to strong | `experiments/model_ladder.py` → `results/model-ladder/` | Routing halves the cost of always-strongest. The cheap-to-strong quality spread is only 0.25, so no gap is significant at n=72. Misses were all in `complexity` | $0.99 | Single-turn prompts only |
 | 8 | Complexity fix, decision accuracy | `experiments/complexity_eval.py` → `results/complexity-eval.json` | Held-out **90% → 96% (general) → 98% (with team criteria)**. Seen set 69% → 91%. Misroutes 22 → 6. Judge gave the same decision on 100/102 re-runs | pennies | Held-out prompts are more clear-cut than the originals |
 | 9 | Complexity fix, answer quality | `experiments/model_ladder.py --out results/model-ladder-complexity-fix` | On the 3 complexity routes, decision accuracy went from 72% to 89%. Routed answers scored 4.61 vs always-cheapest's 4.11 (before the fix, routing scored no better than always-cheapest). Spend rose from $0.069 to $0.105 as hard prompts reached the strong tier | $0.27 | n=18 shared prompts. The same arm varied 4.78 to 4.44 between runs, so compare within a run only |
+| 10 | `auto` vs `escalation` on real transcripts | `experiments/auto_vs_escalation.py` → `results/auto-vs-escalation.json` | Found the escalation blind spot (§15). After the fix: both catch a stuck coding agent. Only escalation catches a chatbot repeating a broken promise. Neither over-escalates after a single fixed failure | cents | Six hand-built transcripts, a demo not a benchmark |
 
 ## 7. Bugs found and fixed, and where the tests pin them
 
@@ -143,6 +144,7 @@ Found by running against real APIs, not mocks. Details are in the § cited.
 | Cache field meant "read count", not "cached size" | A gateway would report 0 after a cold turn and the gate would lose the cache | Renamed to `cached_prefix_tokens`, documented | §12 |
 | `complexity` used a coding-agent rubric for business prompts | ~⅓ misroutes in both directions | General rubric, plus `weak_when`/`strong_when` | §14 |
 | Stale Sol price ($5/$30, now $4/$20) | Earlier Sol costs slightly overstated | `evals/models.py` | §12.4 |
+| Escalation judge saw only the opening task | **`escalation` was blind to real agent transcripts** (tool calls and results were dropped before Jev) | Pass `recent_turn_window` to Switchyard's classifier | §15 |
 
 ## 8. Performance
 
@@ -219,14 +221,15 @@ Found by running against real APIs, not mocks. Details are in the § cited.
 2. **Outcome loop.** Add an endpoint to report an outcome against `outcome_id`, and a report of
    outcome rate by route, model and policy. Use it to set `base_threshold` and rosters from data.
    Start with one business outcome that's fast and clear, for example voice-call resolution.
-3. **Complexity on long contexts** (learning 6): judge the latest turn plus a compact context
+3. **A real-transcript escalation eval.** Every escalation number before §15 came from prose transcripts. Build 50+ real agent and chatbot transcripts (from Langfuse) labelled continue or escalate, and measure. This belongs in the eval bench (item 8).
+4. **Complexity on long contexts** (learning 6): judge the latest turn plus a compact context
    summary. Measure it with `experiments/complexity_eval.py`, extended with long-context items.
-4. **Roster tuning.** Re-run `model_ladder.py` with cheaper top tiers, and move each route to the
+5. **Roster tuning.** Re-run `model_ladder.py` with cheaper top tiers, and move each route to the
    cheapest roster whose quality holds.
-5. **Per-provider pricing** keyed by `(client, model)`, for pinned providers.
-6. **Production hardening:** deployment manifest, metrics (decision latency, judge errors, cache
+6. **Per-provider pricing** keyed by `(client, model)`, for pinned providers.
+7. **Production hardening:** deployment manifest, metrics (decision latency, judge errors, cache
    holds), and `/v1/decide` timeouts documented for gateway integrators.
-7. **A Cars24 eval bench** has been proposed to leadership (2026-09-28). It would be one owner on
+8. **A Cars24 eval bench** has been proposed to leadership (2026-09-28). It would be one owner on
    the team, building an internal benchmark from our own work, split into segments:
    * coding agents: tasks mined from our 1,000+ internal repos, with real issues and merged PRs,
      where our own test suites decide pass or fail

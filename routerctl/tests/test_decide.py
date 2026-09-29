@@ -104,3 +104,31 @@ async def test_decision_carries_each_models_extra_body_to_the_gateway(judge):
     expected = {"m-weak": pin, "m-strong": effort}
     assert decision.selected_extra_body == expected[decision.selected_model]
     assert decision.fallback_extra_bodies == [expected[m] for m in decision.fallback_model_ids]
+
+
+async def test_escalation_judge_sees_the_tool_turns_not_just_the_opening_task(judge):
+    # Regression: Switchyard's custom classifier shows the judge only the opening task and the
+    # latest *user* message unless recent_turn_window reaches it. On a real agent transcript
+    # the escalation judge never saw a single tool call or failure (DECISION.md section 15).
+    import json as _json
+    compiled = compile_route_algorithm(route("r", {"policy": "escalation", "models": {
+        "weak": {"id": "m-weak", "client": "openai"}, "strong": {"id": "m-strong", "client": "openai"}}}))
+    messages = [{"role": "user", "content": "Fix the failing build."}]
+    for i in range(3):
+        messages += [
+            {"role": "assistant", "content": None, "tool_calls": [{"id": f"c{i}", "type": "function",
+             "function": {"name": "bash", "arguments": _json.dumps({"command": "python -m app"})}}]},
+            {"role": "tool", "tool_call_id": f"c{i}", "content": f"Traceback {i}: ModuleNotFoundError: No module named 'serde'"},
+        ]
+    seen: list[str] = []
+    real_judge = judge.judge
+
+    async def spy(request):
+        seen.extend(str(m.get("content")) for m in request["messages"])
+        return await real_judge(request)
+
+    judge.judge = spy
+    await decide(compiled, judge, {"model": "r", "stream": False, "messages": to_libsy_messages(messages)})
+    transcript = "\n".join(seen)
+    assert all(f"Traceback {i}" in transcript for i in range(3))
+    assert "tool_call bash" in transcript

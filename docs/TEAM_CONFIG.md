@@ -126,6 +126,27 @@ rather than counters Switchyard tracks for you. Practically: make sure your requ
 actually include the recent tool calls/results/errors you want judged — decision mode has no
 memory of previous requests to fall back on.
 
+### `auto` or `escalation`?
+
+Both start on the cheap model and move up when a run is going badly. They read the run
+differently. Here are real decisions on the same transcripts (`experiments/auto_vs_escalation.py`):
+
+| Transcript | `auto` | `escalation` |
+|---|---|---|
+| Coding agent hits the same traceback 3× | strong | strong |
+| Coding agent: edits land, tests pass | cheap | cheap |
+| Support chatbot breaks the same promise 3×, no tools | cheap | **strong** |
+| One failure, then fixed | cheap | cheap |
+
+* **`auto`** reads tool traffic: errors in tool results, spinning, and exploring vs. producing. It
+  makes no judge call and takes about 1 ms. It's built for coding agents: it can't see trouble
+  that isn't in a tool result, and it doesn't know tools outside its coding vocabulary.
+* **`escalation`** asks the judge whether the transcript shows a repeated-failure pattern. It
+  costs one judge call (about 0.5 s). It works for any conversation, and `confirmations` and
+  `recent_turn_window` tune it.
+
+Neither judges how hard a request is before anything has happened. For that, use `complexity`.
+
 ### `intent` — route by what the request actually is
 
 A judge picks one of your named buckets by content. This is the shape for "if it's an extraction
